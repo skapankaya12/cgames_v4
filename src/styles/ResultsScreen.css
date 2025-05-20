@@ -26,6 +26,73 @@
   margin: 0;
 }
 
+.notification {
+  background-color: #edf2f7;
+  color: #2d3748;
+  padding: 0.75rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #4299e1;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 0.75rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.resubmit-button {
+  padding: 0.5rem 1rem;
+  background-color: #f56565;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 5px;
+}
+
+.resubmit-button:hover {
+  background-color: #e53e3e;
+}
+
+.success-message {
+  background-color: #c6f6d5;
+  color: #2f855a;
+  padding: 0.75rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
 .chart-container {
   width: 100%;
   height: 400px;
@@ -59,10 +126,18 @@
   margin: 0;
 }
 
-.restart-button {
-  width: 100%;
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.restart-button,
+.direct-submit-button,
+.debug-button {
   padding: 0.75rem;
-  background-color: #4299e1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -70,16 +145,111 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  max-width: 300px;
-  align-self: center;
+}
+
+.restart-button {
+  background-color: #4299e1;
 }
 
 .restart-button:hover {
   background-color: #3182ce;
 }
 
+.direct-submit-button {
+  background-color: #48bb78;
+}
+
+.direct-submit-button:hover {
+  background-color: #38a169;
+}
+
+.debug-button {
+  background-color: #805ad5;
+}
+
+.debug-button:hover {
+  background-color: #6b46c1;
+}
+
+.debug-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.debug-panel h3 {
+  margin-top: 0;
+  color: #4a5568;
+}
+
+.debug-panel pre {
+  background-color: #edf2f7;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  color: #2d3748;
+}
+
+.answers-debug {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.answers-debug h4, .api-info h4 {
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}
+
+.answers-debug ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.answers-debug li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.answers-debug .weights {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  color: #4a5568;
+}
+
+.api-info {
+  margin-top: 1rem;
+}
+
+.api-info p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  font-family: monospace;
+  color: #4a5568;
+}
+
+.api-info button {
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 600px) {
   .scores-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .restart-button,
+  .direct-submit-button,
+  .debug-button {
+    width: 100%;
+    max-width: 300px;
   }
 } 
