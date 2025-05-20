@@ -584,7 +584,7 @@ export const competencies = [
   { name: "AD", color: "#45B7D1", fullName: "Adaptability" },
   { name: "CM", color: "#96CEB4", fullName: "Communication" },
   { name: "ST", color: "#FFD93D", fullName: "Strategic Thinking" },
-  { name: "TO", color: "#6C5CE7", fullName: "Team Orientation" },
+  { name: "TO", color: "#6C5CE7", fullName: "Time Management" },
   { name: "RL", color: "#E17055", fullName: "Risk Leadership" },
   { name: "RI", color: "#00B894", fullName: "Risk Intelligence" }
 ]; 
