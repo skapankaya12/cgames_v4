@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 2rem 1rem;
+}
+
+.results-screen {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.results-title {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  background: white;
+}
+
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.score-card {
+  padding: 1rem;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.score-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.score-value {
+  margin: 0;
+}
+
+.restart-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  max-width: 300px;
+  align-self: center;
+}
+
+.restart-button:hover {
+  background-color: #3182ce;
+}
+
+@media screen and (max-width: 600px) {
+  .scores-grid {
+    grid-template-columns: 1fr;
+  }
+} 

@@ -1,0 +1,225 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 1rem 0;
+}
+
+.test-screen {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 650px;
+  transition: all 0.3s ease;
+}
+
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4299e1;
+  background-image: linear-gradient(to right, #4299e1, #63b3ed);
+  transition: width 0.4s ease;
+}
+
+.question-counter {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.question-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.question-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+  color: #2d3748;
+  font-weight: 600;
+  text-align: center;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: #4a5568;
+  text-align: center;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #4299e1;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.radio-option {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.25s ease;
+  overflow: hidden;
+  background-color: white;
+}
+
+.radio-option:hover {
+  border-color: #bee3f8;
+  background-color: #f7fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(66, 153, 225, 0.15);
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-option input[type="radio"]:checked + label {
+  background-color: #ebf8ff;
+  border-left: 4px solid #4299e1;
+  font-weight: 500;
+  color: #2c5282;
+}
+
+.radio-option label {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  width: 100%;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.radio-option label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid #cbd5e0;
+  background-color: #fff;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  position: absolute;
+  left: 1rem;
+}
+
+.radio-option input[type="radio"]:checked + label::before {
+  border-color: #4299e1;
+  background-color: #4299e1;
+  box-shadow: inset 0 0 0 4px #fff;
+}
+
+.forwarding-line {
+  background-color: #ebf8ff;
+  border: 1px solid #bee3f8;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.forwarding-line p {
+  color: #2c5282;
+  font-style: italic;
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.prev-button, .next-button {
+  padding: 0.85rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.prev-button {
+  flex: 1;
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.prev-button:hover:not(:disabled) {
+  background-color: #cbd5e0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.prev-button:disabled {
+  background-color: #edf2f7;
+  color: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.next-button {
+  flex: 2;
+  background-color: #4299e1;
+  color: white;
+}
+
+.next-button:hover:not(:disabled) {
+  background-color: #3182ce;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.next-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.error-message {
+  color: #e53e3e;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  background-color: #fff5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #fed7d7;
+} 

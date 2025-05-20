@@ -1,35 +1,50 @@
-import { Question } from '../types';
+interface Option {
+  id: string;
+  text: string;
+  weights: CompetencyWeights;
+}
+
+interface CompetencyWeights {
+  [key: string]: number;
+}
+
+interface Question {
+  id: number;
+  text: string;
+  forwardingLine: string;
+  options: Option[];
+}
 
 export const questions: Question[] = [
   {
     id: 1,
-    text: "Loş depo koridorunda, Yük Sorumlusu'nun soğuk bakışları altında.",
+    text: "Loş depo koridorunda, Yük Sorumlusu'nun soğuk bakışları altında. Yük Sorumlusu: \"Kargoyu vermem için 8.000 Zenix ödemelisin.\"",
     forwardingLine: "Depodan çıktığında, dar ve kalabalık çıkış koridoruna yöneliyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Parayı hemen öde.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 1, "ST": 2, "TO": 5, "RL": 4, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "\"Teslim sonrası ödeyeyim\" diye teklif yap.",
         weights: {
           "DM": 3, "IN": 5, "AD": 3, "CM": 2, "ST": 4, "TO": 4, "RL": 3, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Sahte onay belgesi göster.",
         weights: {
           "DM": 4, "IN": 3, "AD": 3, "CM": 1, "ST": 3, "TO": 2, "RL": 1, "RI": 5
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "\"1 saat ver, başka bir çözüm bakacağım.\"",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 2, "ST": 5, "TO": 1, "RL": 3, "RI": 2
         }
@@ -43,28 +58,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Özel geçiş için para öde.",
         weights: {
           "DM": 4, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 5, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Kaçakçının tünelini kullan.",
         weights: {
           "DM": 3, "IN": 4, "AD": 5, "CM": 1, "ST": 2, "TO": 2, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Gece çıkışı bekle.",
         weights: {
           "DM": 2, "IN": 1, "AD": 2, "CM": 2, "ST": 4, "TO": 1, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Motor sistemini ayarla, sonra çık.",
         weights: {
           "DM": 3, "IN": 1, "AD": 3, "CM": 0, "ST": 5, "TO": 1, "RL": 5, "RI": 1
         }
@@ -73,33 +88,33 @@ export const questions: Question[] = [
   },
   {
     id: 3,
-    text: "Holografik ışıklarla aydınlanan odada, parıldayan enerji çekirdeği ve cazip teklifler.",
+    text: "Holografik ışıklarla aydınlanan odada, parıldayan enerji çekirdeği.",
     forwardingLine: "Teklifi dinledikten sonra, hoparlörlerden gelen Devriye Gemisi anonsuna doğru yöneliyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Teklifi kabul et, yükü onlara teslim et.",
         weights: {
           "DM": 5, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 4, "RL": 1, "RI": 5
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Ortaklık öner, %50 kâr paylaşımı teklif et.",
         weights: {
           "DM": 3, "IN": 5, "AD": 3, "CM": 3, "ST": 4, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "\"Zamana ihtiyacım var\" diyerek oyalamaya çalış.",
         weights: {
           "DM": 3, "IN": 3, "AD": 3, "CM": 2, "ST": 3, "TO": 2, "RL": 1, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Teklifi reddet, göreve devam et.",
         weights: {
           "DM": 4, "IN": 1, "AD": 2, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
@@ -113,28 +128,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Evrak + 500 Zenix rüşvet ver.",
         weights: {
           "DM": 3, "IN": 2, "AD": 1, "CM": 2, "ST": 4, "TO": 4, "RL": 4, "RI": 3
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Komutanı çaya davet et, yumuşat.",
         weights: {
           "DM": 2, "IN": 5, "AD": 3, "CM": 3, "ST": 3, "TO": 1, "RL": 3, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Kargoyu sakla, aramasına izin ver.",
         weights: {
           "DM": 4, "IN": 2, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 2, "RI": 5
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Motorları aç, doğrudan kaç.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
@@ -148,28 +163,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Navigasyon sistemine güven.",
         weights: {
           "DM": 4, "IN": 2, "AD": 2, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Kestirme rotayı dene, içgüdüyle git.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Ekibe sor, çoğunluğa uy.",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 4, "ST": 3, "TO": 2, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "1 saat dur, gözlem yap ve sonra karar ver.",
         weights: {
           "DM": 3, "IN": 1, "AD": 4, "CM": 1, "ST": 5, "TO": 1, "RL": 3, "RI": 2
         }
@@ -183,28 +198,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Anteni kes, gövdeyi koru.",
         weights: {
           "DM": 4, "IN": 0, "AD": 2, "CM": 0, "ST": 2, "TO": 4, "RL": 3, "RI": 5
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Kalkanlara güç ver, motor ısınsın.",
         weights: {
           "DM": 3, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Mühendise bırak, yaratıcı çözüm uygulasın.",
         weights: {
           "DM": 3, "IN": 2, "AD": 4, "CM": 2, "ST": 4, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Hiçbir şey yapma, devam et.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
         }
@@ -218,30 +233,30 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Hemen teknik bilgileri gönder.",
         weights: {
           "DM": 4, "IN": 4, "AD": 1, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Görevin önemini hikâyeleştir.",
         weights: {
           "DM": 2, "IN": 4, "AD": 3, "CM": 5, "ST": 2, "TO": 3, "RL": 4, "RI": 1
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Diplomatik konuş, ikna etmeye çalış.",
         weights: {
-          "DM": 3, "IN": 5, "AD": 3, "CM": 5, "ST": 3, "TO": 2, "RL": 3, "RI": 1
+          "DM": 3, "IN": 2, "AD": 4, "CM": 4, "ST": 3, "TO": 1, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Sessiz kal, hızla geç.",
         weights: {
-          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
+          "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 4, "TO": 5, "RL": 2, "RI": 5
         }
       }
     ]
@@ -249,34 +264,34 @@ export const questions: Question[] = [
   {
     id: 8,
     text: "Karanlıkta belirip tehditler savuran korsan gemileri.",
-    forwardingLine: "Korsan tehdidini atlattıktan sonra, terminal operatörünün soğuk arayüzüyle karşılaşıyorsun.",
+    forwardingLine: "Korsan tehdidini geride bırakıp, yeşil ışıklı terminal ekranına doğru ilerlerken.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "2.000 Zenix öde, geç.",
         weights: {
-          "DM": 3, "IN": 2, "AD": 2, "CM": 1, "ST": 3, "TO": 5, "RL": 5, "RI": 1
+          "DM": 4, "IN": 3, "AD": 2, "CM": 2, "ST": 3, "TO": 5, "RL": 2, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Ekibini sahte rehin olarak sun.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 4, "CM": 1, "ST": 3, "TO": 2, "RL": 1, "RI": 5
+          "DM": 3, "IN": 4, "AD": 4, "CM": 3, "ST": 2, "TO": 3, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Federasyon rozetini göster, blöf yap.",
         weights: {
-          "DM": 3, "IN": 4, "AD": 2, "CM": 2, "ST": 3, "TO": 2, "RL": 3, "RI": 4
+          "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 3, "TO": 3, "RL": 3, "RI": 4
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Topları ateşle, çatışmaya gir.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
+          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 4, "TO": 2, "RL": 1, "RI": 5
         }
       }
     ]
@@ -284,69 +299,69 @@ export const questions: Question[] = [
   {
     id: 9,
     text: "Yeşil imleç yanıp sönen, soğuk bir terminal ekranı.",
-    forwardingLine: "Soruyu yanıtlayıp, \"Gecikme\" alarmının yandığı kontrol odasına yöneliyorsun.",
+    forwardingLine: "Mesajını girdikten sonra, koridorda çınlayan gecikme alarmına yöneliyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Ekonomik faydayı vurgula.",
         weights: {
-          "DM": 4, "IN": 4, "AD": 1, "CM": 2, "ST": 5, "TO": 3, "RL": 5, "RI": 1
+          "DM": 3, "IN": 3, "AD": 2, "CM": 3, "ST": 3, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Enerjinin insanlara katkısını anlat.",
         weights: {
-          "DM": 2, "IN": 4, "AD": 3, "CM": 5, "ST": 2, "TO": 3, "RL": 4, "RI": 1
+          "DM": 2, "IN": 2, "AD": 3, "CM": 5, "ST": 2, "TO": 3, "RL": 5, "RI": 1
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "\"Bu teslimat gerekli, başka seçeneğiniz yok.\"",
         weights: {
-          "DM": 5, "IN": 3, "AD": 2, "CM": 2, "ST": 3, "TO": 4, "RL": 3, "RI": 5
+          "DM": 5, "IN": 1, "AD": 1, "CM": 2, "ST": 5, "TO": 5, "RL": 2, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "\"Detaya gerek yok, teslim edeceğim.\"",
         weights: {
-          "DM": 3, "IN": 1, "AD": 1, "CM": 1, "ST": 3, "TO": 5, "RL": 2, "RI": 3
+          "DM": 5, "IN": 0, "AD": 1, "CM": 1, "ST": 4, "TO": 5, "RL": 3, "RI": 2
         }
       }
     ]
   },
   {
     id: 10,
-    text: "\"Gecikme var\" uyarısı yanan, kırmızı alarm ışıkları.",
-    forwardingLine: "Alarmı dindirip, kargonun aşırı sarsıntıya maruz kaldığı kargo bölümüne geçiyorsun.",
+    text: "\"Gecikme var\" uyarısı, kırmızı ışıklar.",
+    forwardingLine: "Alarm sessizleşirken, kargo bölmesinden gelen ani sarsıntıyı hissediyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Yardım teklif et.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 4, "CM": 5, "ST": 3, "TO": 2, "RL": 5, "RI": 1
+          "DM": 3, "IN": 2, "AD": 3, "CM": 4, "ST": 2, "TO": 3, "RL": 5, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "\"Zamanım yok, müdahale etmeyin\" de.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 2, "RI": 4
+          "DM": 5, "IN": 1, "AD": 2, "CM": 1, "ST": 3, "TO": 5, "RL": 2, "RI": 3
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Sistemi analiz etmek için 10 dakika iste.",
         weights: {
-          "DM": 2, "IN": 2, "AD": 4, "CM": 2, "ST": 5, "TO": 3, "RL": 4, "RI": 2
+          "DM": 2, "IN": 3, "AD": 3, "CM": 2, "ST": 5, "TO": 2, "RL": 3, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Terminal ekibini ikna et, öncelik al.",
         weights: {
-          "DM": 3, "IN": 5, "AD": 3, "CM": 5, "ST": 3, "TO": 2, "RL": 3, "RI": 2
+          "DM": 3, "IN": 4, "AD": 3, "CM": 5, "ST": 3, "TO": 2, "RL": 4, "RI": 2
         }
       }
     ]
@@ -354,69 +369,69 @@ export const questions: Question[] = [
   {
     id: 11,
     text: "Ani sarsıntı, kırmızı risk göstergesi ve duman kokusu.",
-    forwardingLine: "Sarsıntıyı atlattıktan sonra, varış noktasındaki sessiz bekleyiş alanına doğru ilerliyorsun.",
+    forwardingLine: "Sarsıntıyı atlattıktan sonra, boş görünen teslimat alanına ulaşıyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Manuel kontrolle sabitle.",
         weights: {
-          "DM": 4, "IN": 2, "AD": 3, "CM": 2, "ST": 4, "TO": 3, "RL": 5, "RI": 2
+          "DM": 3, "IN": 1, "AD": 5, "CM": 0, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Kargo bölmesini kapat, risk alma.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 4, "RI": 3
+          "DM": 4, "IN": 0, "AD": 1, "CM": 0, "ST": 3, "TO": 3, "RL": 3, "RI": 1
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Mühendise bırak, dışarıdan müdahale etsin.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 4, "CM": 2, "ST": 4, "TO": 2, "RL": 3, "RI": 4
+          "DM": 2, "IN": 2, "AD": 3, "CM": 2, "ST": 3, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "\"Önemli değil\" diyerek devam et.",
         weights: {
-          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
+          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 4, "RL": 1, "RI": 5
         }
       }
     ]
   },
   {
     id: 12,
-    text: "Bom boş terminal, \"Bekleme süresi: 2 dk\" sayacı.",
-    forwardingLine: "Beklemeyi aşınca, inisiyatif alman gereken aşırı ısınan motorlar kokpitine adım atıyorsun.",
+    text: "Bom boş terminal, \"Bekleme süresi: 2 dk.\"",
+    forwardingLine: "Beklerken aniden buharlanan kokpit ve çığlık atan motor alarmlarına odaklanıyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Bekle, biri gelir.",
         weights: {
-          "DM": 2, "IN": 2, "AD": 3, "CM": 1, "ST": 4, "TO": 2, "RL": 5, "RI": 2
+          "DM": 3, "IN": 1, "AD": 2, "CM": 0, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Girişi zorla, teslimatı kendi yap.",
         weights: {
-          "DM": 4, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 2, "RI": 5
+          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 1, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Üst yönetime ulaş, bilgi iste.",
         weights: {
-          "DM": 3, "IN": 4, "AD": 3, "CM": 5, "ST": 3, "TO": 2, "RL": 4, "RI": 1
+          "DM": 3, "IN": 3, "AD": 3, "CM": 3, "ST": 4, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Kargoyu bırak, ayrıl.",
         weights: {
-          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
+          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 4
         }
       }
     ]
@@ -424,139 +439,139 @@ export const questions: Question[] = [
   {
     id: 13,
     text: "Buharlı kokpit, çığlık atan motor alarmları.",
-    forwardingLine: "Motorları kontrol altına aldıktan sonra, kontrol gemisinden gelen yeni çağrı hattını dinliyorsun.",
+    forwardingLine: "Acil durumu kontrol altına aldıktan sonra, telsizden gelen \"Dur, kargo incelemesi\" anonsuyla karşılaşıyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Tüm sistemleri yavaşlat, kontrollü iniş yap.",
         weights: {
-          "DM": 4, "IN": 1, "AD": 3, "CM": 1, "ST": 4, "TO": 3, "RL": 5, "RI": 2
+          "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Acil iniş moduna geç.",
         weights: {
-          "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 3, "TO": 5, "RL": 2, "RI": 5
+          "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 2, "RI": 4
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Mühendisin planına güven, yönlendirmeyi ona bırak.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 4, "CM": 2, "ST": 4, "TO": 2, "RL": 4, "RI": 2
+          "DM": 2, "IN": 2, "AD": 4, "CM": 2, "ST": 3, "TO": 2, "RL": 4, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Sistemi kapat, serbest düşüşe geç.",
         weights: {
-          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
+          "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
       }
     ]
   },
   {
     id: 14,
-    text: "Telsizden yankılanan \"Dur, kargoyu inceleyeceğiz.\" emri.",
-    forwardingLine: "Çağrıya yanıt verip, silinmiş navigasyon kaydının belirdiği ekrana yöneliyorsun.",
+    text: "\"Dur, kargoyu inceleyeceğiz.\" telsiz komutu.",
+    forwardingLine: "Kargo incelemesi geride kalınca, navigasyon çizgileri aniden kayboluyor.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Dur, tüm sistemleri hazırla ve işbirliği yap.",
         weights: {
-          "DM": 4, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 4, "RL": 5, "RI": 1
+          "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 4, "TO": 3, "RL": 5, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Güç aktarımı simülasyonu başlat, durmadan ilerle.",
         weights: {
-          "DM": 3, "IN": 4, "AD": 3, "CM": 3, "ST": 3, "TO": 2, "RL": 3, "RI": 2
+          "DM": 4, "IN": 3, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 1, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Federasyon kimliğini gönder ve devam et.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 3, "CM": 2, "ST": 3, "TO": 2, "RL": 1, "RI": 3
+          "DM": 5, "IN": 1, "AD": 2, "CM": 2, "ST": 3, "TO": 4, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Sadece konumu paylaş ve rotayı değiştir.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
+          "DM": 4, "IN": 1, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 2, "RI": 4
         }
       }
     ]
   },
   {
     id: 15,
-    text: "Aniden kaybolan rota çizgileri, boş kalan koordinat kutucukları.",
-    forwardingLine: "Yeni rota belirledikten sonra, muhatap teslimat alıcısını bulman gereken son aşamaya geçiyorsun.",
+    text: "Aniden kaybolan rota çizgileri, boş kalan koordinatlar.",
+    forwardingLine: "Yeni rotayı belirlerken, veri ekranında \"Alıcı bilgisi: ?\" uyarısını fark ediyorsun.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Manuel koordinat gir, eski kayıtlara güven.",
         weights: {
-          "DM": 4, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 4, "RL": 5, "RI": 1
+          "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Yapay zekadan yeni rota iste.",
         weights: {
-          "DM": 3, "IN": 4, "AD": 3, "CM": 3, "ST": 3, "TO": 2, "RL": 3, "RI": 2
+          "DM": 2, "IN": 1, "AD": 4, "CM": 0, "ST": 3, "TO": 3, "RL": 4, "RI": 3
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Terminale ulaş, oradan sinyal iste.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 3, "CM": 2, "ST": 3, "TO": 2, "RL": 1, "RI": 3
+          "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 4, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Tahmini rota çiz, risk al ve devam et.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
+          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 2, "RI": 5
         }
       }
     ]
   },
   {
     id: 16,
-    text: "\"Alıcı bilgisi: ?\" yazısı yanıp sönen, sessiz terminal ekranı.",
-    forwardingLine: "Karşı taraf belirir belirmez, oyunun finale doğru son hamleni yapacaksın.",
+    text: "\"Alıcı bilgisi: ?\" yazısı yanıp sönen ekran.",
+    forwardingLine: "Yük teslim edildi. Görev tamamlandı.",
     options: [
       {
         id: "A",
-        text: "Seçenek A",
+        text: "Sisteme bildir, gelen ilk kişiye teslim et.",
         weights: {
-          "DM": 4, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 4, "RL": 5, "RI": 1
+          "DM": 4, "IN": 2, "AD": 2, "CM": 2, "ST": 3, "TO": 4, "RL": 2, "RI": 4
         }
       },
       {
         id: "B",
-        text: "Seçenek B",
+        text: "Şirketin temsilcisi gelene kadar bekle.",
         weights: {
-          "DM": 3, "IN": 4, "AD": 3, "CM": 3, "ST": 3, "TO": 2, "RL": 3, "RI": 2
+          "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Seçenek C",
+        text: "Teslimat kodunu gönder, kim yanıt verirse ona teslim et.",
         weights: {
-          "DM": 3, "IN": 3, "AD": 3, "CM": 2, "ST": 3, "TO": 2, "RL": 1, "RI": 3
+          "DM": 4, "IN": 2, "AD": 3, "CM": 2, "ST": 4, "TO": 3, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Seçenek D",
+        text: "Terminali terk et, teslimatı iptal et.",
         weights: {
-          "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
+          "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
       }
     ]

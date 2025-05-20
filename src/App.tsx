@@ -1,13 +1,12 @@
-import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import IdentityScreen from './pages/IdentityScreen';
 import TestScreen from './pages/TestScreen';
 import ResultsScreen from './pages/ResultsScreen';
+import './App.css';
 
 function App() {
   return (
-    <ChakraProvider>
-      <CSSReset />
+    <div className="app">
       <Router>
         <Routes>
           <Route path="/" element={<IdentityScreen />} />
@@ -15,7 +14,7 @@ function App() {
           <Route path="/results" element={<ResultsScreen />} />
         </Routes>
       </Router>
-    </ChakraProvider>
+    </div>
   );
 }
 

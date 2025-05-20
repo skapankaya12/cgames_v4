@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  VStack,
-  Text,
-  SimpleGrid,
-} from '@chakra-ui/react';
-import {
   ScatterChart,
   Scatter,
   XAxis,
@@ -19,7 +10,13 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { questions, competencies } from '../data/questions';
-import { CompetencyScore } from '../types';
+import '../styles/ResultsScreen.css';
+
+interface CompetencyScore {
+  name: string;
+  score: number;
+  color: string;
+}
 
 const ResultsScreen = () => {
   const navigate = useNavigate();
@@ -80,11 +77,11 @@ const ResultsScreen = () => {
   }));
 
   return (
-    <Container maxW="800px" py={8}>
-      <VStack spacing={8}>
-        <Heading>Sonuçlarınız, {user.firstName}</Heading>
+    <div className="container">
+      <div className="results-screen">
+        <h1 className="results-title">Sonuçlarınız, {user.firstName}</h1>
 
-        <Box w="100%" h="400px">
+        <div className="chart-container">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
               <CartesianGrid />
@@ -100,29 +97,26 @@ const ResultsScreen = () => {
               ))}
             </ScatterChart>
           </ResponsiveContainer>
-        </Box>
+        </div>
 
-        <SimpleGrid columns={2} spacing={4} w="100%">
+        <div className="scores-grid">
           {scores.map((score) => (
-            <Box
+            <div
               key={score.name}
-              p={4}
-              borderWidth={1}
-              borderRadius="md"
-              bg={score.color}
-              color="white"
+              className="score-card"
+              style={{ backgroundColor: score.color }}
             >
-              <Text fontWeight="bold">{score.name}</Text>
-              <Text>Puan: {score.score}</Text>
-            </Box>
+              <p className="score-name">{score.name}</p>
+              <p className="score-value">Puan: {score.score}</p>
+            </div>
           ))}
-        </SimpleGrid>
+        </div>
 
-        <Button colorScheme="blue" onClick={handleRestart}>
+        <button className="restart-button" onClick={handleRestart}>
           Yeniden Başlat
-        </Button>
-      </VStack>
-    </Container>
+        </button>
+      </div>
+    </div>
   );
 };
 
