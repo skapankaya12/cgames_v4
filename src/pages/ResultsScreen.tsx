@@ -42,158 +42,164 @@ const ResultsScreen = () => {
     const storedAnswers = sessionStorage.getItem('answers');
 
     if (!storedUser || !storedAnswers) {
-      navigate('/');
+      console.error('Missing user or answers data:', { storedUser, storedAnswers });
+      setSubmitError('Veri transferinde sorun oluştu. Lütfen testi yeniden başlatın.');
       return;
     }
 
-    setUser(JSON.parse(storedUser));
-    const parsedAnswers = JSON.parse(storedAnswers);
-    setAnswers(parsedAnswers);
+    try {
+      setUser(JSON.parse(storedUser));
+      const parsedAnswers = JSON.parse(storedAnswers);
+      setAnswers(parsedAnswers);
 
-    // Calculate scores
-    const competencyScores: { [key: string]: number } = {};
-    competencies.forEach(comp => {
-      competencyScores[comp.name] = 0;
-    });
+      // Calculate scores
+      const competencyScores: { [key: string]: number } = {};
+      competencies.forEach(comp => {
+        competencyScores[comp.name] = 0;
+      });
 
-    Object.entries(parsedAnswers).forEach(([questionId, answerId]) => {
-      const question = questions.find(q => q.id === parseInt(questionId));
-      const selectedOption = question?.options.find(opt => opt.id === answerId);
-      
-      if (selectedOption) {
-        Object.entries(selectedOption.weights).forEach(([comp, weight]) => {
-          competencyScores[comp] += weight;
-        });
-      }
-    });
+      Object.entries(parsedAnswers).forEach(([questionId, answerId]) => {
+        const question = questions.find(q => q.id === parseInt(questionId));
+        const selectedOption = question?.options.find(opt => opt.id === answerId);
+        
+        if (selectedOption) {
+          Object.entries(selectedOption.weights).forEach(([comp, weight]) => {
+            competencyScores[comp] += weight;
+          });
+        }
+      });
 
-    const finalScores = competencies.map(comp => ({
-      name: comp.name,
-      score: competencyScores[comp.name],
-      color: comp.color,
-    }));
+      const finalScores = competencies.map(comp => ({
+        name: comp.name,
+        score: competencyScores[comp.name],
+        color: comp.color,
+      }));
 
-    setScores(finalScores);
+      setScores(finalScores);
 
-    // Prepare debug data
-    const debugInfo = {
-      user: JSON.parse(storedUser),
-      answers: parsedAnswers,
-      scores: finalScores
-    };
-    setDebugData(JSON.stringify(debugInfo, null, 2));
-
-    // Submit results to Google Sheets using multiple methods to ensure success
-    const submitResults = async () => {
-      if (!user || !parsedAnswers || finalScores.length === 0) return;
-      
-      setIsSubmitting(true);
-      setSubmitError(null);
-      
-      // Prepare the data
-      const userData = JSON.parse(storedUser);
-      const payload = {
-        user: userData,
+      // Prepare debug data
+      const debugInfo = {
+        user: JSON.parse(storedUser),
         answers: parsedAnswers,
-        competencyScores: finalScores
+        scores: finalScores
       };
-      
-      let success = false;
-      
-      // Method 1: Direct fetch to Apps Script in a way that handles CORS
-      try {
-        // Use fetch with URL parameters to avoid CORS issues
-        const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+      setDebugData(JSON.stringify(debugInfo, null, 2));
+
+      // Submit results to Google Sheets using multiple methods to ensure success
+      const submitResults = async () => {
+        if (!user || !parsedAnswers || finalScores.length === 0) return;
         
-        // Using Image method to bypass CORS
-        const img = new Image();
-        img.src = url;
-        img.style.display = 'none';
-        document.body.appendChild(img);
+        setIsSubmitting(true);
+        setSubmitError(null);
         
-        setTimeout(() => {
-          document.body.removeChild(img);
-        }, 5000);
+        // Prepare the data
+        const userData = JSON.parse(storedUser);
+        const payload = {
+          user: userData,
+          answers: parsedAnswers,
+          competencyScores: finalScores
+        };
         
-        success = true;
-      } catch (error) {
-        console.error('Error with image method:', error);
-      }
-      
-      // Method 2: iFrame form submission (as backup)
-      if (!success) {
+        let success = false;
+        
+        // Method 1: Direct fetch to Apps Script in a way that handles CORS
         try {
-          // Create a hidden iframe
-          const iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
+          // Use fetch with URL parameters to avoid CORS issues
+          const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
           
-          // Create form inside iframe
-          const doc = iframe.contentDocument || iframe.contentWindow?.document;
-          if (doc) {
-            const form = doc.createElement('form');
+          // Using Image method to bypass CORS
+          const img = new Image();
+          img.src = url;
+          img.style.display = 'none';
+          document.body.appendChild(img);
+          
+          setTimeout(() => {
+            document.body.removeChild(img);
+          }, 5000);
+          
+          success = true;
+        } catch (error) {
+          console.error('Error with image method:', error);
+        }
+        
+        // Method 2: iFrame form submission (as backup)
+        if (!success) {
+          try {
+            // Create a hidden iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Create form inside iframe
+            const doc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (doc) {
+              const form = doc.createElement('form');
+              form.method = 'POST';
+              form.action = API_URL;
+              
+              // Add data as form field
+              const hiddenField = doc.createElement('input');
+              hiddenField.type = 'hidden';
+              hiddenField.name = 'data';
+              hiddenField.value = JSON.stringify(payload);
+              form.appendChild(hiddenField);
+              
+              // Add form to iframe document body and submit
+              doc.body.appendChild(form);
+              form.submit();
+              
+              success = true;
+              
+              // Clean up after 5 seconds
+              setTimeout(() => {
+                document.body.removeChild(iframe);
+              }, 5000);
+            }
+          } catch (error) {
+            console.error('Error with iframe method:', error);
+          }
+        }
+        
+        // Method 3: Using a direct form submission in a new window
+        if (!success) {
+          try {
+            // Create a new window/tab for the form submission
+            const form = document.createElement('form');
             form.method = 'POST';
             form.action = API_URL;
+            form.target = '_blank';
             
             // Add data as form field
-            const hiddenField = doc.createElement('input');
+            const hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
             hiddenField.name = 'data';
             hiddenField.value = JSON.stringify(payload);
             form.appendChild(hiddenField);
             
-            // Add form to iframe document body and submit
-            doc.body.appendChild(form);
+            // Add form to document body and submit
+            document.body.appendChild(form);
             form.submit();
+            document.body.removeChild(form);
             
             success = true;
-            
-            // Clean up after 5 seconds
-            setTimeout(() => {
-              document.body.removeChild(iframe);
-            }, 5000);
+          } catch (error) {
+            console.error('Error with form method:', error);
           }
-        } catch (error) {
-          console.error('Error with iframe method:', error);
         }
-      }
-      
-      // Method 3: Using a direct form submission in a new window
-      if (!success) {
-        try {
-          // Create a new window/tab for the form submission
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = API_URL;
-          form.target = '_blank';
-          
-          // Add data as form field
-          const hiddenField = document.createElement('input');
-          hiddenField.type = 'hidden';
-          hiddenField.name = 'data';
-          hiddenField.value = JSON.stringify(payload);
-          form.appendChild(hiddenField);
-          
-          // Add form to document body and submit
-          document.body.appendChild(form);
-          form.submit();
-          document.body.removeChild(form);
-          
-          success = true;
-        } catch (error) {
-          console.error('Error with form method:', error);
-        }
-      }
-      
-      // Optimistically assume success to enhance user experience
-      setSubmitSuccess(true);
-      setIsSubmitting(false);
-    };
+        
+        // Optimistically assume success to enhance user experience
+        setSubmitSuccess(true);
+        setIsSubmitting(false);
+      };
 
-    // Submit with a small delay to ensure the UI renders first
-    setTimeout(() => {
-      submitResults();
-    }, 1000);
+      // Submit with a small delay to ensure the UI renders first
+      setTimeout(() => {
+        submitResults();
+      }, 1000);
+    } catch (error) {
+      console.error('Error processing test data:', error);
+      setSubmitError('Veriler işlenirken bir sorun oluştu. Lütfen testi yeniden başlatın.');
+    }
   }, [navigate, API_URL]);
 
   const handleRestart = () => {
@@ -248,15 +254,15 @@ const ResultsScreen = () => {
   const chartData = scores.map(score => ({
     x: Math.random() * 100, // Random x position for visualization
     y: Math.random() * 100, // Random y position for visualization
-    z: score.score * 2, // Bubble size based on score
-    name: score.name,
-    color: score.color,
+    z: score.score * 5, // Size based on competency score
+    name: score.name, // Competency name for tooltip
+    color: score.color, // Competency color
   }));
 
   return (
-    <div className="container">
+    <div className="container space-background">
       <div className="results-screen">
-        <h1 className="results-title">Sonuçlarınız, {user.firstName}</h1>
+        <h1 className="results-title">Görev Tamamlandı, Kaptan {user.firstName}!</h1>
 
         {isSubmitting && (
           <div className="notification">

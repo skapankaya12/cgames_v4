@@ -23,41 +23,49 @@ const IdentityScreen = () => {
   };
 
   return (
-    <div className="container">
-      <div className="identity-screen">
-        <h1>Hoş Geldiniz</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="firstName">Adınız</label>
-            <input
-              id="firstName"
-              type="text"
-              value={user.firstName}
-              onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-              placeholder="Adınızı giriniz"
-              required
-            />
+    <div className="container space-background">
+      <div className="welcome-card">
+        <div className="welcome-content">
+          <h1 className="welcome-title">🛸 Hoş Geldiniz, Kaptan!</h1>
+          
+          <div className="welcome-text">
+            <p>Galaksiler arası teslimat kaptanısın.</p>
+            <p>Görevin, yüksek riskli bir enerji çekirdeğini Nova Terminali'ne zamanında, hasarsız ve doğru kişiye ulaştırmak.</p>
+            <p>Yol boyunca vereceğin kararlar, liderlik tarzını ve reflekslerini ortaya çıkaracak. Hazır mısın?</p>
+            <p>Teslimat başlıyor.</p>
           </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Soyadınız</label>
-            <input
-              id="lastName"
-              type="text"
-              value={user.lastName}
-              onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-              placeholder="Soyadınızı giriniz"
-              required
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button
-            type="submit"
-            className="submit-button"
-            disabled={!user.firstName.trim() || !user.lastName.trim()}
-          >
-            Başla
-          </button>
-        </form>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                id="firstName"
+                type="text"
+                value={user.firstName}
+                onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                placeholder="İsim"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                id="lastName"
+                type="text"
+                value={user.lastName}
+                onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                placeholder="Soyisim"
+                required
+              />
+            </div>
+            {error && <div className="error-message">{error}</div>}
+            <button
+              type="submit"
+              className="start-button"
+              disabled={!user.firstName.trim() || !user.lastName.trim()}
+            >
+              BAŞLA ▶
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

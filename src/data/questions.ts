@@ -18,7 +18,7 @@ interface Question {
 export const questions: Question[] = [
   {
     id: 1,
-    text: "Loş depo koridorunda, Yük Sorumlusu'nun soğuk bakışları altında. Yük Sorumlusu: \"Kargoyu vermem için 8.000 Zenix ödemelisin.\"",
+    text: "Loş bir depo koridorundasın. Yük Sorumlusu soğuk bir bakışla sana bakıyor ve şöyle diyor:\n\"Kargoyu vermem için 8.000 Zenix ödemelisin.\"\nGörevine başlamadan önce bu engeli nasıl aşarsın?\nNe yaparsın?",
     forwardingLine: "Depodan çıktığında, dar ve kalabalık çıkış koridoruna yöneliyorsun.",
     options: [
       {
@@ -53,7 +53,7 @@ export const questions: Question[] = [
   },
   {
     id: 2,
-    text: "Titreyen floresan ışıklar, sıkışmış insan seli.",
+    text: "Depodan çıkıyorsun. Titreyen flüoresan ışıkların altında kalabalık bir insan seli var.\nÇıkış koridoru tıkalı. Gecikme riski oluşuyor.\nHangisini seçersin?",
     forwardingLine: "Kalabalığı yarıp ilerleyince, cam duvarlı toplantı odasının kapısına yaklaşıyorsun.",
     options: [
       {
@@ -88,7 +88,7 @@ export const questions: Question[] = [
   },
   {
     id: 3,
-    text: "Holografik ışıklarla aydınlanan odada, parıldayan enerji çekirdeği.",
+    text: "Holografik bir odadasın. Parıldayan enerji çekirdeği önünde.\nRakip firma telsizle ulaşıyor:\n\"Yükü bize ver, iki katını ödeyelim.\"\nNe yaparsın?",
     forwardingLine: "Teklifi dinledikten sonra, hoparlörlerden gelen Devriye Gemisi anonsuna doğru yöneliyorsun.",
     options: [
       {
@@ -123,7 +123,7 @@ export const questions: Question[] = [
   },
   {
     id: 4,
-    text: "Gökyüzünde beliren karanlık gölge, telsizde yankılanan \"Dur!\" komutu.",
+    text: "Gökyüzünde bir gölge beliriyor. Telsizden sert bir ses yankılanıyor:\n\"Dur! Rutin kontrol.\"\nGemini durduruyorlar.\nNe yaparsın?",
     forwardingLine: "Tuzaktan sıyrıldıktan sonra, kokpitteki navigasyon ekranının başına geçiyorsun.",
     options: [
       {
@@ -158,7 +158,7 @@ export const questions: Question[] = [
   },
   {
     id: 5,
-    text: "Karanlık kokpit, kaybolan rota çizgileri.",
+    text: "Karanlık kokpitte oturuyorsun. Navigasyon ekranı bozuldu.\nHarita bir rota öneriyor ama içgüdülerin başka bir yolu söylüyor.\nHangi yolu seçersin?",
     forwardingLine: "Rota ayarlarını yaptıktan hemen sonra, gökyüzünde beliren meteor tehdidine odaklanıyorsun.",
     options: [
       {
@@ -193,7 +193,7 @@ export const questions: Question[] = [
   },
   {
     id: 6,
-    text: "Camın arkasından hızla yaklaşan alev topu ve alarm zilleri.",
+    text: "Camın arkasında dev bir alev topu. Alarm zilleri çalıyor.\nÇarpma ihtimali yüksek. Kargo riskte.\nNe yaparsın?",
     forwardingLine: "Meteor bölgesini geride bırakıp, telsizden gelen kimlik kontrol sinyaline doğru ilerliyorsun.",
     options: [
       {
@@ -228,7 +228,7 @@ export const questions: Question[] = [
   },
   {
     id: 7,
-    text: "Bozuk frekanstan gelen \"Kimliğini doğrula\" emri.",
+    text: "Telsizden zayıf bir sinyal geliyor:\n\"Kimliğini doğrula.\"\nFederasyon uydusu seni sorguluyor.\nNasıl yanıt verirsin?",
     forwardingLine: "Kimlik doğrulamasını halledip, ufukta görünen korsan gemilerine odaklanıyorsun.",
     options: [
       {
@@ -263,7 +263,7 @@ export const questions: Question[] = [
   },
   {
     id: 8,
-    text: "Karanlıkta belirip tehditler savuran korsan gemileri.",
+    text: "Bir anda radarlar sustu. Gemin sarsıldı.\n\"Yükü ver, yoksa seni vururuz!\" diyen korsanlar telsizden bağırıyor.\nNe yaparsın?",
     forwardingLine: "Korsan tehdidini geride bırakıp, yeşil ışıklı terminal ekranına doğru ilerlerken.",
     options: [
       {
@@ -298,7 +298,7 @@ export const questions: Question[] = [
   },
   {
     id: 9,
-    text: "Yeşil imleç yanıp sönen, soğuk bir terminal ekranı.",
+    text: "Varışa birkaç dakika kalmış. Terminal sisteminden bir mesaj geliyor:\n\"Teslimatın amacı nedir?\"\nİlk izlenimi sen belirleyeceksin.\nNasıl cevap verirsin?",
     forwardingLine: "Mesajını girdikten sonra, koridorda çınlayan gecikme alarmına yöneliyorsun.",
     options: [
       {
@@ -333,7 +333,7 @@ export const questions: Question[] = [
   },
   {
     id: 10,
-    text: "\"Gecikme var\" uyarısı, kırmızı ışıklar.",
+    text: "Terminalde sistem arızası oldu. Teslimat onayı ertelendi.\nZaman daralıyor. Senin teslimatı tamamlaman gerek.\nNe yaparsın?",
     forwardingLine: "Alarm sessizleşirken, kargo bölmesinden gelen ani sarsıntıyı hissediyorsun.",
     options: [
       {
@@ -368,7 +368,7 @@ export const questions: Question[] = [
   },
   {
     id: 11,
-    text: "Ani sarsıntı, kırmızı risk göstergesi ve duman kokusu.",
+    text: "Gemide ani bir sarsıntı oldu. Kargo bölümünden gelen sesler tehlikeli.\nEğer yük zarar görürse, teslimat başarısız olabilir.\nNasıl müdahale edersin?",
     forwardingLine: "Sarsıntıyı atlattıktan sonra, boş görünen teslimat alanına ulaşıyorsun.",
     options: [
       {
@@ -403,7 +403,7 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    text: "Bom boş terminal, \"Bekleme süresi: 2 dk.\"",
+    text: "Terminale vardın ama alan boş. Teslim alacak kimse yok.\nSistemde \"Bekleme süresi: 2 dk\" yazıyor.\nNasıl hareket edersin?",
     forwardingLine: "Beklerken aniden buharlanan kokpit ve çığlık atan motor alarmlarına odaklanıyorsun.",
     options: [
       {
@@ -438,7 +438,7 @@ export const questions: Question[] = [
   },
   {
     id: 13,
-    text: "Buharlı kokpit, çığlık atan motor alarmları.",
+    text: "İnişe geçmeden önce motorlar uyarı veriyor.\nKaptan olarak karar senin.\nKontrollü iniş mi, agresif çözüm mü?",
     forwardingLine: "Acil durumu kontrol altına aldıktan sonra, telsizden gelen \"Dur, kargo incelemesi\" anonsuyla karşılaşıyorsun.",
     options: [
       {
@@ -473,7 +473,7 @@ export const questions: Question[] = [
   },
   {
     id: 14,
-    text: "\"Dur, kargoyu inceleyeceğiz.\" telsiz komutu.",
+    text: "Telsizden yeni bir çağrı geliyor:\n\"Dur. Kargoyu incelememiz gerekiyor.\"\nİnişe saniyeler kala müdahale ediliyor.\nNe yaparsın?",
     forwardingLine: "Kargo incelemesi geride kalınca, navigasyon çizgileri aniden kayboluyor.",
     options: [
       {
@@ -508,7 +508,7 @@ export const questions: Question[] = [
   },
   {
     id: 15,
-    text: "Aniden kaybolan rota çizgileri, boş kalan koordinatlar.",
+    text: "Ekran karardı. Koordinatlar silinmiş.\nVarış noktası görünmüyor.\nYeni rota nasıl belirlenir?",
     forwardingLine: "Yeni rotayı belirlerken, veri ekranında \"Alıcı bilgisi: ?\" uyarısını fark ediyorsun.",
     options: [
       {
@@ -543,7 +543,7 @@ export const questions: Question[] = [
   },
   {
     id: 16,
-    text: "\"Alıcı bilgisi: ?\" yazısı yanıp sönen ekran.",
+    text: "Teslim noktasına ulaştın.\nAma sistemde sadece şu yazıyor:\n\"Alıcı: ?\"\nKime teslim edeceksin?",
     forwardingLine: "Yük teslim edildi. Görev tamamlandı.",
     options: [
       {
