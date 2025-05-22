@@ -11,22 +11,25 @@
 }
 
 .test-screen {
-  background-color: rgba(25, 25, 65, 0.9);
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(60, 120, 255, 0.4), 0 0 10px rgba(60, 120, 255, 0.2);
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: 650px;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(100, 150, 255, 0.2);
+  padding: 0.5rem; /* Reduced padding */
+}
+
+.question-header {
+  width: 100%;
+  margin-bottom: 0; /* No margin between header and video */
 }
 
 .progress-container {
   width: 100%;
   height: 8px;
   background-color: rgba(50, 50, 100, 0.4);
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
+  border-radius: 4px 4px 0 0; /* Rounded only at the top */
+  margin-bottom: 0; /* Remove margin */
   overflow: hidden;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -41,41 +44,173 @@
 
 .question-counter {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin: 0; /* Remove all margins */
+  padding: 0.25rem 0; /* Add small vertical padding instead */
   font-size: 1.2rem;
   color: #d8e3ff;
   font-weight: 600;
   text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+  background-color: rgba(26, 76, 161, 0.2); /* Same as video background */
 }
 
-.question-box {
-  border: 1px solid rgba(100, 150, 255, 0.3);
-  border-radius: 12px;
+.video-scene {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 80%; /* Reduced from 110% to 80% to make the container shorter */
+  margin-top: 0; /* Remove top margin */
+  margin-bottom: 1rem;
+  overflow: hidden;
+  background-color: rgba(26, 76, 161, 0.2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  border-radius: 0; /* Remove sharp borders */
+  box-shadow: none; /* Remove box shadow */
+}
+
+.scene-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 120%; /* Increased from 100% to 120% to ensure video fills the frame */
+  transform: translate(-50%, -35%); /* Changed from -40% to -35% to show more of top and cut more of bottom */
+  object-fit: cover; /* Keep cover to fill the frame */
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  border-radius: 0; /* Remove border radius */
+}
+
+.scene-video.loaded {
+  opacity: 1;
+}
+
+.video-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(26, 76, 161, 0.3);
+  border-radius: 0; /* Remove border radius */
+  z-index: 2; /* Ensure it appears above the video */
+}
+
+.video-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(26, 76, 161, 0.7);
+  color: #ffffff;
+  border-radius: 0; /* Remove border radius */
+  text-align: center;
+  z-index: 2; /* Ensure it appears above the video */
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)); /* Gradient overlay */
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.video-overlay.playing {
+  opacity: 0;
+}
+
+.video-overlay:hover {
+  opacity: 1;
+}
+
+.play-icon {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.play-icon:hover {
+  transform: scale(1.1);
+}
+
+.play-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.scene-narration {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 24px; /* Pill shape */
+  background-image: linear-gradient(to right, #1a2a4a, #2c3e67); /* Darker space-themed gradient */
+  color: #d8e3ff; /* Light blue text for better contrast */
+  font-size: 1rem;
+  text-align: center;
+  min-height: 100px; /* Increased fixed height to prevent layout shifts */
+  height: auto; /* Allow height to grow if needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+  position: relative;
+  overflow: hidden; /* Prevent any overflow */
+  border: 1px solid rgba(100, 150, 255, 0.2); /* Subtle border glow */
+}
+
+.scene-narration p {
+  margin: 0;
+  line-height: 1.4;
+  padding: 0 0.5rem;
+  width: 100%; /* Ensure text takes full width */
+  height: 100%; /* Full height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px; /* Minimum height for text */
+  animation: fadeIn 0.3s ease-in-out;
+  text-shadow: 0 0 10px rgba(100, 200, 255, 0.3); /* Subtle text glow */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.question-options-container {
+  width: 100%;
   padding: 1.5rem;
-  background-color: rgba(25, 25, 75, 0.7);
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background-image: linear-gradient(to bottom, #cccccc, #999999);
   box-shadow: 0 0 15px rgba(60, 120, 255, 0.3);
 }
 
 .question-title {
   font-size: 1.35rem;
-  margin-bottom: 0.75rem;
-  color: #ffffff;
+  margin-bottom: 1.25rem;
+  color: #333333;
   font-weight: 600;
   text-align: center;
-  text-shadow: 0 0 10px rgba(100, 200, 255, 0.7);
-}
-
-.question-text {
-  font-size: 1.1rem;
-  margin-bottom: 1.75rem;
-  line-height: 1.5;
-  font-style: italic;
-  color: #d8e3ff;
-  text-align: center;
-  background-color: rgba(50, 50, 100, 0.4);
-  padding: 1rem;
-  border-radius: 8px;
-  border-left: 3px solid #4e5eff;
 }
 
 .radio-group {
@@ -92,12 +227,12 @@
   border: 1px solid rgba(100, 150, 255, 0.3);
   transition: all 0.25s ease;
   overflow: hidden;
-  background-color: rgba(50, 50, 100, 0.4);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .radio-option:hover {
   border-color: rgba(100, 200, 255, 0.8);
-  background-color: rgba(60, 60, 120, 0.6);
+  background-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
   box-shadow: 0 0 15px rgba(60, 120, 255, 0.4);
 }
@@ -110,11 +245,10 @@
 }
 
 .radio-option input[type="radio"]:checked + label {
-  background-color: rgba(60, 80, 180, 0.5);
+  background-color: rgba(255, 255, 255, 0.6);
   border-left: 4px solid #4e5eff;
   font-weight: 500;
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(100, 200, 255, 0.7);
+  color: #333333;
 }
 
 .radio-option label {
@@ -128,7 +262,7 @@
   justify-content: center;
   text-align: center;
   line-height: 1.4;
-  color: #d8e3ff;
+  color: #333333;
 }
 
 .radio-option label::before {
@@ -139,7 +273,7 @@
   margin-right: 0.75rem;
   border-radius: 50%;
   border: 2px solid rgba(100, 150, 255, 0.5);
-  background-color: rgba(25, 25, 75, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   flex-shrink: 0;
   transition: all 0.2s ease;
   position: absolute;
@@ -149,31 +283,33 @@
 .radio-option input[type="radio"]:checked + label::before {
   border-color: #4e5eff;
   background-color: #4e5eff;
-  box-shadow: 0 0 8px rgba(100, 200, 255, 0.8), inset 0 0 0 4px rgba(25, 25, 75, 0.7);
+  box-shadow: 0 0 8px rgba(100, 200, 255, 0.8), inset 0 0 0 4px rgba(255, 255, 255, 0.7);
 }
 
-.forwarding-line {
-  background-color: rgba(50, 50, 120, 0.5);
-  border: 1px solid rgba(100, 150, 255, 0.3);
-  border-radius: 8px;
+.forwarding-text {
+  width: 100%;
   padding: 1rem;
-  margin: 1.5rem 0;
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.3);
+  border-radius: 24px; /* Pill shape */
+  background-image: linear-gradient(to right, #2c3e67, #4e5eff); /* Coordinated gradient with scene narration */
+  color: #ffffff; /* White text for better visibility */
+  font-size: 1rem;
+  text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Matching shadow depth */
+  border: 1px solid rgba(100, 150, 255, 0.2); /* Subtle border glow */
 }
 
-.forwarding-line.active {
-  background-color: rgba(60, 80, 180, 0.5);
-  border-color: #4e5eff;
+.forwarding-text.active {
   box-shadow: 0 0 20px rgba(60, 120, 255, 0.5);
   transform: scale(1.02);
 }
 
-.forwarding-line p {
-  color: #ffffff;
+.forwarding-text p {
+  margin: 0;
   font-style: italic;
   text-align: center;
-  text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+  padding: 0 0.5rem;
+  text-shadow: 0 0 10px rgba(100, 200, 255, 0.3); /* Subtle text glow */
 }
 
 .transition-indicator {
@@ -235,81 +371,50 @@
   box-shadow: none;
 }
 
-.next-button {
-  flex: 2;
-  background-color: #4e5eff;
-  color: white;
-}
-
-.next-button:hover:not(:disabled) {
-  background-color: #616dff;
-  transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.5);
-}
-
-.next-button:disabled {
-  background-color: rgba(60, 60, 120, 0.4);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
 .error-message {
   color: #ff6b6b;
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
   font-size: 0.875rem;
   text-align: center;
-  background-color: rgba(255, 107, 107, 0.1);
-  padding: 0.5rem;
-  border-radius: 4px;
 }
 
-/* Completion message styles */
 .completion-message {
   text-align: center;
-  padding: 2rem 1rem;
-  color: #d8e3ff;
+  padding: 1rem;
 }
 
 .completion-message p {
   margin-bottom: 1rem;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+  font-size: 1.1rem;
+  color: #333333;
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(100, 150, 255, 0.3);
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(100, 150, 255, 0.3);
   border-radius: 50%;
   border-top-color: #4e5eff;
-  animation: spin 1s linear infinite;
-  margin: 2rem auto;
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.4);
+  animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
 
-/* Mobile responsive adjustments */
 @media screen and (max-width: 768px) {
   .container {
-    padding: 0.5rem 0;
+    padding: 0.5rem;
   }
   
   .test-screen {
-    padding: 1rem;
-    max-width: 100%;
-    border-radius: 8px;
+    padding: 0.75rem;
   }
   
-  .question-box {
+  .question-options-container {
     padding: 1rem;
   }
   
@@ -317,27 +422,24 @@
     font-size: 1.2rem;
   }
   
-  .question-text {
-    font-size: 1rem;
+  .scene-narration {
     padding: 0.75rem;
-    margin-bottom: 1.25rem;
   }
   
   .radio-option label {
-    padding: 0.75rem 2.5rem;
-    font-size: 0.95rem;
+    padding: 0.75rem 2rem;
   }
-
+  
   .radio-option label::before {
-    left: 0.5rem;
+    width: 18px;
+    height: 18px;
   }
   
-  .forwarding-line {
+  .forwarding-text {
     padding: 0.75rem;
-    margin: 1rem 0;
   }
   
-  .forwarding-line p {
+  .forwarding-text p {
     font-size: 0.95rem;
   }
   
@@ -345,31 +447,42 @@
     padding: 0.75rem;
     font-size: 1rem;
   }
+  
+  .play-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .play-icon svg {
+    width: 28px;
+    height: 28px;
+  }
 }
 
-/* Small phones */
 @media screen and (max-width: 480px) {
   .test-screen {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   
   .progress-container {
     height: 6px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   .question-counter {
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   .question-title {
     font-size: 1.1rem;
+    margin-bottom: 1rem;
   }
   
-  .question-text {
-    font-size: 0.95rem;
-    padding: 0.75rem 0.5rem;
+  .scene-narration {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    min-height: 50px;
   }
   
   .radio-group {
@@ -377,23 +490,18 @@
   }
   
   .radio-option label {
-    padding: 0.75rem 0.5rem 0.75rem 2rem;
-    font-size: 0.9rem;
+    padding: 0.6rem 1.75rem;
+    font-size: 0.95rem;
   }
   
   .radio-option label::before {
     width: 16px;
     height: 16px;
-    margin-right: 0.5rem;
-    left: 0.5rem;
+    left: 0.75rem;
   }
   
-  .forwarding-line {
-    padding: 0.75rem 0.5rem;
-  }
-  
-  .forwarding-line p {
-    font-size: 0.9rem;
+  .forwarding-text {
+    padding: 0.5rem;
   }
   
   .button-group {
@@ -406,6 +514,22 @@
   }
   
   .completion-message p {
-    font-size: 0.95rem;
+    font-size: 1rem;
+  }
+  
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+  }
+  
+  .play-icon {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .play-icon svg {
+    width: 24px;
+    height: 24px;
   }
 } 
