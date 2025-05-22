@@ -499,7 +499,7 @@ const ResultsScreen = () => {
   }));
 
   return (
-    <div className="container space-background">
+    <div className="full-page-container">
       <div className="results-screen">
         <div className="results-header">
           <h1 className="results-title">Test Tamamlandı: Yetenek Profiliniz</h1>

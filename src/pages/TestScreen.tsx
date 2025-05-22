@@ -228,7 +228,7 @@ const TestScreen = () => {
   // If test is complete, show completion message
   if (testState.isComplete) {
     return (
-      <div className="container space-background">
+      <div className="full-page-container">
         <div className="test-screen">
           <div className="progress-container">
             <div className="progress-bar" style={{ width: '100%' }}></div>
@@ -301,7 +301,7 @@ const TestScreen = () => {
   }
 
   return (
-    <div className="container space-background">
+    <div className="full-page-container">
       <div className="test-screen">
         <div className="question-header">
           <div className="progress-container">

@@ -112,7 +112,7 @@ const IdentityScreen = () => {
   };
 
   return (
-    <div className="container space-background">
+    <div className="full-page-container">
       <div className="welcome-screen">
         <div className="video-scene">
           <video 
