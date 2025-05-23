@@ -11,13 +11,11 @@ const IdentityScreen = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({ firstName: '', lastName: '' });
   const [error, setError] = useState<string | null>(null);
-  const [narrationText, setNarrationText] = useState('');
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Welcome text to be displayed with typewriter effect
   const welcomeText = "Galaksiler arası teslimat kaptanısın. Görevin, yüksek riskli bir enerji çekirdeğini Nova Terminali'ne zamanında, hasarsız ve doğru kişiye ulaştırmak. Yol boyunca vereceğin kararlar, liderlik tarzını ve reflekslerini ortaya çıkaracak. Hazır mısın? Teslimat başlıyor.";
 
   // Initialize and play welcome video
@@ -72,12 +70,6 @@ const IdentityScreen = () => {
     }
   }, []);
 
-  // Replace typewriter effect with immediate text display
-  useEffect(() => {
-    // Display full text immediately
-    setNarrationText(welcomeText);
-  }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user.firstName.trim() || !user.lastName.trim()) {
@@ -112,96 +104,95 @@ const IdentityScreen = () => {
   };
 
   return (
-    <div className="full-page-container">
-      <div className="welcome-screen">
-        <div className="video-scene">
-          <video 
-            ref={videoRef}
-            className={`scene-video ${videoLoaded ? 'loaded' : ''}`}
-            playsInline
-            muted
-            loop
-            onClick={handleVideoClick}
-            onLoadedData={handleVideoLoad}
-            onError={handleVideoError}
-          >
-            {/* Source is set via JavaScript for better control */}
-            Your browser does not support the video tag.
-          </video>
-          {!videoLoaded && !videoError && (
-            <div className="video-loading">
-              <div className="loading-spinner"></div>
-            </div>
-          )}
-          {videoError && (
-            <div className="video-error">
-              <p>Video yüklenemedi</p>
-              <button 
-                onClick={() => window.location.reload()}
-                style={{ 
-                  marginTop: '10px', 
-                  padding: '5px 10px', 
-                  background: '#4e5eff', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Yeniden Dene
-              </button>
-            </div>
-          )}
-          <div className={`video-overlay ${isVideoPlaying ? 'playing' : ''}`}>
-            <div className="play-icon">
-              <svg viewBox="0 0 24 24" fill="white">
-                <path d={isVideoPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"} />
-              </svg>
-            </div>
+    <div className="dialog-game-container">
+      {/* Fullscreen Video Background */}
+      <div className="fullscreen-video">
+        <video 
+          ref={videoRef}
+          className={`background-video ${videoLoaded ? 'loaded' : ''}`}
+          playsInline
+          muted
+          loop
+          onClick={handleVideoClick}
+          onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
+        >
+          {/* Source is set via JavaScript for better control */}
+          Your browser does not support the video tag.
+        </video>
+        {!videoLoaded && !videoError && (
+          <div className="video-loading">
+            <div className="loading-spinner"></div>
+          </div>
+        )}
+        {videoError && (
+          <div className="video-error">
+            <p>Video yüklenemedi</p>
+            <button 
+              className="retry-button"
+              onClick={() => window.location.reload()}
+            >
+              Yeniden Dene
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Dialog UI Overlay */}
+      <div className="dialog-ui">
+        {/* Progress HUD Header */}
+        <div className="progress-hud">
+          <div className="header-content">
+            <div className="welcome-header-title">🛸 Hoş Geldiniz, Kaptan!</div>
           </div>
         </div>
-        
-        <div className="scene-narration">
-          <p>{narrationText}</p>
-        </div>
-        
-        <div className="question-options-container">
-          <h1 className="welcome-title">🛸 Hoş Geldiniz, Kaptan!</h1>
-          
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <input
-                id="firstName"
-                type="text"
-                value={user.firstName}
-                onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-                placeholder="İsim"
-                required
-              />
+
+        {/* Dialog Content */}
+        <div className="dialog-content">
+          {/* Scene Narration */}
+          <div className="dialog-narration">
+            <div className="dialog-box narration-box">
+              <div className="dialog-content">
+                <p>{welcomeText}</p>
+              </div>
             </div>
-            <div className="form-group">
-              <input
-                id="lastName"
-                type="text"
-                value={user.lastName}
-                onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-                placeholder="Soyisim"
-                required
-              />
+          </div>
+
+          {/* Dialog Options - Welcome Form */}
+          <div className="dialog-options">
+            <div className="options-box">
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={user.firstName}
+                    onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                    placeholder="İsim"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <input
+                    id="lastName"
+                    type="text"
+                    value={user.lastName}
+                    onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                    placeholder="Soyisim"
+                    required
+                  />
+                </div>
+                {error && <div className="error-message">{error}</div>}
+                <button
+                  type="submit"
+                  className="start-button"
+                  disabled={!user.firstName.trim() || !user.lastName.trim()}
+                >
+                  BAŞLA ▶
+                </button>
+              </form>
             </div>
-            {error && <div className="error-message">{error}</div>}
-            <button
-              type="submit"
-              className="start-button"
-              disabled={!user.firstName.trim() || !user.lastName.trim()}
-            >
-              BAŞLA ▶
-            </button>
-          </form>
-        </div>
-        
-        <div className="forwarding-text">
-          <p>Yolculuğa hazır mısın?</p>
+          </div>
         </div>
       </div>
     </div>
