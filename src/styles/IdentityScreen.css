@@ -11,8 +11,7 @@
 }
 
 .space-background {
-  background: url(/question1bg.png) no-repeat center center;
-  background-size: cover;
+  background: linear-gradient(135deg, #0a0a2e, #16213e, #1a1a3a);
   position: relative;
   width: 100%;
   height: 100%;

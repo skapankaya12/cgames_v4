@@ -228,92 +228,11 @@ const TestScreen = () => {
   // If test is complete, show completion message
   if (testState.isComplete) {
     return (
-      <div className="full-page-container">
-        <div className="test-screen">
-          <div className="progress-container">
-            <div className="progress-bar" style={{ width: '100%' }}></div>
-          </div>
-          <h2 className="question-counter">Test tamamlandı!</h2>
-          
-          <div className="video-scene">
-            <video 
-              ref={videoRef}
-              className={`scene-video ${videoLoaded ? 'loaded' : ''}`}
-              playsInline
-              muted
-              loop
-              onClick={handleVideoClick}
-              onLoadedData={handleVideoLoad}
-              onError={handleVideoError}
-            >
-              Your browser does not support the video tag.
-            </video>
-            {!videoLoaded && !videoError && (
-              <div className="video-loading">
-                <div className="loading-spinner"></div>
-              </div>
-            )}
-            {videoError && (
-              <div className="video-error">
-                <p>Video yüklenemedi</p>
-                <button 
-                  onClick={() => window.location.reload()}
-                  style={{ 
-                    marginTop: '10px', 
-                    padding: '5px 10px', 
-                    background: '#4e5eff', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Yeniden Dene
-                </button>
-              </div>
-            )}
-            <div className={`video-overlay ${isVideoPlaying ? 'playing' : ''}`}>
-              <div className="play-icon">
-                <svg viewBox="0 0 24 24" fill="white">
-                  <path d={isVideoPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"} />
-                </svg>
-              </div>
-            </div>
-          </div>
-          
-          <div className="scene-narration">
-            <p>Tebrikler, kaptan! Teslimat görevini tamamladınız.</p>
-          </div>
-          
-          <div className="question-options-container">
-            <div className="completion-message">
-              <p>Sonuçlarınız yükleniyor...</p>
-              <div className="loading-spinner"></div>
-            </div>
-          </div>
-          
-          <div className="forwarding-text">
-            <p>Yük teslim edildi. Görev tamamlandı.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="full-page-container">
-      <div className="test-screen">
-        <div className="question-header">
-          <div className="progress-container">
-            <div className="progress-bar" style={{ width: `${progress}%` }}></div>
-          </div>
-          <h2 className="question-counter">Soru {testState.currentQuestion + 1} / {questions.length}</h2>
-        </div>
-        
-        <div className="video-scene">
+      <div className="dialog-game-container">
+        <div className="fullscreen-video">
           <video 
             ref={videoRef}
-            className={`scene-video ${videoLoaded ? 'loaded' : ''}`}
+            className={`background-video ${videoLoaded ? 'loaded' : ''}`}
             playsInline
             muted
             loop
@@ -333,15 +252,7 @@ const TestScreen = () => {
               <p>Video yüklenemedi</p>
               <button 
                 onClick={() => window.location.reload()}
-                style={{ 
-                  marginTop: '10px', 
-                  padding: '5px 10px', 
-                  background: '#4e5eff', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
+                className="retry-button"
               >
                 Yeniden Dene
               </button>
@@ -356,51 +267,149 @@ const TestScreen = () => {
           </div>
         </div>
         
-        <div className="scene-narration">
-          <p>{narrationText}</p>
-        </div>
-        
-        <div className="question-options-container">
-          <h3 className="question-title">{questionTitles[testState.currentQuestion]}</h3>
-          
-          <div className="radio-group">
-            {currentQuestion.options.map(option => (
-              <div 
-                className={`radio-option ${isTransitioning ? 'disabled' : ''}`} 
-                key={option.id}
-                onClick={() => handleAnswer(option.id)}
-              >
-                <input
-                  type="radio"
-                  id={option.id}
-                  name="question-option"
-                  value={option.id}
-                  checked={testState.answers[currentQuestion.id] === option.id}
-                  onChange={() => {}}
-                  disabled={isTransitioning}
-                />
-                <label htmlFor={option.id}>{option.text}</label>
-              </div>
-            ))}
+        <div className="dialog-ui">
+          <div className="progress-hud">
+            <div className="progress-container">
+              <div className="progress-bar" style={{ width: '100%' }}></div>
+            </div>
+            <div className="question-counter">Test Tamamlandı!</div>
           </div>
+          
+          <div className="dialog-narration">
+            <div className="dialog-box narration-box">
+              <div className="dialog-content">
+                <p>Tebrikler, kaptan! Teslimat görevini tamamladınız.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="dialog-completion">
+            <div className="dialog-box completion-box">
+              <div className="dialog-content">
+                <p>Sonuçlarınız yükleniyor...</p>
+                <div className="loading-spinner"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="dialog-forwarding">
+            <div className="forwarding-message">
+              <p>Yük teslim edildi. Görev tamamlandı.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="button-group">
+  return (
+    <div className="dialog-game-container">
+      <div className="fullscreen-video">
+        <video 
+          ref={videoRef}
+          className={`background-video ${videoLoaded ? 'loaded' : ''}`}
+          playsInline
+          muted
+          loop
+          onClick={handleVideoClick}
+          onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
+        >
+          Your browser does not support the video tag.
+        </video>
+        {!videoLoaded && !videoError && (
+          <div className="video-loading">
+            <div className="loading-spinner"></div>
+          </div>
+        )}
+        {videoError && (
+          <div className="video-error">
+            <p>Video yüklenemedi</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="retry-button"
+            >
+              Yeniden Dene
+            </button>
+          </div>
+        )}
+        <div className={`video-overlay ${isVideoPlaying ? 'playing' : ''}`}>
+          <div className="play-icon">
+            <svg viewBox="0 0 24 24" fill="white">
+              <path d={isVideoPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"} />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <div className="dialog-ui">
+        <div className="progress-hud">
+          <div className="progress-container">
+            <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+          </div>
+          <div className="header-content">
             <button
-              className="prev-button"
+              className="header-prev-button"
               onClick={handlePrevious}
               disabled={testState.currentQuestion === 0 || isTransitioning}
             >
               Geri
             </button>
+            <div className="question-counter">
+              Soru {testState.currentQuestion + 1} / {questions.length} - {questionTitles[testState.currentQuestion]}
+            </div>
+          </div>
+        </div>
+        
+        <div className="dialog-narration">
+          <div className="dialog-box narration-box">
+            <div className="dialog-content">
+              <p>{narrationText}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="dialog-options">
+          <div className="dialog-box options-box">
+            <div className="dialog-content">
+              <div className="radio-group">
+                {currentQuestion.options.map((option, index) => {
+                  const optionLabel = String.fromCharCode(97 + index); // a, b, c, d
+                  return (
+                    <div 
+                      className={`radio-option ${isTransitioning ? 'disabled' : ''}`} 
+                      key={option.id}
+                      onClick={() => handleAnswer(option.id)}
+                    >
+                      <input
+                        type="radio"
+                        id={option.id}
+                        name="question-option"
+                        value={option.id}
+                        checked={testState.answers[currentQuestion.id] === option.id}
+                        onChange={() => {}}
+                        disabled={isTransitioning}
+                      />
+                      <label htmlFor={option.id}>
+                        <span className="option-label">{optionLabel}:</span>
+                        <span className="option-text">{option.text}</span>
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {error && <div className="error-message">{error}</div>}
+            </div>
           </div>
         </div>
         
         {showForwardingLine && (
-          <div className={`forwarding-text ${isTransitioning ? 'active' : ''}`}>
-            <p>{testState.currentQuestion === questions.length - 1 ? 'Yük teslim edildi. Görev tamamlandı.' : currentQuestion.forwardingLine}</p>
-            {isTransitioning && <div className="transition-indicator"></div>}
+          <div className="dialog-forwarding">
+            <div className={`forwarding-message ${isTransitioning ? 'active' : ''}`}>
+              <p>{testState.currentQuestion === questions.length - 1 ? 'Yük teslim edildi. Görev tamamlandı.' : currentQuestion.forwardingLine}</p>
+              {isTransitioning && <div className="transition-indicator"></div>}
+            </div>
           </div>
         )}
       </div>

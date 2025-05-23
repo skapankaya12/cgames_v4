@@ -1,103 +1,69 @@
-.container {
+/* Dialog Game Container - Full Screen Video Background */
+.dialog-game-container {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  padding: 0;
-  background: url(/question1bg.png) no-repeat center center;
-  background-size: cover;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
+  background: #000;
 }
 
-.container::before {
-  content: "";
-  display: block;
+/* Full Screen Video Background */
+.fullscreen-video {
+  position: absolute;
+  top: 100px;
+  left: 0;
   width: 100%;
-  height: 0;
-  padding-top: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625 = 56.25%) */
-  pointer-events: none;
+  height: calc(100vh - 100px);
+  z-index: 1;
+}
+
+.background-video {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.test-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: 650px;
-  padding: 0.5rem; /* Reduced padding */
-}
-
-.question-header {
-  width: 100%;
-  margin-bottom: 0; /* No margin between header and video */
-}
-
-.progress-container {
-  width: 100%;
-  height: 8px;
-  background-color: rgba(50, 50, 100, 0.4);
-  border-radius: 4px 4px 0 0; /* Rounded only at the top */
-  margin-bottom: 0; /* Remove margin */
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.progress-bar {
   height: 100%;
-  background-color: #4e5eff;
-  background-image: linear-gradient(to right, #4e5eff, #8f94ff);
-  transition: width 0.4s ease;
-  box-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
-}
-
-.question-counter {
-  text-align: center;
-  margin: 0; /* Remove all margins */
-  padding: 0.25rem 0; /* Add small vertical padding instead */
-  font-size: 1.2rem;
-  color: #d8e3ff;
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
-  background-color: rgba(26, 76, 161, 0.2); /* Same as video background */
-}
-
-.video-scene {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 80%; /* Reduced from 110% to 80% to make the container shorter */
-  margin-top: 0; /* Remove top margin */
-  margin-bottom: 1rem;
-  overflow: hidden;
-  background-color: rgba(26, 76, 161, 0.2);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
-  border-radius: 0; /* Remove sharp borders */
-  box-shadow: none; /* Remove box shadow */
-}
-
-.scene-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 120%; /* Increased from 100% to 120% to ensure video fills the frame */
-  transform: translate(-50%, -35%); /* Changed from -40% to -35% to show more of top and cut more of bottom */
-  object-fit: cover; /* Keep cover to fill the frame */
+  object-fit: cover;
+  object-position: center top;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  border-radius: 0; /* Remove border radius */
+  transition: opacity 0.8s ease;
 }
 
-.scene-video.loaded {
+/* Specific positioning for question 2 - show more bottom content */
+.background-video[src*="question2"] {
+  object-position: center 25%;
+}
+
+/* Specific positioning for question 6 */
+.background-video[src*="question6"] {
+  object-position: center 25%;
+}
+
+/* Specific positioning for question 8 */
+.background-video[src*="question8"] {
+  object-position: center 25%;
+}
+
+/* Specific positioning for question 10 */
+.background-video[src*="question10"] {
+  object-position: center 25%;
+}
+
+/* Specific positioning for question 11 */
+.background-video[src*="question11"] {
+  object-position: center 25%;
+}
+
+/* Specific positioning for question 14 */
+.background-video[src*="question14"] {
+  object-position: center 25%;
+}
+
+.background-video.loaded {
   opacity: 1;
 }
 
+/* Video Loading and Error States */
 .video-loading {
   position: absolute;
   top: 0;
@@ -107,9 +73,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(26, 76, 161, 0.3);
-  border-radius: 0; /* Remove border radius */
-  z-index: 2; /* Ensure it appears above the video */
+  background: linear-gradient(135deg, #0a0a2e, #16213e);
+  z-index: 2;
 }
 
 .video-error {
@@ -119,15 +84,35 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(26, 76, 161, 0.7);
+  background: linear-gradient(135deg, #0a0a2e, #16213e);
   color: #ffffff;
-  border-radius: 0; /* Remove border radius */
   text-align: center;
-  z-index: 2; /* Ensure it appears above the video */
+  z-index: 2;
 }
 
+.retry-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4e5eff, #8f94ff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 94, 255, 0.3);
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 94, 255, 0.4);
+}
+
+/* Video Overlay and Play Controls */
 .video-overlay {
   position: absolute;
   top: 0;
@@ -137,9 +122,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)); /* Gradient overlay */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
   opacity: 1;
   transition: opacity 0.3s ease;
+  z-index: 2;
 }
 
 .video-overlay.playing {
@@ -147,22 +133,26 @@
 }
 
 .video-overlay:hover {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .play-icon {
-  width: 60px;
-  height: 60px;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.2s ease;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .play-icon:hover {
   transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .play-icon svg {
@@ -170,295 +160,609 @@
   height: 32px;
 }
 
-.scene-narration {
+/* Dialog UI Overlay */
+.dialog-ui {
+  position: absolute;
+  top: 100px;
+  left: 0;
   width: 100%;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 24px; /* Pill shape */
-  background-image: linear-gradient(to right, #1a2a4a, #2c3e67); /* Darker space-themed gradient */
-  color: #d8e3ff; /* Light blue text for better contrast */
-  font-size: 1rem;
-  text-align: center;
-  min-height: 100px; /* Increased fixed height to prevent layout shifts */
-  height: auto; /* Allow height to grow if needed */
+  height: calc(100vh - 100px);
+  z-index: 10;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  pointer-events: none;
+}
+
+/* Progress HUD - Top of Screen */
+.progress-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9));
+  backdrop-filter: blur(20px);
+  border-bottom: 2px solid rgba(0, 191, 255, 0.6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.progress-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 1px solid rgba(0, 191, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00bfff, #4e5eff);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
   position: relative;
-  overflow: hidden; /* Prevent any overflow */
-  border: 1px solid rgba(100, 150, 255, 0.2); /* Subtle border glow */
 }
 
-.scene-narration p {
-  margin: 0;
-  line-height: 1.4;
-  padding: 0 0.5rem;
-  width: 100%; /* Ensure text takes full width */
-  height: 100%; /* Full height */
+.progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+  animation: progressShine 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.header-content {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  min-height: 60px; /* Minimum height for text */
-  animation: fadeIn 0.3s ease-in-out;
-  text-shadow: 0 0 10px rgba(100, 200, 255, 0.3); /* Subtle text glow */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-@keyframes fadeIn {
+.header-prev-button {
+  background: linear-gradient(135deg, rgba(60, 60, 60, 0.9), rgba(40, 40, 40, 0.9));
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.header-prev-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(80, 80, 80, 0.9), rgba(60, 60, 60, 0.9));
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.header-prev-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.question-counter {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
+  text-align: center;
+  flex: 1;
+  margin-left: 20px;
+}
+
+/* Dialog Boxes */
+.dialog-box {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(20, 20, 40, 0.85));
+  border: 2px solid rgba(0, 191, 255, 0.6);
+  border-radius: 12px;
+  backdrop-filter: blur(15px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 191, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  margin: 10px 0;
+  animation: dialogAppear 0.5s ease-out;
+  pointer-events: auto;
+  position: relative;
+  z-index: 20;
+}
+
+@keyframes dialogAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dialog-content {
+  padding: 20px 25px;
+}
+
+/* Narration Dialog - Bottom positioned above options */
+.dialog-narration {
+  position: fixed;
+  bottom: 240px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  z-index: 25;
+  pointer-events: auto;
+}
+
+.narration-box {
+  position: relative;
+  background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
+  border: 2px solid #00bfff;
+  clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+  padding: 25px 40px;
+  backdrop-filter: blur(15px);
+  box-shadow: 
+    0 0 30px rgba(0, 191, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 25;
+  min-height: 80px;
+}
+
+.narration-box::before {
+  display: none; /* Remove the speech bubble triangle */
+}
+
+.dialog-narration p {
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  animation: typewriter 0.8s ease-out;
+}
+
+@keyframes typewriter {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-.question-options-container {
-  width: 100%;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  background-image: linear-gradient(to bottom, #cccccc, #999999);
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.3);
+/* Options Dialog - Bottom positioned with proper spacing from narration */
+.dialog-options {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 900px;
+  z-index: 20;
+  pointer-events: auto;
 }
 
-.question-title {
-  font-size: 1.35rem;
-  margin-bottom: 1.25rem;
-  color: #333333;
-  font-weight: 600;
-  text-align: center;
+.options-box {
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  z-index: 20;
 }
 
 .radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .radio-option {
   position: relative;
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid rgba(100, 150, 255, 0.3);
-  transition: all 0.25s ease;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
+  border: 2px solid #00bfff;
+  clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(15px);
+  min-height: 75px;
+  display: flex;
+  align-items: center;
 }
 
 .radio-option:hover {
-  border-color: rgba(100, 200, 255, 0.8);
-  background-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.4);
+  background: linear-gradient(135deg, rgba(0, 40, 100, 0.9), rgba(0, 60, 140, 0.9));
+  border-color: #4dd0ff;
+  transform: scale(1.02);
+  box-shadow: 
+    0 0 25px rgba(0, 191, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+  background: linear-gradient(135deg, rgba(0, 60, 140, 0.9), rgba(0, 80, 180, 0.9));
+  border-color: #00ffff;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 255, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .radio-option input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.radio-option input[type="radio"]:checked + label {
-  background-color: rgba(255, 255, 255, 0.6);
-  border-left: 4px solid #4e5eff;
-  font-weight: 500;
-  color: #333333;
+  display: none;
 }
 
 .radio-option label {
   display: flex;
   align-items: center;
-  padding: 1rem 2.5rem;
-  width: 100%;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  justify-content: center;
-  text-align: center;
+  gap: 15px;
+  color: #ffffff;
+  font-size: 14px;
   line-height: 1.4;
-  color: #333333;
-}
-
-.radio-option label::before {
-  content: "";
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 0.75rem;
-  border-radius: 50%;
-  border: 2px solid rgba(100, 150, 255, 0.5);
-  background-color: rgba(255, 255, 255, 0.7);
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-  position: absolute;
-  left: 1rem;
-}
-
-.radio-option input[type="radio"]:checked + label::before {
-  border-color: #4e5eff;
-  background-color: #4e5eff;
-  box-shadow: 0 0 8px rgba(100, 200, 255, 0.8), inset 0 0 0 4px rgba(255, 255, 255, 0.7);
-}
-
-.forwarding-text {
+  cursor: pointer;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
   width: 100%;
-  padding: 1rem;
-  border-radius: 24px; /* Pill shape */
-  background-image: linear-gradient(to right, #2c3e67, #4e5eff); /* Coordinated gradient with scene narration */
-  color: #ffffff; /* White text for better visibility */
-  font-size: 1rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Matching shadow depth */
-  border: 1px solid rgba(100, 150, 255, 0.2); /* Subtle border glow */
 }
 
-.forwarding-text.active {
-  box-shadow: 0 0 20px rgba(60, 120, 255, 0.5);
-  transform: scale(1.02);
+.option-label {
+  color: #00bfff;
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 25px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
 }
 
-.forwarding-text p {
-  margin: 0;
-  font-style: italic;
-  text-align: center;
-  padding: 0 0.5rem;
-  text-shadow: 0 0 10px rgba(100, 200, 255, 0.3); /* Subtle text glow */
-}
-
-.transition-indicator {
-  height: 4px;
-  background: linear-gradient(to right, #4e5eff, #8f94ff);
-  margin-top: 8px;
-  border-radius: 2px;
-  animation: progress 3s linear forwards;
-  width: 0%;
-  box-shadow: 0 0 10px rgba(60, 120, 255, 0.5);
-}
-
-@keyframes progress {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
+.option-text {
+  flex: 1;
+  font-weight: 500;
 }
 
 .radio-option.disabled {
-  opacity: 0.7;
-  pointer-events: none;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.button-group {
-  display: flex;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.prev-button {
-  padding: 0.85rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 10px rgba(60, 120, 255, 0.3);
-  width: 100%;
-  background-color: #4e5eff;
-  color: white;
-}
-
-.prev-button:hover:not(:disabled) {
-  background-color: #616dff;
-  transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(60, 120, 255, 0.5);
-}
-
-.prev-button:disabled {
-  background-color: rgba(60, 60, 120, 0.4);
-  color: #a0aec0;
+  opacity: 0.4;
   cursor: not-allowed;
-  box-shadow: none;
+  pointer-events: none;
 }
 
+/* Error Message */
 .error-message {
   color: #ff6b6b;
-  margin: 0.5rem 0;
-  font-size: 0.875rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 6px;
+  padding: 10px 15px;
+  margin: 10px 0;
+  font-size: 14px;
   text-align: center;
 }
 
-.completion-message {
+/* Completion Dialog */
+.dialog-completion {
+  position: fixed;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  z-index: 22;
+  pointer-events: auto;
+}
+
+.completion-box {
   text-align: center;
-  padding: 1rem;
+  z-index: 22;
 }
 
-.completion-message p {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #333333;
+.completion-box p {
+  color: #ffffff;
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
+/* Forwarding Message */
+.dialog-forwarding {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  z-index: 23;
+  pointer-events: auto;
+}
+
+.forwarding-message {
+  background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(78, 94, 255, 0.2));
+  border: 1px solid rgba(0, 191, 255, 0.5);
+  border-radius: 8px;
+  padding: 15px 20px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  animation: forwardingPulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 23;
+}
+
+.forwarding-message.active {
+  animation: forwardingActive 0.5s ease-out;
+}
+
+.forwarding-message p {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes forwardingPulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+  }
+}
+
+@keyframes forwardingActive {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Transition Indicator */
+.transition-indicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 191, 255, 0.3);
+  border-top: 2px solid #00bfff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 10px auto 0;
+}
+
+/* Loading Spinner */
 .loading-spinner {
-  display: inline-block;
   width: 30px;
   height: 30px;
-  border: 3px solid rgba(100, 150, 255, 0.3);
+  border: 3px solid rgba(0, 191, 255, 0.3);
+  border-top: 3px solid #00bfff;
   border-radius: 50%;
-  border-top-color: #4e5eff;
-  animation: spin 1s ease-in-out infinite;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* Mobile Responsive */
 @media screen and (max-width: 768px) {
-  .container {
-    padding: 0.5rem;
+  .progress-hud {
+    padding: 15px;
   }
   
-  .test-screen {
-    padding: 0.75rem;
+  .progress-container {
+    height: 8px;
+    margin-bottom: 12px;
   }
   
-  .question-options-container {
-    padding: 1rem;
+  .header-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
   }
   
-  .question-title {
-    font-size: 1.2rem;
+  .header-prev-button {
+    padding: 6px 16px;
+    font-size: 12px;
+    align-self: flex-start;
   }
   
-  .scene-narration {
-    padding: 0.75rem;
+  .question-counter {
+    font-size: 16px;
+    margin-left: 0;
+    text-align: left;
+    flex: none;
+  }
+  
+  .fullscreen-video {
+    top: 80px;
+    height: calc(100vh - 80px);
+  }
+  
+  .dialog-ui {
+    top: 80px;
+    height: calc(100vh - 80px);
+    padding: 15px;
+  }
+  
+  .dialog-narration {
+    bottom: 200px;
+    width: 95%;
+    max-width: 600px;
+  }
+  
+  .narration-box {
+    padding: 20px 30px;
+    min-height: 70px;
+  }
+  
+  .dialog-options {
+    bottom: 30px;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 700px;
+  }
+  
+  .radio-group {
+    gap: 12px;
+  }
+  
+  .radio-option {
+    padding: 15px 20px;
+    min-height: 65px;
   }
   
   .radio-option label {
-    padding: 0.75rem 2rem;
+    font-size: 13px;
+    gap: 12px;
   }
   
-  .radio-option label::before {
-    width: 18px;
-    height: 18px;
+  .option-label {
+    font-size: 14px;
+    min-width: 22px;
   }
   
-  .forwarding-text {
-    padding: 0.75rem;
+  .dialog-completion {
+    bottom: 180px;
+    width: 95%;
   }
   
-  .forwarding-text p {
-    font-size: 0.95rem;
+  .dialog-forwarding {
+    bottom: 100px;
+    width: 95%;
   }
   
-  .prev-button {
-    padding: 0.75rem;
-    font-size: 1rem;
+  .dialog-content {
+    padding: 15px 20px;
+  }
+  
+  .play-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .play-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .progress-hud {
+    padding: 12px;
+  }
+  
+  .progress-container {
+    height: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .header-prev-button {
+    padding: 5px 14px;
+    font-size: 11px;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  
+  .question-counter {
+    font-size: 14px;
+    margin-left: 0;
+    text-align: left;
+    flex: none;
+  }
+  
+  .fullscreen-video {
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .dialog-ui {
+    top: 70px;
+    height: calc(100vh - 70px);
+    padding: 10px;
+  }
+  
+  .dialog-narration {
+    bottom: 180px;
+    width: 98%;
+    max-width: 500px;
+  }
+  
+  .narration-box {
+    padding: 18px 25px;
+    clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+    min-height: 60px;
+  }
+  
+  .dialog-options {
+    bottom: 25px;
+    transform: translateX(-50%);
+    width: 98%;
+    max-width: 600px;
+  }
+  
+  .radio-group {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
+  .radio-option {
+    padding: 12px 18px;
+    min-height: 55px;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+  
+  .radio-option label {
+    font-size: 12px;
+    gap: 10px;
+  }
+  
+  .option-label {
+    font-size: 13px;
+    min-width: 20px;
+  }
+  
+  .dialog-narration p {
+    font-size: 14px;
+  }
+  
+  .dialog-completion {
+    bottom: 160px;
+    width: 98%;
+  }
+  
+  .dialog-forwarding {
+    bottom: 90px;
+    width: 98%;
+  }
+  
+  .dialog-content {
+    padding: 12px 15px;
   }
   
   .play-icon {
@@ -467,83 +771,7 @@
   }
   
   .play-icon svg {
-    width: 28px;
-    height: 28px;
-  }
-
-}
-
-@media screen and (max-width: 480px) {
-  .test-screen {
-    padding: 0.5rem;
-  }
-  
-  .progress-container {
-    height: 6px;
-    margin-bottom: 0.75rem;
-  }
-  
-  .question-counter {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .question-title {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .scene-narration {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    min-height: 50px;
-  }
-  
-  .radio-group {
-    gap: 0.5rem;
-  }
-  
-  .radio-option label {
-    padding: 0.6rem 1.75rem;
-    font-size: 0.95rem;
-  }
-  
-  .radio-option label::before {
-    width: 16px;
-    height: 16px;
-    left: 0.75rem;
-  }
-  
-  .forwarding-text {
-    padding: 0.5rem;
-  }
-  
-  .button-group {
-    margin-top: 0.75rem;
-  }
-  
-  .prev-button {
-    padding: 0.6rem;
-    font-size: 0.95rem;
-  }
-  
-  .completion-message p {
-    font-size: 1rem;
-  }
-  
-  .loading-spinner {
-    width: 24px;
-    height: 24px;
-    border-width: 2px;
-  }
-  
-  .play-icon {
-    width: 42px;
-    height: 42px;
-  }
-  
-  .play-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 } 

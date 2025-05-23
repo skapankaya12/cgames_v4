@@ -6,8 +6,7 @@
   min-height: 100vh;
   width: 100%;
   padding: 2rem 1rem;
-  background: url(/question1bg.png) no-repeat center center;
-  background-size: cover;
+  background: linear-gradient(135deg, #0a0a2e, #16213e, #1a1a3a);
   overflow: hidden;
 }
 
