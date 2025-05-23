@@ -114,50 +114,19 @@
 
 /* Video Overlay and Play Controls */
 .video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-  opacity: 1;
-  transition: opacity 0.3s ease;
-  z-index: 2;
+  display: none; /* Hide the video overlay completely */
 }
 
 .video-overlay.playing {
-  opacity: 0;
+  display: none; /* Keep it hidden even when playing */
 }
 
 .video-overlay:hover {
-  opacity: 1 !important;
+  display: none; /* Keep it hidden on hover */
 }
 
 .play-icon {
-  width: 80px;
-  height: 80px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.play-icon:hover {
-  transform: scale(1.1);
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.play-icon svg {
-  width: 32px;
-  height: 32px;
+  display: none; /* Hide the play icon completely */
 }
 
 /* Dialog UI Overlay */
@@ -269,7 +238,7 @@
   letter-spacing: 0.5px;
   text-align: center;
   flex: 1;
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 /* Dialog Boxes */
@@ -307,11 +276,11 @@
 /* Narration Dialog - Bottom positioned above options */
 .dialog-narration {
   position: fixed;
-  bottom: 240px;
+  bottom: 140px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 800px;
+  width: 95%;
+  max-width: 1200px;
   z-index: 25;
   pointer-events: auto;
 }
@@ -321,13 +290,13 @@
   background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
   border: 2px solid #00bfff;
   clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
-  padding: 25px 40px;
+  padding: 5px 90px;
   backdrop-filter: blur(15px);
   box-shadow: 
     0 0 30px rgba(0, 191, 255, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   z-index: 25;
-  min-height: 80px;
+  min-height: 90px;
 }
 
 .narration-box::before {
@@ -352,7 +321,7 @@
 /* Options Dialog - Bottom positioned with proper spacing from narration */
 .dialog-options {
   position: fixed;
-  bottom: 40px;
+  bottom: 1px;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -381,12 +350,12 @@
   position: relative;
   background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
   border: 2px solid #00bfff;
-  clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
-  padding: 18px 22px;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+  padding: 5px 52px;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(15px);
-  min-height: 75px;
+  min-height: 5px;
   display: flex;
   align-items: center;
 }
@@ -426,7 +395,7 @@
 
 .option-label {
   color: #00bfff;
-  font-weight: 700;
+  font-weight: 900;
   font-size: 16px;
   min-width: 25px;
   text-transform: uppercase;
@@ -435,7 +404,7 @@
 
 .option-text {
   flex: 1;
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .radio-option.disabled {
@@ -483,7 +452,7 @@
 /* Forwarding Message */
 .dialog-forwarding {
   position: fixed;
-  bottom: 80px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -563,6 +532,29 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Footer */
+.game-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 191, 255, 0.3);
+  padding: 8px 20px;
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
 /* Mobile Responsive */
 @media screen and (max-width: 768px) {
   .progress-hud {
@@ -605,9 +597,9 @@
   }
   
   .dialog-narration {
-    bottom: 200px;
-    width: 95%;
-    max-width: 600px;
+    bottom: 240px;
+    width: 98%;
+    max-width: 800px;
   }
   
   .narration-box {
@@ -655,14 +647,12 @@
     padding: 15px 20px;
   }
   
-  .play-icon {
-    width: 60px;
-    height: 60px;
+  .game-footer {
+    padding: 6px 15px;
   }
   
-  .play-icon svg {
-    width: 24px;
-    height: 24px;
+  .footer-text {
+    font-size: 11px;
   }
 }
 
@@ -707,9 +697,9 @@
   }
   
   .dialog-narration {
-    bottom: 180px;
-    width: 98%;
-    max-width: 500px;
+    bottom: 200px;
+    width: 99%;
+    max-width: 700px;
   }
   
   .narration-box {
@@ -765,13 +755,11 @@
     padding: 12px 15px;
   }
   
-  .play-icon {
-    width: 50px;
-    height: 50px;
+  .game-footer {
+    padding: 5px 10px;
   }
   
-  .play-icon svg {
-    width: 20px;
-    height: 20px;
+  .footer-text {
+    font-size: 10px;
   }
 } 

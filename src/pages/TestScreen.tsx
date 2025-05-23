@@ -73,9 +73,18 @@ const TestScreen = () => {
       
       try {
         // Set video source based on current question
+        let questionId = currentQuestion.id;
+        
+        // Swap question 12 and 13 videos since their content is reversed
+        if (questionId === 12) {
+          questionId = 13;
+        } else if (questionId === 13) {
+          questionId = 12;
+        }
+        
         const videoSrc = testState.isComplete 
           ? `${import.meta.env.BASE_URL}scenes/welcomescreen.mp4`
-          : `${import.meta.env.BASE_URL}scenes/question${currentQuestion.id}.mp4`;
+          : `${import.meta.env.BASE_URL}scenes/question${questionId}.mp4`;
         
         console.log('Loading video from:', videoSrc);
         
@@ -298,6 +307,10 @@ const TestScreen = () => {
             </div>
           </div>
         </div>
+        
+        <div className="game-footer">
+          <p className="footer-text">Cognitive Games. All rights reserved</p>
+        </div>
       </div>
     );
   }
@@ -412,6 +425,10 @@ const TestScreen = () => {
             </div>
           </div>
         )}
+      </div>
+      
+      <div className="game-footer">
+        <p className="footer-text">Cognitive Games. All rights reserved</p>
       </div>
     </div>
   );
