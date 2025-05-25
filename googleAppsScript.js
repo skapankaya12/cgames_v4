@@ -1,4 +1,4 @@
-// Google Apps Script code for quiz results collection
+// Google Apps Script code for quiz results collection and interaction tracking
 function doGet(e) {
   try {
     // Log incoming request to debug
@@ -17,14 +17,24 @@ function doGet(e) {
     
     console.log("Parameters:", JSON.stringify(e.parameter || {}));
     
-    // Check if data is passed as a URL parameter
-    if (e.parameter && e.parameter.data) {
-      // Process the data and save to spreadsheet
+    // Check if interaction data is passed as a URL parameter
+    if (e.parameter && e.parameter.interactionData) {
+      // Process interaction tracking data
+      const interactionData = JSON.parse(e.parameter.interactionData);
+      saveInteractionDataToSheet(interactionData);
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true, type: 'interaction_tracking' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    // Check if regular quiz data is passed as a URL parameter
+    else if (e.parameter && e.parameter.data) {
+      // Process the quiz results data and save to spreadsheet
       const data = JSON.parse(e.parameter.data);
       saveDataToSheet(data);
       
       return ContentService
-        .createTextOutput(JSON.stringify({ success: true }))
+        .createTextOutput(JSON.stringify({ success: true, type: 'quiz_results' }))
         .setMimeType(ContentService.MimeType.JSON);
     } else {
       // No data, return info page
@@ -38,11 +48,11 @@ function doGet(e) {
             </style>
           </head>
           <body>
-            <h1>Quiz Results API</h1>
+            <h1>Quiz Results & Interaction Tracking API</h1>
             <div class="info">
-              <p>This is a POST/GET API for collecting quiz results.</p>
-              <p>To submit data, send a POST request with a 'data' field containing your JSON data.</p>
-              <p>You can also use GET with ?data=yourJsonHere</p>
+              <p>This API handles both quiz results and interaction tracking data.</p>
+              <p>For quiz results: Send POST with 'data' field or GET with ?data=yourJsonHere</p>
+              <p>For interaction tracking: Send GET with ?interactionData=yourJsonHere</p>
               <p>Current time: ${new Date().toLocaleString()}</p>
             </div>
           </body>
@@ -176,7 +186,55 @@ function doPost(e) {
   }
 }
 
-// Common function to save data to the spreadsheet
+// Function to save interaction tracking data to a separate sheet
+function saveInteractionDataToSheet(interactionData) {
+  console.log("Saving interaction data:", JSON.stringify(interactionData));
+  
+  // Get the spreadsheet
+  const ss = SpreadsheetApp.openById("1cGGxaSWHklq7WmYG8jd8p1aPpzcJBFJDUkK-qnxr4Xo");
+  const sheet = ss.getSheetByName("InteractionTracking") || ss.insertSheet("InteractionTracking");
+  
+  // Check if we need to initialize headers
+  if (sheet.getLastRow() === 0) {
+    const headers = [
+      "Timestamp",
+      "Session ID", 
+      "Event Type",
+      "Question ID",
+      "Event Timestamp",
+      "Previous Value",
+      "New Value",
+      "Direction",
+      "Response Time (ms)",
+      "Raw Event Data"
+    ];
+    sheet.appendRow(headers);
+  }
+  
+  // Process each event in the batch
+  if (interactionData.events && Array.isArray(interactionData.events)) {
+    for (const event of interactionData.events) {
+      const rowData = [
+        new Date(),                           // Current timestamp
+        interactionData.sessionId,            // Session ID
+        event.type,                          // Event type
+        event.questionId,                    // Question ID
+        new Date(event.timestamp),           // Event timestamp
+        event.data.previousValue || "",      // Previous value
+        event.data.newValue || "",           // New value
+        event.data.direction || "",          // Navigation direction
+        event.data.responseTime || "",       // Response time
+        JSON.stringify(event)                // Raw event data
+      ];
+      
+      sheet.appendRow(rowData);
+    }
+  }
+  
+  console.log(`Added ${interactionData.events ? interactionData.events.length : 0} interaction events`);
+}
+
+// Common function to save quiz results data to the spreadsheet
 function saveDataToSheet(data) {
   // Get the spreadsheet
   const ss = SpreadsheetApp.openById("1cGGxaSWHklq7WmYG8jd8p1aPpzcJBFJDUkK-qnxr4Xo");

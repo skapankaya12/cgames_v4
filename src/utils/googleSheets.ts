@@ -22,7 +22,7 @@ export const sendResultsToGoogleSheets = async (
   competencyScores: CompetencyScore[]
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5FfkakXp3HADStMegv5JCvftCJaJ1s42xI6wElHcnx9BEZMK92ybNE5jTaO2q75tW/exec";
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec";
     
     // Convert data to JSON string
     const data = {
@@ -32,7 +32,7 @@ export const sendResultsToGoogleSheets = async (
     };
     
     // Using fetch with no-cors mode to avoid CORS issues
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL + "?data=" + encodeURIComponent(JSON.stringify(data)), {
+    await fetch(GOOGLE_APPS_SCRIPT_URL + "?data=" + encodeURIComponent(JSON.stringify(data)), {
       method: "GET",
       mode: "no-cors", // This prevents CORS errors
     });
@@ -73,7 +73,7 @@ export const sendResultsToGoogleSheets = async (
     
     // Even if there's an error, try the form method
     try {
-      const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5FfkakXp3HADStMegv5JCvftCJaJ1s42xI6wElHcnx9BEZMK92ybNE5jTaO2q75tW/exec";
+      const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec";
       
       const data = {
         user,
@@ -109,7 +109,7 @@ export const sendResultsToGoogleSheets = async (
       }, 5000);
       
       return { success: true };
-    } catch (e) {
+    } catch {
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }

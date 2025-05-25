@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { questions } from '../data/questions';
+import InteractionTracker from '../services/InteractionTracker';
 import '../styles/TestScreen.css';
 
 interface TestState {
@@ -45,24 +46,49 @@ const TestScreen = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Initialize interaction tracker
+  const trackerRef = useRef<InteractionTracker | null>(null);
+  const API_URL = `https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec`;
+
+  // Initialize tracker on component mount
+  useEffect(() => {
+    if (!trackerRef.current) {
+      trackerRef.current = new InteractionTracker(API_URL);
+    }
+  }, [API_URL]);
 
   const currentQuestion = questions[testState.currentQuestion];
 
   // Clear timer when component unmounts
   useEffect(() => {
+    const video = videoRef.current;
+    
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       
       // Cleanup video
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.src = '';
-        videoRef.current.load();
+      if (video) {
+        video.pause();
+        video.src = '';
+        video.load();
+      }
+
+      // Flush any remaining interaction events
+      if (trackerRef.current) {
+        trackerRef.current.flushEvents();
       }
     };
   }, []);
+
+  // Track question start when question changes
+  useEffect(() => {
+    if (currentQuestion && trackerRef.current) {
+      trackerRef.current.trackQuestionStart(currentQuestion.id);
+    }
+  }, [testState.currentQuestion, currentQuestion]);
 
   // Load and play video when question changes
   useEffect(() => {
@@ -124,7 +150,7 @@ const TestScreen = () => {
         setVideoError(true);
       }
     }
-  }, [testState.currentQuestion, testState.isComplete, currentQuestion?.id]);
+  }, [testState.currentQuestion, testState.isComplete, currentQuestion]);
 
   // Replace typewriter effect with immediate text display
   useEffect(() => {
@@ -134,9 +160,14 @@ const TestScreen = () => {
         setNarrationText(currentQuestion.text);
       }, 50);
     }
-  }, [testState.currentQuestion]);
+  }, [testState.currentQuestion, currentQuestion]);
 
   const moveToNextQuestion = () => {
+    // Track navigation event
+    if (trackerRef.current && currentQuestion) {
+      trackerRef.current.trackNavigation(currentQuestion.id, 'next');
+    }
+
     if (testState.currentQuestion === questions.length - 1) {
       // Set completed state before navigating
       setTestState(prev => ({
@@ -146,6 +177,14 @@ const TestScreen = () => {
       
       // Save answers to session storage
       sessionStorage.setItem('answers', JSON.stringify(testState.answers));
+      
+      // Save interaction analytics to session storage
+      if (trackerRef.current) {
+        const analytics = trackerRef.current.getSessionAnalytics();
+        sessionStorage.setItem('interactionAnalytics', JSON.stringify(analytics));
+        // Flush remaining events
+        trackerRef.current.flushEvents();
+      }
       
       // Add a small delay to allow the user to see the completion message
       setTimeout(() => {
@@ -163,6 +202,12 @@ const TestScreen = () => {
 
   const handleAnswer = (value: string) => {
     if (isTransitioning) return; // Prevent multiple selections during transition
+    
+    // Track answer change
+    if (trackerRef.current && currentQuestion) {
+      const previousValue = testState.answers[currentQuestion.id];
+      trackerRef.current.trackAnswerChange(currentQuestion.id, previousValue, value);
+    }
     
     // Update the answer
     setTestState(prev => ({
@@ -190,6 +235,11 @@ const TestScreen = () => {
   
   const handlePrevious = () => {
     if (testState.currentQuestion > 0 && !isTransitioning) {
+      // Track navigation event
+      if (trackerRef.current && currentQuestion) {
+        trackerRef.current.trackNavigation(currentQuestion.id, 'back');
+      }
+
       // Clear any existing timer
       if (timerRef.current) {
         clearTimeout(timerRef.current);
