@@ -224,58 +224,44 @@ const ResultsScreen = () => {
         const payload = {
           user: userData,
           answers: parsedAnswers,
-          competencyScores: finalScores,
-          interactionAnalytics: storedAnalytics ? JSON.parse(storedAnalytics) : null
+          competencyScores: finalScores
+          // Removed interactionAnalytics to keep sheets separate
         };
         
-        let success = false;
-        
-        // Method 1: Using Image method to bypass CORS
         try {
+          // Use only the Image method which works reliably
           const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
           const img = new Image();
           img.src = url;
           img.style.display = 'none';
           document.body.appendChild(img);
           
+          // Clean up after 5 seconds
           setTimeout(() => {
-            document.body.removeChild(img);
+            if (document.body.contains(img)) {
+              document.body.removeChild(img);
+            }
           }, 5000);
           
-          success = true;
+          // Mark as successful after a short delay
+          setTimeout(() => {
+            setSubmitSuccess(true);
+            setIsSubmitting(false);
+          }, 2000);
+          
         } catch (error) {
-          console.error('Error with automatic submission:', error);
-        }
-        
-        // Method 2: Fallback with fetch (may fail due to CORS but worth trying)
-        if (!success) {
-          try {
-            await fetch(API_URL, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-              mode: 'no-cors' // This prevents CORS errors but we won't get response
-            });
-            success = true;
-          } catch (error) {
-            console.error('Error with fetch submission:', error);
-          }
-        }
-        
-        if (success) {
-          setSubmitSuccess(true);
-        } else {
+          console.error('Error with submission:', error);
           setSubmitError('Otomatik gönderim başarısız oldu. Lütfen "Sonuçları Gönder" butonunu kullanın.');
+          setIsSubmitting(false);
         }
-        
-        setIsSubmitting(false);
       };
 
-      setTimeout(() => {
-        submitResults();
-      }, 1000);
+      // Only submit automatically once, and only if not already submitted
+      if (!submitSuccess) {
+        setTimeout(() => {
+          submitResults();
+        }, 1000);
+      }
     } catch (error) {
       console.error('Error processing test data:', error);
       setSubmitError('Veriler işlenirken bir sorun oluştu. Lütfen testi yeniden başlatın.');
@@ -290,6 +276,11 @@ const ResultsScreen = () => {
   const handleManualSubmit = () => {
     if (!user || !answers || !scores.length) {
       setSubmitError('Veriler eksik, yeniden başlatmayı deneyin');
+      return;
+    }
+    
+    // Prevent duplicate submissions
+    if (submitSuccess || isSubmitting) {
       return;
     }
     
@@ -309,8 +300,8 @@ const ResultsScreen = () => {
     hiddenField.value = JSON.stringify({
       user,
       answers,
-      competencyScores: scores,
-      interactionAnalytics
+      competencyScores: scores
+      // Removed interactionAnalytics to keep sheets separate
     });
     form.appendChild(hiddenField);
     
@@ -319,7 +310,7 @@ const ResultsScreen = () => {
     form.submit();
     document.body.removeChild(form);
     
-    // Optimistically assume success after a delay
+    // Mark as successful after a delay
     setTimeout(() => {
       setSubmitSuccess(true);
       setIsSubmitting(false);
