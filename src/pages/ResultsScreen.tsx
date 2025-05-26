@@ -417,7 +417,7 @@ const ResultsScreen = () => {
 
               <div className="competency-sections">
                 <div className="section">
-                  <h3 className="section-title">🌟 En Güçlü Yetkinlikleriniz</h3>
+                  <h3 className="section-title"> En Güçlü Yetkinlikleriniz</h3>
                   <div className="competency-list">
                     {topCompetencies.map((competency, index) => {
                       const percentage = getScorePercentage(competency.score, competency.maxScore);
@@ -450,7 +450,7 @@ const ResultsScreen = () => {
                 </div>
 
                 <div className="section">
-                  <h3 className="section-title">🚀 Gelişim Alanlarınız</h3>
+                  <h3 className="section-title"> Gelişim Alanlarınız</h3>
                   <div className="competency-list">
                     {developmentAreas.map((competency) => {
                       const percentage = getScorePercentage(competency.score, competency.maxScore);
@@ -485,7 +485,7 @@ const ResultsScreen = () => {
                 {interactionAnalytics && (
                   <div className="section">
                     <div className="analytics-header">
-                      <h3 className="section-title">📊 Performans Analizi</h3>
+                      <h3 className="section-title"> Davranış Analizi</h3>
                       <button 
                         className="analytics-toggle"
                         onClick={() => setShowAnalytics(!showAnalytics)}
@@ -514,7 +514,7 @@ const ResultsScreen = () => {
                         {/* Slowest Questions */}
                         {interactionAnalytics.questionAnalytics.length > 0 && (
                           <div className="analytics-section">
-                            <h4 className="analytics-subtitle">⏱️ En Uzun Düşündüğünüz Sorular</h4>
+                            <h4 className="analytics-subtitle"> En Uzun Düşündüğünüz Sorular</h4>
                             <div className="question-times">
                               {interactionAnalytics.questionAnalytics
                                 .filter(q => q.totalTime && q.totalTime > 0)
@@ -534,7 +534,7 @@ const ResultsScreen = () => {
                         {/* Revised Questions */}
                         {interactionAnalytics.questionAnalytics.some(q => q.revisions.length > 0) && (
                           <div className="analytics-section">
-                            <h4 className="analytics-subtitle">🔄 Cevabını Değiştirdiğin Sorular</h4>
+                            <h4 className="analytics-subtitle"> Cevabını Değiştirdiğin Sorular</h4>
                             <div className="revised-questions">
                               {interactionAnalytics.questionAnalytics
                                 .filter(q => q.revisions.length > 0)
@@ -550,31 +550,31 @@ const ResultsScreen = () => {
 
                         {/* Decision Style Insight */}
                         <div className="analytics-section">
-                          <h4 className="analytics-subtitle">🧠 Karar Verme Tarzınız</h4>
+                          <h4 className="analytics-subtitle"> Karar Verme Tarzınız</h4>
                           <div className="decision-style">
                             {interactionAnalytics.averageResponseTime < 30000 ? (
                               <p className="style-insight quick">
-                                ⚡ <strong>Hızlı Karar Verici:</strong> Sorulara hızlı yanıt veriyorsunuz. Bu, güçlü sezgileriniz ve hızlı analiz yeteneğiniz olduğunu gösterir.
+                                 <strong>Hızlı Karar Verici:</strong> Sorulara hızlı yanıt veriyorsunuz. Bu, güçlü sezgileriniz ve hızlı analiz yeteneğiniz olduğunu gösterir.
                               </p>
                             ) : interactionAnalytics.averageResponseTime > 60000 ? (
                               <p className="style-insight deliberate">
-                                🤔 <strong>Düşünceli Karar Verici:</strong> Kararlarınızı dikkatlice değerlendiriyorsunuz. Bu, analitik düşünce yapınızı ve detaylara önem verdiğinizi gösterir.
+                                 <strong>Düşünceli Karar Verici:</strong> Kararlarınızı dikkatlice değerlendiriyorsunuz. Bu, analitik düşünce yapınızı ve detaylara önem verdiğinizi gösterir.
                               </p>
                             ) : (
                               <p className="style-insight balanced">
-                                ⚖️ <strong>Dengeli Karar Verici:</strong> Hız ve dikkat arasında iyi bir denge kuruyorsunuz. Bu, esnek karar verme yeteneğinizi gösterir.
+                                 <strong>Dengeli Karar Verici:</strong> Hız ve dikkat arasında iyi bir denge kuruyorsunuz. Bu, esnek karar verme yeteneğinizi gösterir.
                               </p>
                             )}
                             
                             {interactionAnalytics.totalAnswerChanges > 5 && (
                               <p className="style-insight adaptive">
-                                🔄 <strong>Adaptif Düşünür:</strong> Cevaplarınızı gözden geçirme eğiliminiz, öz-farkındalığınızı ve sürekli iyileştirme yaklaşımınızı gösterir.
+                                 <strong>Adaptif Düşünür:</strong> Cevaplarınızı gözden geçirme eğiliminiz, öz-farkındalığınızı ve sürekli iyileştirme yaklaşımınızı gösterir.
                               </p>
                             )}
                             
                             {interactionAnalytics.totalBackNavigations > 2 && (
                               <p className="style-insight thorough">
-                                🔍 <strong>Kapsamlı Değerlendirici:</strong> Önceki sorulara geri dönmeniz, bütünsel düşünme yeteneğinizi ve tutarlılığa verdiğiniz önemi gösterir.
+                                 <strong>Kapsamlı Değerlendirici:</strong> Önceki sorulara geri dönmeniz, bütünsel düşünme yeteneğinizi ve tutarlılığa verdiğiniz önemi gösterir.
                               </p>
                             )}
                           </div>

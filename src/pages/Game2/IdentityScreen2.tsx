@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/IdentityScreen.css';
+import '../../styles/IdentityScreen.css';
 
 interface User {
   firstName: string;
@@ -8,7 +8,7 @@ interface User {
   company: string;
 }
 
-const IdentityScreen = () => {
+const IdentityScreen2 = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({ firstName: '', lastName: '', company: '' });
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +27,8 @@ const IdentityScreen = () => {
       setError('Teste başlamak için onay vermeniz gerekmektedir.');
       return;
     }
-    sessionStorage.setItem('user', JSON.stringify(user));
-    navigate('/test');
+    sessionStorage.setItem('user2', JSON.stringify(user));
+    navigate('/game2/test');
   };
 
   const handleVideoLoad = () => {
@@ -86,24 +86,27 @@ const IdentityScreen = () => {
             <div className="signup-box">
               <h2 className="welcome-title">Hoş geldin!</h2>
               <div className="mission-text">
-                <p>Galaksiler arası teslimat kaptanısın.</p>
-                <p>Görevin riskli bir enerji çekirdeğini Nova Terminali'ne zamanında, hasarsız ve doğru kişiye teslim etmek.</p>
-                <p>Yol boyunca karşılaşacağın olaylarda verdiğin kararlar, liderlik tarzını, karakterini ve reflekslerini ortaya çıkaracak.</p>
-                <p>Bu bir test değil! Her karar bir tercih, her tercih bir sonuç.</p>
+                <div className="coming-soon-banner">
+                  <h3>🚀 Coming Soon</h3>
+                  <p>Game 2 is currently under development. New challenges and scenarios are being prepared for you!</p>
+                </div>
+                <p>İkinci galaktik görevin yakında hazır olacak.</p>
+                <p>Yeni senaryolar, farklı kararlar ve daha da zorlu liderlik testleri seni bekliyor.</p>
+                <p>Bu oyun da aynı yapıda olacak: kimlik girişi, test soruları ve sonuçlar.</p>
                 
                 <div className="rules-section">
-                  <p><strong>Kurallar:</strong></p>
-                  <p>• Her sahnede yalnızca bir seçim yapacaksın.</p>
-                  <p>• İstersen cevabını ''Geri'' butonuna basarak değiştirebilirsin, en iyi seni yansıtan seçimi bulmaya çalış.</p>
-                  <p>• Doğru ya da yanlış cevap yok! Sistem senin yetkinliklerini ve davranış reflekslerini analiz eder.</p>
-                  <p> Bu testi başlatarak, verdiğiniz cevapların analiz için kaydedileceğini ve gizli tutulacağını kabul etmiş olursunuz.</p>
+                  <p><strong>Yakında:</strong></p>
+                  <p>• Yeni galaktik senaryolar</p>
+                  <p>• Farklı liderlik zorlukları</p>
+                  <p>• Gelişmiş analiz sistemi</p>
+                  <p>• Karşılaştırmalı sonuçlar</p>
                 </div>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="firstName" className="form-label">İsim</label>
+                  <label htmlFor="firstName2" className="form-label">İsim</label>
                   <input
-                    id="firstName"
+                    id="firstName2"
                     type="text"
                     value={user.firstName}
                     onChange={(e) => setUser({ ...user, firstName: e.target.value })}
@@ -112,9 +115,9 @@ const IdentityScreen = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="lastName" className="form-label">Soyisim</label>
+                  <label htmlFor="lastName2" className="form-label">Soyisim</label>
                   <input
-                    id="lastName"
+                    id="lastName2"
                     type="text"
                     value={user.lastName}
                     onChange={(e) => setUser({ ...user, lastName: e.target.value })}
@@ -123,9 +126,9 @@ const IdentityScreen = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="company" className="form-label">Şirket</label>
+                  <label htmlFor="company2" className="form-label">Şirket</label>
                   <input
-                    id="company"
+                    id="company2"
                     type="text"
                     value={user.company}
                     onChange={(e) => setUser({ ...user, company: e.target.value })}
@@ -139,17 +142,16 @@ const IdentityScreen = () => {
                   <div className="consent-checkbox">
                     <input
                       type="checkbox"
-                      id="consent"
+                      id="consent2"
                       checked={consentChecked}
                       onChange={(e) => setConsentChecked(e.target.checked)}
                       className="consent-input"
                     />
-                    <label htmlFor="consent" className="consent-label">
+                    <label htmlFor="consent2" className="consent-label">
                       <span className="checkbox-custom"></span>
                       <span className="consent-text">Onaylıyorum</span>
                     </label>
                   </div>
-                  
                 </div>
 
                 <button
@@ -157,7 +159,7 @@ const IdentityScreen = () => {
                   className="start-button"
                   disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked}
                 >
-                  Yolculuğa Başla
+                  Demo Yolculuğa Başla
                 </button>
               </form>
             </div>
@@ -172,4 +174,4 @@ const IdentityScreen = () => {
   );
 };
 
-export default IdentityScreen; 
+export default IdentityScreen2; 
