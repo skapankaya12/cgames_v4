@@ -905,6 +905,8 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   margin-top: 1.5rem;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .sidebar-feedback-card:hover {
@@ -929,75 +931,164 @@
 .sidebar-feedback-form {
   display: flex;
   flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sidebar-rating-section {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sidebar-rating-section:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .sidebar-rating-section label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: #e2e8f0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
 }
 
-.sidebar-star-rating {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
+.rating-slider-container {
+  position: relative;
+  padding: 1rem 0;
 }
 
-.sidebar-star {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.3);
+.rating-slider-track {
+  position: relative;
+  height: 20px;
+  background: linear-gradient(90deg, 
+    #ff6b6b 0%,     /* Red */
+    #ffa500 25%,    /* Orange */
+    #ffeb3b 50%,    /* Yellow */
+    #8bc34a 75%,    /* Light Green */
+    #4caf50 100%    /* Green */
+  );
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-slider-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #64748b, #475569);
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  cursor: grab;
   transition: all 0.2s ease;
-  padding: 0.2rem;
-  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 2;
 }
 
-.sidebar-star:hover,
-.sidebar-star.active {
-  color: #fbbf24;
-  transform: scale(1.1);
+.rating-slider-handle:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-.sidebar-star:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.rating-slider-handle:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.rating-slider-handle.has-value {
+  background: linear-gradient(135deg, #00bfff, #0080ff);
+  box-shadow: 0 4px 16px rgba(0, 191, 255, 0.4);
+}
+
+.rating-scale-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.rating-scale-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-description {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  text-align: center;
+  min-height: 1.2em;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.rating-description.has-value {
+  color: #00bfff;
+  font-weight: 600;
+}
+
+/* Hidden input for accessibility */
+.rating-slider-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
 }
 
 .sidebar-feedback-text-section {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-feedback-text-section label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: #e2e8f0;
 }
 
 .sidebar-feedback-text-section textarea {
   width: 100%;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  padding: 0.875rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   color: #ffffff;
   font-size: 0.8rem;
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
   transition: all 0.3s ease;
   font-family: inherit;
+  line-height: 1.4;
 }
 
 .sidebar-feedback-text-section textarea:focus {
   outline: none;
-  border-color: #60a5fa;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: #00bfff;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
 }
 
 .sidebar-feedback-text-section textarea:disabled {
@@ -1016,47 +1107,65 @@
 }
 
 .sidebar-feedback-submit-button {
-  padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, #10b981, #059669);
+  padding: 0.875rem 1.25rem;
+  background: linear-gradient(135deg, #00bfff, #4e5eff);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   margin-top: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 191, 255, 0.2);
 }
 
 .sidebar-feedback-submit-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
 }
 
 .sidebar-feedback-submit-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(0, 191, 255, 0.1);
 }
 
 .sidebar-feedback-error {
-  padding: 0.5rem;
+  padding: 0.75rem;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 6px;
+  border-radius: 8px;
   color: #fca5a5;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-align: center;
 }
 
 .sidebar-feedback-success {
-  padding: 0.5rem;
+  padding: 0.75rem;
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 6px;
+  border-radius: 8px;
   color: #6ee7b7;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-align: center;
   font-weight: 500;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .sidebar-rating-section {
+    padding: 1rem;
+  }
+  
+  .rating-slider-handle {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .rating-scale-label {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
 } 

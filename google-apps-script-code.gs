@@ -64,10 +64,17 @@ function handleFeedbackSubmission(e) {
     console.log("Processing feedback submission");
     console.log("All parameters:", JSON.stringify(e.parameter || {}));
     
-    // Get individual parameters instead of JSON data
+    // Get individual parameters for comprehensive feedback
     const action = e.parameter.action;
     const feedback = e.parameter.feedback;
-    const rating = e.parameter.rating;
+    const accuracy = e.parameter.accuracy;
+    const gameExperience = e.parameter.gameExperience;
+    const fairness = e.parameter.fairness;
+    const usefulness = e.parameter.usefulness;
+    const recommendation = e.parameter.recommendation;
+    const purchaseLikelihood = e.parameter.purchaseLikelihood;
+    const valueForMoney = e.parameter.valueForMoney;
+    const technicalPerformance = e.parameter.technicalPerformance;
     const timestamp = e.parameter.timestamp;
     const firstName = e.parameter.firstName;
     const lastName = e.parameter.lastName;
@@ -75,15 +82,22 @@ function handleFeedbackSubmission(e) {
     console.log("Extracted parameters:", {
       action: action,
       feedback: feedback,
-      rating: rating,
+      accuracy: accuracy,
+      gameExperience: gameExperience,
+      fairness: fairness,
+      usefulness: usefulness,
+      recommendation: recommendation,
+      purchaseLikelihood: purchaseLikelihood,
+      valueForMoney: valueForMoney,
+      technicalPerformance: technicalPerformance,
       timestamp: timestamp,
       firstName: firstName,
       lastName: lastName
     });
     
-    if (!feedback || !rating || !firstName || !lastName) {
-      console.log("Missing required feedback parameters");
-      return ContentService.createTextOutput('Missing required parameters').setMimeType(ContentService.MimeType.TEXT);
+    if (!firstName || !lastName) {
+      console.log("Missing required user information");
+      return ContentService.createTextOutput('Missing required user information').setMimeType(ContentService.MimeType.TEXT);
     }
     
     // Get or create the feedbacks sheet
@@ -94,8 +108,12 @@ function handleFeedbackSubmission(e) {
       // Create the feedbacks sheet if it doesn't exist
       feedbackSheet = spreadsheet.insertSheet('Feedbacks');
       
-      // Add headers
-      const headers = ['Timestamp', 'Name', 'Rating', 'Feedback'];
+      // Add comprehensive headers
+      const headers = [
+        'Timestamp', 'Name', 'Accuracy', 'Game Experience', 'Fairness', 
+        'Usefulness', 'Recommendation', 'Purchase Likelihood', 'Value for Money', 
+        'Technical Performance', 'Additional Comments'
+      ];
       feedbackSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
       
       // Format headers
@@ -113,16 +131,23 @@ function handleFeedbackSubmission(e) {
     const rowData = [
       formattedDate,
       fullName,
-      parseInt(rating),
-      feedback
+      parseInt(accuracy) || 0,
+      parseInt(gameExperience) || 0,
+      parseInt(fairness) || 0,
+      parseInt(usefulness) || 0,
+      parseInt(recommendation) || 0,
+      parseInt(purchaseLikelihood) || 0,
+      parseInt(valueForMoney) || 0,
+      parseInt(technicalPerformance) || 0,
+      feedback || ''
     ];
     
-    console.log("Adding feedback row data:", rowData);
+    console.log("Adding comprehensive feedback row data:", rowData);
     
     // Add the data to the sheet
     feedbackSheet.appendRow(rowData);
     
-    console.log("Feedback data added successfully");
+    console.log("Comprehensive feedback data added successfully");
     return ContentService.createTextOutput('Feedback submitted successfully').setMimeType(ContentService.MimeType.TEXT);
     
   } catch (error) {

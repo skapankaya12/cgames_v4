@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { questions, competencies } from '../data/questions';
 import type { SessionAnalytics } from '../services/InteractionTracker';
 import { testGoogleSheetsIntegration, testBasicConnection } from '../utils/debugGoogleSheets';
+import { BehavioralAnalyticsService } from '../services/BehavioralAnalyticsService';
+import PersonalizedRecommendationsComponent from '../components/PersonalizedRecommendations';
+import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../types/Recommendations';
 import '../styles/ResultsScreen.css';
 
 interface CompetencyScore {
@@ -18,7 +21,16 @@ interface CompetencyScore {
 
 interface FeedbackData {
   feedback: string;
-  rating: number;
+  ratings: {
+    accuracy: number;
+    gameExperience: number;
+    fairness: number;
+    usefulness: number;
+    recommendation: number;
+    purchaseLikelihood: number;
+    valueForMoney: number;
+    technicalPerformance: number;
+  };
   timestamp: string;
   userInfo: {
     firstName: string;
@@ -129,14 +141,28 @@ const ResultsScreen = () => {
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
-  const [feedbackRating, setFeedbackRating] = useState(0);
+  const [feedbackRatings, setFeedbackRatings] = useState({
+    accuracy: 0,
+    gameExperience: 0,
+    fairness: 0,
+    usefulness: 0,
+    recommendation: 0,
+    purchaseLikelihood: 0,
+    valueForMoney: 0,
+    technicalPerformance: 0,
+  });
   const [isFeedbackSubmitting, setIsFeedbackSubmitting] = useState(false);
   const [feedbackSubmitSuccess, setFeedbackSubmitSuccess] = useState(false);
   const [feedbackSubmitError, setFeedbackSubmitError] = useState<string | null>(null);
 
+  // Personalized recommendations state
+  const [personalizedRecommendations, setPersonalizedRecommendations] = useState<PersonalizedRecommendations | null>(null);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+
   // Direct Google Sheets API endpoint
-  const API_URL = `https://script.google.com/macros/s/AKfycbzMTWueAS7y8b_Us7FoA2joYyaAim_KsGL9YlaGd0LfJNuUFPczGJfA4kBP6wUrT7J0/exec`;
-  const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbzMTWueAS7y8b_Us7FoA2joYyaAim_KsGL9YlaGd0LfJNuUFPczGJfA4kBP6wUrT7J0/exec`;
+  const API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
+  const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
 
   // Format time duration
   const formatTime = (milliseconds: number): string => {
@@ -308,6 +334,11 @@ const ResultsScreen = () => {
       })).sort((a, b) => b.score - a.score);
 
       setScores(finalScores);
+
+      // Generate personalized recommendations after scores are calculated
+      setTimeout(() => {
+        generatePersonalizedRecommendations();
+      }, 500); // Small delay to ensure state is updated
 
       // Submit results including interaction analytics
       const submitResults = async () => {
@@ -500,12 +531,15 @@ const ResultsScreen = () => {
   const handleFeedbackSubmit = async () => {
     console.log('=== FEEDBACK SUBMIT STARTED ===');
     console.log('Feedback text:', feedbackText);
-    console.log('Feedback rating:', feedbackRating);
+    console.log('Feedback ratings:', feedbackRatings);
     console.log('User:', user);
     
-    if (!feedbackText.trim() || feedbackRating === 0) {
-      console.log('Validation failed: missing text or rating');
-      setFeedbackSubmitError('Lütfen geri bildirim yazın ve puan verin.');
+    // Check if at least one rating is provided
+    const hasAnyRating = Object.values(feedbackRatings).some(rating => rating > 0);
+    
+    if (!feedbackText.trim() && !hasAnyRating) {
+      console.log('Validation failed: no feedback text or ratings');
+      setFeedbackSubmitError('Lütfen en az bir değerlendirme yapın veya yorum yazın.');
       return;
     }
 
@@ -518,24 +552,38 @@ const ResultsScreen = () => {
     setIsFeedbackSubmitting(true);
     setFeedbackSubmitError(null);
 
-    // Create a simpler data structure to avoid URL length issues
+    // Create comprehensive feedback data
     const feedbackData = {
       action: 'feedback',
       feedback: feedbackText.trim(),
-      rating: feedbackRating,
+      accuracy: feedbackRatings.accuracy,
+      gameExperience: feedbackRatings.gameExperience,
+      fairness: feedbackRatings.fairness,
+      usefulness: feedbackRatings.usefulness,
+      recommendation: feedbackRatings.recommendation,
+      purchaseLikelihood: feedbackRatings.purchaseLikelihood,
+      valueForMoney: feedbackRatings.valueForMoney,
+      technicalPerformance: feedbackRatings.technicalPerformance,
       timestamp: new Date().toISOString(),
       firstName: user.firstName,
       lastName: user.lastName
     };
 
-    console.log('Submitting feedback data:', feedbackData);
+    console.log('Submitting comprehensive feedback data:', feedbackData);
 
     try {
       // Method: Use individual parameters instead of JSON
       const params = new URLSearchParams({
         action: 'feedback',
         feedback: feedbackData.feedback,
-        rating: feedbackData.rating.toString(),
+        accuracy: feedbackData.accuracy.toString(),
+        gameExperience: feedbackData.gameExperience.toString(),
+        fairness: feedbackData.fairness.toString(),
+        usefulness: feedbackData.usefulness.toString(),
+        recommendation: feedbackData.recommendation.toString(),
+        purchaseLikelihood: feedbackData.purchaseLikelihood.toString(),
+        valueForMoney: feedbackData.valueForMoney.toString(),
+        technicalPerformance: feedbackData.technicalPerformance.toString(),
         timestamp: feedbackData.timestamp,
         firstName: feedbackData.firstName,
         lastName: feedbackData.lastName
@@ -557,7 +605,16 @@ const ResultsScreen = () => {
         setFeedbackSubmitSuccess(true);
         setIsFeedbackSubmitting(false);
         setFeedbackText('');
-        setFeedbackRating(0);
+        setFeedbackRatings({
+          accuracy: 0,
+          gameExperience: 0,
+          fairness: 0,
+          usefulness: 0,
+          recommendation: 0,
+          purchaseLikelihood: 0,
+          valueForMoney: 0,
+          technicalPerformance: 0,
+        });
         
         // Hide success message after 3 seconds
         setTimeout(() => {
@@ -642,6 +699,94 @@ const ResultsScreen = () => {
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
+  };
+
+  const handleSliderChange = (ratingType: keyof typeof feedbackRatings, value: number) => {
+    setFeedbackRatings(prev => ({ ...prev, [ratingType]: value }));
+  };
+
+  const handleSliderClick = (event: React.MouseEvent<HTMLDivElement>, ratingType: keyof typeof feedbackRatings) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+    const value = Math.round(percentage * 9) + 1; // 1-10 scale
+    handleSliderChange(ratingType, value);
+  };
+
+  const getSliderPosition = (value: number): string => {
+    return `${((value - 1) / 9) * 100}%`;
+  };
+
+  // Generate personalized recommendations using behavioral analytics
+  const generatePersonalizedRecommendations = async () => {
+    console.log('🚀 generatePersonalizedRecommendations called!');
+    console.log('Data check:', { 
+      hasUser: !!user, 
+      hasAnswers: !!answers, 
+      hasInteractionAnalytics: !!interactionAnalytics, 
+      scoresLength: scores.length 
+    });
+
+    if (!user || !answers || !interactionAnalytics || scores.length === 0) {
+      console.log('❌ Missing data for personalized recommendations:', { user, answers, interactionAnalytics, scores: scores.length });
+      return;
+    }
+
+    console.log('✅ All data available, starting AI recommendation generation...');
+    setIsLoadingRecommendations(true);
+    setRecommendationsError(null);
+
+    try {
+      console.log('=== GENERATING AI-POWERED PERSONALIZED RECOMMENDATIONS ===');
+      
+      // Prepare user analytics data
+      const userAnalyticsData: UserAnalyticsData = {
+        answers,
+        timestamps: {}, // We could enhance this with actual timestamps
+        interactionEvents: interactionAnalytics.events || [],
+        sessionAnalytics: interactionAnalytics,
+        userInfo: {
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      };
+
+      console.log('📊 User analytics data prepared:', userAnalyticsData);
+
+      // Create behavioral analytics service
+      const behavioralService = new BehavioralAnalyticsService();
+
+      // Convert scores to DimensionScore format
+      const dimensionScores: DimensionScore[] = scores.map((score, index) => ({
+        dimension: score.abbreviation || competencies[index]?.name || `DIM_${index}`,
+        score: typeof score === 'number' ? score : Number(score),
+        maxScore: 10,
+        percentile: (typeof score === 'number' ? score : Number(score)) / 10 * 100
+      }));
+
+      console.log('🎯 Dimension scores prepared:', dimensionScores);
+
+      // Try AI-powered recommendations first, fallback to simulated if needed
+      console.log('🤖 Calling AI recommendation service...');
+      const personalizedRecs = await behavioralService.generateAIRecommendations(
+        dimensionScores,
+        `session_${Date.now()}`,
+        userAnalyticsData.userInfo
+      );
+
+      console.log('✅ AI recommendations generated successfully:', personalizedRecs);
+
+      setPersonalizedRecommendations(personalizedRecs);
+      setIsLoadingRecommendations(false);
+
+      // Store in session storage for persistence
+      sessionStorage.setItem('personalizedRecommendations', JSON.stringify(personalizedRecs));
+
+    } catch (error) {
+      console.error('❌ Error generating personalized recommendations:', error);
+      setRecommendationsError('Kişiselleştirilmiş öneriler oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
+      setIsLoadingRecommendations(false);
+    }
   };
 
   if (scores.length === 0) {
@@ -743,6 +888,18 @@ const ResultsScreen = () => {
   );
 
   const renderOneriler = () => {
+    // If we have personalized recommendations, show them
+    if (personalizedRecommendations || isLoadingRecommendations || recommendationsError) {
+      return (
+        <PersonalizedRecommendationsComponent
+          recommendations={personalizedRecommendations}
+          isLoading={isLoadingRecommendations}
+          error={recommendationsError}
+        />
+      );
+    }
+
+    // Fallback to original recommendations
     const recommendations = getRecommendations(scores);
     
     return (
@@ -787,6 +944,7 @@ const ResultsScreen = () => {
           <>
             {renderDavranisAnalizi()}
             {renderYetkinlikler()}
+            {renderOneriler()}
           </>
         );
     }
@@ -893,47 +1051,214 @@ const ResultsScreen = () => {
           <div className="sidebar-feedback-card">
             <h3>Geri Bildirim</h3>
             <p className="sidebar-feedback-description">
-              Test deneyiminizi değerlendirin
+              Test deneyiminizi değerlendirin (1-10 arası puanlayın)
             </p>
             
             <div className="sidebar-feedback-form">
+              {/* Accuracy Rating */}
               <div className="sidebar-rating-section">
-                <label>Puanınız:</label>
-                <div className="sidebar-star-rating">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      className={`sidebar-star ${feedbackRating >= star ? 'active' : ''}`}
-                      onClick={() => setFeedbackRating(star)}
-                      disabled={isFeedbackSubmitting}
-                    >
-                      ★
-                    </button>
-                  ))}
+                <label>Sonuçların doğruluğunu nasıl değerlendiriyorsunuz?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'accuracy')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.accuracy > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.accuracy || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.accuracy > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.accuracy > 0 ? `Puanınız: ${feedbackRatings.accuracy}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Game Experience Rating */}
+              <div className="sidebar-rating-section">
+                <label>Ne kadar "oyun oynuyor" hissi yaşadınız?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'gameExperience')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.gameExperience > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.gameExperience || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.gameExperience > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.gameExperience > 0 ? `Puanınız: ${feedbackRatings.gameExperience}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Fairness Rating */}
+              <div className="sidebar-rating-section">
+                <label>Puanlama sistemi ne kadar adil geldi?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'fairness')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.fairness > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.fairness || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.fairness > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.fairness > 0 ? `Puanınız: ${feedbackRatings.fairness}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Usefulness Rating */}
+              <div className="sidebar-rating-section">
+                <label>Sonuçlar güçlü/zayıf yönlerinizi anlamada ne kadar faydalı?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'usefulness')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.usefulness > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.usefulness || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.usefulness > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.usefulness > 0 ? `Puanınız: ${feedbackRatings.usefulness}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Recommendation Rating */}
+              <div className="sidebar-rating-section">
+                <label>Bu testi arkadaşınıza tavsiye etme olasılığınız?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'recommendation')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.recommendation > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.recommendation || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.recommendation > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.recommendation > 0 ? `Puanınız: ${feedbackRatings.recommendation}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Purchase Likelihood Rating */}
+              <div className="sidebar-rating-section">
+                <label>İK müdürü olsaydınız, bu testi satın alma olasılığınız?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'purchaseLikelihood')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.purchaseLikelihood > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.purchaseLikelihood || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.purchaseLikelihood > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.purchaseLikelihood > 0 ? `Puanınız: ${feedbackRatings.purchaseLikelihood}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Value for Money Rating */}
+              <div className="sidebar-rating-section">
+                <label>25$ maliyetle, paranın karşılığını nasıl değerlendirirsiniz?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'valueForMoney')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.valueForMoney > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.valueForMoney || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.valueForMoney > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.valueForMoney > 0 ? `Puanınız: ${feedbackRatings.valueForMoney}/10` : 'Bir puan seçin'}
+                </div>
+              </div>
+
+              {/* Technical Performance Rating */}
+              <div className="sidebar-rating-section">
+                <label>Teknik performansı (yüklenme, yanıt verme) nasıl değerlendiriyorsunuz?</label>
+                <div className="rating-slider-container">
+                  <div 
+                    className="rating-slider-track"
+                    onClick={(e) => handleSliderClick(e, 'technicalPerformance')}
+                  >
+                    <div 
+                      className={`rating-slider-handle ${feedbackRatings.technicalPerformance > 0 ? 'has-value' : ''}`}
+                      style={{ left: getSliderPosition(feedbackRatings.technicalPerformance || 1) }}
+                    />
+                  </div>
+                  <div className="rating-scale-labels">
+                    <span className="rating-scale-label">1</span>
+                    <span className="rating-scale-label">10</span>
+                  </div>
+                </div>
+                <div className={`rating-description ${feedbackRatings.technicalPerformance > 0 ? 'has-value' : ''}`}>
+                  {feedbackRatings.technicalPerformance > 0 ? `Puanınız: ${feedbackRatings.technicalPerformance}/10` : 'Bir puan seçin'}
                 </div>
               </div>
               
               <div className="sidebar-feedback-text-section">
-                <label htmlFor="sidebar-feedback-text">Yorumlarınız:</label>
+                <label htmlFor="sidebar-feedback-text">Ek Yorumlarınız:</label>
                 <textarea
                   id="sidebar-feedback-text"
                   value={feedbackText}
                   onChange={(e) => setFeedbackText(e.target.value)}
-                  placeholder="Görüşlerinizi paylaşın..."
+                  placeholder="Şimdiden teşekkürler."
                   rows={3}
                   disabled={isFeedbackSubmitting}
-                  maxLength={300}
+                  maxLength={500}
                 />
                 <div className="sidebar-character-count">
-                  {feedbackText.length}/300
+                  {feedbackText.length}/500
                 </div>
               </div>
               
               <button
                 className="sidebar-feedback-submit-button"
                 onClick={handleFeedbackSubmit}
-                disabled={!feedbackText.trim() || feedbackRating === 0 || isFeedbackSubmitting}
+                disabled={isFeedbackSubmitting}
               >
                 {isFeedbackSubmitting ? 'Gönderiliyor...' : 'Gönder'}
               </button>
