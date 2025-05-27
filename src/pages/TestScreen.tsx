@@ -49,7 +49,7 @@ const TestScreen = () => {
   
   // Initialize interaction tracker
   const trackerRef = useRef<InteractionTracker | null>(null);
-  const API_URL = `https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec`;
+  const API_URL = `https://script.google.com/macros/s/AKfycbzMTWueAS7y8b_Us7FoA2joYyaAim_KsGL9YlaGd0LfJNuUFPczGJfA4kBP6wUrT7J0/exec`;
 
   // Initialize tracker on component mount
   useEffect(() => {

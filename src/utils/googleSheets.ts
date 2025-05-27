@@ -22,7 +22,7 @@ export const sendResultsToGoogleSheets = async (
   competencyScores: CompetencyScore[]
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec";
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMTWueAS7y8b_Us7FoA2joYyaAim_KsGL9YlaGd0LfJNuUFPczGJfA4kBP6wUrT7J0/exec";
     
     // Convert data to JSON string
     const data = {
@@ -73,7 +73,7 @@ export const sendResultsToGoogleSheets = async (
     
     // Even if there's an error, try the form method
     try {
-      const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec";
+      const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMTWueAS7y8b_Us7FoA2joYyaAim_KsGL9YlaGd0LfJNuUFPczGJfA4kBP6wUrT7J0/exec";
       
       const data = {
         user,

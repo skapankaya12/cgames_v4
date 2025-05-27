@@ -45,7 +45,7 @@ class InteractionTracker {
   private sessionStartTime: number;
   private currentQuestionStartTime: number | null = null;
   private questionAnalytics: Map<number, QuestionAnalytics> = new Map();
-  private batchSize = 10;
+  private batchSize = 5;
   private apiUrl: string;
 
   constructor(apiUrl: string) {
@@ -56,6 +56,8 @@ class InteractionTracker {
     // Initialize session storage
     sessionStorage.setItem('interactionSessionId', this.sessionId);
     sessionStorage.setItem('interactionEvents', JSON.stringify([]));
+    
+    console.log('InteractionTracker initialized with session ID:', this.sessionId);
   }
 
   private generateSessionId(): string {
@@ -159,11 +161,18 @@ class InteractionTracker {
   private addEvent(event: InteractionEvent): void {
     this.events.push(event);
     
+    console.log(`Added interaction event: ${event.type} for question ${event.questionId} (total events: ${this.events.length})`);
+    
     // Update session storage
-    sessionStorage.setItem('interactionEvents', JSON.stringify(this.events));
+    try {
+      sessionStorage.setItem('interactionEvents', JSON.stringify(this.events));
+    } catch (error) {
+      console.error('Failed to save events to session storage:', error);
+    }
 
     // Batch send events if we reach the batch size
     if (this.events.length >= this.batchSize) {
+      console.log(`Batch size reached (${this.batchSize}), sending events...`);
       this.sendEventsBatch();
     }
   }
@@ -183,15 +192,88 @@ class InteractionTracker {
         timestamp: Date.now()
       };
 
-      const url = `${this.apiUrl}?interactionData=${encodeURIComponent(JSON.stringify(payload))}`;
-      const img = new Image();
-      img.src = url;
-      img.style.display = 'none';
-      document.body.appendChild(img);
+      const payloadString = JSON.stringify(payload);
+      const encodedPayload = encodeURIComponent(payloadString);
+      const url = `${this.apiUrl}?interactionData=${encodedPayload}`;
       
-      setTimeout(() => {
-        document.body.removeChild(img);
-      }, 5000);
+      // Check URL length and split if necessary
+      if (url.length > 8000) { // Conservative limit for URL length
+        console.warn(`Interaction data URL too long (${url.length} chars), splitting batch`);
+        
+        // Split events into smaller batches
+        const halfSize = Math.ceil(eventsToSend.length / 2);
+        const firstHalf = eventsToSend.slice(0, halfSize);
+        const secondHalf = eventsToSend.slice(halfSize);
+        
+        // Send first half
+        if (firstHalf.length > 0) {
+          const firstPayload = {
+            type: 'interaction_events',
+            sessionId: this.sessionId,
+            events: firstHalf,
+            timestamp: Date.now()
+          };
+          
+          const firstUrl = `${this.apiUrl}?interactionData=${encodeURIComponent(JSON.stringify(firstPayload))}`;
+          const firstImg = new Image();
+          firstImg.src = firstUrl;
+          firstImg.style.display = 'none';
+          document.body.appendChild(firstImg);
+          
+          setTimeout(() => {
+            if (document.body.contains(firstImg)) {
+              document.body.removeChild(firstImg);
+            }
+          }, 5000);
+        }
+        
+        // Send second half after a delay
+        if (secondHalf.length > 0) {
+          setTimeout(() => {
+            const secondPayload = {
+              type: 'interaction_events',
+              sessionId: this.sessionId,
+              events: secondHalf,
+              timestamp: Date.now()
+            };
+            
+            const secondUrl = `${this.apiUrl}?interactionData=${encodeURIComponent(JSON.stringify(secondPayload))}`;
+            const secondImg = new Image();
+            secondImg.src = secondUrl;
+            secondImg.style.display = 'none';
+            document.body.appendChild(secondImg);
+            
+            setTimeout(() => {
+              if (document.body.contains(secondImg)) {
+                document.body.removeChild(secondImg);
+              }
+            }, 5000);
+          }, 1000);
+        }
+      } else {
+        // URL is acceptable length, send normally
+        console.log(`Sending ${eventsToSend.length} interaction events (URL length: ${url.length})`);
+        
+        const img = new Image();
+        
+        img.onload = () => {
+          console.log('Interaction events sent successfully');
+        };
+        
+        img.onerror = () => {
+          console.error('Failed to send interaction events via image method');
+        };
+        
+        img.src = url;
+        img.style.display = 'none';
+        document.body.appendChild(img);
+        
+        setTimeout(() => {
+          if (document.body.contains(img)) {
+            document.body.removeChild(img);
+          }
+        }, 5000);
+      }
 
       // Clear sent events
       this.events = [];

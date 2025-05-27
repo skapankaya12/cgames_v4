@@ -647,12 +647,13 @@ input:focus {
 
 /* Start Game Button Styles */
 .start-game-container {
+  position: fixed;
+  bottom: 60px; /* Adjusted to account for footer height + some spacing */
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  width: 100%;
-  height: 100%;
-  padding-bottom: 80px; /* Space above footer */
+  z-index: 4;
 }
 
 .start-game-button {
@@ -717,7 +718,7 @@ input:focus {
 
 @media screen and (max-width: 600px) {
   .start-game-container {
-    padding-bottom: 70px;
+    bottom: 50px; /* Adjusted for smaller screens */
   }
   
   .start-game-button {
