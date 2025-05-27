@@ -276,10 +276,22 @@
   padding: 20px 25px;
 }
 
+/* Specific adjustments for questions with longer text that cause narration to touch options */
+/* Questions 3, 6, 9, 11, 13, 14, 16 need extra spacing */
+.dialog-narration[data-question-id="3"],
+.dialog-narration[data-question-id="6"],
+.dialog-narration[data-question-id="9"],
+.dialog-narration[data-question-id="11"],
+.dialog-narration[data-question-id="13"],
+.dialog-narration[data-question-id="14"],
+.dialog-narration[data-question-id="16"] {
+  bottom: 220px; /* Increased from 180px for better spacing */
+}
+
 /* Narration Dialog - Bottom positioned above options */
 .dialog-narration {
   position: fixed;
-  bottom: 140px;
+  bottom: 180px; /* Increased from 140px for better spacing */
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
@@ -293,13 +305,13 @@
   background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
   border: 2px solid #00bfff;
   clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
-  padding: 5px 90px;
+  padding: 25px 35px; /* Increased padding for better text spacing */
   backdrop-filter: blur(15px);
   box-shadow: 
     0 0 30px rgba(0, 191, 255, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   z-index: 25;
-  min-height: 90px;
+  min-height: 85px; /* Increased min-height for better text display */
 }
 
 .narration-box::before {
@@ -309,7 +321,7 @@
 .dialog-narration p {
   color: #ffffff;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 0;
   text-align: center;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
@@ -324,7 +336,7 @@
 /* Options Dialog - Bottom positioned with proper spacing from narration */
 .dialog-options {
   position: fixed;
-  bottom: 1px;
+  bottom: 35px; /* Increased from 1px to prevent footer overlap */
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -600,9 +612,20 @@
   }
   
   .dialog-narration {
-    bottom: 240px;
+    bottom: 280px;
     width: 98%;
     max-width: 800px;
+  }
+  
+  /* Specific adjustments for problematic questions on tablet */
+  .dialog-narration[data-question-id="3"],
+  .dialog-narration[data-question-id="6"],
+  .dialog-narration[data-question-id="9"],
+  .dialog-narration[data-question-id="11"],
+  .dialog-narration[data-question-id="13"],
+  .dialog-narration[data-question-id="14"],
+  .dialog-narration[data-question-id="16"] {
+    bottom: 320px; /* Extra spacing for tablet */
   }
   
   .narration-box {
@@ -611,7 +634,7 @@
   }
   
   .dialog-options {
-    bottom: 30px;
+    bottom: 50px; /* Increased from 30px to prevent footer overlap */
     transform: translateX(-50%);
     width: 95%;
     max-width: 700px;
@@ -700,9 +723,20 @@
   }
   
   .dialog-narration {
-    bottom: 200px;
+    bottom: 240px; /* Increased from 200px */
     width: 99%;
     max-width: 700px;
+  }
+  
+  /* Specific adjustments for problematic questions on mobile */
+  .dialog-narration[data-question-id="3"],
+  .dialog-narration[data-question-id="6"],
+  .dialog-narration[data-question-id="9"],
+  .dialog-narration[data-question-id="11"],
+  .dialog-narration[data-question-id="13"],
+  .dialog-narration[data-question-id="14"],
+  .dialog-narration[data-question-id="16"] {
+    bottom: 280px; /* Extra spacing for mobile */
   }
   
   .narration-box {
@@ -712,7 +746,7 @@
   }
   
   .dialog-options {
-    bottom: 25px;
+    bottom: 45px; /* Increased from 25px to prevent footer overlap */
     transform: translateX(-50%);
     width: 98%;
     max-width: 600px;

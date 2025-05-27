@@ -40,7 +40,7 @@ const TestScreen2 = () => {
     // Set dummy answers for demo
     const demoAnswers = { 1: 'demo', 2: 'demo' };
     sessionStorage.setItem('answers2', JSON.stringify(demoAnswers));
-    navigate('/game2/results');
+    navigate('/ending', { state: { fromGame2: true } });
   };
 
   return (
@@ -48,7 +48,7 @@ const TestScreen2 = () => {
       <video 
         ref={videoRef}
         className={`background-video ${videoLoaded ? 'loaded' : ''}`}
-        src="/identityscreen.mp4"
+        src="/videoidentityscreen.mp4"
         playsInline
         muted
         loop

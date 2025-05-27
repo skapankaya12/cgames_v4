@@ -74,11 +74,7 @@ const ResultsScreen = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   const [interactionAnalytics, setInteractionAnalytics] = useState<SessionAnalytics | null>(null);
-  const [showAnalytics, setShowAnalytics] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Direct Google Sheets API endpoint
   const API_URL = `https://script.google.com/macros/s/AKfycbwDRSbngy9nVmclxjU_P9UeOR5TpNSpuHMgm--TYi653LOEWZx51K8SJ0yhBOjGVvJC/exec`;
@@ -337,273 +333,240 @@ const ResultsScreen = () => {
 
   if (!user) return null;
 
+  // Calculate overall performance
+  const overallScore = scores.length > 0 ? Math.round(scores.reduce((sum, comp) => sum + getScorePercentage(comp.score, comp.maxScore), 0) / scores.length) : 0;
   const topCompetencies = scores.slice(0, 3);
   const developmentAreas = scores.slice(-2);
 
+  // Group competencies by category
+  const competenciesByCategory = scores.reduce((acc, comp) => {
+    if (!acc[comp.category]) acc[comp.category] = [];
+    acc[comp.category].push(comp);
+    return acc;
+  }, {} as {[key: string]: CompetencyScore[]});
+
   return (
-    <div className="dialog-game-container">
-      <video 
-        ref={videoRef}
-        className={`background-video ${videoLoaded ? 'loaded' : ''}`}
-        src="/identityscreen.mp4"
-        playsInline
-        muted
-        loop
-        autoPlay
-        onLoadedData={() => {
-          setVideoLoaded(true);
-          setVideoError(false);
-          if (videoRef.current) {
-            videoRef.current.play().catch(error => {
-              console.error('Video autoplay failed:', error);
-            });
-          }
-        }}
-        onError={() => {
-          console.error('Video failed to load');
-          setVideoError(true);
-        }}
-      >
-        Your browser does not support the video tag.
-      </video>
-      
-      {!videoLoaded && !videoError && (
-        <div className="video-loading">
-          <div className="loading-spinner"></div>
+    <div className="dashboard-container">
+      {/* Header Section */}
+      <div className="dashboard-header">
+        <div className="header-content">
+          <h1 className="dashboard-title">Sonuçlar</h1>
+          <p className="dashboard-subtitle">Kaptan {user?.firstName}, göreviniz tamamlandı! İşte detaylı performans analiziniz:</p>
         </div>
-      )}
-      
-      {videoError && (
-        <div className="video-error">
-          <p>Video yüklenemedi</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="retry-button"
-          >
-            Yeniden Dene
+        <div className="header-actions">
+          {!submitSuccess && (
+            <button className="submit-btn" onClick={handleManualSubmit} disabled={isSubmitting}>
+              {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Kaydet'}
+            </button>
+          )}
+          <button className="restart-btn" onClick={handleRestart}>
+            Yeni Test Başlat
           </button>
         </div>
+      </div>
+
+      {/* Status Messages */}
+      {isSubmitting && (
+        <div className="status-message loading">
+          <div className="spinner"></div>
+          Sonuçlarınız kaydediliyor...
+        </div>
       )}
 
-      <div className="hero-section">
-        <div className="hero-content">
-          <div className="results-container">
-            <div className="results-box">
-              <div className="results-header">
-                <h1 className="results-title">Görev Tamamlandı, Kaptan {user.firstName}!</h1>
-                <p className="results-subtitle">
-                  Galaksiler arası yolculuğunuz sona erdi. İşte liderlik profiliniz:
-                </p>
+      {submitError && (
+        <div className="status-message error">
+          {submitError}
+        </div>
+      )}
+
+      {submitSuccess && (
+        <div className="status-message success">
+          Sonuçlarınız başarıyla kaydedildi!
+        </div>
+      )}
+
+      {/* Main Dashboard Grid */}
+      <div className="dashboard-grid">
+        {/* Overall Performance Card */}
+        <div className="dashboard-card overview-card">
+          <div className="card-header">
+            <h3>Genel Performans</h3>
+            <div className="overall-score" style={{ color: getScoreLevelColor(overallScore) }}>
+              {overallScore}%
+            </div>
+          </div>
+          <div className="card-content">
+            <div className="score-breakdown">
+              <div className="score-item">
+                <span className="label">Seviye:</span>
+                <span className="value" style={{ color: getScoreLevelColor(overallScore) }}>
+                  {getScoreLevel(overallScore)}
+                </span>
               </div>
-
-              {isSubmitting && (
-                <div className="notification">
-                  <div className="spinner"></div>
-                  Sonuçlarınız kaydediliyor...
-                </div>
-              )}
-
-              {submitError && (
-                <div className="error-message">
-                  {submitError}
-                </div>
-              )}
-
-              {submitSuccess && (
-                <div className="success-message">
-                  Sonuçlarınız başarıyla kaydedildi.
-                </div>
-              )}
-
-              <div className="competency-sections">
-                <div className="section">
-                  <h3 className="section-title"> En Güçlü Yetkinlikleriniz</h3>
-                  <div className="competency-list">
-                    {topCompetencies.map((competency, index) => {
-                      const percentage = getScorePercentage(competency.score, competency.maxScore);
-                      const level = getScoreLevel(percentage);
-                      const levelColor = getScoreLevelColor(percentage);
-                      
-                      return (
-                        <div key={competency.name} className="competency-item">
-                          <div className="competency-header">
-                            <span className="competency-rank">#{index + 1}</span>
-                            <div className="competency-info">
-                              <h4 className="competency-name">{competency.fullName}</h4>
-                              <p className="competency-code">({competency.abbreviation})</p>
-                            </div>
-                            <div className="competency-score">
-                              <span className="score-percentage" style={{ color: levelColor }}>
-                                {percentage}%
-                              </span>
-                              <span className="score-level" style={{ color: levelColor }}>
-                                {level}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="competency-description">{competency.description}</p>
-                          <p className="competency-insight">{getInsight(competency.abbreviation, competency.score)}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="section">
-                  <h3 className="section-title"> Gelişim Alanlarınız</h3>
-                  <div className="competency-list">
-                    {developmentAreas.map((competency) => {
-                      const percentage = getScorePercentage(competency.score, competency.maxScore);
-                      const level = getScoreLevel(percentage);
-                      const levelColor = getScoreLevelColor(percentage);
-                      
-                      return (
-                        <div key={competency.name} className="competency-item development">
-                          <div className="competency-header">
-                            <div className="competency-info">
-                              <h4 className="competency-name">{competency.fullName}</h4>
-                              <p className="competency-code">({competency.abbreviation})</p>
-                            </div>
-                            <div className="competency-score">
-                              <span className="score-percentage" style={{ color: levelColor }}>
-                                {percentage}%
-                              </span>
-                              <span className="score-level" style={{ color: levelColor }}>
-                                {level}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="competency-description">{competency.description}</p>
-                          <p className="competency-insight">{getInsight(competency.abbreviation, competency.score)}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Interaction Analytics Section */}
-                {interactionAnalytics && (
-                  <div className="section">
-                    <div className="analytics-header">
-                      <h3 className="section-title"> Davranış Analizi</h3>
-                      <button 
-                        className="analytics-toggle"
-                        onClick={() => setShowAnalytics(!showAnalytics)}
-                      >
-                        {showAnalytics ? 'Gizle' : 'Göster'}
-                      </button>
-                    </div>
-                    
-                    {showAnalytics && (
-                      <div className="analytics-content">
-                        <div className="analytics-summary">
-                          <div className="analytics-item">
-                            <span className="analytics-label">Ortalama Yanıt Süresi:</span>
-                            <span className="analytics-value">{formatTime(interactionAnalytics.averageResponseTime)}</span>
-                          </div>
-                          <div className="analytics-item">
-                            <span className="analytics-label">Toplam Cevap Değişikliği:</span>
-                            <span className="analytics-value">{interactionAnalytics.totalAnswerChanges}</span>
-                          </div>
-                          <div className="analytics-item">
-                            <span className="analytics-label">Geri Dönüş Sayısı:</span>
-                            <span className="analytics-value">{interactionAnalytics.totalBackNavigations}</span>
-                          </div>
-                        </div>
-
-                        {/* Slowest Questions */}
-                        {interactionAnalytics.questionAnalytics.length > 0 && (
-                          <div className="analytics-section">
-                            <h4 className="analytics-subtitle"> En Uzun Düşündüğünüz Sorular</h4>
-                            <div className="question-times">
-                              {interactionAnalytics.questionAnalytics
-                                .filter(q => q.totalTime && q.totalTime > 0)
-                                .sort((a, b) => (b.totalTime || 0) - (a.totalTime || 0))
-                                .slice(0, 3)
-                                .map((q, index) => (
-                                  <div key={q.questionId} className="question-time-item">
-                                    <span className="question-rank">#{index + 1}</span>
-                                    <span className="question-title">{getQuestionTitle(q.questionId)}</span>
-                                    <span className="question-time">{formatTime(q.totalTime!)}</span>
-                                  </div>
-                                ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Revised Questions */}
-                        {interactionAnalytics.questionAnalytics.some(q => q.revisions.length > 0) && (
-                          <div className="analytics-section">
-                            <h4 className="analytics-subtitle"> Cevabını Değiştirdiğin Sorular</h4>
-                            <div className="revised-questions">
-                              {interactionAnalytics.questionAnalytics
-                                .filter(q => q.revisions.length > 0)
-                                .map(q => (
-                                  <div key={q.questionId} className="revised-question-item">
-                                    <span className="question-title">{getQuestionTitle(q.questionId)}</span>
-                                    <span className="revision-count">{q.revisions.length} değişiklik</span>
-                                  </div>
-                                ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Decision Style Insight */}
-                        <div className="analytics-section">
-                          <h4 className="analytics-subtitle"> Karar Verme Tarzınız</h4>
-                          <div className="decision-style">
-                            {interactionAnalytics.averageResponseTime < 30000 ? (
-                              <p className="style-insight quick">
-                                 <strong>Hızlı Karar Verici:</strong> Sorulara hızlı yanıt veriyorsunuz. Bu, güçlü sezgileriniz ve hızlı analiz yeteneğiniz olduğunu gösterir.
-                              </p>
-                            ) : interactionAnalytics.averageResponseTime > 60000 ? (
-                              <p className="style-insight deliberate">
-                                 <strong>Düşünceli Karar Verici:</strong> Kararlarınızı dikkatlice değerlendiriyorsunuz. Bu, analitik düşünce yapınızı ve detaylara önem verdiğinizi gösterir.
-                              </p>
-                            ) : (
-                              <p className="style-insight balanced">
-                                 <strong>Dengeli Karar Verici:</strong> Hız ve dikkat arasında iyi bir denge kuruyorsunuz. Bu, esnek karar verme yeteneğinizi gösterir.
-                              </p>
-                            )}
-                            
-                            {interactionAnalytics.totalAnswerChanges > 5 && (
-                              <p className="style-insight adaptive">
-                                 <strong>Adaptif Düşünür:</strong> Cevaplarınızı gözden geçirme eğiliminiz, öz-farkındalığınızı ve sürekli iyileştirme yaklaşımınızı gösterir.
-                              </p>
-                            )}
-                            
-                            {interactionAnalytics.totalBackNavigations > 2 && (
-                              <p className="style-insight thorough">
-                                 <strong>Kapsamlı Değerlendirici:</strong> Önceki sorulara geri dönmeniz, bütünsel düşünme yeteneğinizi ve tutarlılığa verdiğiniz önemi gösterir.
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+              <div className="score-item">
+                <span className="label">Toplam Soru:</span>
+                <span className="value">{questions.length}</span>
               </div>
-
-              <div className="action-section">
-                <div className="button-container">
-                  {!submitSuccess && (
-                    <button className="submit-button" onClick={handleManualSubmit} disabled={isSubmitting}>
-                      {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
-                    </button>
-                  )}
-                  <button className="restart-button" onClick={handleRestart}>
-                    Yeni Görev Başlat
-                  </button>
-                </div>
+              <div className="score-item">
+                <span className="label">Değerlendirilen Alan:</span>
+                <span className="value">{scores.length}</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="game-footer">
-        <p className="footer-text">Cognitive Games. All rights reserved</p>
+        {/* Top Competencies Card */}
+        <div className="dashboard-card top-competencies-card">
+          <div className="card-header">
+            <h3> En Güçlü Yetkinlikler</h3>
+          </div>
+          <div className="card-content">
+            <div className="competency-ranking">
+              {topCompetencies.map((comp, index) => {
+                const percentage = getScorePercentage(comp.score, comp.maxScore);
+                return (
+                  <div key={comp.name} className="ranking-item">
+                    <div className="rank-badge">#{index + 1}</div>
+                    <div className="comp-info">
+                      <div className="comp-name">{comp.fullName}</div>
+                      <div className="comp-code">({comp.abbreviation})</div>
+                    </div>
+                    <div className="comp-score" style={{ color: getScoreLevelColor(percentage) }}>
+                      {percentage}%
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Development Areas Card */}
+        <div className="dashboard-card development-card">
+          <div className="card-header">
+            <h3>Gelişim Alanları</h3>
+          </div>
+          <div className="card-content">
+            <div className="development-list">
+              {developmentAreas.map((comp) => {
+                const percentage = getScorePercentage(comp.score, comp.maxScore);
+                return (
+                  <div key={comp.name} className="development-item">
+                    <div className="comp-info">
+                      <div className="comp-name">{comp.fullName}</div>
+                      <div className="comp-insight">{getInsight(comp.abbreviation, comp.score)}</div>
+                    </div>
+                    <div className="comp-score" style={{ color: getScoreLevelColor(percentage) }}>
+                      {percentage}%
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Category Breakdown */}
+        {Object.entries(competenciesByCategory).map(([category, comps]) => (
+          <div key={category} className="dashboard-card category-card">
+            <div className="card-header">
+              <h3>{category.charAt(0).toUpperCase() + category.slice(1)} Yetkinlikleri</h3>
+            </div>
+            <div className="card-content">
+              <div className="category-competencies">
+                {comps.map((comp) => {
+                  const percentage = getScorePercentage(comp.score, comp.maxScore);
+                  return (
+                    <div key={comp.name} className="category-comp-item">
+                      <div className="comp-header">
+                        <span className="comp-name">{comp.fullName}</span>
+                        <span className="comp-percentage" style={{ color: getScoreLevelColor(percentage) }}>
+                          {percentage}%
+                        </span>
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ 
+                            width: `${percentage}%`,
+                            backgroundColor: getScoreLevelColor(percentage)
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Analytics Card */}
+        {interactionAnalytics && (
+          <div className="dashboard-card analytics-card">
+            <div className="card-header">
+              <h3> Davranış Analizi</h3>
+            </div>
+            <div className="card-content">
+              <div className="analytics-grid">
+                <div className="analytics-metric">
+                  <div className="metric-value">{formatTime(interactionAnalytics.averageResponseTime)}</div>
+                  <div className="metric-label">Ortalama Yanıt Süresi</div>
+                </div>
+                <div className="analytics-metric">
+                  <div className="metric-value">{interactionAnalytics.totalAnswerChanges}</div>
+                  <div className="metric-label">Cevap Değişikliği</div>
+                </div>
+                <div className="analytics-metric">
+                  <div className="metric-value">{interactionAnalytics.totalBackNavigations}</div>
+                  <div className="metric-label">Geri Dönüş</div>
+                </div>
+              </div>
+              
+              {/* Decision Style */}
+              <div className="decision-style-section">
+                <h4>Karar Verme Tarzınız</h4>
+                <div className="decision-insights">
+                  {interactionAnalytics.averageResponseTime < 30000 ? (
+                    <div className="insight-badge quick">⚡ Hızlı Karar Verici</div>
+                  ) : interactionAnalytics.averageResponseTime > 60000 ? (
+                    <div className="insight-badge deliberate"> Düşünceli Karar Verici</div>
+                  ) : (
+                    <div className="insight-badge balanced"> Dengeli Karar Verici</div>
+                  )}
+                  
+                  {interactionAnalytics.totalAnswerChanges > 5 && (
+                    <div className="insight-badge adaptive"> Adaptif Düşünür</div>
+                  )}
+                  
+                  {interactionAnalytics.totalBackNavigations > 2 && (
+                    <div className="insight-badge thorough"> Kapsamlı Değerlendirici</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Detailed Insights Card */}
+        <div className="dashboard-card insights-card">
+          <div className="card-header">
+            <h3> Detaylı İçgörüler</h3>
+          </div>
+          <div className="card-content">
+            <div className="insights-list">
+              {topCompetencies.slice(0, 2).map((comp) => (
+                <div key={comp.name} className="insight-item">
+                  <div className="insight-header">
+                    <span className="insight-icon"></span>
+                    <span className="insight-title">{comp.fullName}</span>
+                  </div>
+                  <p className="insight-text">{getInsight(comp.abbreviation, comp.score)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

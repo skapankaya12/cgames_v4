@@ -188,7 +188,7 @@ const TestScreen = () => {
       
       // Add a small delay to allow the user to see the completion message
       setTimeout(() => {
-        navigate('/results');
+        navigate('/ending');
       }, 1000);
     } else {
       setTestState(prev => ({
@@ -251,9 +251,8 @@ const TestScreen = () => {
         currentQuestion: prev.currentQuestion - 1
       }));
       
-      // Show forwarding line if there's already an answer for the previous question
-      const prevQuestion = questions[testState.currentQuestion - 1];
-      setShowForwardingLine(!!testState.answers[prevQuestion.id]);
+      // Reset forwarding line and transition state when going back
+      setShowForwardingLine(false);
       setIsTransitioning(false);
       setError(null);
     }
@@ -424,7 +423,7 @@ const TestScreen = () => {
           </div>
         </div>
         
-        <div className="dialog-narration">
+        <div className="dialog-narration" data-question-id={currentQuestion.id}>
           <div className="dialog-box narration-box">
             <div className="dialog-content">
               <p>{narrationText}</p>
@@ -478,7 +477,7 @@ const TestScreen = () => {
       </div>
       
       <div className="game-footer">
-        <p className="footer-text">Cognitive Games. All rights reserved</p>
+        <p className="footer-text">İsmimiz inşallah 2025. All rights reserved</p>
       </div>
     </div>
   );

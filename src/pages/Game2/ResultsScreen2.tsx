@@ -44,7 +44,7 @@ const ResultsScreen2 = () => {
       <video 
         ref={videoRef}
         className={`background-video ${videoLoaded ? 'loaded' : ''}`}
-        src="/identityscreen.mp4"
+        src="/videoidentityscreen.mp4"
         playsInline
         muted
         loop
