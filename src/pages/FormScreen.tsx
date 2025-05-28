@@ -16,8 +16,95 @@ const FormScreen = () => {
   const [user, setUser] = useState<User>({ firstName: '', lastName: '', company: '' });
   const [error, setError] = useState<string | null>(null);
   const [consentChecked, setConsentChecked] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    setFileError(null);
+    
+    if (!file) {
+      setSelectedFile(null);
+      return;
+    }
+
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      setFileError('Lütfen sadece PDF dosyası seçin.');
+      setSelectedFile(null);
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setFileError('Dosya boyutu 10MB\'dan küçük olmalıdır.');
+      setSelectedFile(null);
+      return;
+    }
+
+    setSelectedFile(file);
+  };
+
+  const uploadPDFToGoogleSheets = async (file: File, userData: User): Promise<boolean> => {
+    try {
+      setIsUploading(true);
+      
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          // Remove data:application/pdf;base64, prefix
+          const base64Data = result.split(',')[1];
+          resolve(base64Data);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      // Prepare data for Google Apps Script
+      const pdfData = {
+        action: 'uploadPDF',
+        fileName: file.name,
+        fileSize: file.size,
+        fileData: base64,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        company: userData.company,
+        timestamp: new Date().toISOString()
+      };
+
+      // Send to Google Apps Script
+      const API_URL = 'https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec';
+      
+      const formData = new FormData();
+      Object.entries(pdfData).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.text();
+      console.log('PDF upload result:', result);
+      
+      return result.includes('success') || result.includes('başarı');
+    } catch (error) {
+      console.error('PDF upload error:', error);
+      return false;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user.firstName.trim() || !user.lastName.trim() || !user.company.trim()) {
       setError('Lütfen tüm alanları doldurunuz.');
@@ -27,6 +114,17 @@ const FormScreen = () => {
       setError('Teste başlamak için onay vermeniz gerekmektedir.');
       return;
     }
+
+    // Upload PDF if selected
+    if (selectedFile) {
+      setError(null);
+      const uploadSuccess = await uploadPDFToGoogleSheets(selectedFile, user);
+      if (!uploadSuccess) {
+        setError('PDF yükleme başarısız oldu. Devam etmek istiyor musunuz?');
+        // Allow user to continue even if PDF upload fails
+      }
+    }
+
     sessionStorage.setItem('user', JSON.stringify(user));
     navigate('/test/1');
   };
@@ -195,6 +293,59 @@ const FormScreen = () => {
             required
           />
         </div>
+
+        <div className="form-group pdf-upload-group">
+          <label htmlFor="pdfUpload" className="form-label">
+            CV/Özgeçmiş (PDF) - İsteğe Bağlı
+          </label>
+          <div className="pdf-upload-container">
+            <input
+              id="pdfUpload"
+              type="file"
+              accept=".pdf"
+              onChange={handleFileSelect}
+              className="pdf-input"
+              disabled={isUploading}
+            />
+            <div className="pdf-upload-info">
+              {selectedFile ? (
+                <div className="selected-file">
+                  <span className="file-icon">📄</span>
+                  <span className="file-name">{selectedFile.name}</span>
+                  <span className="file-size">
+                    ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                  </span>
+                  {!isUploading && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFile(null)}
+                      className="remove-file"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="upload-placeholder">
+                  <span className="upload-icon">📁</span>
+                  <span>PDF dosyası seçin (Maksimum 10MB)</span>
+                </div>
+              )}
+            </div>
+            {isUploading && (
+              <div className="upload-progress">
+                <div className="progress-bar">
+                  <div className="progress-fill"></div>
+                </div>
+                <span>Yükleniyor...</span>
+              </div>
+            )}
+          </div>
+          {fileError && <div className="file-error">{fileError}</div>}
+          <div className="pdf-help-text">
+            CV'niz analiz için güvenli şekilde saklanacak ve sadece test sonuçlarınızla birlikte kullanılacaktır.
+          </div>
+        </div>
         
         {error && <div className="error-message">{error}</div>}
         
@@ -217,10 +368,9 @@ const FormScreen = () => {
         <button
           type="submit"
           className="start-button"
-          disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked}
+          disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked || isUploading}
         >
-          Yolculuğa Başla
-         
+          {isUploading ? 'Yükleniyor...' : 'Yolculuğa Başla'}
         </button>
       </form>
     </div>

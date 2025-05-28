@@ -23,6 +23,9 @@ function doGet(e) {
     if (action === 'feedback') {
       // Handle feedback submission
       return handleFeedbackSubmission(e);
+    } else if (action === 'uploadPDF') {
+      // Handle PDF upload
+      return handlePDFUpload(e);
     } else if (e.parameter.interactionData) {
       // Handle interaction tracking data
       return handleInteractionTracking(e);
@@ -45,7 +48,9 @@ function doPost(e) {
     console.log("Received POST request");
     
     // Handle POST requests (form submissions)
-    if (e.parameter && e.parameter.data) {
+    if (e.parameter && e.parameter.action === 'uploadPDF') {
+      return handlePDFUpload(e);
+    } else if (e.parameter && e.parameter.data) {
       return handleTestResults(e);
     } else if (e.parameter && e.parameter.action === 'feedback') {
       return handleFeedbackSubmission(e);
@@ -242,9 +247,9 @@ function handleTestResults(e) {
     if (!resultsSheet) {
       resultsSheet = spreadsheet.insertSheet('Results');
       
-      // Add simplified headers as requested
+      // Add headers including PDF reference
       const headers = [
-        'Timestamp', 'First Name', 'Last Name', 'Answers', 'Scores', 'Total'
+        'Timestamp', 'First Name', 'Last Name', 'Company', 'Answers', 'Scores', 'Total', 'PDF File ID', 'PDF URL'
       ];
       resultsSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
       
@@ -286,7 +291,10 @@ function handleTestResults(e) {
     
     const scoresString = scoresArray.join(', ');
     
-    // Prepare the data row with simplified structure
+    // Find associated PDF for this user
+    const pdfInfo = findUserPDF(data.user.firstName, data.user.lastName);
+    
+    // Prepare the data row with PDF information
     const timestamp = new Date();
     const formattedTimestamp = Utilities.formatDate(timestamp, Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
     
@@ -294,14 +302,18 @@ function handleTestResults(e) {
       formattedTimestamp,
       data.user.firstName || '',
       data.user.lastName || '',
+      data.user.company || '',
       JSON.stringify(data.answers),
       scoresString,
-      totalScore
+      totalScore,
+      pdfInfo.fileId || '',
+      pdfInfo.fileUrl || ''
     ];
     
     console.log("Adding test results row data:", rowData);
     console.log("Scores string:", scoresString);
     console.log("Total score:", totalScore);
+    console.log("PDF info:", pdfInfo);
     
     // Add the data to the sheet
     resultsSheet.appendRow(rowData);
@@ -312,5 +324,184 @@ function handleTestResults(e) {
   } catch (error) {
     console.error('Error processing test results:', error);
     return ContentService.createTextOutput('Error processing test results: ' + error.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}
+
+/**
+ * Helper function to find PDF for a specific user
+ */
+function findUserPDF(firstName, lastName) {
+  try {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const pdfSheet = spreadsheet.getSheetByName('PDFs');
+    
+    if (!pdfSheet) {
+      console.log("No PDFs sheet found");
+      return { fileId: '', fileUrl: '' };
+    }
+    
+    // Get all data from PDFs sheet
+    const data = pdfSheet.getDataRange().getValues();
+    
+    // Skip header row and search for matching user
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const pdfFirstName = row[1]; // First Name column
+      const pdfLastName = row[2];  // Last Name column
+      const fileId = row[6];       // File ID column
+      const fileUrl = row[7];      // File URL column
+      const status = row[8];       // Upload Status column
+      
+      // Check if names match and upload was successful
+      if (pdfFirstName === firstName && 
+          pdfLastName === lastName && 
+          status === 'Success') {
+        console.log(`Found PDF for ${firstName} ${lastName}: ${fileId}`);
+        return { fileId: fileId, fileUrl: fileUrl };
+      }
+    }
+    
+    console.log(`No PDF found for ${firstName} ${lastName}`);
+    return { fileId: '', fileUrl: '' };
+    
+  } catch (error) {
+    console.error('Error finding user PDF:', error);
+    return { fileId: '', fileUrl: '' };
+  }
+}
+
+function handlePDFUpload(e) {
+  try {
+    console.log("Processing PDF upload");
+    console.log("All parameters:", JSON.stringify(e.parameter || {}));
+    
+    // Extract PDF upload parameters
+    const action = e.parameter.action;
+    const fileName = e.parameter.fileName;
+    const fileSize = e.parameter.fileSize;
+    const fileData = e.parameter.fileData;
+    const firstName = e.parameter.firstName;
+    const lastName = e.parameter.lastName;
+    const company = e.parameter.company;
+    const timestamp = e.parameter.timestamp;
+    
+    console.log("Extracted PDF parameters:", {
+      action: action,
+      fileName: fileName,
+      fileSize: fileSize,
+      firstName: firstName,
+      lastName: lastName,
+      company: company,
+      timestamp: timestamp,
+      hasFileData: !!fileData
+    });
+    
+    if (!firstName || !lastName || !fileName || !fileData) {
+      console.log("Missing required PDF upload information");
+      return ContentService.createTextOutput('Missing required PDF upload information').setMimeType(ContentService.MimeType.TEXT);
+    }
+    
+    // Create or get the PDFs folder in Google Drive
+    let pdfFolder;
+    const folders = DriveApp.getFoldersByName('Quiz_PDFs');
+    if (folders.hasNext()) {
+      pdfFolder = folders.next();
+    } else {
+      pdfFolder = DriveApp.createFolder('Quiz_PDFs');
+    }
+    
+    // Convert base64 to blob and create file
+    const blob = Utilities.newBlob(Utilities.base64Decode(fileData), 'application/pdf', fileName);
+    const file = pdfFolder.createFile(blob);
+    
+    // Make file accessible (optional - be careful with permissions)
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    const fileUrl = file.getUrl();
+    const fileId = file.getId();
+    
+    console.log("PDF file created:", {
+      fileId: fileId,
+      fileUrl: fileUrl,
+      fileName: fileName
+    });
+    
+    // Get or create the PDFs sheet
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    let pdfSheet = spreadsheet.getSheetByName('PDFs');
+    
+    if (!pdfSheet) {
+      // Create the PDFs sheet if it doesn't exist
+      pdfSheet = spreadsheet.insertSheet('PDFs');
+      
+      // Add headers
+      const headers = [
+        'Timestamp', 'First Name', 'Last Name', 'Company', 'File Name', 
+        'File Size (bytes)', 'File ID', 'File URL', 'Upload Status'
+      ];
+      pdfSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      // Format headers
+      const headerRange = pdfSheet.getRange(1, 1, 1, headers.length);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#34a853');
+      headerRange.setFontColor('white');
+    }
+    
+    // Prepare the data row
+    const submissionTime = timestamp ? new Date(timestamp) : new Date();
+    const formattedDate = Utilities.formatDate(submissionTime, Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+    
+    const rowData = [
+      formattedDate,
+      firstName,
+      lastName,
+      company || '',
+      fileName,
+      parseInt(fileSize) || 0,
+      fileId,
+      fileUrl,
+      'Success'
+    ];
+    
+    console.log("Adding PDF row data:", rowData);
+    
+    // Add the data to the sheet
+    pdfSheet.appendRow(rowData);
+    
+    console.log("PDF upload data added successfully");
+    return ContentService.createTextOutput('PDF uploaded successfully').setMimeType(ContentService.MimeType.TEXT);
+    
+  } catch (error) {
+    console.error('Error processing PDF upload:', error);
+    
+    // Still try to log the failed attempt
+    try {
+      const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+      let pdfSheet = spreadsheet.getSheetByName('PDFs');
+      
+      if (pdfSheet) {
+        const submissionTime = e.parameter.timestamp ? new Date(e.parameter.timestamp) : new Date();
+        const formattedDate = Utilities.formatDate(submissionTime, Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss');
+        
+        const errorRowData = [
+          formattedDate,
+          e.parameter.firstName || '',
+          e.parameter.lastName || '',
+          e.parameter.company || '',
+          e.parameter.fileName || '',
+          parseInt(e.parameter.fileSize) || 0,
+          'ERROR',
+          'ERROR',
+          'Failed: ' + error.toString()
+        ];
+        
+        pdfSheet.appendRow(errorRowData);
+      }
+    } catch (logError) {
+      console.error('Error logging failed PDF upload:', logError);
+    }
+    
+    return ContentService.createTextOutput('Error processing PDF upload: ' + error.toString()).setMimeType(ContentService.MimeType.TEXT);
   }
 } 

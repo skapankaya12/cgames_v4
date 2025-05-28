@@ -166,8 +166,8 @@ const ResultsScreen = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Direct Google Sheets API endpoint
-  const API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
-  const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
+  const API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
+  const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
 
   // Format time duration
   const formatTime = (milliseconds: number): string => {
