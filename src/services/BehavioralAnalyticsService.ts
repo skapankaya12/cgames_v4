@@ -5,37 +5,22 @@ import type {
   RecommendationItem, 
   PersonalizedRecommendations 
 } from '../types/Recommendations';
+import { GoogleAIService } from './GoogleAIService';
 
 export class BehavioralAnalyticsService {
   private apiKey: string;
   private baseUrl: string;
-  private aiApiKey: string;
-  private aiApiUrl: string;
+  private googleAI: GoogleAIService;
 
   constructor() {
     // Using a free behavioral analytics API key (placeholder - replace with actual)
     this.apiKey = 'demo-behavioral-analytics-key-2024';
     this.baseUrl = 'https://api.behavioral-analytics.demo.com/v1';
     
-    // FREE AI API for personalized recommendations - CONFIGURED ✅
-    // 🔐 API Key Security: Following best practices from Legit Security
-    // - Key stored securely (not in client-side code)
-    // - HTTPS encryption for all API calls
-    // - Rate limiting and error handling implemented
-    // - Regular monitoring and logging enabled
+    // Initialize Google AI Service
+    this.googleAI = new GoogleAIService();
     
-    this.aiApiKey = process.env.AIML_API_KEY || '3642b12d2f034939b10b2eb708136f02';
-    this.aiApiUrl = 'https://api.aimlapi.com/v1/chat/completions';
-    
-    // Log API configuration (securely - only showing first/last chars)
-    const maskedKey = this.aiApiKey.length > 8 ? 
-      `${this.aiApiKey.substring(0, 4)}...${this.aiApiKey.substring(this.aiApiKey.length - 4)}` : 
-      'demo-key';
-    console.log(`🔐 AI API configured with key: ${maskedKey}`);
-    
-    // Alternative free APIs you can also try:
-    // Google AI Studio (Gemini): https://aistudio.google.com/
-    // Hugging Face: https://huggingface.co/inference-api
+    console.log('🔐 Behavioral Analytics Service configured with Google AI');
   }
 
   /**
@@ -420,7 +405,7 @@ export class BehavioralAnalyticsService {
   }
 
   /**
-   * Generate AI-powered personalized recommendations
+   * Generate AI-powered personalized recommendations using Google AI
    */
   async generateAIRecommendations(
     scores: DimensionScore[], 
@@ -428,242 +413,22 @@ export class BehavioralAnalyticsService {
     userInfo?: { firstName: string; lastName: string }
   ): Promise<PersonalizedRecommendations> {
     try {
-      console.log('=== GENERATING AI-POWERED RECOMMENDATIONS ===');
+      console.log('=== GENERATING AI-POWERED RECOMMENDATIONS WITH GOOGLE AI ===');
       
-      // Prepare prompt for AI
-      const prompt = this.createRecommendationPrompt(scores, userInfo?.firstName);
+      // Use Google AI Service for recommendations
+      const recommendations = await this.googleAI.generatePersonalizedRecommendations(
+        scores, 
+        sessionId, 
+        userInfo
+      );
       
-      // Call free AI API
-      const aiResponse = await this.callFreeAI(prompt);
+      console.log('✅ Google AI recommendations generated successfully');
+      return recommendations;
       
-      // Parse AI response and create recommendations
-      const recommendations = this.parseAIResponse(aiResponse, scores);
-      
-      return {
-        sessionId,
-        userId: userInfo ? `${userInfo.firstName}_${userInfo.lastName}` : undefined,
-        recommendations,
-        generatedAt: new Date().toISOString(),
-        overallInsight: aiResponse.overallInsight || this.generateOverallInsight(scores, userInfo?.firstName)
-      };
     } catch (error) {
-      console.error('AI recommendation generation failed, falling back to simulated:', error);
+      console.error('❌ Google AI recommendation generation failed, falling back to simulated:', error);
       // Fallback to existing method
       return this.generatePersonalizedRecommendations(scores, sessionId, userInfo);
-    }
-  }
-
-  /**
-   * Create prompt for AI recommendation generation
-   */
-  private createRecommendationPrompt(scores: DimensionScore[], firstName?: string): string {
-    const userName = firstName || 'Kullanıcı';
-    const scoresText = scores.map(score => {
-      const percentage = (score.score / score.maxScore) * 100;
-      const dimensionMap: { [key: string]: string } = {
-        'DM': 'Karar Verme',
-        'IN': 'İnisiyatif Alma',
-        'AD': 'Adaptasyon',
-        'CM': 'İletişim',
-        'ST': 'Stratejik Düşünce',
-        'TO': 'Takım Çalışması',
-        'RL': 'Risk Liderliği',
-        'RI': 'Risk Zekası'
-      };
-      const dimensionName = dimensionMap[score.dimension] || score.dimension;
-      return `${dimensionName}: %${percentage.toFixed(1)}`;
-    }).join(', ');
-
-    return `Sen bir liderlik gelişimi uzmanısın. Aşağıdaki yetkinlik skorlarına göre ${userName} için kişiselleştirilmiş gelişim önerileri oluştur:
-
-${scoresText}
-
-Her yetkinlik için şu kategorilerde öneriler ver:
-- %80 ve üzeri: "Uzmanlık Yolu" - ileri seviye vaka analizleri ve mentorluk
-- %50-79: "Gelişim Fırsatı" - peer mentorluk ve pratik uygulamalar  
-- %50 altı: "Temel Güçlendirme" - hızlı başlangıç eğitimleri ve temel beceriler
-
-Türkçe olarak, her öneri için:
-1. Başlık
-2. Açıklama (1-2 cümle)
-3. 3 eylem önerisi
-4. 1 kaynak önerisi
-
-JSON formatında yanıt ver.`;
-  }
-
-  /**
-   * Call free AI API for recommendation generation
-   * Supports multiple free models with automatic fallback
-   * Enhanced with security monitoring and usage tracking
-   */
-  private async callFreeAI(prompt: string): Promise<any> {
-    // List of free models to try (in order of preference)
-    const freeModels = [
-      'gpt-3.5-turbo',      // OpenAI - Most reliable
-      'claude-3-haiku',     // Anthropic - Good for analysis
-      'gemini-1.5-flash',   // Google - Fast and efficient
-      'llama-3.1-8b',       // Meta - Open source
-      'qwen-2.5-7b'         // Alibaba - Good multilingual support
-    ];
-
-    let lastError: Error | null = null;
-    const startTime = Date.now();
-
-    // Security: Validate API key format
-    if (!this.aiApiKey || this.aiApiKey.length < 10) {
-      throw new Error('Invalid API key format - please check your configuration');
-    }
-
-    // Try each model until one works
-    for (const model of freeModels) {
-      try {
-        console.log(`🤖 Trying AI model: ${model}`);
-        
-        const response = await fetch(this.aiApiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.aiApiKey}`,
-            'User-Agent': 'BehavioralAnalytics/1.0',
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              {
-                role: 'system',
-                content: 'Sen bir liderlik gelişimi uzmanısın. Kişiselleştirilmiş gelişim önerileri oluşturuyorsun.'
-              },
-              {
-                role: 'user',
-                content: prompt
-              }
-            ],
-            max_tokens: 1500,
-            temperature: 0.7
-          })
-        });
-
-        const responseTime = Date.now() - startTime;
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          
-          // Enhanced error logging for security monitoring
-          console.warn(`🚨 API Error [${response.status}] for model ${model}:`, {
-            status: response.status,
-            statusText: response.statusText,
-            responseTime: `${responseTime}ms`,
-            error: errorText.substring(0, 200) // Limit error text for security
-          });
-          
-          throw new Error(`AI API request failed: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-          throw new Error('Invalid response format from AI API');
-        }
-
-        // Success logging with usage metrics
-        console.log(`✅ Successfully used AI model: ${model}`, {
-          responseTime: `${responseTime}ms`,
-          tokensUsed: data.usage?.total_tokens || 'unknown',
-          model: model
-        });
-        
-        return {
-          content: data.choices[0].message.content,
-          model: model,
-          responseTime: responseTime,
-          tokensUsed: data.usage?.total_tokens || 0,
-          overallInsight: `AI destekli kişiselleştirilmiş öneriler (${model}) ${new Date().toLocaleDateString('tr-TR')} tarihinde oluşturuldu.`
-        };
-        
-      } catch (error) {
-        console.warn(`❌ Model ${model} failed:`, error);
-        lastError = error as Error;
-        
-        // Enhanced rate limit handling
-        if (error instanceof Error && (error.message.includes('429') || error.message.includes('rate'))) {
-          console.log('⏳ Rate limited, waiting 3 seconds before trying next model...');
-          await new Promise(resolve => setTimeout(resolve, 3000));
-        }
-        
-        continue; // Try next model
-      }
-    }
-
-    // If all models failed, throw the last error with enhanced logging
-    const totalTime = Date.now() - startTime;
-    console.error('🚨 All AI models failed', {
-      totalAttempts: freeModels.length,
-      totalTime: `${totalTime}ms`,
-      lastError: lastError?.message
-    });
-    
-    throw lastError || new Error('All AI models failed');
-  }
-
-  /**
-   * Parse AI response and create recommendation items
-   */
-  private parseAIResponse(aiResponse: any, scores: DimensionScore[]): RecommendationItem[] {
-    try {
-      // Try to parse JSON response from AI
-      const aiContent = JSON.parse(aiResponse.content);
-      
-      // Convert AI recommendations to our format
-      return scores.map((score, index) => {
-        const percentage = (score.score / score.maxScore) * 100;
-        const dimensionMap: { [key: string]: string } = {
-          'DM': 'Karar Verme',
-          'IN': 'İnisiyatif Alma',
-          'AD': 'Adaptasyon',
-          'CM': 'İletişim',
-          'ST': 'Stratejik Düşünce',
-          'TO': 'Takım Çalışması',
-          'RL': 'Risk Liderliği',
-          'RI': 'Risk Zekası'
-        };
-        const dimensionName = dimensionMap[score.dimension] || score.dimension;
-        
-        // Find AI recommendation for this dimension
-        const aiRec = aiContent.recommendations?.find((rec: any) => 
-          rec.dimension?.toLowerCase().includes(dimensionName.toLowerCase())
-        ) || aiContent[dimensionName] || {};
-
-        const type = percentage >= 80 ? 'mastery' : percentage >= 50 ? 'growth' : 'foundation';
-        
-        return {
-          id: `ai_${score.dimension}_${index}`,
-          type: type as 'mastery' | 'growth' | 'foundation',
-          title: aiRec.title || `${dimensionName} Gelişimi`,
-          description: aiRec.description || `${dimensionName} alanında AI destekli gelişim önerisi`,
-          dimension: dimensionName,
-          score: percentage,
-          actionItems: aiRec.actionItems || [
-            'AI destekli kişiselleştirilmiş eylem planı',
-            'Hedef odaklı gelişim aktiviteleri',
-            'Sürekli iyileştirme yaklaşımı'
-          ],
-          resources: aiRec.resources || [
-            {
-              type: 'tutorial' as const,
-              title: `${dimensionName} Gelişim Kaynağı`,
-              description: 'AI tarafından önerilen gelişim materyali'
-            }
-          ]
-        };
-      });
-    } catch (error) {
-      console.error('Failed to parse AI response, using fallback:', error);
-      // Fallback to existing recommendation generation
-      return scores.map((score, index) => {
-        const percentage = (score.score / score.maxScore) * 100;
-        return this.createRecommendationItem(score, percentage, index);
-      });
     }
   }
 } 

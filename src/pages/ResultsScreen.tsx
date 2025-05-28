@@ -75,14 +75,11 @@ const getInsight = (competency: string, score: number): string => {
       "Ekip çalışmasında üstün performans gösteriyorsunuz."
     ],
     "RL": [
-      "Risk liderliği konusunda gelişim alanlarınız var.",
-      "Risk yönetiminde dengeli bir yaklaşımınız var.",
+      "Risk liderliği, risk yönetiminde sorumluluk alma ve liderlik etme becerinizi ölçer.",
       "Risk liderliğinde başarılı bir profiliniz var."
     ],
     "RI": [
-      "Risk zekası konusunda daha fazla tecrübe kazanmalısınız.",
-      "Risk zekası konusunda yeterli düzeydesiniz.",
-      "Risk zekasında çok başarılı bir düzeydesiniz."
+      "Risk zekası, riskleri doğru değerlendirme ve analiz etme yeteneğinizi gösterir."
     ]
   };
   
@@ -1031,15 +1028,31 @@ const ResultsScreen = () => {
       // Create behavioral analytics service
       const behavioralService = new BehavioralAnalyticsService();
 
-      // Convert scores to DimensionScore format
-      const dimensionScores: DimensionScore[] = scores.map((score, index) => ({
-        dimension: score.abbreviation || competencies[index]?.name || `DIM_${index}`,
-        score: typeof score === 'number' ? score : Number(score),
-        maxScore: 10,
-        percentile: (typeof score === 'number' ? score : Number(score)) / 10 * 100
-      }));
+      // Convert scores to DimensionScore format with proper names
+      const dimensionMapping = {
+        'DM': 'Karar Verme Becerileri',
+        'IN': 'İnisiyatif Alma', 
+        'AD': 'Adaptasyon',
+        'CM': 'İletişim',
+        'ST': 'Stratejik Düşünce',
+        'TO': 'Takım Çalışması',
+        'RL': 'Risk Liderliği',
+        'RI': 'Risk Zekası'
+      };
 
-      console.log('🎯 Dimension scores prepared:', dimensionScores);
+      const dimensionScores: DimensionScore[] = scores.map((score, index) => {
+        const abbreviation = score.abbreviation || competencies[index]?.name || `DIM_${index}`;
+        return {
+          dimension: abbreviation,
+          displayName: dimensionMapping[abbreviation as keyof typeof dimensionMapping] || score.fullName || abbreviation,
+          score: typeof score.score === 'number' ? score.score : Number(score.score),
+          maxScore: score.maxScore || 10,
+          percentile: ((typeof score.score === 'number' ? score.score : Number(score.score)) / (score.maxScore || 10)) * 100,
+          category: score.category || 'Genel'
+        };
+      });
+
+      console.log('🎯 Enhanced dimension scores prepared:', dimensionScores);
 
       // Try AI-powered recommendations first, fallback to simulated if needed
       console.log('🤖 Calling AI recommendation service...');
@@ -1166,20 +1179,68 @@ const ResultsScreen = () => {
     // If we have personalized recommendations, show them
     if (personalizedRecommendations || isLoadingRecommendations || recommendationsError) {
       return (
-        <PersonalizedRecommendationsComponent
-          recommendations={personalizedRecommendations}
-          isLoading={isLoadingRecommendations}
-          error={recommendationsError}
-        />
+        <div>
+          <div className="ai-recommendations-header">
+            <button 
+              className="generate-ai-button"
+              onClick={generatePersonalizedRecommendations}
+              disabled={isLoadingRecommendations}
+              style={{
+                backgroundColor: isLoadingRecommendations ? '#ccc' : '#4285f4',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                cursor: isLoadingRecommendations ? 'not-allowed' : 'pointer',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              🤖 {isLoadingRecommendations ? 'AI Değerlendirme Hazırlanıyor...' : 'AI Aday Değerlendirme Raporu Oluştur'}
+            </button>
+          </div>
+          <PersonalizedRecommendationsComponent
+            recommendations={personalizedRecommendations}
+            isLoading={isLoadingRecommendations}
+            error={recommendationsError}
+          />
+        </div>
       );
     }
 
-    // Fallback to original recommendations
+    // Fallback to original recommendations with AI trigger button
     const recommendations = getRecommendations(scores);
     
     return (
       <div className="recommendations-section">
-        <h3>Gelişim Önerileri</h3>
+        <div className="recommendations-header-with-ai">
+          <h3>Gelişim Önerileri</h3>
+          <button 
+            className="generate-ai-button"
+            onClick={generatePersonalizedRecommendations}
+            disabled={isLoadingRecommendations}
+            style={{
+              backgroundColor: isLoadingRecommendations ? '#ccc' : '#4285f4',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              cursor: isLoadingRecommendations ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}
+          >
+            🤖 {isLoadingRecommendations ? 'AI Değerlendirme Hazırlanıyor...' : 'AI Aday Değerlendirme Raporu Oluştur'}
+          </button>
+        </div>
+        
         <div className="recommendations-list">
           {recommendations.map((recommendation, index) => (
             <div key={index} className="recommendation-item">

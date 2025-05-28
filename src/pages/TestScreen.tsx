@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { questions } from '../data/questions';
 import InteractionTracker from '../services/InteractionTracker';
 import '../styles/TestScreen.css';
@@ -32,11 +32,29 @@ const questionTitles = [
 
 const TestScreen = () => {
   const navigate = useNavigate();
-  const [testState, setTestState] = useState<TestState>({
-    currentQuestion: 0,
-    answers: {},
-    isComplete: false,
+  const { questionNumber } = useParams<{ questionNumber: string }>();
+  
+  // Initialize current question from URL parameter or default to 0
+  const getInitialQuestion = () => {
+    if (questionNumber) {
+      const qNum = parseInt(questionNumber, 10) - 1; // Convert to 0-based index
+      if (qNum >= 0 && qNum < questions.length) {
+        return qNum;
+      }
+    }
+    return 0;
+  };
+
+  const [testState, setTestState] = useState<TestState>(() => {
+    // Load answers from sessionStorage if available
+    const savedAnswers = sessionStorage.getItem('testAnswers');
+    return {
+      currentQuestion: getInitialQuestion(),
+      answers: savedAnswers ? JSON.parse(savedAnswers) : {},
+      isComplete: false,
+    };
   });
+
   const [showForwardingLine, setShowForwardingLine] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +75,32 @@ const TestScreen = () => {
       trackerRef.current = new InteractionTracker(API_URL);
     }
   }, [API_URL]);
+
+  // Update current question when URL parameter changes
+  useEffect(() => {
+    const newQuestion = getInitialQuestion();
+    if (newQuestion !== testState.currentQuestion) {
+      setTestState(prev => ({
+        ...prev,
+        currentQuestion: newQuestion
+      }));
+    }
+  }, [questionNumber]);
+
+  // Save answers to sessionStorage whenever they change
+  useEffect(() => {
+    sessionStorage.setItem('testAnswers', JSON.stringify(testState.answers));
+  }, [testState.answers]);
+
+  // Update URL when current question changes (but not during initial load)
+  useEffect(() => {
+    const currentQuestionNumber = testState.currentQuestion + 1;
+    const urlQuestionNumber = questionNumber ? parseInt(questionNumber, 10) : 1;
+    
+    if (currentQuestionNumber !== urlQuestionNumber) {
+      navigate(`/test/${currentQuestionNumber}`, { replace: true });
+    }
+  }, [testState.currentQuestion, questionNumber, navigate]);
 
   const currentQuestion = questions[testState.currentQuestion];
 

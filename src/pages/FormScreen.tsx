@@ -28,7 +28,7 @@ const FormScreen = () => {
       return;
     }
     sessionStorage.setItem('user', JSON.stringify(user));
-    navigate('/test');
+    navigate('/test/1');
   };
 
   const handleBack = () => {

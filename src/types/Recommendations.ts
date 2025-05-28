@@ -2,6 +2,9 @@ export interface DimensionScore {
   dimension: string;
   score: number;
   maxScore: number;
+  percentile?: number;
+  displayName?: string;
+  category?: string;
 }
 
 export interface AnalyticsApiResponse {
@@ -12,15 +15,32 @@ export interface AnalyticsApiResponse {
 }
 
 export interface RecommendationItem {
-  id: string;
-  type: 'mastery' | 'growth' | 'foundation';
+  id?: string;
+  type?: 'mastery' | 'growth' | 'foundation';
   title: string;
   description: string;
   dimension: string;
-  score: number;
+  score?: number;
+  priority?: 'high' | 'medium' | 'low';
   actionItems: string[];
+  timeline?: string;
+  expectedOutcome?: string;
+  reasoning?: string;
+  confidence?: number;
+  basedOn?: string[];
+  userBenefit?: string;
+  difficultyLevel?: 'beginner' | 'intermediate' | 'advanced';
+  estimatedImpact?: 'low' | 'medium' | 'high';
+  candidateStrengths?: string;
+  candidateWeaknesses?: string;
+  suitablePositions?: string[];
+  developmentPotential?: string;
+  hrRecommendations?: string[];
+  overallAssessment?: string;
+  riskLevel?: 'low' | 'medium' | 'high';
+  interviewFocus?: string[];
   resources?: {
-    type: 'case-study' | 'mentorship' | 'tutorial';
+    type: 'case-study' | 'mentorship' | 'tutorial' | 'spiritual-guidance' | 'spiritual-practice' | 'book' | 'course' | 'exercise';
     title: string;
     url?: string;
     description: string;
@@ -33,6 +53,9 @@ export interface PersonalizedRecommendations {
   recommendations: RecommendationItem[];
   generatedAt: string;
   overallInsight: string;
+  aiModel?: string;
+  dataUsed?: string[];
+  confidenceScore?: number;
 }
 
 export interface UserAnalyticsData {

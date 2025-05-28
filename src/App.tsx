@@ -23,6 +23,7 @@ function AppContent() {
         <Route path="/" element={<IdentityScreen />} />
         <Route path="/form" element={<FormScreen />} />
         <Route path="/test" element={<TestScreen />} />
+        <Route path="/test/:questionNumber" element={<TestScreen />} />
         <Route path="/ending" element={<EndingScreen />} />
         <Route path="/results" element={<ResultsScreen />} />
         <Route path="/game2" element={<IdentityScreen2 />} />
