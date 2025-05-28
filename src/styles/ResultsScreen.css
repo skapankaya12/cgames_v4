@@ -172,11 +172,42 @@
   transition: all 0.3s ease;
   font-size: 0.9rem;
   font-weight: 600;
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
 .export-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+}
+
+/* Import Button */
+.import-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.import-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.import-button:disabled {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Restart Button */
@@ -719,6 +750,12 @@
   .filter-button, .export-button, .restart-button {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+  }
+
+  .import-button {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
   }
 
   .overview-card, .development-areas-card, .main-content {

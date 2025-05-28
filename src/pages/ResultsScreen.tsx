@@ -4,6 +4,8 @@ import { questions, competencies } from '../data/questions';
 import type { SessionAnalytics } from '../services/InteractionTracker';
 import { testGoogleSheetsIntegration, testBasicConnection } from '../utils/debugGoogleSheets';
 import { BehavioralAnalyticsService } from '../services/BehavioralAnalyticsService';
+import { PDFImportService, type ImportedData } from '../services/PDFImportService';
+import { PDFExportService, type ExportData } from '../services/PDFExportService';
 import PersonalizedRecommendationsComponent from '../components/PersonalizedRecommendations';
 import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../types/Recommendations';
 import '../styles/ResultsScreen.css';
@@ -160,6 +162,12 @@ const ResultsScreen = () => {
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
 
+  // PDF Import state
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [importSuccess, setImportSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Direct Google Sheets API endpoint
   const API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
   const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbyPTdwM5hzH0m7Bm2g9_eyEogvPM-LAU_YxJ-mvzf8aT0RrTq8ZRqwZOcfMLNtPW-ac/exec`;
@@ -256,6 +264,75 @@ const ResultsScreen = () => {
           document.body.appendChild(img);
         } else {
           console.log("❌ Missing required data for submission");
+        }
+      },
+      testWithFetch: async () => {
+        console.log("=== TESTING WITH FETCH ===");
+        if (user && answers && scores.length > 0) {
+          const payload = {
+            user,
+            answers,
+            competencyScores: scores
+          };
+          
+          try {
+            const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+            console.log("Fetch URL:", url.substring(0, 200) + "...");
+            
+            const response = await fetch(url, {
+              method: 'GET',
+              mode: 'no-cors'
+            });
+            
+            console.log("✅ Fetch completed - Response:", response);
+            console.log("Response status:", response.status);
+            console.log("Response type:", response.type);
+            
+          } catch (error) {
+            console.error("❌ Fetch failed:", error);
+          }
+        }
+      },
+      forceSubmit: async () => {
+        console.log("=== FORCE SUBMIT TEST ===");
+        if (user && answers && scores.length > 0) {
+          const payload = {
+            user,
+            answers,
+            competencyScores: scores
+          };
+          
+          console.log("Force submitting payload:", payload);
+          
+          // Method 1: Image
+          const url1 = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+          const img = new Image();
+          img.onload = () => console.log("✅ Image method successful");
+          img.onerror = (e) => console.log("❌ Image method failed:", e);
+          img.src = url1;
+          img.style.display = 'none';
+          document.body.appendChild(img);
+          
+          // Method 2: Fetch with no-cors
+          try {
+            const response = await fetch(url1, { method: 'GET', mode: 'no-cors' });
+            console.log("✅ Fetch no-cors completed");
+          } catch (error) {
+            console.error("❌ Fetch no-cors failed:", error);
+          }
+          
+          // Method 3: Create iframe
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = url1;
+          document.body.appendChild(iframe);
+          console.log("📤 Iframe method initiated");
+          
+          setTimeout(() => {
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+          }, 5000);
         }
       }
     };
@@ -367,22 +444,48 @@ const ResultsScreen = () => {
         console.log('Full payload:', JSON.stringify(payload, null, 2));
         
         try {
-          // Submit test results
+          // Enhanced submission with multiple methods for reliability
           const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
           console.log('Results URL length:', url.length);
           console.log('Results URL preview:', url.substring(0, 300) + '...');
           
+          // Method 1: Fetch with no-cors (most reliable for Google Apps Script)
+          try {
+            const fetchResponse = await fetch(url, { 
+              method: 'GET', 
+              mode: 'no-cors',
+              cache: 'no-cache'
+            });
+            console.log('✅ Fetch submission completed');
+          } catch (fetchError) {
+            console.warn('⚠️ Fetch method failed:', fetchError);
+          }
+          
+          // Method 2: Image fallback
           const img = new Image();
+          img.onload = () => console.log('✅ Image submission successful');
+          img.onerror = (e) => console.warn('⚠️ Image submission failed:', e);
           img.src = url;
           img.style.display = 'none';
           document.body.appendChild(img);
           
-          // Clean up after 5 seconds
+          // Method 3: Iframe fallback
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.style.width = '1px';
+          iframe.style.height = '1px';
+          iframe.src = url;
+          document.body.appendChild(iframe);
+          
+          // Clean up after 10 seconds
           setTimeout(() => {
             if (document.body.contains(img)) {
               document.body.removeChild(img);
             }
-          }, 5000);
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+          }, 10000);
           
           // Submit interaction tracking data if available
           if (storedAnalytics) {
@@ -395,21 +498,28 @@ const ResultsScreen = () => {
               };
               
               const interactionUrl = `${API_URL}?interactionData=${encodeURIComponent(JSON.stringify(analyticsWithUser))}`;
-              const interactionImg = new Image();
-              interactionImg.src = interactionUrl;
-              interactionImg.style.display = 'none';
-              document.body.appendChild(interactionImg);
               
-              // Clean up after 5 seconds
-              setTimeout(() => {
-                if (document.body.contains(interactionImg)) {
-                  document.body.removeChild(interactionImg);
-                }
-              }, 5000);
+              // Use fetch for interaction data too
+              try {
+                await fetch(interactionUrl, { method: 'GET', mode: 'no-cors' });
+                console.log('✅ Interaction tracking submitted via fetch');
+              } catch (fetchError) {
+                console.warn('⚠️ Interaction fetch failed, using image fallback');
+                const interactionImg = new Image();
+                interactionImg.src = interactionUrl;
+                interactionImg.style.display = 'none';
+                document.body.appendChild(interactionImg);
+                
+                setTimeout(() => {
+                  if (document.body.contains(interactionImg)) {
+                    document.body.removeChild(interactionImg);
+                  }
+                }, 10000);
+              }
               
-              console.log('Interaction tracking data submitted successfully');
+              console.log('✅ Interaction tracking data submitted successfully');
             } catch (interactionError) {
-              console.error('Error submitting interaction tracking:', interactionError);
+              console.error('❌ Error submitting interaction tracking:', interactionError);
               // Don't fail the whole submission if interaction tracking fails
             }
           }
@@ -421,7 +531,7 @@ const ResultsScreen = () => {
           }, 2000);
           
         } catch (error) {
-          console.error('Error with submission:', error);
+          console.error('❌ Error with submission:', error);
           setSubmitError('Otomatik gönderim başarısız oldu. Lütfen "Sonuçları Gönder" butonunu kullanın.');
           setIsSubmitting(false);
         }
@@ -467,22 +577,55 @@ const ResultsScreen = () => {
     console.log('Full payload:', JSON.stringify(payload, null, 2));
 
     try {
-      // Submit test results
+      // Enhanced manual submission with multiple methods
       const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
       console.log('Manual results URL length:', url.length);
       console.log('Manual results URL preview:', url.substring(0, 300) + '...');
       
+      // Method 1: Fetch with no-cors (most reliable)
+      const submitWithFetch = async () => {
+        try {
+          const response = await fetch(url, { 
+            method: 'GET', 
+            mode: 'no-cors',
+            cache: 'no-cache'
+          });
+          console.log('✅ Manual fetch submission completed');
+          return true;
+        } catch (error) {
+          console.warn('⚠️ Manual fetch failed:', error);
+          return false;
+        }
+      };
+      
+      // Execute fetch submission
+      submitWithFetch();
+      
+      // Method 2: Image fallback
       const img = new Image();
+      img.onload = () => console.log('✅ Manual image submission successful');
+      img.onerror = (e) => console.warn('⚠️ Manual image submission failed:', e);
       img.src = url;
       img.style.display = 'none';
       document.body.appendChild(img);
       
-      // Clean up after 5 seconds
+      // Method 3: Iframe fallback
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      
+      // Clean up after 10 seconds
       setTimeout(() => {
         if (document.body.contains(img)) {
           document.body.removeChild(img);
         }
-      }, 5000);
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 10000);
       
       // Submit interaction tracking data if available
       const storedAnalytics = sessionStorage.getItem('interactionAnalytics');
@@ -496,21 +639,31 @@ const ResultsScreen = () => {
           };
           
           const interactionUrl = `${API_URL}?interactionData=${encodeURIComponent(JSON.stringify(analyticsWithUser))}`;
-          const interactionImg = new Image();
-          interactionImg.src = interactionUrl;
-          interactionImg.style.display = 'none';
-          document.body.appendChild(interactionImg);
           
-          // Clean up after 5 seconds
-          setTimeout(() => {
-            if (document.body.contains(interactionImg)) {
-              document.body.removeChild(interactionImg);
+          // Use fetch for interaction data
+          const submitInteractionWithFetch = async () => {
+            try {
+              await fetch(interactionUrl, { method: 'GET', mode: 'no-cors' });
+              console.log('✅ Manual interaction tracking submitted via fetch');
+            } catch (error) {
+              console.warn('⚠️ Manual interaction fetch failed, using image fallback');
+              const interactionImg = new Image();
+              interactionImg.src = interactionUrl;
+              interactionImg.style.display = 'none';
+              document.body.appendChild(interactionImg);
+              
+              setTimeout(() => {
+                if (document.body.contains(interactionImg)) {
+                  document.body.removeChild(interactionImg);
+                }
+              }, 10000);
             }
-          }, 5000);
+          };
           
-          console.log('Manual interaction tracking data submitted successfully');
+          submitInteractionWithFetch();
+          console.log('✅ Manual interaction tracking data submitted successfully');
         } catch (interactionError) {
-          console.error('Error submitting manual interaction tracking:', interactionError);
+          console.error('❌ Error submitting manual interaction tracking:', interactionError);
           // Don't fail the whole submission if interaction tracking fails
         }
       }
@@ -522,7 +675,7 @@ const ResultsScreen = () => {
       }, 2000);
       
     } catch (error) {
-      console.error('Manual submission error:', error);
+      console.error('❌ Manual submission error:', error);
       setSubmitError('Gönderim başarısız oldu. Lütfen tekrar deneyin.');
       setIsSubmitting(false);
     }
@@ -664,7 +817,21 @@ const ResultsScreen = () => {
   };
 
   const getScorePercentage = (score: number, maxScore: number): number => {
-    return Math.round((score / maxScore) * 100);
+    // NORMALIZED SCORING SYSTEM - All competencies scaled to 100 points
+    // This ensures fair percentage calculation across all competencies
+    
+    const NORMALIZED_BASE = 100; // All competencies normalized to 100 points
+    
+    // Calculate the scaling factor to bring this competency to 100 points
+    const scalingFactor = NORMALIZED_BASE / maxScore;
+    
+    // Scale the user's score proportionally
+    const normalizedScore = score * scalingFactor;
+    
+    // Calculate percentage from the normalized 100-point base
+    const percentage = (normalizedScore / NORMALIZED_BASE) * 100;
+    
+    return Math.round(Math.min(percentage, 100)); // Cap at 100%
   };
 
   const getScoreLevel = (percentage: number): string => {
@@ -681,24 +848,132 @@ const ResultsScreen = () => {
     return '#ff6b6b';
   };
 
-  const handleExportData = () => {
-    const exportData = {
-      user,
-      scores,
-      interactionAnalytics,
-      recommendations: getRecommendations(scores),
-      exportDate: new Date().toISOString()
-    };
+  const handleExportData = async () => {
+    try {
+      console.log('📄 Starting PDF export process...');
+      
+      // Prepare export data
+      const exportData: ExportData = {
+        user: user || { firstName: 'Kullanıcı', lastName: 'Bilinmiyor' },
+        scores: scores.map(score => ({
+          name: score.name,
+          score: score.score,
+          maxScore: score.maxScore,
+          abbreviation: score.abbreviation,
+          fullName: score.fullName,
+          category: score.category,
+          description: score.description,
+          color: score.color
+        })),
+        interactionAnalytics,
+        recommendations: getRecommendations(scores),
+        exportDate: new Date().toISOString()
+      };
 
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = `${user?.firstName}_${user?.lastName}_sonuclar.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+      // Create PDF export service and export
+      const pdfExportService = new PDFExportService();
+      await pdfExportService.exportToPDF(exportData);
+      
+      console.log('✅ PDF export completed successfully');
+      
+    } catch (error) {
+      console.error('❌ PDF export failed:', error);
+      alert('PDF dışa aktarma başarısız oldu. Lütfen tekrar deneyin.');
+    }
+  };
+
+  // PDF Import Functions
+  const handleImportClick = () => {
+    setImportError(null);
+    setImportSuccess(false);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      setImportError('Lütfen sadece PDF dosyası seçin.');
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setImportError('Dosya boyutu 10MB\'dan küçük olmalıdır.');
+      return;
+    }
+
+    setIsImporting(true);
+    setImportError(null);
+
+    try {
+      console.log('📄 Starting PDF import for file:', file.name);
+      
+      const pdfImportService = new PDFImportService();
+      const importedData: ImportedData = await pdfImportService.importFromPDF(file);
+
+      // Validate imported data
+      if (!pdfImportService.validateImportedData(importedData)) {
+        throw new Error('İçe aktarılan veri geçersiz format içeriyor.');
+      }
+
+      console.log('✅ PDF import successful:', importedData);
+
+      // Update application state with imported data
+      setUser({
+        firstName: importedData.user.firstName,
+        lastName: importedData.user.lastName
+      });
+
+      // Convert imported scores to CompetencyScore format
+      const importedScores: CompetencyScore[] = importedData.scores.map((score, index) => ({
+        name: score.name,
+        score: score.score,
+        maxScore: score.maxScore,
+        color: getScoreLevelColor((score.score / score.maxScore) * 100),
+        fullName: score.fullName,
+        abbreviation: score.abbreviation,
+        category: score.category,
+        description: score.description
+      }));
+
+      setScores(importedScores);
+
+      // Update session storage with imported data
+      sessionStorage.setItem('user', JSON.stringify(importedData.user));
+      
+      if (importedData.answers) {
+        setAnswers(importedData.answers);
+        sessionStorage.setItem('answers', JSON.stringify(importedData.answers));
+      }
+
+      if (importedData.interactionAnalytics) {
+        setInteractionAnalytics(importedData.interactionAnalytics);
+        sessionStorage.setItem('interactionAnalytics', JSON.stringify(importedData.interactionAnalytics));
+      }
+
+      setImportSuccess(true);
+      setIsImporting(false);
+
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setImportSuccess(false);
+      }, 3000);
+
+      console.log('✅ PDF import completed and state updated');
+
+    } catch (error) {
+      console.error('❌ PDF import failed:', error);
+      setImportError(error instanceof Error ? error.message : 'PDF içe aktarma başarısız oldu.');
+      setIsImporting(false);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleSliderChange = (ratingType: keyof typeof feedbackRatings, value: number) => {
@@ -985,7 +1260,37 @@ const ResultsScreen = () => {
               )}
             </div>
             <button className="export-button" onClick={handleExportData}>
-              Dışa Aktar
+              PDF Dışa Aktar
+            </button>
+            <button 
+              className="import-button" 
+              onClick={handleImportClick}
+              disabled={isImporting}
+            >
+              {isImporting ? 'İçe Aktarılıyor...' : 'PDF İçe Aktar'}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf"
+              onChange={handleFileSelect}
+              style={{ display: 'none' }}
+            />
+            <button 
+              className="manual-submit-button" 
+              onClick={handleManualSubmit}
+              disabled={isSubmitting}
+              style={{
+                backgroundColor: isSubmitting ? '#ccc' : '#4CAF50',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                marginLeft: '8px'
+              }}
+            >
+              {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
             </button>
           </div>
           <button className="restart-button" onClick={handleRestart}>
@@ -1294,6 +1599,15 @@ const ResultsScreen = () => {
         </div>
       )}
 
+      {isImporting && (
+        <div className="status-overlay">
+          <div className="status-message loading">
+            <div className="spinner"></div>
+            PDF dosyası içe aktarılıyor...
+          </div>
+        </div>
+      )}
+
       {submitError && (
         <div className="status-overlay">
           <div className="status-message error">
@@ -1303,11 +1617,29 @@ const ResultsScreen = () => {
         </div>
       )}
 
+      {importError && (
+        <div className="status-overlay">
+          <div className="status-message error">
+            {importError}
+            <button onClick={() => setImportError(null)}>✕</button>
+          </div>
+        </div>
+      )}
+
       {submitSuccess && (
         <div className="status-overlay">
           <div className="status-message success">
             Sonuçlar başarıyla kaydedildi!
             <button onClick={() => setSubmitSuccess(false)}>✕</button>
+          </div>
+        </div>
+      )}
+
+      {importSuccess && (
+        <div className="status-overlay">
+          <div className="status-message success">
+            PDF dosyası başarıyla içe aktarıldı!
+            <button onClick={() => setImportSuccess(false)}>✕</button>
           </div>
         </div>
       )}

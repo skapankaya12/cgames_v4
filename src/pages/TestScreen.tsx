@@ -92,7 +92,8 @@ const TestScreen = () => {
 
   // Load and play video when question changes
   useEffect(() => {
-    if (videoRef.current) {
+    const video = videoRef.current;
+    if (video) {
       setVideoLoaded(false);
       setVideoError(false);
       setIsVideoPlaying(false);
@@ -100,36 +101,47 @@ const TestScreen = () => {
       try {
         // Set video source based on current question
         let questionId = currentQuestion.id;
+        let videoFileName = '';
         
-        // Swap question 12 and 13 videos since their content is reversed
-        if (questionId === 12) {
-          questionId = 13;
-        } else if (questionId === 13) {
-          questionId = 12;
+        // Use new videos with sound for questions 1-7
+        if (questionId >= 1 && questionId <= 7) {
+          videoFileName = `question${questionId}veo.mp4`;
+        } else {
+          // Swap question 12 and 13 videos since their content is reversed
+          if (questionId === 12) {
+            questionId = 13;
+          } else if (questionId === 13) {
+            questionId = 12;
+          }
+          videoFileName = `question${questionId}.mp4`;
         }
         
         const videoSrc = testState.isComplete 
           ? `${import.meta.env.BASE_URL}scenes/welcomescreen.mp4`
-          : `${import.meta.env.BASE_URL}scenes/question${questionId}.mp4`;
+          : `${import.meta.env.BASE_URL}scenes/${videoFileName}`;
         
         console.log('Loading video from:', videoSrc);
         
         // Reset video to beginning
-        videoRef.current.pause();
-        videoRef.current.src = videoSrc;
-        videoRef.current.currentTime = 0;
+        video.pause();
+        video.src = videoSrc;
+        video.currentTime = 0;
+        
+        // Enable sound for questions 1-7, keep muted for others
+        video.muted = !(questionId >= 1 && questionId <= 7);
         
         // Play video when loaded
-        videoRef.current.load();
+        video.load();
         
         // Add a small delay before trying to play to ensure the video has loaded properly
         const playVideoTimer = setTimeout(() => {
-          if (videoRef.current) {
-            videoRef.current.play()
+          const currentVideo = videoRef.current;
+          if (currentVideo) {
+            currentVideo.play()
               .then(() => {
                 setIsVideoPlaying(true);
                 setVideoLoaded(true); // Set loaded state when play starts successfully
-                console.log('Video playing successfully');
+                console.log('Video playing successfully with sound:', !currentVideo.muted);
               })
               .catch(err => {
                 console.error('Video play error:', err);
@@ -286,13 +298,12 @@ const TestScreen = () => {
   // If test is complete, show completion message
   if (testState.isComplete) {
     return (
-      <div className="dialog-game-container">
+      <div className="dialog-game-container completion-transition">
         <div className="fullscreen-video">
           <video 
             ref={videoRef}
             className={`background-video ${videoLoaded ? 'loaded' : ''}`}
             playsInline
-            muted
             loop
             onClick={handleVideoClick}
             onLoadedData={handleVideoLoad}
@@ -325,34 +336,22 @@ const TestScreen = () => {
           </div>
         </div>
         
-        <div className="dialog-ui">
-          <div className="progress-hud">
-            <div className="progress-container">
-              <div className="progress-bar" style={{ width: '100%' }}></div>
-            </div>
-            <div className="question-counter">Test Tamamlandı!</div>
-          </div>
-          
-          <div className="dialog-narration">
-            <div className="dialog-box narration-box">
+        {/* Simplified completion UI that fades out smoothly */}
+        <div className="dialog-ui completion-fade">
+          <div className="dialog-completion-center">
+            <div className="dialog-box completion-box-center">
               <div className="dialog-content">
-                <p>Tebrikler, kaptan! Teslimat görevini tamamladınız.</p>
+                <h2 style={{ color: '#00bfff', marginBottom: '20px', fontSize: '1.5rem' }}>
+                  🎉 Tebrikler, Kaptan!
+                </h2>
+                <p style={{ fontSize: '1.1rem', marginBottom: '15px' }}>
+                  Teslimat görevini başarıyla tamamladınız.
+                </p>
+                <p style={{ fontSize: '1rem', opacity: 0.8 }}>
+                  Sonuçlarınız hazırlanıyor...
+                </p>
+                <div className="loading-spinner" style={{ marginTop: '20px' }}></div>
               </div>
-            </div>
-          </div>
-          
-          <div className="dialog-completion">
-            <div className="dialog-box completion-box">
-              <div className="dialog-content">
-                <p>Sonuçlarınız yükleniyor...</p>
-                <div className="loading-spinner"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="dialog-forwarding">
-            <div className="forwarding-message">
-              <p>Yük teslim edildi. Görev tamamlandı.</p>
             </div>
           </div>
         </div>
@@ -371,7 +370,6 @@ const TestScreen = () => {
           ref={videoRef}
           className={`background-video ${videoLoaded ? 'loaded' : ''}`}
           playsInline
-          muted
           loop
           onClick={handleVideoClick}
           onLoadedData={handleVideoLoad}

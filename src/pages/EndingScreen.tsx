@@ -7,11 +7,17 @@ const EndingScreen = () => {
   const location = useLocation();
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Auto-navigate to results page after 8 seconds
+    // Ensure smooth entrance
     const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
+    // Auto-navigate to results page after 8 seconds
+    const navigationTimer = setTimeout(() => {
       // Check if we came from game2 to navigate to the correct results page
       const isGame2 = location.state?.fromGame2 || false;
       if (isGame2) {
@@ -21,7 +27,10 @@ const EndingScreen = () => {
       }
     }, 8000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(navigationTimer);
+    };
   }, [navigate, location.state]);
 
   const handleVideoLoad = () => {
@@ -40,7 +49,7 @@ const EndingScreen = () => {
   };
 
   return (
-    <div className="ending-screen-container">
+    <div className={`ending-screen-container ${isVisible ? 'visible' : ''}`}>
       <video 
         ref={videoRef}
         className={`background-video ${videoLoaded ? 'loaded' : ''}`}

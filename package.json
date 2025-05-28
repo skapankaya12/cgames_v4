@@ -14,6 +14,10 @@
     "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "google-spreadsheet": "^4.1.4",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^5.2.133",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.1",
@@ -21,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.4.1",
