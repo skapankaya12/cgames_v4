@@ -1,7 +1,18 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+// Configure PDF.js worker - use a more robust approach for Vite
+if (typeof window !== 'undefined') {
+  // In browser environment
+  try {
+    // Use the worker file from public directory for better reliability
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  } catch (error) {
+    // Ultimate fallback - use inline worker
+    console.warn('⚠️ Worker setup failed, using inline worker:', error);
+    // Let PDF.js create an inline worker as fallback
+    pdfjsLib.GlobalWorkerOptions.workerSrc = undefined;
+  }
+}
 
 export interface ImportedData {
   user: {

@@ -6,7 +6,7 @@ import type {
   PersonalizedRecommendations,
   SessionAnalytics 
 } from '../types/Recommendations';
-import { GoogleAIService } from './GoogleAIService';
+import { OpenAIService } from './OpenAIService';
 import { CVTextExtractionService } from './CVTextExtractionService';
 
 interface RecommendationContent {
@@ -27,17 +27,17 @@ interface ContentMapping {
 export class BehavioralAnalyticsService {
   private apiKey: string;
   private baseUrl: string;
-  private googleAI: GoogleAIService;
+  private openAI: OpenAIService;
 
   constructor() {
     // Using a free behavioral analytics API key (placeholder - replace with actual)
     this.apiKey = 'demo-behavioral-analytics-key-2024';
     this.baseUrl = 'https://api.behavioral-analytics.demo.com/v1';
     
-    // Initialize Google AI Service
-    this.googleAI = new GoogleAIService();
+    // Initialize OpenAI Service
+    this.openAI = new OpenAIService();
     
-    console.log('🔐 Behavioral Analytics Service configured with Google AI');
+    console.log('🔐 Behavioral Analytics Service configured with OpenAI GPT-3.5-turbo');
     // Note: API endpoint configured but currently using simulation mode
     console.debug(`API Config: ${this.baseUrl} (key: ${this.apiKey.substring(0, 8)}...)`);
   }
@@ -427,7 +427,7 @@ export class BehavioralAnalyticsService {
   }
 
   /**
-   * Generate AI-powered personalized recommendations using Google AI
+   * Generate AI-powered personalized recommendations using OpenAI
    */
   async generateAIRecommendations(
     scores: DimensionScore[], 
@@ -435,7 +435,7 @@ export class BehavioralAnalyticsService {
     userInfo?: { firstName: string; lastName: string }
   ): Promise<PersonalizedRecommendations> {
     try {
-      console.log('=== GENERATING AI-POWERED RECOMMENDATIONS WITH GOOGLE AI ===');
+      console.log('=== GENERATING AI-POWERED RECOMMENDATIONS WITH OPENAI GPT-3.5-turbo ===');
       
       // Check for CV data to enhance recommendations
       const cvService = new CVTextExtractionService();
@@ -448,19 +448,19 @@ export class BehavioralAnalyticsService {
         console.log('📋 No CV data found, using standard AI recommendations');
       }
       
-      // Use Google AI Service for recommendations with CV data if available
-      const recommendations = await this.googleAI.generatePersonalizedRecommendations(
+      // Use OpenAI Service for recommendations with CV data if available
+      const recommendations = await this.openAI.generatePersonalizedRecommendations(
         scores, 
         sessionId, 
         userInfo,
         cvData || undefined // Pass CV data if available
       );
       
-      console.log('✅ Google AI recommendations generated successfully');
+      console.log('✅ OpenAI recommendations generated successfully');
       return recommendations;
       
     } catch (error) {
-      console.error('❌ Google AI recommendation generation failed, falling back to simulated:', error);
+      console.error('❌ OpenAI recommendation generation failed, falling back to simulated:', error);
       // Fallback to existing method
       return this.generatePersonalizedRecommendations(scores, sessionId, userInfo);
     }

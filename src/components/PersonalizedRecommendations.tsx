@@ -54,7 +54,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
         <h3>🤖 AI Destekli Aday Değerlendirme Raporu</h3>
         <div className="recommendations-loading">
           <div className="loading-spinner"></div>
-          <p>Google AI ile aday değerlendirme raporu hazırlanıyor...</p>
+          <p>OpenAI GPT-3.5-turbo ile aday değerlendirme raporu hazırlanıyor...</p>
           <small>Yetkinlik skorları ve davranış kalıpları analiz ediliyor...</small>
         </div>
       </div>
@@ -175,7 +175,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   return (
     <div className="recommendations-section">
       <div className="recommendations-header">
-        <h3>🤖 Google AI Destekli Aday Değerlendirme Raporu</h3>
+        <h3>🤖 OpenAI GPT-3.5-turbo Destekli Aday Değerlendirme Raporu</h3>
         <p className="recommendations-subtitle">
           Yetkinlik analiz sonuçlarına dayalı profesyonel aday değerlendirmesi
         </p>
@@ -185,7 +185,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           <div className="ai-info-grid">
             <div className="ai-info-item">
               <span className="ai-info-label">AI Modeli:</span>
-              <span className="ai-info-value">{recommendations.aiModel || 'Google Gemini'}</span>
+              <span className="ai-info-value">{recommendations.aiModel || 'OpenAI GPT-3.5-turbo'}</span>
             </div>
             <div className="ai-info-item">
               <span className="ai-info-label">Genel Performans:</span>
@@ -425,7 +425,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
         <div className="transparency-note">
           <h5>🔍 İK Değerlendirme Notu</h5>
           <p>
-            Bu rapor, adayın yetkinlik skorları ve davranış kalıpları analiz edilerek Google AI tarafından oluşturulmuştur. 
+            Bu rapor, adayın yetkinlik skorları ve davranış kalıpları analiz edilerek OpenAI GPT-3.5-turbo tarafından oluşturulmuştur. 
             Her değerlendirme için performans analizi, pozisyon önerileri ve İK süreçleri için öneriler sunulmuştur.
           </p>
         </div>

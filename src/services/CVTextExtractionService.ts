@@ -1,18 +1,36 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { CVAnalysisService } from './CVAnalysisService';
 import type { CVAnalysisResult, CVData } from '../types/CVTypes';
+import { PDFDebugUtils } from '../utils/pdfDebug';
 
 // Re-export for backwards compatibility
 export type { CVData, CVAnalysisResult } from '../types/CVTypes';
 
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+// Configure PDF.js worker - use a more robust approach for Vite
+if (typeof window !== 'undefined') {
+  // In browser environment
+  try {
+    // Use the worker file from public directory for better reliability
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+    console.log('✅ PDF.js worker configured with public directory worker');
+  } catch (error) {
+    // Ultimate fallback - use inline worker
+    console.warn('⚠️ Worker setup failed, using inline worker:', error);
+    // Let PDF.js create an inline worker as fallback
+    pdfjsLib.GlobalWorkerOptions.workerSrc = undefined;
+  }
+}
 
 export class CVTextExtractionService {
   private cvAnalysisService: CVAnalysisService;
 
   constructor() {
     this.cvAnalysisService = new CVAnalysisService();
+    
+    // Log PDF.js configuration for debugging
+    if (process.env.NODE_ENV === 'development') {
+      PDFDebugUtils.logDebugInfo();
+    }
   }
 
   /**
@@ -34,27 +52,56 @@ export class CVTextExtractionService {
       // Convert file to ArrayBuffer
       const arrayBuffer = await file.arrayBuffer();
       
-      // Load PDF document
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      // Load PDF document with enhanced error handling
+      let pdf;
+      try {
+        console.log('📄 Loading PDF document...');
+        // Use simple configuration first to avoid network dependencies
+        pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      } catch (pdfError) {
+        console.error('❌ PDF loading failed:', pdfError);
+        
+        // Try with minimal configuration as fallback
+        try {
+          console.log('🔄 Retrying PDF load with minimal configuration...');
+          pdf = await pdfjsLib.getDocument({ 
+            data: arrayBuffer,
+            useSystemFonts: true,
+            disableFontFace: false
+          }).promise;
+        } catch (secondError) {
+          throw new Error(`Failed to load PDF: ${pdfError instanceof Error ? pdfError.message : 'Unknown PDF error'}`);
+        }
+      }
+      
       console.log(`📄 PDF loaded with ${pdf.numPages} pages`);
       
       // Extract text from all pages
       let extractedText = '';
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => {
-            // Extract text content with proper spacing
-            return typeof item.str === 'string' ? item.str : '';
-          })
-          .join(' ');
-        
-        extractedText += pageText + '\n';
+        try {
+          const page = await pdf.getPage(pageNum);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items
+            .map((item: any) => {
+              // Extract text content with proper spacing
+              return typeof item.str === 'string' ? item.str : '';
+            })
+            .join(' ');
+          
+          extractedText += pageText + '\n';
+        } catch (pageError) {
+          console.warn(`⚠️ Failed to extract text from page ${pageNum}:`, pageError);
+          // Continue with other pages
+        }
       }
       
       // Clean up extracted text
       extractedText = this.cleanExtractedText(extractedText);
+      
+      if (!extractedText || extractedText.length < 50) {
+        throw new Error('Could not extract enough text from PDF. The file might be encrypted, image-based, or corrupted.');
+      }
       
       console.log('📄 Extracted text length:', extractedText.length);
       console.log('📄 Text preview:', extractedText.substring(0, 200) + '...');
@@ -78,7 +125,14 @@ export class CVTextExtractionService {
       
     } catch (error) {
       console.error('❌ CV text extraction failed:', error);
-      throw new Error(`CV text extraction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Use debug utils for better error messages
+      if (error instanceof Error) {
+        const friendlyError = PDFDebugUtils.getUserFriendlyError(error);
+        throw new Error(friendlyError);
+      } else {
+        throw new Error('CV yükleme sırasında bilinmeyen bir hata oluştu.');
+      }
     }
   }
 
