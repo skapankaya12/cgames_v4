@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CVTextExtractionService } from '../../services/CVTextExtractionService';
 import '../../styles/IdentityScreen.css';
 
 interface User {
@@ -18,9 +19,10 @@ const IdentityScreen2 = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isProcessingCV, setIsProcessingCV] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setFileError(null);
     
@@ -44,6 +46,24 @@ const IdentityScreen2 = () => {
     }
 
     setSelectedFile(file);
+
+    // Extract CV text for analysis
+    setIsProcessingCV(true);
+    try {
+      console.log('📄 Starting CV text extraction for:', file.name);
+      const cvService = new CVTextExtractionService();
+      const cvData = await cvService.extractCVData(file);
+      
+      // Store CV data for later use in recommendations
+      cvService.storeCVData(cvData);
+      console.log('✅ CV data extracted and stored:', cvData.fileName);
+    } catch (error) {
+      console.error('❌ CV text extraction failed:', error);
+      // Don't block the form submission if CV extraction fails
+      setFileError('CV analizi başarısız oldu, ancak dosya yine de yüklenecek.');
+    } finally {
+      setIsProcessingCV(false);
+    }
   };
 
   const uploadPDFToGoogleSheets = async (file: File, userData: User): Promise<boolean> => {
@@ -246,7 +266,7 @@ const IdentityScreen2 = () => {
                       accept=".pdf"
                       onChange={handleFileSelect}
                       className="pdf-input"
-                      disabled={isUploading}
+                      disabled={isUploading || isProcessingCV}
                     />
                     <div className="pdf-upload-info">
                       {selectedFile ? (
@@ -256,7 +276,7 @@ const IdentityScreen2 = () => {
                           <span className="file-size">
                             ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                           </span>
-                          {!isUploading && (
+                          {!isUploading && !isProcessingCV && (
                             <button
                               type="button"
                               onClick={() => setSelectedFile(null)}
@@ -273,6 +293,14 @@ const IdentityScreen2 = () => {
                         </div>
                       )}
                     </div>
+                    {isProcessingCV && (
+                      <div className="upload-progress">
+                        <div className="progress-bar">
+                          <div className="progress-fill"></div>
+                        </div>
+                        <span>CV analiz ediliyor...</span>
+                      </div>
+                    )}
                     {isUploading && (
                       <div className="upload-progress">
                         <div className="progress-bar">
@@ -309,9 +337,9 @@ const IdentityScreen2 = () => {
                 <button
                   type="submit"
                   className="start-button"
-                  disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked || isUploading}
+                  disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked || isUploading || isProcessingCV}
                 >
-                  {isUploading ? 'Yükleniyor...' : 'Demo Yolculuğa Başla'}
+                  {isProcessingCV ? 'CV Analiz Ediliyor...' : isUploading ? 'Yükleniyor...' : 'Demo Yolculuğa Başla'}
                 </button>
               </form>
             </div>

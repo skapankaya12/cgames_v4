@@ -6,6 +6,7 @@ import type {
   PersonalizedRecommendations 
 } from '../types/Recommendations';
 import { GoogleAIService } from './GoogleAIService';
+import { CVTextExtractionService } from './CVTextExtractionService';
 
 export class BehavioralAnalyticsService {
   private apiKey: string;
@@ -415,11 +416,23 @@ export class BehavioralAnalyticsService {
     try {
       console.log('=== GENERATING AI-POWERED RECOMMENDATIONS WITH GOOGLE AI ===');
       
-      // Use Google AI Service for recommendations
+      // Check for CV data to enhance recommendations
+      const cvService = new CVTextExtractionService();
+      const cvData = cvService.getCVData();
+      
+      if (cvData) {
+        console.log('✅ CV data found, enhancing AI recommendations with CV analysis');
+        console.log(`📄 CV file: ${cvData.fileName}, Experience: ${cvData.analysis.experience.years} years`);
+      } else {
+        console.log('📋 No CV data found, using standard AI recommendations');
+      }
+      
+      // Use Google AI Service for recommendations with CV data if available
       const recommendations = await this.googleAI.generatePersonalizedRecommendations(
         scores, 
         sessionId, 
-        userInfo
+        userInfo,
+        cvData || undefined // Pass CV data if available
       );
       
       console.log('✅ Google AI recommendations generated successfully');

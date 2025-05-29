@@ -56,15 +56,30 @@ export interface PersonalizedRecommendations {
   aiModel?: string;
   dataUsed?: string[];
   confidenceScore?: number;
+  cvIntegrated?: boolean;
 }
 
 export interface UserAnalyticsData {
   answers: { [key: number]: string };
   timestamps: { [key: number]: number };
-  interactionEvents: any[];
-  sessionAnalytics: any;
+  interactionEvents: InteractionEvent[];
+  sessionAnalytics: SessionAnalytics;
   userInfo?: {
     firstName: string;
     lastName: string;
   };
+}
+
+export interface InteractionEvent {
+  type: string;
+  timestamp: number;
+  data?: Record<string, unknown>;
+}
+
+export interface SessionAnalytics {
+  totalTime: number;
+  averageResponseTime: number;
+  questionCount: number;
+  startTime: number;
+  endTime?: number;
 } 

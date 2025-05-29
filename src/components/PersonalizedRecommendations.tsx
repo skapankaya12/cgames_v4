@@ -1,18 +1,53 @@
 import React from 'react';
-import type { PersonalizedRecommendations, RecommendationItem } from '../types/Recommendations';
+import type { PersonalizedRecommendations, RecommendationItem, DimensionScore } from '../types/Recommendations';
+import type { CVData } from '../types/CVTypes';
+import { CVTextExtractionService } from '../services/CVTextExtractionService';
+import CVAnalysisDisplay from './CVAnalysisDisplay';
 import '../styles/PersonalizedRecommendations.css';
 
 interface PersonalizedRecommendationsProps {
   recommendations: PersonalizedRecommendations | null;
   isLoading: boolean;
   error?: string | null;
+  competencyScores?: DimensionScore[]; // Add competency scores for alignment
 }
 
 const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendationsProps> = ({
   recommendations,
   isLoading,
-  error
+  error,
+  competencyScores = []
 }) => {
+  // CV Analysis state
+  const [cvData, setCvData] = React.useState<CVData | null>(null);
+  const [competencyAlignment, setCompetencyAlignment] = React.useState<{
+    [competency: string]: {
+      cvEvidence: string[];
+      scoreAlignment: string;
+      recommendation: string;
+    }
+  } | null>(null);
+
+  // Load CV data from session storage on component mount
+  React.useEffect(() => {
+    const cvService = new CVTextExtractionService();
+    const storedCvData = cvService.getCVData();
+    
+    if (storedCvData && competencyScores.length > 0) {
+      setCvData(storedCvData);
+      // Generate competency alignment if we have both CV data and competency scores
+      const alignment = cvService.alignCVWithCompetencies(storedCvData, competencyScores);
+      setCompetencyAlignment(alignment);
+      console.log('✅ CV data loaded from storage:', storedCvData.fileName);
+    } else if (storedCvData) {
+      setCvData(storedCvData);
+      console.log('✅ CV data loaded from storage (no competency scores yet):', storedCvData.fileName);
+    } else {
+      console.log('ℹ️ No CV data found in storage - user did not upload a CV');
+    }
+  }, [competencyScores]);
+
+
   if (isLoading) {
     return (
       <div className="recommendations-section">
@@ -63,40 +98,12 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
     }
   };
 
-  const getRecommendationTypeLabel = (type: RecommendationItem['type']): string => {
-    switch (type) {
-      case 'mastery':
-        return 'Ustalık Geliştirme';
-      case 'growth':
-        return 'Büyüme Odaklı';
-      case 'foundation':
-        return 'Temel Güçlendirme';
-      default:
-        return 'Gelişim Önerisi';
-    }
-  };
-
-  const getConfidenceColor = (confidence: number): string => {
-    if (confidence >= 80) return '#27ae60';
-    if (confidence >= 60) return '#f39c12';
-    return '#e74c3c';
-  };
-
   const getDifficultyIcon = (level: string): string => {
     switch (level) {
       case 'beginner': return '🟢';
       case 'intermediate': return '🟡';
       case 'advanced': return '🔴';
       default: return '🟡';
-    }
-  };
-
-  const getDifficultyLabel = (level: string): string => {
-    switch (level) {
-      case 'beginner': return 'Başlangıç';
-      case 'intermediate': return 'Orta';
-      case 'advanced': return 'İleri';
-      default: return 'Orta';
     }
   };
 
@@ -147,7 +154,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
     }
   };
 
-  const getOverallPerformance = (scores: any[]): number => {
+  const getOverallPerformance = (scores: DimensionScore[]): number => {
     if (!scores || scores.length === 0) return 0;
     const total = scores.reduce((sum, score) => sum + (score.score / score.maxScore) * 100, 0);
     return Math.round(total / scores.length);
@@ -168,7 +175,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   return (
     <div className="recommendations-section">
       <div className="recommendations-header">
-        <h3>�� Google AI Destekli Aday Değerlendirme Raporu</h3>
+        <h3>🤖 Google AI Destekli Aday Değerlendirme Raporu</h3>
         <p className="recommendations-subtitle">
           Yetkinlik analiz sonuçlarına dayalı profesyonel aday değerlendirmesi
         </p>
@@ -204,8 +211,33 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
         </div>
       )}
 
+      {/* CV Analysis Display */}
+      {cvData ? (
+        <CVAnalysisDisplay 
+          cvData={cvData} 
+          competencyAlignment={competencyAlignment}
+        />
+      ) : (
+        <div className="cv-analysis-info" style={{ 
+          padding: '16px', 
+          backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+          borderRadius: '8px', 
+          marginBottom: '16px',
+          textAlign: 'center',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
+        }}>
+          <div style={{ marginBottom: '8px', fontSize: '1.2rem' }}>📄</div>
+          <p style={{ margin: '0', color: '#cbd5e1', fontSize: '0.9rem' }}>
+            Bu analiz sadece yetkinlik testi verilerine dayanmaktadır.
+          </p>
+          <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.8rem' }}>
+            CV yüklemediğiniz için detaylı CV analizi mevcut değil.
+          </p>
+        </div>
+      )}
+
       <div className="recommendations-grid">
-        {recommendations.recommendations.map((recommendation, index) => (
+        {recommendations.recommendations.map((recommendation: RecommendationItem, index: number) => (
           <div 
             key={recommendation.id || `rec-${index}`} 
             className="recommendation-card"
@@ -283,7 +315,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 <div className="recommendation-based-on">
                   <h5>📈 Analiz Temeli</h5>
                   <ul className="based-on-list">
-                    {recommendation.basedOn.map((item, index) => (
+                    {recommendation.basedOn.map((item: string, index: number) => (
                       <li key={index}>{item}</li>
                     ))}
                   </ul>
@@ -344,7 +376,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 <div className="action-items">
                   <h5>✅ İK Eylem Planı</h5>
                   <ul className="action-list">
-                    {recommendation.actionItems.map((action, index) => (
+                    {recommendation.actionItems.map((action: string, index: number) => (
                       <li key={index} className="action-item">{action}</li>
                     ))}
                   </ul>
@@ -356,7 +388,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 <div className="recommendation-resources">
                   <h5>🎯 Pozisyon Önerileri</h5>
                   <div className="resources-list">
-                    {recommendation.resources.map((resource, index) => (
+                    {recommendation.resources.map((resource: { type: string; title: string; description: string; url?: string }, index: number) => (
                       <div key={index} className="resource-item">
                         <div className="resource-header">
                           <span className="resource-icon">

@@ -4,6 +4,7 @@ import type {
   RecommendationItem, 
   PersonalizedRecommendations 
 } from '../types/Recommendations';
+import type { CVData } from './CVTextExtractionService';
 
 export class GoogleAIService {
   private genAI: GoogleGenerativeAI;
@@ -33,12 +34,13 @@ export class GoogleAIService {
   }
 
   /**
-   * Generate personalized recommendations using Google AI
+   * Generate personalized recommendations using Google AI with CV integration
    */
   async generatePersonalizedRecommendations(
     scores: DimensionScore[], 
     sessionId: string,
-    userInfo?: { firstName: string; lastName: string }
+    userInfo?: { firstName: string; lastName: string },
+    cvData?: CVData
   ): Promise<PersonalizedRecommendations> {
     try {
       console.log('🚀 Generating AI-powered recommendations with Google AI...');
@@ -46,7 +48,7 @@ export class GoogleAIService {
       // Enhance scores with display names
       const enhancedScores = this.enhanceScoresWithDisplayNames(scores);
       
-      const prompt = this.createDetailedPrompt(enhancedScores, userInfo?.firstName);
+      const prompt = this.createDetailedPromptWithCV(enhancedScores, userInfo?.firstName, cvData);
       
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
@@ -61,10 +63,13 @@ export class GoogleAIService {
         userId: userInfo ? `${userInfo.firstName}_${userInfo.lastName}` : undefined,
         recommendations: parsedRecommendations,
         generatedAt: new Date().toISOString(),
-        overallInsight: this.generateOverallInsight(enhancedScores, userInfo?.firstName),
+        overallInsight: this.generateOverallInsight(enhancedScores, userInfo?.firstName, cvData),
         aiModel: 'Google Gemini 1.5 Flash',
-        dataUsed: ['Yetkinlik Skorları', 'Davranışsal Analiz', 'Karar Verme Süreçleri'],
-        confidenceScore: 85
+        dataUsed: cvData ? 
+          ['Yetkinlik Skorları', 'CV Analizi', 'Deneyim Verileri', 'Eğitim Bilgileri', 'Beceri Analizi'] :
+          ['Yetkinlik Skorları', 'Davranışsal Analiz', 'Karar Verme Süreçleri'],
+        confidenceScore: cvData ? 92 : 85, // Higher confidence with CV data
+        cvIntegrated: !!cvData
       };
 
       console.log('🎯 Personalized recommendations generated:', recommendations);
@@ -89,9 +94,9 @@ export class GoogleAIService {
   }
 
   /**
-   * Create a detailed prompt for Google AI with HR manager focus
+   * Create a detailed prompt for Google AI with HR manager focus and CV integration
    */
-  private createDetailedPrompt(scores: DimensionScore[], firstName?: string): string {
+  private createDetailedPromptWithCV(scores: DimensionScore[], firstName?: string, cvData?: CVData): string {
     const candidateName = firstName || 'aday';
     
     const scoresText = scores.map(score => {
@@ -100,17 +105,46 @@ export class GoogleAIService {
       return `${score.displayName || score.dimension}: ${percentage.toFixed(1)}% (${score.score}/${score.maxScore}) - ${dimensionInfo?.description || ''}`;
     }).join('\n');
 
+    // Build CV context if available
+    let cvContext = '';
+    if (cvData) {
+      const { analysis } = cvData;
+      cvContext = `
+
+CV ADAY PROFİLİ:
+Deneyim: ${analysis.experience.years} yıl profesyonel deneyim
+Şirketler: ${analysis.experience.companies.slice(0, 3).join(', ')}
+Pozisyonlar: ${analysis.experience.positions.slice(0, 3).join(', ')}
+Sektörler: ${analysis.experience.industries.join(', ')}
+
+Teknik Beceriler: ${analysis.skills.technical.slice(0, 5).join(', ')}
+Liderlik Becerileri: ${analysis.skills.leadership.slice(0, 3).join(', ')}
+Soft Skill: ${analysis.skills.soft.slice(0, 3).join(', ')}
+Diller: ${analysis.skills.languages.join(', ')}
+
+Eğitim: ${analysis.education.degrees.join(', ')}
+Kurumlar: ${analysis.education.institutions.slice(0, 2).join(', ')}
+Sertifikalar: ${analysis.education.certifications.slice(0, 3).join(', ')}
+
+Başarılar: ${analysis.achievements.slice(0, 3).join(', ')}
+
+HR İçgörüleri:
+${cvData.hrInsights.overallAssessment}
+Güçlü Yönler: ${cvData.hrInsights.strengths.join(', ')}
+Gelişim Alanları: ${cvData.hrInsights.concerns.join(', ')}`;
+    }
+
     return `Sen bir İK uzmanısın. ${candidateName} adlı aday için DETAYLI ve PROFESYONEL değerlendirme raporu oluştur.
 
 ADAY YETKİNLİK SKORLARI:
-${scoresText}
+${scoresText}${cvContext}
 
-ÖNEMLİ: Her değerlendirme için MUTLAKA şunları dahil et:
+ÖNEMLİ: ${cvData ? 'CV verilerini ve yetkinlik skorlarını MUTLAKA karşılaştırarak' : 'Yetkinlik skorlarını analiz ederek'} şunları dahil et:
 1. Adayın bu alandaki GÜÇLÜ ve ZAYIF yönlerini analiz et
-2. Hangi pozisyonlar için UYGUN olduğunu belirt
+2. ${cvData ? 'CV deneyimi ile test sonuçlarının UYUMUNU değerlendir' : 'Hangi pozisyonlar için UYGUN olduğunu belirt'}
 3. Gelişim potansiyelini değerlendir
 4. İK önerilerini sun
-5. Genel performans değerlendirmesi yap
+5. ${cvData ? 'CV ve test verilerine dayalı GENEL performans değerlendirmesi yap' : 'Genel performans değerlendirmesi yap'}
 
 Her yetkinlik için şu JSON formatında çıktı ver:
 {
@@ -118,7 +152,7 @@ Her yetkinlik için şu JSON formatında çıktı ver:
     {
       "dimension": "yetkinlik_kodu",
       "title": "Yetkinlik Alanı Değerlendirmesi",
-      "candidateStrengths": "Bu alandaki güçlü yönleri",
+      "candidateStrengths": "Bu alandaki güçlü yönleri${cvData ? ' (CV deneyimi dahil)' : ''}",
       "candidateWeaknesses": "Gelişim gerektiren alanlar",
       "suitablePositions": ["Uygun pozisyon 1", "Uygun pozisyon 2"],
       "developmentPotential": "Gelişim potansiyeli değerlendirmesi",
@@ -126,7 +160,9 @@ Her yetkinlik için şu JSON formatında çıktı ver:
       "overallAssessment": "Bu yetkinlik için genel değerlendirme",
       "riskLevel": "low/medium/high",
       "priority": "high/medium/low",
-      "interviewFocus": ["Mülakatta odaklanılacak konular"]
+      "interviewFocus": ["Mülakatta odaklanılacak konular"],
+      ${cvData ? '"cvAlignment": "CV deneyimi ile test sonuçlarının uyum seviyesi ve açıklaması",' : ''}
+      "evidenceFromCV": [${cvData ? '"CV\'den bu yetkinliği destekleyen kanıtlar"' : ''}]
     }
   ]
 }
@@ -135,8 +171,16 @@ KURALLAR:
 - Değerlendirmeler Türkçe olmalı
 - ${candidateName} için objektif ve profesyonel olmalı
 - İK perspektifinden yazılmalı
-- Adayın işe alım sürecindeki durumunu değerlendirmeli
-- Hangi rollerde başarılı olabileceğini belirtmeli`;
+- ${cvData ? 'CV deneyimi ile test sonuçlarını MUTLAKA karşılaştırmalı' : 'Adayın işe alım sürecindeki durumunu değerlendirmeli'}
+- Hangi rollerde başarılı olabileceğini belirtmeli
+- ${cvData ? 'CV verilerinden somut örnekler vermeli' : 'Test sonuçlarına dayalı örnekler vermeli'}`;
+  }
+
+  /**
+   * Create a detailed prompt for Google AI with HR manager focus (fallback without CV)
+   */
+  private createDetailedPrompt(scores: DimensionScore[], firstName?: string): string {
+    return this.createDetailedPromptWithCV(scores, firstName);
   }
 
   /**
@@ -163,7 +207,7 @@ KURALLAR:
             actionItems: rec.hrRecommendations || ['İK süreçlerinde dikkate alınmalı'],
             resources: [
               {
-                type: 'mentoring',
+                type: 'mentorship',
                 title: 'İK Değerlendirme Raporu',
                 description: `${rec.suitablePositions?.join(', ') || 'Pozisyon önerileri'} - ${rec.developmentPotential || 'Gelişim potansiyeli'}`
               }
@@ -178,7 +222,10 @@ KURALLAR:
             hrRecommendations: rec.hrRecommendations,
             overallAssessment: rec.overallAssessment,
             riskLevel: rec.riskLevel,
-            interviewFocus: rec.interviewFocus
+            interviewFocus: rec.interviewFocus,
+            // CV-specific fields
+            cvAlignment: rec.cvAlignment,
+            evidenceFromCV: rec.evidenceFromCV
           }));
         }
       }
@@ -226,7 +273,7 @@ KURALLAR:
         actionItems: this.getHRActionItems(score.dimension, percentage),
         resources: [
           {
-            type: 'mentoring',
+            type: 'mentorship',
             title: `${score.displayName || dimensionInfo?.name} Değerlendirme Raporu`,
             description: this.getSuitablePositions(score.dimension, percentage)
           }
@@ -360,33 +407,35 @@ KURALLAR:
   }
 
   /**
-   * Generate overall insight for HR managers
+   * Generate overall insight with CV integration
    */
-  private generateOverallInsight(scores: DimensionScore[], firstName?: string): string {
+  private generateOverallInsight(scores: DimensionScore[], firstName?: string, cvData?: CVData): string {
     const candidateName = firstName || 'Aday';
-    const averageScore = scores.reduce((sum, score) => sum + (score.score / score.maxScore), 0) / scores.length;
-    const averagePercentage = averageScore * 100;
+    const avgScore = scores.reduce((sum, score) => sum + (score.score / score.maxScore) * 100, 0) / scores.length;
     
-    const topDimensions = scores
-      .map(score => ({ ...score, percentage: (score.score / score.maxScore) * 100 }))
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 2);
-    
-    const developmentAreas = scores
-      .map(score => ({ ...score, percentage: (score.score / score.maxScore) * 100 }))
-      .sort((a, b) => a.percentage - b.percentage)
-      .slice(0, 2);
-
-    let overallAssessment = '';
-    if (averagePercentage >= 75) {
-      overallAssessment = 'güçlü bir aday profili sergiliyor';
-    } else if (averagePercentage >= 60) {
-      overallAssessment = 'orta-üst seviyede yetkinlik gösteriyor';
+    let baseInsight = '';
+    if (avgScore >= 80) {
+      baseInsight = `${candidateName} yüksek performans gösteren bir aday profili sergiliyor.`;
+    } else if (avgScore >= 60) {
+      baseInsight = `${candidateName} orta-üst seviye potansiyele sahip bir aday.`;
     } else {
-      overallAssessment = 'gelişim potansiyeli olan bir aday';
+      baseInsight = `${candidateName} gelişim odaklı yaklaşım gerektiren bir aday profili.`;
     }
 
-    return `${candidateName} genel olarak %${averagePercentage.toFixed(1)} performans ile ${overallAssessment}. En güçlü olduğu alanlar ${topDimensions.map(d => this.getDimensionName(d.dimension)).join(' ve ')}. Gelişim desteği gereken alanlar ${developmentAreas.map(d => this.getDimensionName(d.dimension)).join(' ve ')}.`;
+    if (cvData) {
+      const experienceLevel = cvData.analysis.experience.years;
+      const careerInsight = experienceLevel >= 10 ? 
+        'Deneyimli bir profesyonel profili.' :
+        experienceLevel >= 5 ?
+        'Orta seviye deneyime sahip.' :
+        'Kariyer başlangıcında veya genç profesyonel.';
+      
+      const cvAlignment = cvData.hrInsights.fitAnalysis || 'CV ile test sonuçları uyumu değerlendirildi.';
+      
+      return `${baseInsight} ${careerInsight} ${cvAlignment}`;
+    }
+
+    return baseInsight;
   }
 
   /**
@@ -405,7 +454,7 @@ KURALLAR:
         actionItems: this.getHRActionItems(score.dimension, percentage),
         resources: [
           {
-            type: 'mentoring',
+            type: 'mentorship',
             title: `${dimensionName} Değerlendirme Raporu`,
             description: this.getSuitablePositions(score.dimension, percentage)
           }

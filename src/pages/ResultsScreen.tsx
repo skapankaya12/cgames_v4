@@ -1207,6 +1207,7 @@ const ResultsScreen = () => {
             recommendations={personalizedRecommendations}
             isLoading={isLoadingRecommendations}
             error={recommendationsError}
+            competencyScores={scores}
           />
         </div>
       );
