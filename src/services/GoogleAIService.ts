@@ -23,10 +23,14 @@ export class GoogleAIService {
   };
 
   constructor() {
-    // Initialize Google AI with the API key
-    // In production, this should be handled server-side for security
-    const apiKey = 'AIzaSyBKhn1c0Q3sOLnaFAjXZpYF7-qf0USAsSY';
+    // Initialize Google AI with the API key from environment variables
+    const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
     
+    if (!apiKey) {
+      console.error('❌ Google AI API key not found in environment variables');
+      throw new Error('Google AI API key not configured. Please set VITE_GOOGLE_AI_API_KEY in your .env file');
+    }
+
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
@@ -99,81 +103,55 @@ export class GoogleAIService {
   private createDetailedPromptWithCV(scores: DimensionScore[], firstName?: string, cvData?: CVData): string {
     const candidateName = firstName || 'aday';
     
+    // Create a more detailed scores text with percentages
     const scoresText = scores.map(score => {
-      const percentage = (score.score / score.maxScore) * 100;
-      const dimensionInfo = this.dimensionMapping[score.dimension as keyof typeof this.dimensionMapping];
-      return `${score.displayName || score.dimension}: ${percentage.toFixed(1)}% (${score.score}/${score.maxScore}) - ${dimensionInfo?.description || ''}`;
+      const percentage = ((score.score / score.maxScore) * 100).toFixed(1);
+      const dimensionName = this.getDimensionName(score.dimension);
+      return `${dimensionName} (${score.dimension}): %${percentage} (${score.score}/${score.maxScore})`;
     }).join('\n');
 
-    // Build CV context if available
     let cvContext = '';
     if (cvData) {
-      const { analysis } = cvData;
-      cvContext = `
-
-CV ADAY PROFİLİ:
-Deneyim: ${analysis.experience.years} yıl profesyonel deneyim
-Şirketler: ${analysis.experience.companies.slice(0, 3).join(', ')}
-Pozisyonlar: ${analysis.experience.positions.slice(0, 3).join(', ')}
-Sektörler: ${analysis.experience.industries.join(', ')}
-
-Teknik Beceriler: ${analysis.skills.technical.slice(0, 5).join(', ')}
-Liderlik Becerileri: ${analysis.skills.leadership.slice(0, 3).join(', ')}
-Soft Skill: ${analysis.skills.soft.slice(0, 3).join(', ')}
-Diller: ${analysis.skills.languages.join(', ')}
-
-Eğitim: ${analysis.education.degrees.join(', ')}
-Kurumlar: ${analysis.education.institutions.slice(0, 2).join(', ')}
-Sertifikalar: ${analysis.education.certifications.slice(0, 3).join(', ')}
-
-Başarılar: ${analysis.achievements.slice(0, 3).join(', ')}
-
-HR İçgörüleri:
-${cvData.hrInsights.overallAssessment}
-Güçlü Yönler: ${cvData.hrInsights.strengths.join(', ')}
-Gelişim Alanları: ${cvData.hrInsights.concerns.join(', ')}`;
+      cvContext = `\n\nCV VERİLERİ:
+- Deneyim: ${cvData.analysis.experience.years} yıl
+- Şirket Sayısı: ${cvData.analysis.experience.companies.length}
+- Teknik Beceri: ${cvData.analysis.skills.technical.length} adet
+- Liderlik Becerisi: ${cvData.analysis.skills.leadership.length} adet
+- Eğitim: ${cvData.analysis.education.degrees.length} derece
+- Sertifika: ${cvData.analysis.education.certifications.length} adet
+- Genel Değerlendirme: ${cvData.hrInsights.overallAssessment}
+- Güçlü Yönler: ${cvData.hrInsights.strengths.slice(0, 3).join(', ')}
+- Gelişim Alanları: ${cvData.hrInsights.concerns.slice(0, 3).join(', ')}`;
     }
 
-    return `Sen bir İK uzmanısın. ${candidateName} adlı aday için DETAYLI ve PROFESYONEL değerlendirme raporu oluştur.
+    return `Sen profesyonel bir İK uzmanısın. ${candidateName} adlı aday için SADECE İKİ PARAGRAF halinde değerlendirme raporu oluştur.
 
 ADAY YETKİNLİK SKORLARI:
 ${scoresText}${cvContext}
 
-ÖNEMLİ: ${cvData ? 'CV verilerini ve yetkinlik skorlarını MUTLAKA karşılaştırarak' : 'Yetkinlik skorlarını analiz ederek'} şunları dahil et:
-1. Adayın bu alandaki GÜÇLÜ ve ZAYIF yönlerini analiz et
-2. ${cvData ? 'CV deneyimi ile test sonuçlarının UYUMUNU değerlendir' : 'Hangi pozisyonlar için UYGUN olduğunu belirt'}
-3. Gelişim potansiyelini değerlendir
-4. İK önerilerini sun
-5. ${cvData ? 'CV ve test verilerine dayalı GENEL performans değerlendirmesi yap' : 'Genel performans değerlendirmesi yap'}
+TALEP EDİLEN FORMAT - SADECE BU İKİ PARAGRAFI YAZ:
 
-Her yetkinlik için şu JSON formatında çıktı ver:
-{
-  "recommendations": [
-    {
-      "dimension": "yetkinlik_kodu",
-      "title": "Yetkinlik Alanı Değerlendirmesi",
-      "candidateStrengths": "Bu alandaki güçlü yönleri${cvData ? ' (CV deneyimi dahil)' : ''}",
-      "candidateWeaknesses": "Gelişim gerektiren alanlar",
-      "suitablePositions": ["Uygun pozisyon 1", "Uygun pozisyon 2"],
-      "developmentPotential": "Gelişim potansiyeli değerlendirmesi",
-      "hrRecommendations": ["İK önerisi 1", "İK önerisi 2"],
-      "overallAssessment": "Bu yetkinlik için genel değerlendirme",
-      "riskLevel": "low/medium/high",
-      "priority": "high/medium/low",
-      "interviewFocus": ["Mülakatta odaklanılacak konular"],
-      ${cvData ? '"cvAlignment": "CV deneyimi ile test sonuçlarının uyum seviyesi ve açıklaması",' : ''}
-      "evidenceFromCV": [${cvData ? '"CV\'den bu yetkinliği destekleyen kanıtlar"' : ''}]
-    }
-  ]
-}
+İlk paragraf: CV analizi, test skorları ve davranış verilerini birleştiren kapsamlı değerlendirme. Bu paragraf şunları içermeli:
+   - Yetkinlik skorlarının analizi ve yorumu
+   - ${cvData ? 'CV deneyimi ile test sonuçlarının uyumluluğu' : 'Test performansının analizi'}
+   - ${cvData ? 'Deneyim verileri ile skor etkileşiminin değerlendirmesi' : 'Davranışsal verilerin analizi'}
+   - Adayın güçlü ve zayıf yönlerinin objektif analizi
+
+İkinci paragraf: Mülakat rehberliği ve yönetici özeti. Bu paragraf şunları içermeli:
+   - Mülakat sürecinde sorulacak anahtar sorular (3-4 tane)
+   - Zayıflık ve güçlü yönleri değerlendirme ipuçları
+   - Pozisyon uygunluğu değerlendirmesi
+   - ${cvData ? 'Adaya gönderilebilecek vaka çalışması önerileri' : 'Değerlendirme önerileri'}
+   - Tüm verilerin ejecutif özeti ve nihai karar için öneriler
 
 KURALLAR:
-- Değerlendirmeler Türkçe olmalı
-- ${candidateName} için objektif ve profesyonel olmalı
-- İK perspektifinden yazılmalı
-- ${cvData ? 'CV deneyimi ile test sonuçlarını MUTLAKA karşılaştırmalı' : 'Adayın işe alım sürecindeki durumunu değerlendirmeli'}
-- Hangi rollerde başarılı olabileceğini belirtmeli
-- ${cvData ? 'CV verilerinden somut örnekler vermeli' : 'Test sonuçlarına dayalı örnekler vermeli'}`;
+- SADECE bu iki paragrafı yaz, başka hiçbir şey ekleme
+- Her paragraf en az 150 kelime olmalı
+- Türkçe ve profesyonel dilde yaz
+- ${candidateName} için özelleştirilmiş olmalı
+- JSON formatı kullanma, düz metin paragraflar olarak yaz
+- Paragraf numaraları kullanma, doğrudan paragraf içeriklerini yaz
+- Başlık ekleme, sadece paragrafları yaz`;
   }
 
   /**
@@ -184,59 +162,114 @@ KURALLAR:
   }
 
   /**
-   * Parse Google AI response into HR-focused recommendation items
+   * Parse Google AI response into a simple two-paragraph format
    */
   private parseAIResponse(text: string, scores: DimensionScore[]): RecommendationItem[] {
-    try {
-      // Try to extract JSON from the response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        if (parsed.recommendations && Array.isArray(parsed.recommendations)) {
-          return parsed.recommendations.map((rec: any) => ({
-            dimension: rec.dimension || 'general',
-            title: rec.title || 'Yetkinlik Değerlendirmesi',
-            description: `${rec.candidateStrengths || 'Güçlü yönler analiz edildi.'} ${rec.candidateWeaknesses || 'Gelişim alanları belirlendi.'}`,
-            reasoning: rec.overallAssessment || 'Bu yetkinlik alanında genel değerlendirme yapılmıştır.',
-            basedOn: [`Yetkinlik skoru analizi`, 'Davranışsal değerlendirme', 'Performans göstergeleri'],
-            userBenefit: rec.hrRecommendations?.join(' ') || 'İK süreçleri için öneriler sunulmuştur.',
-            confidence: this.calculateHRConfidence(scores.find(s => s.dimension === rec.dimension)),
-            difficultyLevel: rec.riskLevel === 'high' ? 'advanced' : rec.riskLevel === 'medium' ? 'intermediate' : 'beginner',
-            estimatedImpact: rec.priority === 'high' ? 'high' : rec.priority === 'medium' ? 'medium' : 'low',
-            priority: rec.priority || 'medium',
-            actionItems: rec.hrRecommendations || ['İK süreçlerinde dikkate alınmalı'],
-            resources: [
-              {
-                type: 'mentorship',
-                title: 'İK Değerlendirme Raporu',
-                description: `${rec.suitablePositions?.join(', ') || 'Pozisyon önerileri'} - ${rec.developmentPotential || 'Gelişim potansiyeli'}`
-              }
-            ],
-            timeline: 'İşe alım süreci',
-            expectedOutcome: rec.developmentPotential || 'Aday potansiyeli değerlendirildi',
-            // HR-specific fields
-            candidateStrengths: rec.candidateStrengths,
-            candidateWeaknesses: rec.candidateWeaknesses,
-            suitablePositions: rec.suitablePositions,
-            developmentPotential: rec.developmentPotential,
-            hrRecommendations: rec.hrRecommendations,
-            overallAssessment: rec.overallAssessment,
-            riskLevel: rec.riskLevel,
-            interviewFocus: rec.interviewFocus,
-            // CV-specific fields
-            cvAlignment: rec.cvAlignment,
-            evidenceFromCV: rec.evidenceFromCV
-          }));
-        }
-      }
-      
-      // If JSON parsing fails, create HR-focused recommendations from text
-      return this.createHRRecommendationsFromText(text, scores);
-      
-    } catch (error) {
-      console.error('Error parsing AI response:', error);
-      return this.createHRFallbackRecommendationsArray(scores);
+    // Clean the text and split into paragraphs
+    const cleanText = text.trim();
+    const paragraphs = cleanText.split('\n\n').filter(p => p.trim().length > 50);
+    
+    // Ensure we have at least some content
+    if (paragraphs.length === 0) {
+      return this.createFallbackTwoParagraphs(scores);
     }
+
+    // Take the first two substantial paragraphs or combine if needed
+    let firstParagraph = paragraphs[0] || '';
+    let secondParagraph = paragraphs[1] || '';
+    
+    // If we only have one paragraph, split it or create a second one
+    if (paragraphs.length === 1) {
+      const sentences = firstParagraph.split('. ');
+      if (sentences.length > 6) {
+        const midPoint = Math.floor(sentences.length / 2);
+        firstParagraph = sentences.slice(0, midPoint).join('. ') + '.';
+        secondParagraph = sentences.slice(midPoint).join('. ');
+      } else {
+        secondParagraph = this.generateSecondParagraph(scores);
+      }
+    }
+
+    // Return as a single "AI Report" item with both paragraphs
+    return [{
+      dimension: 'AI_REPORT',
+      title: 'AI Destekli Aday Değerlendirme Raporu',
+      description: firstParagraph,
+      reasoning: secondParagraph,
+      basedOn: ['Yetkinlik Skorları', 'CV Analizi', 'Davranışsal Veriler', 'İK Değerlendirme Kriterleri'],
+      userBenefit: 'Kapsamlı aday değerlendirmesi ve mülakat rehberliği',
+      confidence: 95,
+      difficultyLevel: 'advanced',
+      estimatedImpact: 'high',
+      priority: 'high',
+      actionItems: ['Mülakat planlaması', 'Değerlendirme kriterlerini belirleme', 'Karar verme süreci'],
+      resources: [{
+        type: 'course',
+        title: 'AI Değerlendirme Raporu',
+        description: 'Komple aday analizi ve öneriler'
+      }],
+      timeline: 'İşe alım süreci',
+      expectedOutcome: 'Objektif ve kapsamlı aday değerlendirmesi'
+    }];
+  }
+
+  /**
+   * Generate fallback two paragraphs if AI response is insufficient
+   */
+  private createFallbackTwoParagraphs(scores: DimensionScore[]): RecommendationItem[] {
+    const averageScore = scores.reduce((sum, score) => sum + (score.score / score.maxScore), 0) / scores.length * 100;
+    const strongAreas = scores.filter(s => (s.score / s.maxScore) >= 0.7);
+    const weakAreas = scores.filter(s => (s.score / s.maxScore) < 0.5);
+    
+    const firstParagraph = `Bu aday genel yetkinlik düzeyi %${averageScore.toFixed(1)} seviyesinde performans göstermektedir. ` +
+      `Yetkinlik analizi sonuçlarına göre, özellikle ${strongAreas.map(s => this.getDimensionName(s.dimension)).join(', ')} alanlarında güçlü performans sergilemektedir. ` +
+      `${weakAreas.length > 0 ? `Gelişim gerektiren alanlar ise ${weakAreas.map(s => this.getDimensionName(s.dimension)).join(', ')} olarak değerlendirilmektedir. ` : ''}` +
+      `Test sonuçları ile davranışsal veriler karşılaştırıldığında, adayın tutarlı bir profil sergilediği görülmektedir. ` +
+      `Bu değerlendirme, adayın mevcut yetkinlik seviyesini objektif olarak yansıtmakta ve gelecekteki performans potansiyelini öngörmede önemli veriler sunmaktadır.`;
+
+    const secondParagraph = `Mülakat sürecinde şu konulara odaklanılması önerilir: Karar verme süreçlerindeki yaklaşımı, ekip içindeki rolleri ve sorumluluk alma becerileri. ` +
+      `${strongAreas.length > 0 ? `"${strongAreas.map(s => this.getDimensionName(s.dimension)).join(' ve ')} konularındaki deneyimlerinizi paylaşır mısınız?" sorusu ile güçlü yönleri detaylandırılabilir. ` : ''}` +
+      `${weakAreas.length > 0 ? `${weakAreas.map(s => this.getDimensionName(s.dimension)).join(' ve ')} alanlarında gelişim planları sorgulanmalıdır. ` : ''}` +
+      `Vaka çalışması olarak sektörel bir problem durumu sunularak analitik düşünce ve çözüm önerme becerileri test edilebilir. ` +
+      `Sonuç olarak, aday ${averageScore >= 70 ? 'pozisyon için uygun görülmekte' : 'gelişim odaklı bir yaklaşımla değerlendirilebilir'} ve ` +
+      `${averageScore >= 80 ? 'üst düzey roller' : averageScore >= 60 ? 'orta seviye pozisyonlar' : 'başlangıç seviyesi roller'} için önerilmektedir.`;
+
+    return [{
+      dimension: 'AI_REPORT',
+      title: 'AI Destekli Aday Değerlendirme Raporu',
+      description: firstParagraph,
+      reasoning: secondParagraph,
+      basedOn: ['Yetkinlik Skorları', 'Davranışsal Analiz', 'İK Değerlendirme Kriterleri'],
+      userBenefit: 'Kapsamlı aday değerlendirmesi ve mülakat rehberliği',
+      confidence: 85,
+      difficultyLevel: 'intermediate',
+      estimatedImpact: 'high',
+      priority: 'high',
+      actionItems: ['Mülakat planlaması', 'Değerlendirme kriterlerini belirleme'],
+      resources: [{
+        type: 'course',
+        title: 'Yetkinlik Değerlendirme Raporu',
+        description: 'Temel aday analizi ve öneriler'
+      }],
+      timeline: 'İşe alım süreci',
+      expectedOutcome: 'Objektif aday değerlendirmesi'
+    }];
+  }
+
+  /**
+   * Generate second paragraph for interview guidance
+   */
+  private generateSecondParagraph(scores: DimensionScore[]): string {
+    const averageScore = scores.reduce((sum, score) => sum + (score.score / score.maxScore), 0) / scores.length * 100;
+    const strongAreas = scores.filter(s => (s.score / s.maxScore) >= 0.7);
+    const weakAreas = scores.filter(s => (s.score / s.maxScore) < 0.5);
+    
+    return `Mülakat sürecinde aday değerlendirmesi için şu yaklaşım önerilir: ` +
+      `${strongAreas.length > 0 ? `Güçlü yönleri olan ${strongAreas.map(s => this.getDimensionName(s.dimension)).join(' ve ')} alanlarında somut örnekler talep edilmeli. ` : ''}` +
+      `"Zorlu bir karar verme durumunda nasıl yaklaştınız?" ve "Ekip içindeki rolünüzü nasıl tanımlarsınız?" gibi sorularla davranışsal yetkinlikler değerlendirilebilir. ` +
+      `${weakAreas.length > 0 ? `Gelişim alanları olan ${weakAreas.map(s => this.getDimensionName(s.dimension)).join(' ve ')} konularında iyileştirme planları sorgulanmalı. ` : ''}` +
+      `Pozisyon uygunluğu açısından ${averageScore >= 70 ? 'yüksek potansiyel göstermekte' : 'orta seviye uygunluk sergilemekte'} olup, ` +
+      `${averageScore >= 80 ? 'liderlik rolleri' : averageScore >= 60 ? 'uzman pozisyonlar' : 'junior seviye roller'} için değerlendirilebilir.`;
   }
 
   /**
@@ -273,7 +306,7 @@ KURALLAR:
         actionItems: this.getHRActionItems(score.dimension, percentage),
         resources: [
           {
-            type: 'mentorship',
+            type: 'course',
             title: `${score.displayName || dimensionInfo?.name} Değerlendirme Raporu`,
             description: this.getSuitablePositions(score.dimension, percentage)
           }
@@ -454,7 +487,7 @@ KURALLAR:
         actionItems: this.getHRActionItems(score.dimension, percentage),
         resources: [
           {
-            type: 'mentorship',
+            type: 'course',
             title: `${dimensionName} Değerlendirme Raporu`,
             description: this.getSuitablePositions(score.dimension, percentage)
           }

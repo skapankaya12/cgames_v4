@@ -56,3 +56,27 @@ src/
 - Chakra UI
 - Recharts
 - React Router
+
+# Environment Setup
+
+This project requires API keys for OpenAI and Google AI services. To set up your environment:
+
+1. Create a `.env` file in the root directory
+2. Add the following environment variables:
+```env
+# OpenAI API Key for GPT-3.5 integration
+VITE_OPENAI_API_KEY=your_openai_api_key_here
+
+# Google AI API Key for Gemini integration
+VITE_GOOGLE_AI_API_KEY=your_google_ai_api_key_here
+```
+
+3. Replace the placeholder values with your actual API keys
+4. Never commit the `.env` file to version control
+
+## Security Notes
+
+- Keep your API keys secure and never share them
+- The `.env` file is ignored by git to prevent accidental exposure
+- In production, consider using a secure secrets management service
+- For development, ensure your `.env` file is properly secured on your local machine
