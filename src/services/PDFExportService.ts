@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import type { SessionAnalytics } from './InteractionTracker';
 
 export interface ExportData {
   user: {
@@ -17,7 +17,7 @@ export interface ExportData {
     description: string;
     color: string;
   }>;
-  interactionAnalytics?: any;
+  interactionAnalytics?: SessionAnalytics;
   recommendations?: string[];
   exportDate: string;
 }
@@ -49,12 +49,12 @@ export class PDFExportService {
       
       // Page 3: Detailed Competency Analysis
       pdf.addPage();
-      this.createDetailedAnalysis(pdf, data, pageWidth, margin, contentWidth);
+      this.createDetailedAnalysis(pdf, data, margin, contentWidth);
       
       // Page 4: Recommendations (if available)
       if (data.recommendations && data.recommendations.length > 0) {
         pdf.addPage();
-        this.createRecommendationsPage(pdf, data, pageWidth, margin, contentWidth);
+        this.createRecommendationsPage(pdf, data, margin, contentWidth);
       }
       
       // Generate filename
@@ -237,7 +237,7 @@ export class PDFExportService {
   /**
    * Create detailed analysis page
    */
-  private createDetailedAnalysis(pdf: jsPDF, data: ExportData, pageWidth: number, margin: number, contentWidth: number): void {
+  private createDetailedAnalysis(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
     let yPosition = margin;
     
     // Page title
@@ -316,7 +316,7 @@ export class PDFExportService {
   /**
    * Create recommendations page
    */
-  private createRecommendationsPage(pdf: jsPDF, data: ExportData, pageWidth: number, margin: number, contentWidth: number): void {
+  private createRecommendationsPage(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
     let yPosition = margin;
     
     // Page title
@@ -335,7 +335,7 @@ export class PDFExportService {
     yPosition += 20;
     
     // Recommendations
-    if (data.recommendations) {
+    if (data.recommendations && data.recommendations.length > 0) {
       data.recommendations.forEach((recommendation, index) => {
         // Bullet point
         pdf.setTextColor(0, 100, 200);
@@ -352,11 +352,18 @@ export class PDFExportService {
         yPosition += lines.length * 6 + 8;
         
         // Check if we need a new page
-        if (yPosition > 250 && index < data.recommendations.length - 1) {
+        if (yPosition > 250 && index < (data.recommendations?.length || 0) - 1) {
           pdf.addPage();
           yPosition = margin;
         }
       });
+    } else {
+      // No recommendations available message
+      pdf.setTextColor(100, 100, 100);
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'italic');
+      pdf.text('Şu anda özel gelişim önerisi bulunmamaktadır.', margin, yPosition);
+      yPosition += 15;
     }
     
     // Footer note
@@ -367,25 +374,5 @@ export class PDFExportService {
     const footerNote = 'Bu öneriler AI destekli analiz sonuçlarına dayanmaktadır. Kişisel gelişim planınızı oluştururken profesyonel destek almanızı öneririz.';
     const footerLines = pdf.splitTextToSize(footerNote, contentWidth);
     pdf.text(footerLines, margin, yPosition);
-  }
-
-  /**
-   * Get score level text
-   */
-  private getScoreLevel(percentage: number): string {
-    if (percentage >= 80) return 'Mükemmel';
-    if (percentage >= 60) return 'İyi';
-    if (percentage >= 40) return 'Orta';
-    return 'Gelişim Alanı';
-  }
-
-  /**
-   * Get score color
-   */
-  private getScoreColor(percentage: number): [number, number, number] {
-    if (percentage >= 80) return [0, 255, 136]; // Green
-    if (percentage >= 60) return [0, 191, 255]; // Blue
-    if (percentage >= 40) return [255, 165, 0]; // Orange
-    return [255, 107, 107]; // Red
   }
 } 

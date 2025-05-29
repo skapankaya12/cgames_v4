@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { PersonalizedRecommendations, RecommendationItem, DimensionScore } from '../types/Recommendations';
 import type { CVData } from '../types/CVTypes';
 import { CVTextExtractionService } from '../services/CVTextExtractionService';
@@ -15,9 +15,9 @@ interface PersonalizedRecommendationsProps {
 const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendationsProps> = ({
   recommendations,
   isLoading,
-  error,
+  error = null,
   competencyScores = []
-}) => {
+}: PersonalizedRecommendationsProps) => {
   // CV Analysis state
   const [cvData, setCvData] = React.useState<CVData | null>(null);
   const [competencyAlignment, setCompetencyAlignment] = React.useState<{
@@ -434,4 +434,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   );
 };
 
-export default PersonalizedRecommendationsComponent; 
+export default PersonalizedRecommendationsComponent;
+
+// Named export for backwards compatibility
+export { PersonalizedRecommendationsComponent }; 

@@ -21,25 +21,6 @@ interface CompetencyScore {
   description: string;
 }
 
-interface FeedbackData {
-  feedback: string;
-  ratings: {
-    accuracy: number;
-    gameExperience: number;
-    fairness: number;
-    usefulness: number;
-    recommendation: number;
-    purchaseLikelihood: number;
-    valueForMoney: number;
-    technicalPerformance: number;
-  };
-  timestamp: string;
-  userInfo: {
-    firstName: string;
-    lastName: string;
-  };
-}
-
 type FilterType = 'all' | 'davranış-analizi' | 'yetkinlikler' | 'öneriler';
 
 const getInsight = (competency: string, score: number): string => {
@@ -167,7 +148,6 @@ const ResultsScreen = () => {
 
   // Direct Google Sheets API endpoint
   const API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
-  const FEEDBACK_API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
 
   // Format time duration
   const formatTime = (milliseconds: number): string => {
@@ -179,29 +159,6 @@ const ResultsScreen = () => {
       return `${minutes}dk ${remainingSeconds}sn`;
     }
     return `${remainingSeconds}sn`;
-  };
-
-  // Get question title by ID
-  const getQuestionTitle = (questionId: number): string => {
-    const questionTitles = [
-      "Yük Sorumlusu ile İlk Karşılaşma",
-      "Çıkış Koridoru", 
-      "Rakip Firma Teklifi",
-      "Devriye Gemisi Engeli",
-      "Navigasyon Kararı",
-      "Meteor Tehdidi",
-      "Kimlik Doğrulama",
-      "Korsan Saldırısı",
-      "Terminal İlk İletişim",
-      "Gecikme Alarmı",
-      "Kargo Sarsıntısı",
-      "Teslimat Alanı Boş",
-      "Motor Alarmı",
-      "Kargo İncelemesi",
-      "Navigasyon Kaybı",
-      "Alıcı Bilgisi Eksik"
-    ];
-    return questionTitles[questionId - 1] || `Soru ${questionId}`;
   };
 
   useEffect(() => {
@@ -230,7 +187,7 @@ const ResultsScreen = () => {
     };
 
     // Make test functions available in console for debugging
-    (window as any).debugGoogleSheets = {
+    (window as Window & { debugGoogleSheets?: unknown }).debugGoogleSheets = {
       testBasicConnection,
       testGoogleSheetsIntegration,
       testCurrentData: () => {
@@ -276,14 +233,14 @@ const ResultsScreen = () => {
             const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
             console.log("Fetch URL:", url.substring(0, 200) + "...");
             
-            const response = await fetch(url, {
+            const _response = await fetch(url, {
               method: 'GET',
               mode: 'no-cors'
             });
             
-            console.log("✅ Fetch completed - Response:", response);
-            console.log("Response status:", response.status);
-            console.log("Response type:", response.type);
+            console.log("✅ Fetch completed");
+            console.log("Response status:", _response.status);
+            console.log("Response type:", _response.type);
             
           } catch (error) {
             console.error("❌ Fetch failed:", error);
@@ -312,7 +269,7 @@ const ResultsScreen = () => {
           
           // Method 2: Fetch with no-cors
           try {
-            const response = await fetch(url1, { method: 'GET', mode: 'no-cors' });
+            await fetch(url1, { method: 'GET', mode: 'no-cors' });
             console.log("✅ Fetch no-cors completed");
           } catch (error) {
             console.error("❌ Fetch no-cors failed:", error);
@@ -448,7 +405,7 @@ const ResultsScreen = () => {
           
           // Method 1: Fetch with no-cors (most reliable for Google Apps Script)
           try {
-            const fetchResponse = await fetch(url, { 
+            await fetch(url, { 
               method: 'GET', 
               mode: 'no-cors',
               cache: 'no-cache'
@@ -501,7 +458,7 @@ const ResultsScreen = () => {
                 await fetch(interactionUrl, { method: 'GET', mode: 'no-cors' });
                 console.log('✅ Interaction tracking submitted via fetch');
               } catch (fetchError) {
-                console.warn('⚠️ Interaction fetch failed, using image fallback');
+                console.warn('⚠️ Interaction fetch failed, using image fallback:', fetchError);
                 const interactionImg = new Image();
                 interactionImg.src = interactionUrl;
                 interactionImg.style.display = 'none';
@@ -539,7 +496,7 @@ const ResultsScreen = () => {
       console.error('Error processing data:', error);
       setSubmitError('Veri işleme hatası oluştu.');
     }
-  }, [API_URL]);
+  }, [API_URL]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRestart = () => {
     sessionStorage.clear();
@@ -582,7 +539,7 @@ const ResultsScreen = () => {
       // Method 1: Fetch with no-cors (most reliable)
       const submitWithFetch = async () => {
         try {
-          const response = await fetch(url, { 
+          await fetch(url, { 
             method: 'GET', 
             mode: 'no-cors',
             cache: 'no-cache'
@@ -643,7 +600,7 @@ const ResultsScreen = () => {
               await fetch(interactionUrl, { method: 'GET', mode: 'no-cors' });
               console.log('✅ Manual interaction tracking submitted via fetch');
             } catch (error) {
-              console.warn('⚠️ Manual interaction fetch failed, using image fallback');
+              console.warn('⚠️ Manual interaction fetch failed, using image fallback:', error);
               const interactionImg = new Image();
               interactionImg.src = interactionUrl;
               interactionImg.style.display = 'none';
@@ -786,33 +743,6 @@ const ResultsScreen = () => {
     }
   };
 
-  // Test function for debugging
-  const testFeedbackSubmission = () => {
-    console.log('=== TEST FEEDBACK SUBMISSION ===');
-    console.log('API_URL:', API_URL);
-    
-    const testParams = new URLSearchParams({
-      action: 'feedback',
-      feedback: 'Test feedback message',
-      rating: '5',
-      timestamp: new Date().toISOString(),
-      firstName: 'Test',
-      lastName: 'User'
-    });
-    
-    const url = `${API_URL}?${testParams.toString()}`;
-    console.log('Test URL:', url);
-    console.log('Test URL length:', url.length);
-    
-    // Try with Image method
-    const img = new Image();
-    img.onload = () => console.log('Test image loaded successfully');
-    img.onerror = () => console.log('Test image failed to load');
-    img.src = url;
-    img.style.display = 'none';
-    document.body.appendChild(img);
-  };
-
   const getScorePercentage = (score: number, maxScore: number): number => {
     // NORMALIZED SCORING SYSTEM - All competencies scaled to 100 points
     // This ensures fair percentage calculation across all competencies
@@ -925,7 +855,7 @@ const ResultsScreen = () => {
       });
 
       // Convert imported scores to CompetencyScore format
-      const importedScores: CompetencyScore[] = importedData.scores.map((score, index) => ({
+      const importedScores: CompetencyScore[] = importedData.scores.map((score) => ({
         name: score.name,
         score: score.score,
         maxScore: score.maxScore,
@@ -999,24 +929,46 @@ const ResultsScreen = () => {
       scoresLength: scores.length 
     });
 
-    if (!user || !answers || !interactionAnalytics || scores.length === 0) {
-      console.log('❌ Missing data for personalized recommendations:', { user, answers, interactionAnalytics, scores: scores.length });
+    if (!user || !answers || scores.length === 0) {
+      console.log('❌ Missing essential data for personalized recommendations:', { user: !!user, answers: !!answers, scores: scores.length });
       return;
     }
 
-    console.log('✅ All data available, starting AI recommendation generation...');
+    console.log('✅ Essential data available, starting AI recommendation generation...');
     setIsLoadingRecommendations(true);
     setRecommendationsError(null);
 
     try {
       console.log('=== GENERATING AI-POWERED PERSONALIZED RECOMMENDATIONS ===');
       
+      // Create fallback analytics if not available
+      const fallbackAnalytics: SessionAnalytics = {
+        sessionId: `fallback_${Date.now()}`,
+        startTime: Date.now() - 600000, // 10 minutes ago
+        endTime: Date.now(),
+        averageResponseTime: 30000, // 30 seconds average
+        totalQuestions: Object.keys(answers).length,
+        completedQuestions: Object.keys(answers).length,
+        totalAnswerChanges: 0,
+        totalBackNavigations: 0,
+        questionAnalytics: [],
+        events: []
+      };
+
+      const analyticsToUse = interactionAnalytics || fallbackAnalytics;
+      
       // Prepare user analytics data
       const userAnalyticsData: UserAnalyticsData = {
-        answers,
-        timestamps: {}, // We could enhance this with actual timestamps
-        interactionEvents: interactionAnalytics.events || [],
-        sessionAnalytics: interactionAnalytics,
+        answers: answers,
+        timestamps: {},
+        interactionEvents: [],
+        sessionAnalytics: {
+          totalTime: analyticsToUse.endTime ? analyticsToUse.endTime - analyticsToUse.startTime : 600000,
+          averageResponseTime: analyticsToUse.averageResponseTime,
+          questionCount: analyticsToUse.totalQuestions,
+          startTime: analyticsToUse.startTime,
+          endTime: analyticsToUse.endTime
+        },
         userInfo: {
           firstName: user.firstName,
           lastName: user.lastName
@@ -1091,8 +1043,7 @@ const ResultsScreen = () => {
     scores.reduce((sum, comp) => sum + getScorePercentage(comp.score, comp.maxScore), 0) / scores.length
   );
 
-  // Get top competencies and development areas
-  const topCompetencies = scores.slice(0, 3);
+  // Get development areas
   const developmentAreas = scores.slice(-3).reverse();
 
   const filterOptions = [
@@ -1114,11 +1065,11 @@ const ResultsScreen = () => {
             <div className="metric-label">Ortalama Yanıt Süresi</div>
           </div>
           <div className="metric-card">
-            <div className="metric-value">{interactionAnalytics.totalAnswerChanges}</div>
+            <div className="metric-value">{interactionAnalytics.totalAnswerChanges || 0}</div>
             <div className="metric-label">Cevap Değişikliği</div>
           </div>
           <div className="metric-card">
-            <div className="metric-value">{interactionAnalytics.totalBackNavigations}</div>
+            <div className="metric-value">{interactionAnalytics.totalBackNavigations || 0}</div>
             <div className="metric-label">Geri Dönüş</div>
           </div>
         </div>
@@ -1134,7 +1085,7 @@ const ResultsScreen = () => {
               <span className="style-badge balanced">Dengeli Karar Verici</span>
             )}
             
-            {interactionAnalytics.totalAnswerChanges > 5 && (
+            {(interactionAnalytics.totalAnswerChanges || 0) > 5 && (
               <span className="style-badge adaptive">Adaptif Düşünür</span>
             )}
           </div>
@@ -1207,7 +1158,14 @@ const ResultsScreen = () => {
             recommendations={personalizedRecommendations}
             isLoading={isLoadingRecommendations}
             error={recommendationsError}
-            competencyScores={scores}
+            competencyScores={scores.map(score => ({
+              dimension: score.abbreviation || score.name,
+              displayName: score.fullName,
+              score: typeof score.score === 'number' ? score.score : Number(score.score),
+              maxScore: score.maxScore || 10,
+              percentile: ((typeof score.score === 'number' ? score.score : Number(score.score)) / (score.maxScore || 10)) * 100,
+              category: score.category || 'Genel'
+            }))}
           />
         </div>
       );

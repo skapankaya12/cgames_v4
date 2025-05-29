@@ -3,10 +3,26 @@ import type {
   AnalyticsApiResponse, 
   DimensionScore, 
   RecommendationItem, 
-  PersonalizedRecommendations 
+  PersonalizedRecommendations,
+  SessionAnalytics 
 } from '../types/Recommendations';
 import { GoogleAIService } from './GoogleAIService';
 import { CVTextExtractionService } from './CVTextExtractionService';
+
+interface RecommendationContent {
+  title: string;
+  description: string;
+  actionItems: string[];
+  resources: Array<{
+    type: 'case-study' | 'mentorship' | 'tutorial';
+    title: string;
+    description: string;
+  }>;
+}
+
+interface ContentMapping {
+  [key: string]: RecommendationContent;
+}
 
 export class BehavioralAnalyticsService {
   private apiKey: string;
@@ -22,6 +38,8 @@ export class BehavioralAnalyticsService {
     this.googleAI = new GoogleAIService();
     
     console.log('🔐 Behavioral Analytics Service configured with Google AI');
+    // Note: API endpoint configured but currently using simulation mode
+    console.debug(`API Config: ${this.baseUrl} (key: ${this.apiKey.substring(0, 8)}...)`);
   }
 
   /**
@@ -131,7 +149,7 @@ export class BehavioralAnalyticsService {
     percentage: number, 
     index: number
   ): RecommendationItem {
-    const masteryContent: { [key: string]: any } = {
+    const masteryContent: ContentMapping = {
       'DM': {
         title: 'Karar Verme Uzmanlığı',
         description: 'Kompleks karar verme senaryolarında liderlik yapabilecek seviyedesiniz.',
@@ -204,7 +222,7 @@ export class BehavioralAnalyticsService {
     percentage: number, 
     index: number
   ): RecommendationItem {
-    const growthContent: { [key: string]: any } = {
+    const growthContent: ContentMapping = {
       'DM': {
         title: 'Karar Verme Gelişimi',
         description: 'Karar verme süreçlerinizi hızlandırarak daha etkili olabilirsiniz.',
@@ -277,7 +295,7 @@ export class BehavioralAnalyticsService {
     percentage: number, 
     index: number
   ): RecommendationItem {
-    const foundationContent: { [key: string]: any } = {
+    const foundationContent: ContentMapping = {
       'DM': {
         title: 'Karar Verme Temelleri',
         description: 'Karar verme süreçlerinizi güçlendirmek için temel becerileri geliştirin.',
@@ -378,7 +396,9 @@ export class BehavioralAnalyticsService {
       let adjustedScore = baseScore;
       if (userData.sessionAnalytics) {
         const avgResponseTime = userData.sessionAnalytics.averageResponseTime || 0;
-        const answerChanges = userData.sessionAnalytics.totalAnswerChanges || 0;
+        // Using safe property access since totalAnswerChanges might not be available
+        const analytics = userData.sessionAnalytics as SessionAnalytics & { totalAnswerChanges?: number };
+        const answerChanges = analytics.totalAnswerChanges || 0;
         
         // Quick decisions might indicate confidence
         if (avgResponseTime < 15000) adjustedScore += 10;
@@ -400,7 +420,8 @@ export class BehavioralAnalyticsService {
     return {
       success: true,
       scores,
-      sessionId: userData.sessionAnalytics?.sessionId || 'demo-session',
+      // Generate a demo session ID since SessionAnalytics doesn't include sessionId
+      sessionId: `demo-session-${Date.now()}`,
       timestamp: new Date().toISOString()
     };
   }
