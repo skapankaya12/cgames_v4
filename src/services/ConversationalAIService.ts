@@ -102,7 +102,7 @@ export class ConversationalAIService {
 - Şirket Sayısı: ${context.cvData.analysis.experience.companies.length}
 - Teknik Beceriler: ${context.cvData.analysis.skills.technical.join(', ')}
 - Liderlik Becerileri: ${context.cvData.analysis.skills.leadership.join(', ')}
-- Eğitim: ${context.cvData.analysis.education.degrees.map(d => d.degree).join(', ')}
+- Eğitim: ${context.cvData.analysis.education.degrees.join(', ')}
 - Sertifikalar: ${context.cvData.analysis.education.certifications.join(', ')}
 - Genel Değerlendirme: ${context.cvData.hrInsights.overallAssessment}
 - Güçlü Yönler: ${context.cvData.hrInsights.strengths.join(', ')}
@@ -186,7 +186,4 @@ YANIT KURALLARI:
       'risk_analizi': 'Bu adayın işe alım risklerini değerlendir'
     };
   }
-}
-
-// Explicit exports to ensure proper module resolution
-export type { ConversationMessage, ConversationContext }; 
+} 

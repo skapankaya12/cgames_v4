@@ -9,6 +9,8 @@ import type { ExportData } from '../services/PDFExportService';
 import type { CVData } from '../services';
 import PersonalizedRecommendationsComponent from '../components/PersonalizedRecommendations';
 import AIAssistantChat from '../components/AIAssistantChat';
+import UserGuidePanel from '../components/UserGuidePanel';
+import { Icons } from '../components/SvgIcons';
 import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../types/Recommendations';
 import '../styles/ResultsScreen.css';
 
@@ -151,6 +153,9 @@ const ResultsScreen = () => {
   // AI Assistant Chat state
   const [cvData, setCvData] = useState<CVData | null>(null);
   const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+
+  // User Guide Panel state
+  const [isGuidePanelCollapsed, setIsGuidePanelCollapsed] = useState(false);
 
   // Direct Google Sheets API endpoint
   const API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
@@ -793,13 +798,6 @@ const ResultsScreen = () => {
     return Math.round(Math.min(percentage, 100)); // Cap at 100%
   };
 
-  const getScoreLevel = (percentage: number): string => {
-    if (percentage >= 80) return 'Mükemmel';
-    if (percentage >= 60) return 'İyi';
-    if (percentage >= 40) return 'Orta';
-    return 'Gelişim Gerekli';
-  };
-
   const getScoreLevelColor = (percentage: number): string => {
     if (percentage >= 80) return '#00ff88';
     if (percentage >= 60) return '#00bfff';
@@ -1070,14 +1068,6 @@ const ResultsScreen = () => {
       </div>
     );
   }
-
-  // Calculate overall performance
-  const overallScore = Math.round(
-    scores.reduce((sum, comp) => sum + getScorePercentage(comp.score, comp.maxScore), 0) / scores.length
-  );
-
-  // Get development areas
-  const developmentAreas = scores.slice(-3).reverse();
 
   const filterOptions = [
     { value: 'feedback', label: 'Geri Bildirim' },
@@ -1438,247 +1428,270 @@ const ResultsScreen = () => {
 
   return (
     <div className="modern-results-container">
-      {/* Header */}
-      <div className="modern-header">
-        <div className="header-left">
-          <h1>Sonuçlar</h1>
-        </div>
-        <div className="header-right">
-          <div className="header-controls">
-            <div className="filter-dropdown">
-              <button 
-                className="filter-button"
-                onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-              >
-                {filterOptions.find(opt => opt.value === currentFilter)?.label}
-                <span className={`dropdown-arrow ${isFilterDropdownOpen ? 'open' : ''}`}></span>
+      {/* User Guide Panel */}
+      <UserGuidePanel 
+        currentFilter={currentFilter} 
+        onCollapseChange={setIsGuidePanelCollapsed} 
+      />
+      
+      {/* Main Content Wrapper */}
+      <div className={`main-content-wrapper ${isGuidePanelCollapsed ? 'guide-collapsed' : ''}`}>
+        {/* Header */}
+        <div className="modern-header">
+          <div className="header-left">
+            <h1>Sonuçlar</h1>
+          </div>
+          <div className="header-right">
+            <div className="header-controls">
+              <div className="filter-dropdown">
+                <button 
+                  className="filter-button"
+                  onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+                >
+                  {filterOptions.find(opt => opt.value === currentFilter)?.label}
+                  <span className={`dropdown-arrow ${isFilterDropdownOpen ? 'open' : ''}`}></span>
+                </button>
+                {isFilterDropdownOpen && (
+                  <div className="filter-dropdown-menu">
+                    {filterOptions.map(option => (
+                      <button
+                        key={option.value}
+                        className={`filter-option ${currentFilter === option.value ? 'active' : ''}`}
+                        onClick={() => {
+                          setCurrentFilter(option.value as FilterType);
+                          setIsFilterDropdownOpen(false);
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button className="export-button" onClick={handleExportData}>
+                PDF Dışa Aktar
               </button>
-              {isFilterDropdownOpen && (
-                <div className="filter-dropdown-menu">
-                  {filterOptions.map(option => (
-                    <button
-                      key={option.value}
-                      className={`filter-option ${currentFilter === option.value ? 'active' : ''}`}
-                      onClick={() => {
-                        setCurrentFilter(option.value as FilterType);
-                        setIsFilterDropdownOpen(false);
-                      }}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+              <button 
+                className="import-button" 
+                onClick={handleImportClick}
+                disabled={isImporting}
+              >
+                {isImporting ? 'İçe Aktarılıyor...' : 'PDF İçe Aktar'}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+              <button 
+                className="manual-submit-button" 
+                onClick={handleManualSubmit}
+                disabled={isSubmitting}
+                style={{
+                  backgroundColor: isSubmitting ? '#ccc' : '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  marginLeft: '8px'
+                }}
+              >
+                {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
+              </button>
+            </div>
+            <button className="restart-button" onClick={handleRestart}>
+              Yeni Test
+            </button>
+          </div>
+        </div>
+
+        {/* Content Overview Navigation */}
+        <div className="content-overview-section">
+          <div className="content-navigation-cards">
+            <div 
+              className={`content-nav-card ${currentFilter === 'öneriler' ? 'active' : ''}`}
+              onClick={() => setCurrentFilter('öneriler')}
+            >
+              <div className="nav-card-icon">
+                <Icons.AI size={32} color={currentFilter === 'öneriler' ? 'white' : '#667eea'} />
+              </div>
+              <div className="nav-card-content">
+                <h4>AI Öneriler</h4>
+                <p>Kişiselleştirilmiş değerlendirme ve öneriler</p>
+                <div className="nav-card-status">
+                  <span className="status-ready">
+                    <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+                    Hazır
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
-            <button className="export-button" onClick={handleExportData}>
-              PDF Dışa Aktar
-            </button>
-            <button 
-              className="import-button" 
-              onClick={handleImportClick}
-              disabled={isImporting}
+
+            <div 
+              className={`content-nav-card ${currentFilter === 'yetkinlikler' ? 'active' : ''}`}
+              onClick={() => setCurrentFilter('yetkinlikler')}
             >
-              {isImporting ? 'İçe Aktarılıyor...' : 'PDF İçe Aktar'}
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf"
-              onChange={handleFileSelect}
-              style={{ display: 'none' }}
+              <div className="nav-card-icon">
+                <Icons.Analytics size={32} color={currentFilter === 'yetkinlikler' ? 'white' : '#667eea'} />
+              </div>
+              <div className="nav-card-content">
+                <h4>Yetkinlikler</h4>
+                <p>{scores.length} yetkinlik alanı analizi</p>
+                <div className="nav-card-status">
+                  <span className="status-ready">
+                    <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+                    Hazır
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className={`content-nav-card ${currentFilter === 'davranış-analizi' || currentFilter === 'feedback' ? 'active' : ''}`}
+              onClick={() => setCurrentFilter('davranış-analizi')}
+            >
+              <div className="nav-card-icon">
+                <Icons.Brain size={32} color={currentFilter === 'davranış-analizi' ? 'white' : '#667eea'} />
+              </div>
+              <div className="nav-card-content">
+                <h4>Davranış Analizi</h4>
+                <p>Davranış patternleri ve zaman analizi</p>
+                <div className="nav-card-status">
+                  {interactionAnalytics ? (
+                    <span className="status-ready">
+                      <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+                      Hazır
+                    </span>
+                  ) : (
+                    <span className="status-limited">
+                      <Icons.Warning size={16} color="#f59e0b" style={{ marginRight: '4px' }} />
+                      Sınırlı veri
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className={`content-nav-card ${currentFilter === 'feedback' ? 'active' : ''}`}
+              onClick={() => setCurrentFilter('feedback')}
+            >
+              <div className="nav-card-icon">
+                <Icons.Message size={32} color={currentFilter === 'feedback' ? 'white' : '#667eea'} />
+              </div>
+              <div className="nav-card-content">
+                <h4>Geri Bildirim</h4>
+                <p>Test deneyiminizi değerlendirin</p>
+                <div className="nav-card-status">
+                  {feedbackSubmitSuccess ? (
+                    <span className="status-ready">
+                      <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+                      Gönderildi
+                    </span>
+                  ) : (feedbackText.trim() || Object.values(feedbackRatings).some(rating => rating > 0)) ? (
+                    <span className="status-pending">
+                      <Icons.Edit size={16} color="#667eea" style={{ marginRight: '4px' }} />
+                      Dolduruldu
+                    </span>
+                  ) : (
+                    <span className="status-ready">
+                      <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+                      Hazır
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="modern-content">
+            {renderFilteredContent()}
+          </div>
+
+          {/* Status Messages */}
+          {isSubmitting && (
+            <div className="status-overlay">
+              <div className="status-message loading">
+                <div className="spinner"></div>
+                Sonuçlar kaydediliyor...
+              </div>
+            </div>
+          )}
+
+          {isImporting && (
+            <div className="status-overlay">
+              <div className="status-message loading">
+                <div className="spinner"></div>
+                PDF dosyası içe aktarılıyor...
+              </div>
+            </div>
+          )}
+
+          {submitError && (
+            <div className="status-overlay">
+              <div className="status-message error">
+                {submitError}
+                <button onClick={() => setSubmitError(null)}>
+                  <Icons.Close size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {importError && (
+            <div className="status-overlay">
+              <div className="status-message error">
+                {importError}
+                <button onClick={() => setImportError(null)}>
+                  <Icons.Close size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {submitSuccess && (
+            <div className="status-overlay">
+              <div className="status-message success">
+                Sonuçlar başarıyla kaydedildi!
+                <button onClick={() => setSubmitSuccess(false)}>
+                  <Icons.Close size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {importSuccess && (
+            <div className="status-overlay">
+              <div className="status-message success">
+                PDF dosyası başarıyla içe aktarıldı!
+                <button onClick={() => setImportSuccess(false)}>
+                  <Icons.Close size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* AI Assistant Chat - only show if we have scores */}
+          {scores.length > 0 && (
+            <AIAssistantChat
+              scores={scores.map(score => ({
+                dimension: score.abbreviation,
+                score: score.score,
+                maxScore: score.maxScore,
+                displayName: score.fullName,
+                category: score.category
+              }))}
+              candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
+              cvData={cvData || undefined}
+              sessionId={sessionId}
             />
-            <button 
-              className="manual-submit-button" 
-              onClick={handleManualSubmit}
-              disabled={isSubmitting}
-              style={{
-                backgroundColor: isSubmitting ? '#ccc' : '#4CAF50',
-                color: 'white',
-                border: 'none',
-                padding: '8px 16px',
-                borderRadius: '4px',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                marginLeft: '8px'
-              }}
-            >
-              {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
-            </button>
-          </div>
-          <button className="restart-button" onClick={handleRestart}>
-            Yeni Test
-          </button>
+          )}
         </div>
       </div>
-
-      {/* Content Overview Navigation */}
-      <div className="content-overview-section">
-        <div className="content-navigation-cards">
-          <div 
-            className={`content-nav-card ${currentFilter === 'öneriler' || currentFilter === 'feedback' ? 'active' : ''}`}
-            onClick={() => setCurrentFilter('öneriler')}
-          >
-            <div className="nav-card-icon">🤖</div>
-            <div className="nav-card-content">
-              <h4>AI Aday Değerlendirme</h4>
-              <p>Kişiselleştirilmiş öneriler ve analiz</p>
-              <div className="nav-card-status">
-                {personalizedRecommendations ? (
-                  <span className="status-ready">✅ Hazır</span>
-                ) : isLoadingRecommendations ? (
-                  <span className="status-loading">⏳ Hazırlanıyor</span>
-                ) : (
-                  <span className="status-pending">🔄 Oluşturuluyor</span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className={`content-nav-card ${currentFilter === 'yetkinlikler' || currentFilter === 'feedback' ? 'active' : ''}`}
-            onClick={() => setCurrentFilter('yetkinlikler')}
-          >
-            <div className="nav-card-icon">📊</div>
-            <div className="nav-card-content">
-              <h4>Yetkinlik Detayları</h4>
-              <p>{scores.length} yetkinlik alanı analizi</p>
-              <div className="nav-card-status">
-                <span className="status-ready">✅ Hazır</span>
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className={`content-nav-card ${currentFilter === 'davranış-analizi' || currentFilter === 'feedback' ? 'active' : ''}`}
-            onClick={() => setCurrentFilter('davranış-analizi')}
-          >
-            <div className="nav-card-icon">🧠</div>
-            <div className="nav-card-content">
-              <h4>Davranış Analizi</h4>
-              <p>Karar verme tarzı ve etkileşim analizi</p>
-              <div className="nav-card-status">
-                {interactionAnalytics ? (
-                  <span className="status-ready">✅ Hazır</span>
-                ) : (
-                  <span className="status-limited">⚠️ Sınırlı veri</span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className={`content-nav-card ${currentFilter === 'feedback' ? 'active' : ''}`}
-            onClick={() => setCurrentFilter('feedback')}
-          >
-            <div className="nav-card-icon">💬</div>
-            <div className="nav-card-content">
-              <h4>Geri Bildirim</h4>
-              <p>Test deneyiminizi değerlendirin</p>
-              <div className="nav-card-status">
-                {feedbackSubmitSuccess ? (
-                  <span className="status-ready">✅ Gönderildi</span>
-                ) : (feedbackText.trim() || Object.values(feedbackRatings).some(rating => rating > 0)) ? (
-                  <span className="status-pending">📝 Dolduruldu</span>
-                ) : (
-                  <span className="status-ready">✅ Hazır</span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Indicator */}
-        <div className="content-progress-indicator">
-          <div className="progress-dots">
-            <div className={`progress-dot ${currentFilter === 'öneriler' || currentFilter === 'feedback' ? 'active' : ''}`}>
-              <span>AI</span>
-            </div>
-            <div className="progress-line"></div>
-            <div className={`progress-dot ${currentFilter === 'yetkinlikler' || currentFilter === 'feedback' ? 'active' : ''}`}>
-              <span>YETKİN</span>
-            </div>
-            <div className="progress-line"></div>
-            <div className={`progress-dot ${currentFilter === 'davranış-analizi' || currentFilter === 'feedback' ? 'active' : ''}`}>
-              <span>DAVR</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="modern-content">
-        {renderFilteredContent()}
-      </div>
-
-      {/* Status Messages */}
-      {isSubmitting && (
-        <div className="status-overlay">
-          <div className="status-message loading">
-            <div className="spinner"></div>
-            Sonuçlar kaydediliyor...
-          </div>
-        </div>
-      )}
-
-      {isImporting && (
-        <div className="status-overlay">
-          <div className="status-message loading">
-            <div className="spinner"></div>
-            PDF dosyası içe aktarılıyor...
-          </div>
-        </div>
-      )}
-
-      {submitError && (
-        <div className="status-overlay">
-          <div className="status-message error">
-            {submitError}
-            <button onClick={() => setSubmitError(null)}>✕</button>
-          </div>
-        </div>
-      )}
-
-      {importError && (
-        <div className="status-overlay">
-          <div className="status-message error">
-            {importError}
-            <button onClick={() => setImportError(null)}>✕</button>
-          </div>
-        </div>
-      )}
-
-      {submitSuccess && (
-        <div className="status-overlay">
-          <div className="status-message success">
-            Sonuçlar başarıyla kaydedildi!
-            <button onClick={() => setSubmitSuccess(false)}>✕</button>
-          </div>
-        </div>
-      )}
-
-      {importSuccess && (
-        <div className="status-overlay">
-          <div className="status-message success">
-            PDF dosyası başarıyla içe aktarıldı!
-            <button onClick={() => setImportSuccess(false)}>✕</button>
-          </div>
-        </div>
-      )}
-
-      {/* AI Assistant Chat - only show if we have scores */}
-      {scores.length > 0 && (
-        <AIAssistantChat
-          scores={scores.map(score => ({
-            dimension: score.abbreviation,
-            score: score.score,
-            maxScore: score.maxScore,
-            displayName: score.fullName,
-            category: score.category
-          }))}
-          candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
-          cvData={cvData || undefined}
-          sessionId={sessionId}
-        />
-      )}
     </div>
   );
 };

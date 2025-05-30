@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { PersonalizedRecommendations, RecommendationItem, DimensionScore } from '../types/Recommendations';
 import type { CVData } from '../types/CVTypes';
 import { CVTextExtractionService } from '../services/CVTextExtractionService';
+import { Icons } from './SvgIcons';
 import '../styles/PersonalizedRecommendations.css';
 
 interface PersonalizedRecommendationsProps {
@@ -39,7 +40,10 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   if (isLoading) {
     return (
       <div className="recommendations-section">
-        <h3>🤖 AI Destekli Aday Değerlendirme Raporu</h3>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Icons.AI size={24} color="#667eea" />
+          <span>AI Destekli Aday Değerlendirme Raporu</span>
+        </h3>
         <div className="recommendations-loading">
           <div className="loading-spinner"></div>
           <p>AI ile aday değerlendirme raporu hazırlanıyor...</p>
@@ -52,7 +56,10 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   if (error) {
     return (
       <div className="recommendations-section">
-        <h3>🤖 AI Destekli Aday Değerlendirme Raporu</h3>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Icons.AI size={24} color="#667eea" />
+          <span>AI Destekli Aday Değerlendirme Raporu</span>
+        </h3>
         <div className="recommendations-error">
           <p>AI değerlendirme raporu yüklenirken bir hata oluştu: {error}</p>
           <p>Genel değerlendirme gösteriliyor.</p>
@@ -64,7 +71,10 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   if (!recommendations) {
     return (
       <div className="recommendations-section">
-        <h3>🤖 AI Destekli Aday Değerlendirme Raporu</h3>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Icons.AI size={24} color="#667eea" />
+          <span>AI Destekli Aday Değerlendirme Raporu</span>
+        </h3>
         <div className="recommendations-empty">
           <p>Henüz AI destekli aday değerlendirme raporu bulunmuyor.</p>
           <p>Rapor oluşturmak için yukarıdaki butona tıklayın.</p>
@@ -108,7 +118,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(241, 223, 223, 0.3)'
           }}>
-            <span style={{ fontSize: '24px', marginRight: '12px' }}>🤖</span>
+            <Icons.AI size={24} color="white" style={{ marginRight: '12px' }} />
             <span style={{ 
               color: 'white', 
               fontSize: '18px', 
@@ -174,7 +184,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   marginRight: '16px',
                   boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)'
                 }}>
-                  <span style={{ fontSize: '24px' }}>💼</span>
+                  <Icons.Briefcase size={24} color="white" />
                 </div>
                 <h4 style={{ 
                   color: '#1a202c', 
@@ -264,7 +274,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   marginRight: '16px',
                   boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
                 }}>
-                  <span style={{ fontSize: '24px' }}>🎯</span>
+                  <Icons.Target size={24} color="white" />
                 </div>
                 <h4 style={{ 
                   color: '#1a202c', 
@@ -374,7 +384,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   marginRight: '16px',
                   boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
                 }}>
-                  <span style={{ fontSize: '24px' }}>👨‍💼</span>
+                  <Icons.User size={24} color="white" />
                 </div>
                 <h4 style={{ 
                   color: '#1a202c', 
@@ -446,196 +456,16 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                         display: 'flex',
                         alignItems: 'flex-start'
                       }}>
-                        <span style={{ 
-                          color: '#10b981', 
+                        <Icons.Check size={16} color="#10b981" style={{ 
                           marginRight: '8px',
-                          fontSize: '16px',
-                          lineHeight: '1'
-                        }}>
-                          ✓
-                        </span>
+                          marginTop: '2px',
+                          flexShrink: 0
+                        }} />
                         {strength}
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
-
-            {/* Risk & Adaptasyon Profili Card */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: '20px',
-              padding: '28px',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              gridColumn: 'span 1'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                <div style={{
-                  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                  borderRadius: '12px',
-                  padding: '12px',
-                  marginRight: '16px',
-                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-                }}>
-                  <span style={{ fontSize: '24px' }}>⚡</span>
-                </div>
-                <h4 style={{ 
-                  color: '#1a202c', 
-                  fontSize: '20px', 
-                  fontWeight: '700', 
-                  margin: '0',
-                  letterSpacing: '-0.3px'
-                }}>
-                  Profil
-                </h4>
-              </div>
-              
-              {/* Risk Yönetimi Skoru */}
-              <div style={{
-                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)',
-                borderRadius: '12px',
-                padding: '16px',
-                marginBottom: '16px',
-                border: '1px solid rgba(239, 68, 68, 0.2)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <h5 style={{ 
-                    color: '#dc2626', 
-                    fontSize: '14px', 
-                    fontWeight: '700', 
-                    margin: '0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    Risk Yönetimi
-                  </h5>
-                  <span style={{
-                    color: '#dc2626',
-                    fontSize: '16px',
-                    fontWeight: '800'
-                  }}>
-                    {(() => {
-                      // Calculate risk management score from RL and RI competencies
-                      const rlScore = competencyScores?.find(score => score.dimension === 'RL')?.score || 0;
-                      const riScore = competencyScores?.find(score => score.dimension === 'RI')?.score || 0;
-                      const avgRiskScore = Math.round(((rlScore + riScore) / 2) * 2.5); // Scale to 0-100
-                      return `${avgRiskScore}%`;
-                    })()}
-                  </span>
-                </div>
-                <p style={{ 
-                  color: '#1e293b', 
-                  margin: '0', 
-                  fontSize: '13px', 
-                  lineHeight: '1.4',
-                  fontWeight: '500'
-                }}>
-                  Risk liderliği ve risk zekası skorlarına dayalı analiz
-                </p>
-              </div>
-
-              {/* Adaptasyon Kabiliyeti */}
-              <div style={{
-                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(21, 128, 61, 0.1) 100%)',
-                borderRadius: '12px',
-                padding: '16px',
-                marginBottom: '16px',
-                border: '1px solid rgba(34, 197, 94, 0.2)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <h5 style={{ 
-                    color: '#15803d', 
-                    fontSize: '14px', 
-                    fontWeight: '700', 
-                    margin: '0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    Adaptasyon Kabiliyeti
-                  </h5>
-                  <span style={{
-                    color: '#15803d',
-                    fontSize: '16px',
-                    fontWeight: '800'
-                  }}>
-                    {(() => {
-                      const adScore = competencyScores?.find(score => score.dimension === 'AD')?.score || 0;
-                      const adPercentage = Math.round(adScore * 2.5); // Scale to 0-100
-                      return `${adPercentage}%`;
-                    })()}
-                  </span>
-                </div>
-                <p style={{ 
-                  color: '#1e293b', 
-                  margin: '0', 
-                  fontSize: '13px', 
-                  lineHeight: '1.4',
-                  fontWeight: '500'
-                }}>
-                  {(() => {
-                    const adScore = competencyScores?.find(score => score.dimension === 'AD')?.score || 0;
-                    const adPercentage = Math.round(adScore * 2.5);
-                    if (adPercentage >= 80) return 'Değişime çok hızlı uyum sağlar';
-                    if (adPercentage >= 60) return 'Değişime iyi uyum sağlar';
-                    if (adPercentage >= 40) return 'Değişime orta düzeyde uyum sağlar';
-                    return 'Değişime uyum konusunda gelişim gerekli';
-                  })()}
-                </p>
-              </div>
-
-              {/* Kariyer Stabilitesi */}
-              <div style={{
-                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%)',
-                borderRadius: '12px',
-                padding: '16px',
-                border: '1px solid rgba(99, 102, 241, 0.2)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <h5 style={{ 
-                    color: '#4f46e5', 
-                    fontSize: '14px', 
-                    fontWeight: '700', 
-                    margin: '0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    Kariyer Stabilitesi
-                  </h5>
-                  <span style={{
-                    color: '#4f46e5',
-                    fontSize: '16px',
-                    fontWeight: '800'
-                  }}>
-                    {(() => {
-                      // Calculate stability based on company count vs years
-                      const years = cvData.analysis.experience.years;
-                      const companies = cvData.analysis.experience.companies.length;
-                      const avgYearsPerCompany = companies > 0 ? years / companies : years;
-                      
-                      if (avgYearsPerCompany >= 4) return 'Yüksek';
-                      if (avgYearsPerCompany >= 2) return 'Orta';
-                      return 'Değişken';
-                    })()}
-                  </span>
-                </div>
-                <p style={{ 
-                  color: '#1e293b', 
-                  margin: '0', 
-                  fontSize: '13px', 
-                  lineHeight: '1.4',
-                  fontWeight: '500'
-                }}>
-                  {(() => {
-                    const years = cvData.analysis.experience.years;
-                    const companies = cvData.analysis.experience.companies.length;
-                    const avgYearsPerCompany = companies > 0 ? years / companies : years;
-                    return `Ortalama ${avgYearsPerCompany.toFixed(1)} yıl/şirket`;
-                  })()}
-                </p>
               </div>
             </div>
           </div>
@@ -649,7 +479,9 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           textAlign: 'center',
           border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
-          <div style={{ marginBottom: '8px', fontSize: '1.2rem' }}>📄</div>
+          <div style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
+            <Icons.Document size={24} color="#cbd5e1" />
+          </div>
           <p style={{ margin: '0', color: '#cbd5e1', fontSize: '0.9rem' }}>
             Bu analiz sadece yetkinlik testi verilerine dayanmaktadır.
           </p>
@@ -699,7 +531,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                       padding: '8px',
                       marginRight: '12px'
                     }}>
-                      <span style={{ fontSize: '20px' }}>🧠</span>
+                      <Icons.Brain size={20} color="white" />
                     </div>
                     <h4 style={{ 
                       color: '#1a202c', 
@@ -806,7 +638,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                       padding: '6px',
                       marginRight: '12px'
                     }}>
-                      <span style={{ fontSize: '18px' }}>📊</span>
+                      <Icons.Analytics size={16} color="white" />
                     </div>
                     <h5 style={{ 
                       color: '#047857', 
@@ -865,7 +697,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
               borderRadius: '10px',
               padding: '8px'
             }}>
-              <span style={{ fontSize: '16px' }}>🤖</span>
+              <Icons.AI size={16} color="white" />
             </div>
             <div style={{ textAlign: 'left' }}>
               <p style={{ 
@@ -897,7 +729,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
               borderRadius: '10px',
               padding: '8px'
             }}>
-              <span style={{ fontSize: '16px' }}>📊</span>
+              <Icons.Analytics size={16} color="white" />
             </div>
             <div style={{ textAlign: 'left' }}>
               <p style={{ 
