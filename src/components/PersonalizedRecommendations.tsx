@@ -75,7 +75,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
 
   return (
     <div className="recommendations-section" style={{
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg,rgb(229, 230, 234) 0%, #764ba2 100%)',
       padding: '40px',
       borderRadius: '24px',
       boxShadow: '0 20px 60px rgba(102, 126, 234, 0.15)',
@@ -106,14 +106,14 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
             borderRadius: '20px',
             padding: '12px 24px',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.3)'
+            border: '1px solid rgba(241, 223, 223, 0.3)'
           }}>
             <span style={{ fontSize: '24px', marginRight: '12px' }}>🤖</span>
             <span style={{ 
               color: 'white', 
               fontSize: '18px', 
               fontWeight: '600',
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              textShadow: '0 2px 4px rgba(130, 29, 29, 0.1)'
             }}>
               AI Destekli Değerlendirme
             </span>
@@ -125,18 +125,18 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           fontWeight: '700',
           margin: '0 0 8px 0',
           textAlign: 'center',
-          textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+          textShadow: '0 2px 8px rgba(44, 18, 18, 0.2)',
           letterSpacing: '-0.5px'
         }}>
           Aday Profil Analizi
         </h3>
         <p style={{
-          color: 'rgba(251, 250, 250, 0.9)',
+          color: 'rgba(41, 33, 33, 0.9)',
           fontSize: '16px',
           margin: '0',
           textAlign: 'center',
           fontWeight: '400',
-          textShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
         }}>
           Özgeçmiş ve yetkinlik testi verilerine dayalı kapsamlı değerlendirme
         </p>
