@@ -2,6 +2,7 @@ import jsPDF from 'jspdf';
 import type { SessionAnalytics } from './InteractionTracker';
 import type { PersonalizedRecommendations } from '../types/Recommendations';
 
+// Type definitions for better type safety
 export interface ExportData {
   user: {
     firstName: string;
@@ -24,758 +25,892 @@ export interface ExportData {
   exportDate: string;
 }
 
+interface ColorRGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+interface Typography {
+  size: number;
+  weight: 'normal' | 'bold';
+  lineHeight: number;
+}
+
+interface Spacing {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}
+
 export class PDFExportService {
+  private pdf!: jsPDF;
+  private currentY: number = 0;
+  private pageWidth: number = 0;
+  private pageHeight: number = 0;
+  private margins = { top: 20, right: 20, bottom: 20, left: 20 };
+  private contentWidth: number = 0;
+
+  // Professional soft color palette
+  private readonly colors = {
+    primary: { r: 99, g: 102, b: 241 },      // Soft indigo
+    secondary: { r: 129, g: 140, b: 248 },   // Light indigo
+    success: { r: 34, g: 197, b: 94 },       // Soft green
+    warning: { r: 251, g: 191, b: 36 },      // Soft amber
+    danger: { r: 248, g: 113, b: 113 },      // Soft red
+    info: { r: 56, g: 189, b: 248 },         // Soft blue
+    
+    // Text colors
+    text: {
+      primary: { r: 31, g: 41, b: 55 },      // Dark gray
+      secondary: { r: 75, g: 85, b: 99 },    // Medium gray
+      muted: { r: 156, g: 163, b: 175 }      // Light gray
+    },
+    
+    // Background colors
+    background: {
+      primary: { r: 255, g: 255, b: 255 },   // White
+      secondary: { r: 249, g: 250, b: 251 }, // Very light gray
+      accent: { r: 243, g: 244, b: 246 }     // Light gray
+    },
+    
+    // Chart colors (soft and professional)
+    chart: [
+      { r: 99, g: 102, b: 241 },   // Indigo
+      { r: 34, g: 197, b: 94 },    // Green
+      { r: 251, g: 191, b: 36 },   // Amber
+      { r: 248, g: 113, b: 113 },  // Red
+      { r: 56, g: 189, b: 248 },   // Blue
+      { r: 168, g: 85, b: 247 },   // Purple
+      { r: 236, g: 72, b: 153 },   // Pink
+      { r: 20, g: 184, b: 166 }    // Teal
+    ]
+  };
+
+  // Typography system
+  private readonly typography: Record<string, Typography> = {
+    title: { size: 24, weight: 'bold', lineHeight: 1.2 },
+    heading: { size: 18, weight: 'bold', lineHeight: 1.3 },
+    subheading: { size: 14, weight: 'bold', lineHeight: 1.4 },
+    body: { size: 11, weight: 'normal', lineHeight: 1.5 },
+    small: { size: 9, weight: 'normal', lineHeight: 1.4 },
+    caption: { size: 8, weight: 'normal', lineHeight: 1.3 }
+  };
+
+  // Spacing system
+  private readonly spacing: Spacing = {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32
+  };
+
   /**
-   * Export user results as a comprehensive professional PDF report
+   * Main export function
    */
   async exportToPDF(data: ExportData): Promise<void> {
     try {
-      console.log('📄 Starting comprehensive PDF export process...');
+      console.log('🚀 Creating professional PDF report...');
       
-      // Create new PDF document
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 20;
-      const contentWidth = pageWidth - (margin * 2);
+      this.initializePDF();
+      this.setupFontWithTurkishSupport();
       
-      // Set up fonts and colors
-      pdf.setFont('helvetica');
+      // Create pages
+      this.createCoverPage(data);
+      this.addNewPage();
+      this.createSummaryPage(data);
+      this.addNewPage();
+      this.createDetailedAnalysisPage(data);
       
-      // Page 1: Enhanced Cover Page
-      this.createEnhancedCoverPage(pdf, data, pageWidth, pageHeight, margin, contentWidth);
-      
-      // Page 2: Executive Summary
-      pdf.addPage();
-      this.createExecutiveSummary(pdf, data, pageWidth, margin, contentWidth);
-      
-      // Page 3: Competency Analysis
-      pdf.addPage();
-      this.createCompetencyAnalysis(pdf, data, margin, contentWidth);
-      
-      // Page 4: Behavioral Analytics
       if (data.interactionAnalytics) {
-        pdf.addPage();
-        this.createBehavioralAnalytics(pdf, data, margin, contentWidth);
+        this.addNewPage();
+        this.createAnalyticsPage(data);
       }
       
-      // Page 5+: AI Personalized Recommendations (if available)
-      if (data.personalizedRecommendations?.recommendations && 
-          data.personalizedRecommendations.recommendations.length > 0) {
-        pdf.addPage();
-        this.createAIRecommendationsSection(pdf, data, margin, contentWidth);
-      }
+      this.addNewPage();
+      this.createRecommendationsPage(data);
       
-      // Page N: Development Recommendations
-      pdf.addPage();
-      this.createDevelopmentRecommendations(pdf, data, margin, contentWidth);
-      
-      // Generate filename with timestamp
-      const timestamp = new Date().toISOString().split('T')[0];
-      const fileName = `${data.user.firstName}_${data.user.lastName}_Liderlik_Raporu_${timestamp}.pdf`;
+      // Add page numbers
+      this.addPageNumbers();
       
       // Save the PDF
-      pdf.save(fileName);
+      const fileName = this.generateFileName(data);
+      this.pdf.save(fileName);
       
-      console.log('✅ Comprehensive PDF export completed successfully:', fileName);
+      console.log('✅ PDF generated successfully:', fileName);
       
     } catch (error) {
-      console.error('❌ PDF export failed:', error);
-      throw new Error(`PDF export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('❌ PDF generation failed:', error);
+      throw new Error(`PDF oluşturma hatası: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
     }
   }
 
   /**
-   * Create enhanced cover page with modern design
+   * Initialize PDF with proper settings
    */
-  private createEnhancedCoverPage(pdf: jsPDF, data: ExportData, pageWidth: number, pageHeight: number, margin: number, contentWidth: number): void {
-    // Gradient header background (simulated with rectangles)
-    pdf.setFillColor(30, 41, 59);
-    pdf.rect(0, 0, pageWidth, 100, 'F');
+  private initializePDF(): void {
+    this.pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
     
-    pdf.setFillColor(45, 56, 74);
-    pdf.rect(0, 80, pageWidth, 20, 'F');
+    this.pageWidth = this.pdf.internal.pageSize.getWidth();
+    this.pageHeight = this.pdf.internal.pageSize.getHeight();
+    this.contentWidth = this.pageWidth - this.margins.left - this.margins.right;
+    this.currentY = this.margins.top;
+  }
+
+  /**
+   * Setup font with Turkish character support
+   */
+  private setupFontWithTurkishSupport(): void {
+    try {
+      // Use Helvetica which has better Unicode support than default
+      this.pdf.setFont('helvetica');
+      console.log('✅ Font configured for Turkish characters');
+    } catch (error) {
+      console.warn('⚠️ Font setup warning:', error);
+    }
+  }
+
+  /**
+   * Safe text rendering with Turkish character support
+   */
+  private renderText(
+    text: string, 
+    x: number, 
+    y: number, 
+    options?: {
+      align?: 'left' | 'center' | 'right';
+      maxWidth?: number;
+    }
+  ): number {
+    try {
+      // Ensure proper encoding for Turkish characters
+      const processedText = this.processTurkishText(text);
+      
+      if (options?.maxWidth) {
+        const lines = this.pdf.splitTextToSize(processedText, options.maxWidth);
+        const lineHeight = this.getCurrentLineHeight();
+        
+        lines.forEach((line: string, index: number) => {
+          this.pdf.text(line, x, y + (index * lineHeight), { 
+            align: options.align || 'left' 
+          });
+        });
+        
+        return y + (lines.length * lineHeight);
+      } else {
+        this.pdf.text(processedText, x, y, { 
+          align: options?.align || 'left' 
+        });
+        return y + this.getCurrentLineHeight();
+      }
+    } catch (error) {
+      console.warn('Text rendering error:', error);
+      // Fallback to ASCII version
+      const asciiText = this.convertToASCII(text);
+      this.pdf.text(asciiText, x, y, { align: options?.align || 'left' });
+      return y + this.getCurrentLineHeight();
+    }
+  }
+
+  /**
+   * Process Turkish text for PDF compatibility
+   */
+  private processTurkishText(text: string): string {
+    // Normalize Unicode characters
+    return text.normalize('NFC');
+  }
+
+  /**
+   * Convert Turkish characters to ASCII as fallback
+   */
+  private convertToASCII(text: string): string {
+    const turkishMap: Record<string, string> = {
+      'ç': 'c', 'Ç': 'C',
+      'ğ': 'g', 'Ğ': 'G',
+      'ı': 'i', 'İ': 'I',
+      'ö': 'o', 'Ö': 'O',
+      'ş': 's', 'Ş': 'S',
+      'ü': 'u', 'Ü': 'U'
+    };
     
-    // Company/System logo area
-    pdf.setFillColor(255, 255, 255);
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('LIDERLIK YETKINLIK SISTEMI', pageWidth / 2, 15, { align: 'center' });
-    
-    // Main title with enhanced typography
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(32);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('LIDERLIK YETKINLIK', pageWidth / 2, 45, { align: 'center' });
-    pdf.text('RAPORU', pageWidth / 2, 65, { align: 'center' });
-    
-    // Subtitle
-    pdf.setFontSize(14);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text('AI Destekli Kapsamlı Analiz ve Değerlendirme', pageWidth / 2, 85, { align: 'center' });
-    
-    // User information card
-    pdf.setFillColor(248, 250, 252);
-    pdf.rect(margin, 120, contentWidth, 70, 'F');
-    pdf.setDrawColor(226, 232, 240);
-    pdf.rect(margin, 120, contentWidth, 70);
-    
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('KATILIMCI BİLGİLERİ', margin + 10, 135);
-    
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(`Ad Soyad: ${data.user.firstName} ${data.user.lastName}`, margin + 10, 150);
-    
-    if (data.user.company) {
-      pdf.text(`Şirket: ${data.user.company}`, margin + 10, 165);
+    return text.replace(/[çÇğĞıİöÖşŞüÜ]/g, char => turkishMap[char] || char);
+  }
+
+  /**
+   * Apply typography style
+   */
+  private applyTypography(style: string, color?: ColorRGB): void {
+    const typo = this.typography[style];
+    if (!typo) {
+      console.warn(`Typography style '${style}' not found`);
+      return;
     }
     
-    pdf.text(`Rapor Tarihi: ${new Date(data.exportDate).toLocaleDateString('tr-TR')}`, margin + 10, 180);
+    this.pdf.setFontSize(typo.size);
+    this.pdf.setFont('helvetica', typo.weight);
     
-    // Overall performance showcase
-    const overallScore = Math.round(
-      data.scores.reduce((sum, comp) => sum + (comp.score / comp.maxScore) * 100, 0) / data.scores.length
+    if (color) {
+      this.pdf.setTextColor(color.r, color.g, color.b);
+    }
+  }
+
+  /**
+   * Get current line height based on font size
+   */
+  private getCurrentLineHeight(): number {
+    const fontSize = this.pdf.getFontSize();
+    return fontSize * 1.2; // 20% line spacing
+  }
+
+  /**
+   * Set color utility
+   */
+  private setColor(color: ColorRGB, type: 'fill' | 'draw' | 'text' = 'fill'): void {
+    switch (type) {
+      case 'fill':
+        this.pdf.setFillColor(color.r, color.g, color.b);
+        break;
+      case 'draw':
+        this.pdf.setDrawColor(color.r, color.g, color.b);
+        break;
+      case 'text':
+        this.pdf.setTextColor(color.r, color.g, color.b);
+        break;
+    }
+  }
+
+  /**
+   * Check if new page is needed
+   */
+  private checkPageBreak(neededSpace: number): void {
+    if (this.currentY + neededSpace > this.pageHeight - this.margins.bottom) {
+      this.addNewPage();
+    }
+  }
+
+  /**
+   * Add new page
+   */
+  private addNewPage(): void {
+    this.pdf.addPage();
+    this.currentY = this.margins.top;
+  }
+
+  /**
+   * Create cover page
+   */
+  private createCoverPage(data: ExportData): void {
+    // Header background
+    this.setColor(this.colors.primary, 'fill');
+    this.pdf.rect(0, 0, this.pageWidth, 60, 'F');
+    
+    // Title
+    this.applyTypography('title', this.colors.background.primary);
+    this.currentY = 35;
+    this.renderText(
+      'LİDERLİK YETKİNLİK DEĞERLENDİRMESİ',
+      this.pageWidth / 2,
+      this.currentY,
+      { align: 'center' }
     );
     
-    // Performance circle with gradient effect
-    const centerX = pageWidth / 2;
-    const centerY = 230;
-    const radius = 35;
+    // Participant info card
+    this.currentY = 80;
+    this.createParticipantCard(data);
     
-    // Outer ring
-    pdf.setFillColor(226, 232, 240);
-    pdf.circle(centerX, centerY, radius + 5, 'F');
-    
-    // Inner circle
-    pdf.setFillColor(255, 255, 255);
-    pdf.circle(centerX, centerY, radius, 'F');
-    
-    // Score color based on performance
-    let scoreColor = [239, 68, 68]; // Red
-    let levelText = 'Gelişim Alanı';
-    let levelColor = 'Kırmızı';
-    
-    if (overallScore >= 80) {
-      scoreColor = [34, 197, 94]; // Green
-      levelText = 'Mükemmel';
-      levelColor = 'Yeşil';
-    } else if (overallScore >= 60) {
-      scoreColor = [59, 130, 246]; // Blue
-      levelText = 'İyi';
-      levelColor = 'Mavi';
-    } else if (overallScore >= 40) {
-      scoreColor = [245, 158, 11]; // Orange
-      levelText = 'Orta';
-      levelColor = 'Turuncu';
-    }
-    
-    // Score text
-    pdf.setTextColor(scoreColor[0], scoreColor[1], scoreColor[2]);
-    pdf.setFontSize(28);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(`${overallScore}%`, centerX, centerY + 2, { align: 'center' });
-    
-    // Performance level
-    pdf.setTextColor(71, 85, 105);
-    pdf.setFontSize(14);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('GENEL PERFORMANS', centerX, centerY - 45, { align: 'center' });
-    
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(levelText, centerX, centerY + 25, { align: 'center' });
-    
-    // Performance indicators
-    const indicators = [
-      { label: 'Liderlik', score: Math.round(data.scores.filter(s => s.category === 'liderlik').reduce((sum, s) => sum + (s.score / s.maxScore) * 100, 0) / data.scores.filter(s => s.category === 'liderlik').length || 0) },
-      { label: 'İletişim', score: Math.round(data.scores.filter(s => s.category === 'iletişim').reduce((sum, s) => sum + (s.score / s.maxScore) * 100, 0) / data.scores.filter(s => s.category === 'iletişim').length || 0) },
-      { label: 'Stratejik', score: Math.round(data.scores.filter(s => s.category === 'stratejik').reduce((sum, s) => sum + (s.score / s.maxScore) * 100, 0) / data.scores.filter(s => s.category === 'stratejik').length || 0) },
-      { label: 'Risk', score: Math.round(data.scores.filter(s => s.category === 'risk').reduce((sum, s) => sum + (s.score / s.maxScore) * 100, 0) / data.scores.filter(s => s.category === 'risk').length || 0) }
-    ];
-    
-    let startY = 270;
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(71, 85, 105);
-    
-    indicators.forEach((indicator, index) => {
-      if (!isNaN(indicator.score)) {
-        const xPos = margin + (index * (contentWidth / 4));
-        pdf.text(indicator.label, xPos + 30, startY);
-        pdf.text(`${indicator.score}%`, xPos + 30, startY + 10);
-      }
-    });
+    // Overall score gauge
+    this.currentY += this.spacing.xl;
+    this.createOverallScoreGauge(data);
     
     // Footer
-    pdf.setTextColor(148, 163, 184);
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'italic');
-    pdf.text('Bu rapor yapay zeka destekli analiz ile oluşturulmuştur.', pageWidth / 2, pageHeight - 15, { align: 'center' });
-    pdf.text('Confidential & Professional Assessment Report', pageWidth / 2, pageHeight - 5, { align: 'center' });
+    this.createCoverFooter();
   }
 
   /**
-   * Create executive summary page
+   * Create participant information card
    */
-  private createExecutiveSummary(pdf: jsPDF, data: ExportData, pageWidth: number, margin: number, contentWidth: number): void {
-    let yPosition = margin;
+  private createParticipantCard(data: ExportData): void {
+    const cardHeight = 50;
+    const cardY = this.currentY;
     
-    // Page title
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('ÖZET RAPOR', margin, yPosition);
-    yPosition += 15;
+    // Card background
+    this.setColor(this.colors.background.secondary, 'fill');
+    this.pdf.rect(this.margins.left, cardY, this.contentWidth, cardHeight, 'F');
     
-    // Subtitle
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(100, 116, 139);
-    pdf.text('Genel değerlendirme ve temel bulgular', margin, yPosition);
-    yPosition += 25;
+    // Card border
+    this.setColor(this.colors.text.muted, 'draw');
+    this.pdf.setLineWidth(0.5);
+    this.pdf.rect(this.margins.left, cardY, this.contentWidth, cardHeight);
     
-    // Overall Performance Box
-    pdf.setFillColor(248, 250, 252);
-    pdf.rect(margin, yPosition, contentWidth, 40, 'F');
-    pdf.setDrawColor(226, 232, 240);
-    pdf.rect(margin, yPosition, contentWidth, 40);
+    // Content
+    this.applyTypography('subheading', this.colors.text.primary);
+    let textY = cardY + 15;
     
-    const overallScore = Math.round(
-      data.scores.reduce((sum, comp) => sum + (comp.score / comp.maxScore) * 100, 0) / data.scores.length
+    this.renderText('KATILIMCI BİLGİLERİ', this.margins.left + 10, textY);
+    
+    this.applyTypography('body', this.colors.text.secondary);
+    textY += 10;
+    
+    this.renderText(
+      `Ad Soyad: ${data.user.firstName} ${data.user.lastName}`,
+      this.margins.left + 10,
+      textY
     );
     
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(14);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('GENEL PERFORMANS SKORU', margin + 10, yPosition + 15);
-    
-    let performanceText = 'Gelişim Alanı';
-    let performanceColor = [239, 68, 68];
-    if (overallScore >= 80) {
-      performanceText = 'Mükemmel';
-      performanceColor = [34, 197, 94];
-    } else if (overallScore >= 60) {
-      performanceText = 'İyi';
-      performanceColor = [59, 130, 246];
-    } else if (overallScore >= 40) {
-      performanceText = 'Orta';
-      performanceColor = [245, 158, 11];
+    if (data.user.company) {
+      textY += 8;
+      this.renderText(
+        `Şirket: ${data.user.company}`,
+        this.margins.left + 10,
+        textY
+      );
     }
     
-    pdf.setTextColor(performanceColor[0], performanceColor[1], performanceColor[2]);
-    pdf.setFontSize(20);
-    pdf.text(`${overallScore}% - ${performanceText}`, margin + 10, yPosition + 30);
+    textY += 8;
+    this.renderText(
+      `Tarih: ${new Date(data.exportDate).toLocaleDateString('tr-TR')}`,
+      this.margins.left + 10,
+      textY
+    );
     
-    yPosition += 60;
+    this.currentY = cardY + cardHeight;
+  }
+
+  /**
+   * Create overall score gauge chart
+   */
+  private createOverallScoreGauge(data: ExportData): void {
+    const overallScore = this.calculateOverallScore(data.scores);
+    const centerX = this.pageWidth / 2;
+    const centerY = this.currentY + 40;
+    const radius = 30;
     
-    // Top 3 Strengths
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('EN GÜÇLÜ ALANLAR', margin, yPosition);
-    yPosition += 15;
+    // Background circle
+    this.setColor(this.colors.background.accent, 'fill');
+    this.pdf.circle(centerX, centerY, radius, 'F');
     
-    const topScores = [...data.scores]
-      .sort((a, b) => (b.score / b.maxScore) - (a.score / a.maxScore))
-      .slice(0, 3);
+    // Score arc
+    this.drawScoreArc(centerX, centerY, radius - 5, overallScore);
     
-    topScores.forEach((comp, index) => {
-      const percentage = Math.round((comp.score / comp.maxScore) * 100);
-      pdf.setTextColor(34, 197, 94);
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text(`${index + 1}. ${comp.fullName}`, margin + 5, yPosition);
+    // Score text
+    this.applyTypography('heading', this.colors.text.primary);
+    this.renderText(
+      `%${Math.round(overallScore)}`,
+      centerX,
+      centerY + 3,
+      { align: 'center' }
+    );
+    
+    // Label
+    this.applyTypography('small', this.colors.text.secondary);
+    this.renderText(
+      'GENEL PERFORMANS',
+      centerX,
+      centerY + 15,
+      { align: 'center' }
+    );
+    
+    this.currentY = centerY + radius + 20;
+  }
+
+  /**
+   * Draw score arc for gauge
+   */
+  private drawScoreArc(x: number, y: number, radius: number, score: number): void {
+    const color = this.getScoreColor(score);
+    this.setColor(color, 'draw');
+    this.pdf.setLineWidth(3);
+    
+    // Calculate arc (270 degrees max)
+    const startAngle = 135; // Start from bottom left
+    const endAngle = startAngle + (score / 100 * 270);
+    
+    // Draw arc using multiple small lines
+    const steps = Math.max(20, Math.round((endAngle - startAngle) / 5));
+    for (let i = 0; i < steps; i++) {
+      const angle = startAngle + ((endAngle - startAngle) * i / steps);
+      const nextAngle = startAngle + ((endAngle - startAngle) * (i + 1) / steps);
       
-      pdf.setTextColor(71, 85, 105);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`${percentage}%`, contentWidth + margin - 30, yPosition);
+      const x1 = x + radius * Math.cos(angle * Math.PI / 180);
+      const y1 = y + radius * Math.sin(angle * Math.PI / 180);
+      const x2 = x + radius * Math.cos(nextAngle * Math.PI / 180);
+      const y2 = y + radius * Math.sin(nextAngle * Math.PI / 180);
       
-      yPosition += 8;
-      pdf.setTextColor(100, 116, 139);
-      pdf.setFontSize(10);
-      const description = pdf.splitTextToSize(comp.description, contentWidth - 40);
-      pdf.text(description, margin + 10, yPosition);
-      yPosition += description.length * 4 + 8;
+      this.pdf.line(x1, y1, x2, y2);
+    }
+  }
+
+  /**
+   * Get color based on score
+   */
+  private getScoreColor(score: number): ColorRGB {
+    if (score >= 80) return this.colors.success;
+    if (score >= 60) return this.colors.info;
+    if (score >= 40) return this.colors.warning;
+    return this.colors.danger;
+  }
+
+  /**
+   * Calculate overall score
+   */
+  private calculateOverallScore(scores: ExportData['scores']): number {
+    if (scores.length === 0) return 0;
+    const total = scores.reduce((sum, score) => sum + (score.score / score.maxScore * 100), 0);
+    return total / scores.length;
+  }
+
+  /**
+   * Create cover footer
+   */
+  private createCoverFooter(): void {
+    this.applyTypography('caption', this.colors.text.muted);
+    const footerY = this.pageHeight - 30;
+    
+    this.renderText(
+      'Bu rapor AI destekli analiz ve psikometrik değerlendirme yöntemleri kullanılarak oluşturulmuştur.',
+      this.pageWidth / 2,
+      footerY,
+      { align: 'center' }
+    );
+  }
+
+  /**
+   * Create summary page
+   */
+  private createSummaryPage(data: ExportData): void {
+    // Page header
+    this.createPageHeader('YÖNETİCİ ÖZETİ');
+    
+    // Key metrics
+    this.createKeyMetrics(data);
+    
+    // Strengths and development areas
+    this.currentY += this.spacing.lg;
+    this.createStrengthsAndDevelopmentAreas(data);
+    
+    // Quick insights
+    this.currentY += this.spacing.lg;
+    this.createQuickInsights(data);
+  }
+
+  /**
+   * Create page header
+   */
+  private createPageHeader(title: string): void {
+    this.applyTypography('heading', this.colors.text.primary);
+    this.currentY += this.spacing.md;
+    this.renderText(title, this.margins.left, this.currentY);
+    
+    // Underline
+    this.currentY += 5;
+    this.setColor(this.colors.primary, 'draw');
+    this.pdf.setLineWidth(2);
+    this.pdf.line(this.margins.left, this.currentY, this.margins.left + 100, this.currentY);
+    
+    this.currentY += this.spacing.md;
+  }
+
+  /**
+   * Create key metrics cards
+   */
+  private createKeyMetrics(data: ExportData): void {
+    const overallScore = this.calculateOverallScore(data.scores);
+    const strongCount = data.scores.filter(s => (s.score / s.maxScore * 100) >= 70).length;
+    const needsImprovement = data.scores.filter(s => (s.score / s.maxScore * 100) < 50).length;
+    
+    const metrics = [
+      { label: 'Genel Performans', value: `%${Math.round(overallScore)}`, color: this.getScoreColor(overallScore) },
+      { label: 'Güçlü Alanlar', value: strongCount.toString(), color: this.colors.success },
+      { label: 'Gelişim Alanları', value: needsImprovement.toString(), color: this.colors.warning }
+    ];
+    
+    const cardWidth = (this.contentWidth - 2 * this.spacing.md) / 3;
+    
+    metrics.forEach((metric, index) => {
+      const x = this.margins.left + (index * (cardWidth + this.spacing.md));
+      this.createMetricCard(x, this.currentY, cardWidth, metric);
     });
     
-    yPosition += 10;
+    this.currentY += 60; // Card height + spacing
+  }
+
+  /**
+   * Create metric card
+   */
+  private createMetricCard(
+    x: number, 
+    y: number, 
+    width: number, 
+    metric: { label: string; value: string; color: ColorRGB }
+  ): void {
+    const height = 50;
     
-    // Development Areas
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('GELİŞİM ALANLARI', margin, yPosition);
-    yPosition += 15;
+    // Card background
+    this.setColor(this.colors.background.secondary, 'fill');
+    this.pdf.rect(x, y, width, height, 'F');
     
+    // Card border
+    this.setColor(metric.color, 'draw');
+    this.pdf.setLineWidth(1);
+    this.pdf.rect(x, y, width, height);
+    
+    // Top accent bar
+    this.setColor(metric.color, 'fill');
+    this.pdf.rect(x, y, width, 3, 'F');
+    
+    // Value
+    this.applyTypography('heading', metric.color);
+    this.renderText(metric.value, x + width/2, y + 25, { align: 'center' });
+    
+    // Label
+    this.applyTypography('small', this.colors.text.secondary);
+    this.renderText(metric.label, x + width/2, y + 40, { align: 'center' });
+  }
+
+  /**
+   * Create strengths and development areas
+   */
+  private createStrengthsAndDevelopmentAreas(data: ExportData): void {
+    const sortedScores = [...data.scores].sort((a, b) => 
+      (b.score / b.maxScore) - (a.score / a.maxScore)
+    );
+    
+    const strengths = sortedScores.slice(0, 3);
+    const development = sortedScores.slice(-3).reverse();
+    
+    const columnWidth = (this.contentWidth - this.spacing.md) / 2;
+    
+    // Strengths column
+    this.applyTypography('subheading', this.colors.text.primary);
+    this.renderText('GÜÇLÜ ALANLAR', this.margins.left, this.currentY);
+    
+    let strengthsY = this.currentY + this.spacing.md;
+    strengths.forEach((comp, index) => {
+      const score = Math.round((comp.score / comp.maxScore) * 100);
+      this.createCompetencyItem(this.margins.left, strengthsY, columnWidth, comp.fullName, score);
+      strengthsY += 25;
+    });
+    
+    // Development areas column
+    const devX = this.margins.left + columnWidth + this.spacing.md;
+    this.renderText('GELİŞİM ALANLARI', devX, this.currentY);
+    
+    let devY = this.currentY + this.spacing.md;
+    development.forEach((comp, index) => {
+      const score = Math.round((comp.score / comp.maxScore) * 100);
+      this.createCompetencyItem(devX, devY, columnWidth, comp.fullName, score);
+      devY += 25;
+    });
+    
+    this.currentY = Math.max(strengthsY, devY) + this.spacing.sm;
+  }
+
+  /**
+   * Create competency item
+   */
+  private createCompetencyItem(
+    x: number, 
+    y: number, 
+    width: number, 
+    name: string, 
+    score: number
+  ): void {
+    const height = 20;
+    const color = this.getScoreColor(score);
+    
+    // Background
+    this.setColor(this.colors.background.accent, 'fill');
+    this.pdf.rect(x, y, width, height, 'F');
+    
+    // Progress bar
+    const progressWidth = (width - 40) * (score / 100);
+    this.setColor(color, 'fill');
+    this.pdf.rect(x + 5, y + height - 3, progressWidth, 3, 'F');
+    
+    // Text
+    this.applyTypography('small', this.colors.text.primary);
+    this.renderText(name, x + 5, y + 12, { maxWidth: width - 45 });
+    
+    // Score
+    this.applyTypography('small', color);
+    this.renderText(`%${score}`, x + width - 25, y + 12, { align: 'right' });
+  }
+
+  /**
+   * Create quick insights
+   */
+  private createQuickInsights(data: ExportData): void {
+    this.applyTypography('subheading', this.colors.text.primary);
+    this.renderText('TEMEL İÇGÖRÜLER', this.margins.left, this.currentY);
+    
+    this.currentY += this.spacing.md;
+    
+    const overallScore = this.calculateOverallScore(data.scores);
+    const insights = [
+      `Genel liderlik yetkinlik seviyeniz %${Math.round(overallScore)} olarak değerlendirilmiştir.`,
+      `${data.scores.filter(s => (s.score / s.maxScore * 100) >= 70).length} alanda güçlü performans gösteriyorsunuz.`,
+      `${data.scores.filter(s => (s.score / s.maxScore * 100) < 50).length} alan odaklanmış gelişim için önceliklendirilmiştir.`
+    ];
+    
+    insights.forEach(insight => {
+      this.applyTypography('body', this.colors.text.secondary);
+      this.currentY = this.renderText(
+        `• ${insight}`,
+        this.margins.left + 10,
+        this.currentY,
+        { maxWidth: this.contentWidth - 20 }
+      );
+      this.currentY += this.spacing.xs;
+    });
+  }
+
+  /**
+   * Create detailed analysis page
+   */
+  private createDetailedAnalysisPage(data: ExportData): void {
+    this.createPageHeader('DETAYLI YETKİNLİK ANALİZİ');
+    
+    // Competency chart
+    this.createCompetencyChart(data);
+    
+    // Category breakdown
+    this.currentY += this.spacing.lg;
+    this.createCategoryBreakdown(data);
+  }
+
+  /**
+   * Create competency chart
+   */
+  private createCompetencyChart(data: ExportData): void {
+    const chartHeight = 100;
+    const chartY = this.currentY;
+    const barWidth = this.contentWidth / data.scores.length;
+    
+    // Chart background
+    this.setColor(this.colors.background.secondary, 'fill');
+    this.pdf.rect(this.margins.left, chartY, this.contentWidth, chartHeight, 'F');
+    
+    // Bars
+    data.scores.forEach((comp, index) => {
+      const score = (comp.score / comp.maxScore) * 100;
+      const barHeight = (score / 100) * (chartHeight - 20);
+      const x = this.margins.left + (index * barWidth) + (barWidth * 0.1);
+      const width = barWidth * 0.8;
+      const y = chartY + chartHeight - 10 - barHeight;
+      
+      // Bar
+      const color = this.colors.chart[index % this.colors.chart.length];
+      this.setColor(color, 'fill');
+      this.pdf.rect(x, y, width, barHeight, 'F');
+      
+      // Score label
+      this.applyTypography('caption', this.colors.text.primary);
+      this.renderText(
+        `%${Math.round(score)}`,
+        x + width/2,
+        y - 3,
+        { align: 'center' }
+      );
+      
+      // Competency label (rotated effect with abbreviation)
+      this.renderText(
+        comp.abbreviation || comp.name.substring(0, 4).toUpperCase(),
+        x + width/2,
+        chartY + chartHeight + 8,
+        { align: 'center' }
+      );
+    });
+    
+    this.currentY = chartY + chartHeight + 20;
+  }
+
+  /**
+   * Create category breakdown
+   */
+  private createCategoryBreakdown(data: ExportData): void {
+    const categories = this.groupCompetenciesByCategory(data.scores);
+    
+    Object.entries(categories).forEach(([category, competencies]) => {
+      this.checkPageBreak(60);
+      
+      this.applyTypography('subheading', this.colors.text.primary);
+      this.renderText(category, this.margins.left, this.currentY);
+      
+      this.currentY += this.spacing.md;
+      
+      competencies.forEach(comp => {
+        const score = Math.round((comp.score / comp.maxScore) * 100);
+        this.createCompetencyItem(
+          this.margins.left + 10,
+          this.currentY,
+          this.contentWidth - 20,
+          comp.fullName,
+          score
+        );
+        this.currentY += 25;
+      });
+      
+      this.currentY += this.spacing.sm;
+    });
+  }
+
+  /**
+   * Group competencies by category
+   */
+  private groupCompetenciesByCategory(scores: ExportData['scores']): Record<string, ExportData['scores']> {
+    const categories: Record<string, ExportData['scores']> = {};
+    
+    scores.forEach(comp => {
+      const category = comp.category || 'Genel';
+      if (!categories[category]) {
+        categories[category] = [];
+      }
+      categories[category].push(comp);
+    });
+    
+    return categories;
+  }
+
+  /**
+   * Create analytics page
+   */
+  private createAnalyticsPage(data: ExportData): void {
+    if (!data.interactionAnalytics) return;
+    
+    this.createPageHeader('DAVRANIŞSAL ANALİTİK');
+    
+    const analytics = data.interactionAnalytics;
+    
+    // Response time metric
+    const avgResponseTime = Math.round(analytics.averageResponseTime / 1000);
+    const completionRate = Math.round((analytics.completedQuestions / analytics.totalQuestions) * 100);
+    
+    const analyticsMetrics = [
+      { label: 'Ortalama Yanıt Süresi', value: `${avgResponseTime}s`, color: this.colors.info },
+      { label: 'Tamamlanma Oranı', value: `%${completionRate}`, color: this.colors.success }
+    ];
+    
+    const cardWidth = (this.contentWidth - this.spacing.md) / 2;
+    
+    analyticsMetrics.forEach((metric, index) => {
+      const x = this.margins.left + (index * (cardWidth + this.spacing.md));
+      this.createMetricCard(x, this.currentY, cardWidth, metric);
+    });
+    
+    this.currentY += 80;
+    
+    // Additional insights
+    this.applyTypography('body', this.colors.text.secondary);
+    this.currentY = this.renderText(
+      'Değerlendirme sırasındaki davranış kalıplarınız tutarlı ve odaklanmış bir yaklaşım sergilediğinizi göstermektedir.',
+      this.margins.left,
+      this.currentY,
+      { maxWidth: this.contentWidth }
+    );
+  }
+
+  /**
+   * Create recommendations page
+   */
+  private createRecommendationsPage(data: ExportData): void {
+    this.createPageHeader('GELİŞİM ÖNERİLERİ');
+    
+    // Priority development areas
     const developmentAreas = [...data.scores]
       .sort((a, b) => (a.score / a.maxScore) - (b.score / b.maxScore))
       .slice(0, 3);
     
+    this.applyTypography('subheading', this.colors.text.primary);
+    this.renderText('ÖNCELİKLİ GELİŞİM ALANLARI', this.margins.left, this.currentY);
+    
+    this.currentY += this.spacing.md;
+    
     developmentAreas.forEach((comp, index) => {
-      const percentage = Math.round((comp.score / comp.maxScore) * 100);
-      pdf.setTextColor(239, 68, 68);
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text(`${index + 1}. ${comp.fullName}`, margin + 5, yPosition);
+      const score = Math.round((comp.score / comp.maxScore) * 100);
       
-      pdf.setTextColor(71, 85, 105);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`${percentage}%`, contentWidth + margin - 30, yPosition);
+      this.applyTypography('body', this.colors.text.primary);
+      this.currentY = this.renderText(
+        `${index + 1}. ${comp.fullName} (%${score})`,
+        this.margins.left + 10,
+        this.currentY
+      );
       
-      yPosition += 8;
-      pdf.setTextColor(100, 116, 139);
-      pdf.setFontSize(10);
-      const description = pdf.splitTextToSize(comp.description, contentWidth - 40);
-      pdf.text(description, margin + 10, yPosition);
-      yPosition += description.length * 4 + 8;
-    });
-  }
-
-  /**
-   * Create competency analysis page
-   */
-  private createCompetencyAnalysis(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
-    let yPosition = margin;
-    
-    // Page title
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('YETKİNLİK ANALİZİ', margin, yPosition);
-    yPosition += 20;
-    
-    // Group competencies by category
-    const categories: { [key: string]: typeof data.scores } = {};
-    data.scores.forEach(comp => {
-      const categoryName = comp.category || 'Genel';
-      if (!categories[categoryName]) {
-        categories[categoryName] = [];
-      }
-      categories[categoryName].push(comp);
+      this.applyTypography('small', this.colors.text.secondary);
+      this.currentY = this.renderText(
+        comp.description,
+        this.margins.left + 20,
+        this.currentY,
+        { maxWidth: this.contentWidth - 30 }
+      );
+      
+      this.currentY += this.spacing.sm;
     });
     
-    // Display each category
-    Object.entries(categories).forEach(([category, competencies]) => {
-      // Category header with colored background
-      const categoryColors: { [key: string]: number[] } = {
-        'liderlik': [99, 102, 241],
-        'iletişim': [16, 185, 129],
-        'stratejik': [245, 158, 11],
-        'risk': [239, 68, 68],
-        'Genel': [107, 114, 128]
-      };
-      
-      const categoryColor = categoryColors[category] || [107, 114, 128];
-      
-      pdf.setFillColor(categoryColor[0], categoryColor[1], categoryColor[2]);
-      pdf.rect(margin, yPosition - 5, contentWidth, 15, 'F');
-      
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text(category.toUpperCase(), margin + 5, yPosition + 5);
-      yPosition += 20;
-      
-      // Competencies in this category
-      competencies.forEach(comp => {
-        const percentage = Math.round((comp.score / comp.maxScore) * 100);
-        
-        // Competency name and score
-        pdf.setTextColor(30, 41, 59);
-        pdf.setFontSize(12);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(comp.fullName, margin + 5, yPosition);
-        
-        // Score badge
-        let scoreColor = [239, 68, 68]; // Red
-        if (percentage >= 80) scoreColor = [34, 197, 94]; // Green
-        else if (percentage >= 60) scoreColor = [59, 130, 246]; // Blue
-        else if (percentage >= 40) scoreColor = [245, 158, 11]; // Orange
-        
-        pdf.setFillColor(scoreColor[0], scoreColor[1], scoreColor[2]);
-        pdf.rect(contentWidth + margin - 35, yPosition - 8, 30, 12, 'F');
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(`${percentage}%`, contentWidth + margin - 20, yPosition - 1, { align: 'center' });
-        
-        yPosition += 8;
-        
-        // Progress bar
-        const barWidth = contentWidth - 50;
-        pdf.setFillColor(226, 232, 240);
-        pdf.rect(margin + 5, yPosition, barWidth, 4, 'F');
-        
-        const fillWidth = (barWidth * percentage) / 100;
-        pdf.setFillColor(scoreColor[0], scoreColor[1], scoreColor[2]);
-        pdf.rect(margin + 5, yPosition, fillWidth, 4, 'F');
-        
-        yPosition += 10;
-        
-        // Description
-        pdf.setTextColor(71, 85, 105);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'normal');
-        const description = pdf.splitTextToSize(comp.description, contentWidth - 10);
-        pdf.text(description, margin + 5, yPosition);
-        yPosition += description.length * 4 + 2;
-        
-        // Insight
-        let insight = '';
-        if (percentage >= 80) {
-          insight = '✓ Mükemmel performans - Bu alanda mentor olabilir';
-        } else if (percentage >= 60) {
-          insight = '→ İyi performans - Küçük iyileştirmelerle güçlenebilir';
-        } else if (percentage >= 40) {
-          insight = '⚠ Orta seviye - Odaklanarak gelişim sağlanabilir';
-        } else {
-          insight = '⚡ Gelişim alanı - Temel becerileri güçlendirme gerekiyor';
-        }
-        
-        pdf.setTextColor(100, 116, 139);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'italic');
-        pdf.text(insight, margin + 5, yPosition);
-        yPosition += 15;
-        
-        // Check if we need a new page
-        if (yPosition > 250) {
-          pdf.addPage();
-          yPosition = margin;
-        }
-      });
-      
-      yPosition += 5;
-    });
+    // Action plan
+    this.currentY += this.spacing.md;
+    this.createActionPlan();
   }
 
   /**
-   * Create behavioral analytics page
+   * Create action plan
    */
-  private createBehavioralAnalytics(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
-    let yPosition = margin;
+  private createActionPlan(): void {
+    this.applyTypography('subheading', this.colors.text.primary);
+    this.renderText('EYLEM PLANI', this.margins.left, this.currentY);
     
-    // Page title
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('DAVRANIŞ ANALİZİ', margin, yPosition);
-    yPosition += 15;
+    this.currentY += this.spacing.md;
     
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(100, 116, 139);
-    pdf.text('Test sırasındaki davranış kalıpları ve etkileşim analizi', margin, yPosition);
-    yPosition += 25;
-    
-    if (data.interactionAnalytics) {
-      // Analytics cards
-      const analyticsData = [
-        {
-          title: 'Ortalama Yanıt Süresi',
-          value: `${Math.round(data.interactionAnalytics.averageResponseTime / 1000)} saniye`,
-          description: 'Sorulara çabuk yanıt verme eğilimi',
-          icon: '⏱️'
-        },
-        {
-          title: 'Cevap Değişikliği',
-          value: `${data.interactionAnalytics.totalAnswerChanges || 0} kez`,
-          description: 'Verilen cevapları tekrar değerlendirme eğilimi',
-          icon: '🔄'
-        },
-        {
-          title: 'Geri Dönüş',
-          value: `${data.interactionAnalytics.totalBackNavigations || 0} kez`,
-          description: 'Önceki sorulara geri dönme sıklığı',
-          icon: '⬅️'
-        },
-        {
-          title: 'Tamamlanma Oranı',
-          value: `${Math.round((data.interactionAnalytics.completedQuestions / data.interactionAnalytics.totalQuestions) * 100)}%`,
-          description: 'Test tamamlama başarısı',
-          icon: '✅'
-        }
-      ];
-      
-      analyticsData.forEach((item, index) => {
-        const cardY = yPosition + Math.floor(index / 2) * 50;
-        const cardX = margin + (index % 2) * (contentWidth / 2);
-        const cardWidth = (contentWidth / 2) - 5;
-        
-        // Card background
-        pdf.setFillColor(248, 250, 252);
-        pdf.rect(cardX, cardY, cardWidth, 40, 'F');
-        pdf.setDrawColor(226, 232, 240);
-        pdf.rect(cardX, cardY, cardWidth, 40);
-        
-        // Icon and title
-        pdf.setTextColor(30, 41, 59);
-        pdf.setFontSize(12);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(`${item.icon} ${item.title}`, cardX + 5, cardY + 10);
-        
-        // Value
-        pdf.setTextColor(59, 130, 246);
-        pdf.setFontSize(16);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(item.value, cardX + 5, cardY + 22);
-        
-        // Description
-        pdf.setTextColor(100, 116, 139);
-        pdf.setFontSize(8);
-        pdf.setFont('helvetica', 'normal');
-        const descLines = pdf.splitTextToSize(item.description, cardWidth - 10);
-        pdf.text(descLines, cardX + 5, cardY + 30);
-      });
-      
-      yPosition += 110;
-      
-      // Behavioral insights
-      pdf.setTextColor(30, 41, 59);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('DAVRANIŞ DESENLERİ', margin, yPosition);
-      yPosition += 15;
-      
-      const avgTime = Math.round(data.interactionAnalytics.averageResponseTime / 1000);
-      const insights = [];
-      
-      if (avgTime < 30) {
-        insights.push('• Hızlı karar verme: Sorulara çabuk yanıt verme eğilimi gösteriyor');
-      } else if (avgTime > 60) {
-        insights.push('• Düşünceli yaklaşım: Sorulara detaylı düşünerek yanıt veriyor');
-      } else {
-        insights.push('• Dengeli yaklaşım: Sorulara orta tempoda ve düşünerek yanıt veriyor');
-      }
-      
-      if ((data.interactionAnalytics.totalAnswerChanges || 0) > 5) {
-        insights.push('• Yüksek öz-değerlendirme: Cevaplarını sık sık gözden geçiriyor');
-      } else if ((data.interactionAnalytics.totalAnswerChanges || 0) < 2) {
-        insights.push('• Kararlı yaklaşım: İlk düşüncelerine güveniyor');
-      }
-      
-      if ((data.interactionAnalytics.totalBackNavigations || 0) > 3) {
-        insights.push('• Kapsamlı değerlendirme: Genel tutarlılığı kontrol etme eğilimi');
-      }
-      
-      insights.forEach(insight => {
-        pdf.setTextColor(71, 85, 105);
-        pdf.setFontSize(11);
-        pdf.setFont('helvetica', 'normal');
-        const lines = pdf.splitTextToSize(insight, contentWidth - 10);
-        pdf.text(lines, margin, yPosition);
-        yPosition += lines.length * 6 + 5;
-      });
-    }
-  }
-
-  /**
-   * Create AI recommendations section
-   */
-  private createAIRecommendationsSection(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
-    let yPosition = margin;
-    
-    // Page title
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('AI DESTEKLİ RAPOR', margin, yPosition);
-    yPosition += 15;
-    
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(100, 116, 139);
-    pdf.text('Yapay zeka destekli kişiselleştirilmiş analiz ve öneriler', margin, yPosition);
-    yPosition += 25;
-    
-    if (data.personalizedRecommendations?.recommendations) {
-      const aiRecommendations = data.personalizedRecommendations.recommendations
-        .filter(rec => rec.dimension === 'AI_REPORT');
-      
-      if (aiRecommendations.length > 0) {
-        const aiRec = aiRecommendations[0];
-        
-        // AI Analysis Header
-        pdf.setFillColor(99, 102, 241);
-        pdf.rect(margin, yPosition, contentWidth, 20, 'F');
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(14);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('🤖 YAPAY ZEKA ANALİZİ', margin + 10, yPosition + 12);
-        yPosition += 35;
-        
-        // Analysis content - First paragraph
-        if (aiRec.description) {
-          pdf.setFillColor(248, 250, 252);
-          pdf.rect(margin, yPosition, contentWidth, Math.min(60, aiRec.description.length / 3), 'F');
-          pdf.setDrawColor(226, 232, 240);
-          pdf.rect(margin, yPosition, contentWidth, Math.min(60, aiRec.description.length / 3));
-          
-          pdf.setTextColor(59, 130, 246);
-          pdf.setFontSize(12);
-          pdf.setFont('helvetica', 'bold');
-          pdf.text('YETKİNLİK ve CV UYUM DEĞERLENDİRMESİ', margin + 10, yPosition + 15);
-          
-          pdf.setTextColor(30, 41, 59);
-          pdf.setFontSize(10);
-          pdf.setFont('helvetica', 'normal');
-          const descLines = pdf.splitTextToSize(aiRec.description, contentWidth - 20);
-          pdf.text(descLines, margin + 10, yPosition + 25);
-          yPosition += Math.max(60, descLines.length * 4 + 35);
-        }
-        
-        yPosition += 10;
-        
-        // Analysis content - Second paragraph (reasoning)
-        if (aiRec.reasoning) {
-          pdf.setFillColor(240, 253, 244);
-          pdf.rect(margin, yPosition, contentWidth, Math.min(60, aiRec.reasoning.length / 3), 'F');
-          pdf.setDrawColor(16, 185, 129);
-          pdf.rect(margin, yPosition, contentWidth, Math.min(60, aiRec.reasoning.length / 3));
-          
-          pdf.setTextColor(16, 185, 129);
-          pdf.setFontSize(12);
-          pdf.setFont('helvetica', 'bold');
-          pdf.text('MÜLAKAT REHBERİ ve ÖNERİLER', margin + 10, yPosition + 15);
-          
-          pdf.setTextColor(30, 41, 59);
-          pdf.setFontSize(10);
-          pdf.setFont('helvetica', 'normal');
-          const reasonLines = pdf.splitTextToSize(aiRec.reasoning, contentWidth - 20);
-          pdf.text(reasonLines, margin + 10, yPosition + 25);
-          yPosition += Math.max(60, reasonLines.length * 4 + 35);
-        }
-        
-        // AI Transparency Info
-        yPosition += 15;
-        pdf.setFillColor(255, 251, 235);
-        pdf.rect(margin, yPosition, contentWidth, 30, 'F');
-        pdf.setDrawColor(245, 158, 11);
-        pdf.rect(margin, yPosition, contentWidth, 30);
-        
-        pdf.setTextColor(245, 158, 11);
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('📊 AI ŞEFFAFLIK BİLGİLERİ', margin + 10, yPosition + 12);
-        
-        pdf.setTextColor(120, 53, 15);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'normal');
-        const aiInfo = [
-          `Model: ${data.personalizedRecommendations.aiModel || 'AI Sistemi'}`,
-          `Güven Skoru: ${data.personalizedRecommendations.confidenceScore || 85}%`,
-          `Oluşturulma: ${new Date(data.personalizedRecommendations.generatedAt).toLocaleDateString('tr-TR')}`
-        ].join(' | ');
-        pdf.text(aiInfo, margin + 10, yPosition + 22);
-      }
-    }
-  }
-
-  /**
-   * Create development recommendations page
-   */
-  private createDevelopmentRecommendations(pdf: jsPDF, data: ExportData, margin: number, contentWidth: number): void {
-    let yPosition = margin;
-    
-    // Page title
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('GELİŞİM ÖNERİLERİ', margin, yPosition);
-    yPosition += 15;
-    
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(100, 116, 139);
-    pdf.text('Kişiselleştirilmiş gelişim planı ve eylem önerileri', margin, yPosition);
-    yPosition += 25;
-    
-    // Basic recommendations from scores
-    if (data.recommendations && data.recommendations.length > 0) {
-      pdf.setTextColor(30, 41, 59);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('TEMEL GELİŞİM ÖNERİLERİ', margin, yPosition);
-      yPosition += 15;
-      
-      data.recommendations.forEach((recommendation, index) => {
-        // Recommendation card
-        pdf.setFillColor(248, 250, 252);
-        pdf.rect(margin, yPosition, contentWidth, 25, 'F');
-        pdf.setDrawColor(226, 232, 240);
-        pdf.rect(margin, yPosition, contentWidth, 25);
-        
-        // Bullet number
-        pdf.setFillColor(59, 130, 246);
-        pdf.circle(margin + 15, yPosition + 12, 8, 'F');
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(`${index + 1}`, margin + 15, yPosition + 15, { align: 'center' });
-        
-        // Recommendation text
-        pdf.setTextColor(30, 41, 59);
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'normal');
-        const lines = pdf.splitTextToSize(recommendation, contentWidth - 40);
-        pdf.text(lines, margin + 30, yPosition + 8);
-        
-        yPosition += 30;
-        
-        // Check for new page
-        if (yPosition > 250 && index < (data.recommendations?.length || 0) - 1) {
-          pdf.addPage();
-          yPosition = margin;
-        }
-      });
-    }
-    
-    // General development guidelines
-    yPosition += 15;
-    pdf.setTextColor(30, 41, 59);
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('GENEL GELİŞİM REHBERİ', margin, yPosition);
-    yPosition += 15;
-    
-    const generalGuidelines = [
-      'Düzenli öz-değerlendirme yapın ve gelişim alanlarınızı takip edin',
-      'Mentorluk programlarına katılım sağlayın',
-      'Liderlik ile ilgili kitaplar okuyun ve güncel kalın',
-      'Farklı departmanlarla işbirliği fırsatları yaratın',
-      'Geri bildirim alma ve verme becerilerinizi geliştirin',
-      'Hedef belirleme ve takip sistemleri kullanın'
+    const actionItems = [
+      'İlk 30 gün: Gelişim alanlarınızı detaylı olarak analiz edin',
+      '30-90 gün: Hedeflenen yetkinlikler için özel eğitim programlarına katılın',
+      '90+ gün: Öğrendiklerinizi pratik projelerle uygulayın ve geri bildirim alın'
     ];
     
-    generalGuidelines.forEach((guideline, index) => {
-      pdf.setTextColor(16, 185, 129);
-      pdf.setFontSize(12);
-      pdf.text('▶', margin, yPosition);
-      
-      pdf.setTextColor(71, 85, 105);
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'normal');
-      const lines = pdf.splitTextToSize(guideline, contentWidth - 15);
-      pdf.text(lines, margin + 10, yPosition);
-      yPosition += lines.length * 5 + 8;
+    actionItems.forEach(item => {
+      this.applyTypography('body', this.colors.text.secondary);
+      this.currentY = this.renderText(
+        `• ${item}`,
+        this.margins.left + 10,
+        this.currentY,
+        { maxWidth: this.contentWidth - 20 }
+      );
+      this.currentY += this.spacing.xs;
     });
+  }
+
+  /**
+   * Add page numbers to all pages
+   */
+  private addPageNumbers(): void {
+    const totalPages = this.pdf.getNumberOfPages();
     
-    // Footer disclaimer
-    yPosition += 20;
-    pdf.setFillColor(254, 243, 199);
-    pdf.rect(margin, yPosition, contentWidth, 25, 'F');
-    pdf.setDrawColor(245, 158, 11);
-    pdf.rect(margin, yPosition, contentWidth, 25);
-    
-    pdf.setTextColor(120, 53, 15);
-    pdf.setFontSize(9);
-    pdf.setFont('helvetica', 'italic');
-    const disclaimer = 'Bu öneriler AI destekli analiz sonuçlarına dayanmaktadır. Kişisel gelişim planınızı oluştururken profesyonel destek almanızı ve organizasyonel hedeflerinizi göz önünde bulundurmanızı öneririz.';
-    const disclaimerLines = pdf.splitTextToSize(disclaimer, contentWidth - 20);
-    pdf.text(disclaimerLines, margin + 10, yPosition + 8);
+    for (let i = 1; i <= totalPages; i++) {
+      this.pdf.setPage(i);
+      this.applyTypography('caption', this.colors.text.muted);
+      this.renderText(
+        `Sayfa ${i} / ${totalPages}`,
+        this.pageWidth - this.margins.right,
+        this.pageHeight - 10,
+        { align: 'right' }
+      );
+    }
+  }
+
+  /**
+   * Generate filename
+   */
+  private generateFileName(data: ExportData): string {
+    const date = new Date().toISOString().split('T')[0];
+    const firstName = this.convertToASCII(data.user.firstName);
+    const lastName = this.convertToASCII(data.user.lastName);
+    return `${firstName}_${lastName}_Liderlik_Raporu_${date}.pdf`;
   }
 } 

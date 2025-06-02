@@ -231,7 +231,7 @@ KURALLAR:
       priority: 'high',
       actionItems: ['Mülakat planlaması', 'Değerlendirme kriterlerini belirleme', 'Karar verme süreci'],
       resources: [{
-        type: 'assessment',
+        type: 'case-study',
         title: 'AI Değerlendirme Raporu',
         description: 'Komple aday analizi ve öneriler'
       }],
@@ -274,9 +274,9 @@ KURALLAR:
       priority: 'high',
       actionItems: ['Mülakat planlaması', 'Değerlendirme kriterlerini belirleme'],
       resources: [{
-        type: 'assessment',
-        title: 'Yetkinlik Değerlendirme Raporu',
-        description: 'Temel aday analizi ve öneriler'
+        type: 'case-study',
+        title: 'AI Değerlendirme Raporu',
+        description: 'Komple aday analizi ve öneriler'
       }],
       timeline: 'İşe alım süreci',
       expectedOutcome: 'Objektif aday değerlendirmesi'
@@ -311,7 +311,7 @@ KURALLAR:
   /**
    * Create HR recommendations from text when JSON parsing fails
    */
-  private createHRRecommendationsFromText(text: string, scores: DimensionScore[]): RecommendationItem[] {
+  private createHRRecommendationsFromText(_text: string, scores: DimensionScore[]): RecommendationItem[] {
     return scores.map(score => {
       const percentage = (score.score / score.maxScore) * 100;
       const dimensionName = this.getDimensionName(score.dimension);

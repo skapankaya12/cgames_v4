@@ -122,7 +122,11 @@ const ResultsScreen = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
   const [interactionAnalytics, setInteractionAnalytics] = useState<SessionAnalytics | null>(null);
-  const [currentFilter, setCurrentFilter] = useState<FilterType>('feedback');
+  const [currentFilter, setCurrentFilter] = useState<FilterType>(() => {
+    // Try to get the saved filter from session storage, default to 'öneriler' if not found
+    const savedFilter = sessionStorage.getItem('selectedFilter');
+    return (savedFilter as FilterType) || 'öneriler';
+  });
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackRatings, setFeedbackRatings] = useState({
@@ -171,6 +175,11 @@ const ResultsScreen = () => {
     }
     return `${remainingSeconds}sn`;
   };
+
+  // Add effect to save filter selection to session storage
+  useEffect(() => {
+    sessionStorage.setItem('selectedFilter', currentFilter);
+  }, [currentFilter]);
 
   useEffect(() => {
     // Competency descriptions

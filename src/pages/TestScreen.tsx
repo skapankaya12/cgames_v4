@@ -225,12 +225,6 @@ const TestScreen = () => {
     }
 
     if (testState.currentQuestion === questions.length - 1) {
-      // Set completed state before navigating
-      setTestState(prev => ({
-        ...prev,
-        isComplete: true
-      }));
-      
       // Save answers to session storage
       sessionStorage.setItem('answers', JSON.stringify(testState.answers));
       
@@ -242,10 +236,8 @@ const TestScreen = () => {
         trackerRef.current.flushEvents();
       }
       
-      // Add a small delay to allow the user to see the completion message
-      setTimeout(() => {
-        navigate('/ending');
-      }, 1000);
+      // Navigate immediately without showing completion state
+      navigate('/ending');
     } else {
       setTestState(prev => ({
         ...prev,
