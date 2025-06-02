@@ -1172,9 +1172,10 @@ const ResultsScreen = () => {
     }
 
     // If AI recommendations are not available yet and we have scores, trigger generation
-    if (scores.length > 0 && user && answers && !isLoadingRecommendations && !personalizedRecommendations) {
+    if (scores.length > 0 && user && !isLoadingRecommendations && !personalizedRecommendations) {
       // Auto-trigger AI recommendations generation
       setTimeout(() => {
+        console.log('🚀 Auto-triggering AI recommendations generation...');
         generatePersonalizedRecommendations();
       }, 100);
       
@@ -1185,6 +1186,59 @@ const ResultsScreen = () => {
             <div className="loading-spinner"></div>
             <p>AI Aday Değerlendirme Raporu hazırlanıyor...</p>
             <small>Yetkinlik skorları analiz ediliyor...</small>
+          </div>
+        </div>
+      );
+    }
+
+    // Manual trigger button if auto-trigger failed
+    if (scores.length > 0 && user && !isLoadingRecommendations && !personalizedRecommendations) {
+      return (
+        <div className="recommendations-section">
+          <h3>AI Destekli Aday Değerlendirmesi</h3>
+          <div style={{ 
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '16px',
+            padding: '32px',
+            textAlign: 'center',
+            color: 'white',
+            marginBottom: '24px'
+          }}>
+            <h4 style={{ margin: '0 0 16px 0', fontSize: '20px' }}>
+              🤖 Yapay Zeka Analizi
+            </h4>
+            <p style={{ margin: '0 0 24px 0', fontSize: '16px', opacity: '0.9' }}>
+              CV analizi, test skorları ve davranış verilerini birleştiren kapsamlı değerlendirme
+            </p>
+            <button
+              onClick={() => {
+                console.log('🚀 Manual trigger clicked');
+                generatePersonalizedRecommendations();
+              }}
+              disabled={isLoadingRecommendations}
+              style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '12px',
+                padding: '12px 24px',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'translateY(0px)';
+              }}
+            >
+              🚀 AI Analiz Raporu Oluştur
+            </button>
           </div>
         </div>
       );

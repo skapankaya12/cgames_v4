@@ -59,20 +59,15 @@ src/
 
 # Environment Setup
 
-This project requires API keys for OpenAI and Google AI services. To set up your environment:
+To run this project, you need to set up your environment variables:
 
-1. Create a `.env` file in the root directory
-2. Add the following environment variables:
-```env
-# OpenAI API Key for GPT-3.5 integration
+1. Create a `.env` file in the project root
+2. Add your OpenAI API key:
+```
 VITE_OPENAI_API_KEY=your_openai_api_key_here
-
-# Google AI API Key for Gemini integration
-VITE_GOOGLE_AI_API_KEY=your_google_ai_api_key_here
 ```
 
-3. Replace the placeholder values with your actual API keys
-4. Never commit the `.env` file to version control
+⚠️ IMPORTANT: Never commit your actual API key to the repository. The `.env` file is ignored by git for security.
 
 ## Security Notes
 

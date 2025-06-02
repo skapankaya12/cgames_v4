@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import type { DimensionScore } from '../types/Recommendations';
 import type { CVData } from './CVTextExtractionService';
 
@@ -22,8 +22,7 @@ export interface ConversationContext {
 }
 
 export class ConversationalAIService {
-  private genAI: GoogleGenerativeAI;
-  private model: any;
+  private openai: OpenAI;
 
   // Dimension mapping for better context
   private dimensionMapping = {
@@ -38,17 +37,19 @@ export class ConversationalAIService {
   };
 
   constructor() {
-    const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
     
     if (!apiKey) {
-      console.error('❌ Google AI API key not found in environment variables');
-      throw new Error('Google AI API key not configured. Please set VITE_GOOGLE_AI_API_KEY in your .env file');
+      console.error('❌ OpenAI API key not found in environment variables');
+      throw new Error('OpenAI API key not configured. Please set VITE_OPENAI_API_KEY in your .env file');
     }
 
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    this.openai = new OpenAI({
+      apiKey: apiKey,
+      dangerouslyAllowBrowser: true // Note: In production, this should be handled server-side
+    });
     
-    console.log('🤖 Conversational AI Service initialized successfully');
+    console.log('🤖 Conversational AI Service initialized successfully with OpenAI');
   }
 
   /**
@@ -64,9 +65,23 @@ export class ConversationalAIService {
       
       const contextPrompt = this.buildContextualPrompt(userPrompt, context, conversationHistory);
       
-      const result = await this.model.generateContent(contextPrompt);
-      const response = await result.response;
-      const text = response.text();
+      const completion = await this.openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "Sen profesyonel bir İK uzmanı asistanısın. Aday değerlendirmeleri yaparak İK uzmanlarına yardımcı oluyorsun. Türkçe yanıt ver ve profesyonel bir ton kullan."
+          },
+          {
+            role: "user",
+            content: contextPrompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      });
+
+      const text = completion.choices[0]?.message?.content || 'Yanıt alınamadı.';
       
       console.log('✅ AI response generated successfully');
       return text.trim();

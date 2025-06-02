@@ -26,8 +26,15 @@ export class OpenAIService {
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
     
     if (!apiKey) {
-      console.error('❌ OpenAI API key not found in environment variables');
-      throw new Error('OpenAI API key not configured');
+      console.warn('⚠️ OpenAI API key not found in environment variables');
+      console.log('💡 To enable AI recommendations, add VITE_OPENAI_API_KEY to your .env file');
+      console.log('💡 The system will use fallback recommendations instead');
+      // Don't throw error, just log warning and let it fallback
+      this.openai = new OpenAI({
+        apiKey: 'dummy-key', // Dummy key for initialization
+        dangerouslyAllowBrowser: true
+      });
+      return;
     }
 
     this.openai = new OpenAI({
@@ -50,6 +57,13 @@ export class OpenAIService {
     try {
       console.log('🚀 Generating AI-powered recommendations with OpenAI GPT-3.5-turbo...');
       
+      // Check if we have a valid API key
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+      if (!apiKey || apiKey === 'dummy-key') {
+        console.warn('⚠️ No valid OpenAI API key found, falling back to simulated recommendations');
+        return this.generateFallbackRecommendations(scores, sessionId, userInfo);
+      }
+      
       // Enhance scores with display names
       const enhancedScores = this.enhanceScoresWithDisplayNames(scores);
       
@@ -60,7 +74,7 @@ export class OpenAIService {
         messages: [
           {
             role: "system",
-            content: "Sen profesyonel bir İK uzmanısın. Aday değerlendirmeleri yaparak detaylı raporlar hazırlıyorsun. Türkçe yanıt ver ve JSON formatında çıktı üret."
+            content: "Sen profesyonel bir İK uzmanısın. Aday değerlendirmeleri yaparak detaylı raporlar hazırlıyorsun. Türkçe yanıt ver ve profesyonel bir dil kullan."
           },
           {
             role: "user",
@@ -74,6 +88,7 @@ export class OpenAIService {
       const text = completion.choices[0]?.message?.content || '';
       
       console.log('✅ OpenAI response received');
+      console.log('📝 AI Response preview:', text.substring(0, 200) + '...');
       
       const parsedRecommendations = this.parseAIResponse(text, enhancedScores);
       
@@ -96,6 +111,7 @@ export class OpenAIService {
       
     } catch (error) {
       console.error('❌ OpenAI Service error:', error);
+      console.log('🔄 Falling back to simulated recommendations...');
       // Fallback to simulated recommendations
       return this.generateFallbackRecommendations(scores, sessionId, userInfo);
     }
@@ -139,7 +155,9 @@ export class OpenAIService {
 - Gelişim Alanları: ${cvData.hrInsights.concerns.slice(0, 3).join(', ')}`;
     }
 
-    return `Sen profesyonel bir İK uzmanısın. ${candidateName} adlı aday için SADECE İKİ PARAGRAF halinde değerlendirme raporu oluştur.
+    return `Sen profesyonel bir İK uzmanısın. Aday değerlendirmeleri yaparak detaylı raporlar hazırlıyorsun. Türkçe yanıt ver ve profesyonel bir dil kullan.
+
+${candidateName} adlı aday için SADECE İKİ PARAGRAF halinde değerlendirme raporu oluştur.
 
 ADAY YETKİNLİK SKORLARI:
 ${scoresText}${cvContext}
@@ -157,7 +175,7 @@ TALEP EDİLEN FORMAT - SADECE BU İKİ PARAGRAFI YAZ:
    - Zayıflık ve güçlü yönleri değerlendirme ipuçları
    - Pozisyon uygunluğu değerlendirmesi
    - ${cvData ? 'Adaya gönderilebilecek vaka çalışması önerileri' : 'Değerlendirme önerileri'}
-   - Tüm verilerin ejecutif özeti ve nihai karar için öneriler
+   - Tüm verilerin yönetici özeti ve nihai karar için öneriler
 
 KURALLAR:
 - SADECE bu iki paragrafı yaz, başka hiçbir şey ekleme
@@ -166,7 +184,8 @@ KURALLAR:
 - ${candidateName} için özelleştirilmiş olmalı
 - JSON formatı kullanma, düz metin paragraflar olarak yaz
 - Paragraf numaraları kullanma, doğrudan paragraf içeriklerini yaz
-- Başlık ekleme, sadece paragrafları yaz`;
+- Başlık ekleme, sadece paragrafları yaz
+- İki paragraf arasında boş satır bırak`;
   }
 
   /**
@@ -222,7 +241,7 @@ KURALLAR:
   }
 
   /**
-   * Generate fallback two paragraphs if AI response is insufficient
+   * Generate fallback two paragraphs if OpenAI response is insufficient
    */
   private createFallbackTwoParagraphs(scores: DimensionScore[]): RecommendationItem[] {
     const averageScore = scores.reduce((sum, score) => sum + (score.score / score.maxScore), 0) / scores.length * 100;
@@ -448,21 +467,34 @@ KURALLAR:
   }
 
   /**
-   * Generate fallback recommendations when AI fails
+   * Generate fallback recommendations when OpenAI fails
    */
   private generateFallbackRecommendations(
     scores: DimensionScore[], 
     sessionId: string,
     userInfo?: { firstName: string; lastName: string }
   ): PersonalizedRecommendations {
-    console.log('🔄 Using fallback recommendations');
+    console.log('🔄 Using fallback recommendations with AI report format');
+    
+    // Create the two-paragraph AI report using fallback logic
+    const fallbackAIReport = this.createFallbackTwoParagraphs(scores);
+    
+    // Combine AI report with other recommendations
+    const allRecommendations = [
+      ...fallbackAIReport, // The AI report should be first
+      ...this.createHRFallbackRecommendationsArray(scores).slice(0, 3) // Limit other recommendations
+    ];
     
     return {
       sessionId,
       userId: userInfo ? `${userInfo.firstName}_${userInfo.lastName}` : undefined,
-      recommendations: this.createHRFallbackRecommendationsArray(scores),
+      recommendations: allRecommendations,
       generatedAt: new Date().toISOString(),
-      overallInsight: this.generateOverallInsight(scores, userInfo?.firstName)
+      overallInsight: this.generateOverallInsight(scores, userInfo?.firstName),
+      aiModel: 'Fallback Simulated AI',
+      dataUsed: ['Yetkinlik Skorları', 'Davranışsal Analiz', 'Simulated AI Raporu'],
+      confidenceScore: 75, // Lower confidence for fallback
+      cvIntegrated: false
     };
   }
 } 
