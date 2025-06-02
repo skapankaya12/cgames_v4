@@ -305,22 +305,10 @@
   padding: 20px 25px;
 }
 
-/* Specific adjustments for questions with longer text that cause narration to touch options */
-/* Questions 3, 6, 9, 11, 13, 14, 16 need extra spacing */
-.dialog-narration[data-question-id="3"],
-.dialog-narration[data-question-id="6"],
-.dialog-narration[data-question-id="9"],
-.dialog-narration[data-question-id="11"],
-.dialog-narration[data-question-id="13"],
-.dialog-narration[data-question-id="14"],
-.dialog-narration[data-question-id="16"] {
-  bottom: 220px; /* Increased from 180px for better spacing */
-}
-
 /* Narration Dialog - Bottom positioned above options */
 .dialog-narration {
   position: fixed;
-  bottom: 180px; /* Increased from 140px for better spacing */
+  bottom: 260px; /* Increased from 180px for better spacing */
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
@@ -350,7 +338,7 @@
 .dialog-narration p {
   color: #ffffff;
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.8; /* Increased from 1.7 for better readability */
   margin: 0;
   text-align: center;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
@@ -362,6 +350,18 @@
   to { opacity: 1; }
 }
 
+/* Specific adjustments for questions with longer text that cause narration to touch options */
+/* Questions 3, 6, 9, 11, 13, 14, 16 need extra spacing */
+.dialog-narration[data-question-id="3"],
+.dialog-narration[data-question-id="6"],
+.dialog-narration[data-question-id="9"],
+.dialog-narration[data-question-id="11"],
+.dialog-narration[data-question-id="13"],
+.dialog-narration[data-question-id="14"],
+.dialog-narration[data-question-id="16"] {
+  bottom: 290px; /* Increased from 220px for questions with more text */
+}
+
 /* Options Dialog - Bottom positioned with proper spacing from narration */
 .dialog-options {
   position: fixed;
@@ -369,7 +369,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
-  max-width: 900px;
+  max-width: 1200px;
   z-index: 20;
   pointer-events: auto;
 }
@@ -386,7 +386,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 15px;
+  gap: 18px; /* Increased from 15px for better spacing between options */
   margin-bottom: 15px;
 }
 
@@ -395,11 +395,11 @@
   background: linear-gradient(135deg, rgba(0, 20, 60, 0.9), rgba(0, 40, 100, 0.9));
   border: 2px solid #00bfff;
   clip-path: polygon(10px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
-  padding: 5px 52px;
+  padding: 15px 20px; /* Increased padding for better text spacing */
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(15px);
-  min-height: 5px;
+  min-height: 60px; /* Increased from 5px for better proportions */
   display: flex;
   align-items: center;
 }
@@ -431,7 +431,7 @@
   gap: 15px;
   color: #ffffff;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5; /* Increased from 1.4 for better readability */
   cursor: pointer;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
   width: 100%;
@@ -448,7 +448,8 @@
 
 .option-text {
   flex: 1;
-  font-weight: 300;
+  font-weight: 700;
+  line-height: 1.4; /* Better line height for option text */
 }
 
 .radio-option.disabled {
@@ -641,7 +642,7 @@
   }
   
   .dialog-narration {
-    bottom: 280px;
+    bottom: 320px; /* Increased from 280px for better tablet spacing */
     width: 98%;
     max-width: 800px;
   }
@@ -654,33 +655,34 @@
   .dialog-narration[data-question-id="13"],
   .dialog-narration[data-question-id="14"],
   .dialog-narration[data-question-id="16"] {
-    bottom: 320px; /* Extra spacing for tablet */
+    bottom: 370px; /* Increased from 320px for extra spacing on tablet */
   }
   
   .narration-box {
-    padding: 20px 30px;
-    min-height: 70px;
+    padding: 22px 32px; /* Increased padding for tablet */
+    min-height: 80px; /* Increased min-height for tablet */
   }
   
   .dialog-options {
-    bottom: 50px; /* Increased from 30px to prevent footer overlap */
+    bottom: 60px; /* Increased from 50px to prevent footer overlap */
     transform: translateX(-50%);
     width: 95%;
     max-width: 700px;
   }
   
   .radio-group {
-    gap: 12px;
+    gap: 15px; /* Increased from 12px */
   }
   
   .radio-option {
-    padding: 15px 20px;
-    min-height: 65px;
+    padding: 18px 22px; /* Increased from 15px 20px */
+    min-height: 70px; /* Increased from 65px */
   }
   
   .radio-option label {
     font-size: 13px;
     gap: 12px;
+    line-height: 1.5; /* Better line height for tablet */
   }
   
   .option-label {
@@ -752,7 +754,7 @@
   }
   
   .dialog-narration {
-    bottom: 240px; /* Increased from 200px */
+    bottom: 280px; /* Increased from 240px for better mobile spacing */
     width: 99%;
     max-width: 700px;
   }
@@ -765,17 +767,17 @@
   .dialog-narration[data-question-id="13"],
   .dialog-narration[data-question-id="14"],
   .dialog-narration[data-question-id="16"] {
-    bottom: 280px; /* Extra spacing for mobile */
+    bottom: 330px; /* Increased from 280px for extra spacing on mobile */
   }
   
   .narration-box {
-    padding: 18px 25px;
+    padding: 20px 28px; /* Increased from 18px 25px */
     clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
-    min-height: 60px;
+    min-height: 70px; /* Increased from 60px */
   }
   
   .dialog-options {
-    bottom: 45px; /* Increased from 25px to prevent footer overlap */
+    bottom: 55px; /* Increased from 45px to prevent footer overlap */
     transform: translateX(-50%);
     width: 98%;
     max-width: 600px;
@@ -784,18 +786,19 @@
   .radio-group {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, 1fr);
-    gap: 10px;
+    gap: 12px; /* Increased from 10px */
   }
   
   .radio-option {
-    padding: 12px 18px;
-    min-height: 55px;
+    padding: 15px 20px; /* Increased from 12px 18px */
+    min-height: 65px; /* Increased from 55px */
     clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
   }
   
   .radio-option label {
     font-size: 12px;
     gap: 10px;
+    line-height: 1.5; /* Better line height for mobile */
   }
   
   .option-label {
@@ -805,6 +808,11 @@
   
   .dialog-narration p {
     font-size: 14px;
+    line-height: 1.7; /* Improved line height for mobile */
+  }
+  
+  .option-text {
+    line-height: 1.4; /* Better line height for mobile option text */
   }
   
   .dialog-completion {

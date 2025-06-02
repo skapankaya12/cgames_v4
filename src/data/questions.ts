@@ -23,28 +23,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Parayı hemen öde.",
+        text: "Parayı anında eksiksiz masaya koyuyorum; itiraz beklemeden kargoyu hemen teslim alalım.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 1, "ST": 2, "TO": 5, "RL": 4, "RI": 1
         }
       },
       {
         id: "B",
-        text: "\"Teslim sonrası ödeyeyim\" diye teklif yap.",
+        text: "Teslimatı elden yapar yapmaz 8.000 Zenix'i derhal gönderirim; kargoyu hemen elden al.",
         weights: {
           "DM": 3, "IN": 5, "AD": 3, "CM": 2, "ST": 4, "TO": 4, "RL": 3, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Sahte onay belgesi göster.",
+        text: "Sahte onay belgesi çıkarıp 'Kargo ücretsiz gönderiliyor' deyip belgeyi göstererek muhatabı ikna et.",
         weights: {
           "DM": 4, "IN": 3, "AD": 3, "CM": 1, "ST": 3, "TO": 2, "RL": 1, "RI": 5
         }
       },
       {
         id: "D",
-        text: "\"1 saat ver, başka bir çözüm bakacağım.\"",
+        text: "Bana bir saat süre ver; alternatif bir çözüm bulup geri dönüp kargoyu teslim edeceğim.",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 2, "ST": 5, "TO": 1, "RL": 3, "RI": 2
         }
@@ -58,28 +58,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Özel geçiş için para öde.",
+        text: "Hemen cüzdana uzanıp özel geçiş ücreti öde, kalabalığı atla.",
         weights: {
           "DM": 4, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 5, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Kaçakçının tünelini kullan.",
+        text: "Kaçakçının gizli tüneline gir, kalabalığın altından ilerle.",
         weights: {
           "DM": 3, "IN": 4, "AD": 5, "CM": 1, "ST": 2, "TO": 2, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Gece çıkışı bekle.",
+        text: "Kalabalığın dağılmasını bekle; gece çıkışını kullan.",
         weights: {
           "DM": 2, "IN": 1, "AD": 2, "CM": 2, "ST": 4, "TO": 1, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Motor sistemini ayarla, sonra çık.",
+        text: "Motoru hızlıca yeniden ayarla, sistem çalışınca çıkış yap.",
         weights: {
           "DM": 3, "IN": 1, "AD": 3, "CM": 0, "ST": 5, "TO": 1, "RL": 5, "RI": 1
         }
@@ -93,28 +93,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Teklifi kabul et, yükü onlara teslim et.",
+        text: "Teklifi hiçbir pazarlık yapmadan derhal kabul edip, enerji çekirdeğini hemen rakiplere veriyorum.",
         weights: {
           "DM": 5, "IN": 2, "AD": 1, "CM": 1, "ST": 3, "TO": 4, "RL": 1, "RI": 5
         }
       },
       {
         id: "B",
-        text: "Ortaklık öner, %50 kâr paylaşımı teklif et.",
+        text: "Gelin bu işten eşit kazanalım: %50 kârı paylaşalım\" diyerek ortaklık teklifi sunuyorum.",
         weights: {
           "DM": 3, "IN": 5, "AD": 3, "CM": 3, "ST": 4, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "C",
-        text: "\"Zamana ihtiyacım var\" diyerek oyalamaya çalış.",
+        text: "\"Hemen yanıt veremem, zamana ihtiyacım var\" diyerek duraklatıp vakit kazanmaya çalışıyorum.",
         weights: {
           "DM": 3, "IN": 3, "AD": 3, "CM": 2, "ST": 3, "TO": 2, "RL": 1, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Teklifi reddet, göreve devam et.",
+        text: "Bu teklifi kesinlikle reddedip, misyonu aksatmadan doğrudan hedefime devam ediyorum.",
         weights: {
           "DM": 4, "IN": 1, "AD": 2, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
@@ -128,28 +128,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Evrak + 500 Zenix rüşvet ver.",
+        text: "Evrakları hazırlayıp +500 Zenix rüşvet öde; geçişi hemen hızlandır.",
         weights: {
           "DM": 3, "IN": 2, "AD": 1, "CM": 2, "ST": 4, "TO": 4, "RL": 4, "RI": 3
         }
       },
       {
         id: "B",
-        text: "Komutanı çaya davet et, yumuşat.",
+        text: "Komutanı yemeğe davet et, gönlünü alarak iznini sağla.",
         weights: {
           "DM": 2, "IN": 5, "AD": 3, "CM": 3, "ST": 3, "TO": 1, "RL": 3, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Kargoyu sakla, aramasına izin ver.",
+        text: "Kargoyu gizlice sakla, aramaya izin ver; sonra rahatça ilerle.",
         weights: {
           "DM": 4, "IN": 2, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 2, "RI": 5
         }
       },
       {
         id: "D",
-        text: "Motorları aç, doğrudan kaç.",
+        text: "Motorları çalıştır, fırsat doğar doğmaz doğrudan kaç.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
@@ -163,28 +163,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Navigasyon sistemine güven.",
+        text: "Navigasyon sistemine tam güven; standart rotayı hiç tereddüt etmeden takip et.",
         weights: {
           "DM": 4, "IN": 2, "AD": 2, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Kestirme rotayı dene, içgüdüyle git.",
+        text: "Haritayı bir kenara bırak, içgüdüyü dinle ve kestirme rotaya doğru sür.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Ekibe sor, çoğunluğa uy.",
+        text: "Hemen ekibi topla, çoğunluğun kararına göre rotayı belirle.",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 4, "ST": 3, "TO": 2, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "1 saat dur, gözlem yap ve sonra karar ver.",
+        text: "Bir saat boyunca dur, gözlemler yap; sonra en sağlıklı rotayı seç.",
         weights: {
           "DM": 3, "IN": 1, "AD": 4, "CM": 1, "ST": 5, "TO": 1, "RL": 3, "RI": 2
         }
@@ -198,28 +198,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Anteni kes, gövdeyi koru.",
+        text: "Anteni derhal kopar, tüm enerjiyi gövde zırhına aktar; yaklaşan alev topunun etkisini en aza indir.",
         weights: {
           "DM": 4, "IN": 0, "AD": 2, "CM": 0, "ST": 2, "TO": 4, "RL": 3, "RI": 5
         }
       },
       {
         id: "B",
-        text: "Kalkanlara güç ver, motor ısınsın.",
+        text: "Kalkan jeneratörlerini maksimuma çek, motoru hızla ısıtarak savunmayı ve manevrayı güçlendir.",
         weights: {
           "DM": 3, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Mühendise bırak, yaratıcı çözüm uygulasın.",
+        text: "Hemen mühendisi çağır, sıra dışı bir savunma modülü tasarlayıp uygulayın; meteorun yönünü saptırın.",
         weights: {
           "DM": 3, "IN": 2, "AD": 4, "CM": 2, "ST": 4, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Hiçbir şey yapma, devam et.",
+        text: "Hiçbir aksiyon alma; rota sabit kalıp panik yapmadan yoluna devam et, hasarı doğrudan kabullen.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 5, "RL": 1, "RI": 5
         }
@@ -233,28 +233,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Hemen teknik bilgileri gönder.",
+        text: "Hemen tüm teknik kimlik verilerini gönderip kimliğimi kanıtlıyorum.",
         weights: {
           "DM": 4, "IN": 4, "AD": 1, "CM": 1, "ST": 5, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Görevin önemini hikâyeleştir.",
+        text: "Bu görevin evrenin dengesini koruduğunu anlatarak ikna edici bir hikâye başlatıyorum.",
         weights: {
           "DM": 2, "IN": 4, "AD": 3, "CM": 5, "ST": 2, "TO": 3, "RL": 4, "RI": 1
         }
       },
       {
         id: "C",
-        text: "Diplomatik konuş, ikna etmeye çalış.",
+        text: "Diplomatik üslupla konuşup, karşı tarafı ikna ederek kimliğimi onaylatmaya çalışıyorum.",
         weights: {
           "DM": 3, "IN": 2, "AD": 4, "CM": 4, "ST": 3, "TO": 1, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Sessiz kal, hızla geç.",
+        text: "Hiçbir şey demeden sessizce ortamdan geçip kimlik kontrolünü atlatmaya çalışıyorum.",
         weights: {
           "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 4, "TO": 5, "RL": 2, "RI": 5
         }
@@ -268,28 +268,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "2.000 Zenix öde, geç.",
+        text: "2.000 Zenix'i masaya koy, anında geçişi sağla.",
         weights: {
           "DM": 4, "IN": 3, "AD": 2, "CM": 2, "ST": 3, "TO": 5, "RL": 2, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Ekibini sahte rehin olarak sun.",
+        text: "Ekibini rehinmiş gibi gösterip korsanları yanılt, fırsatta kaç.",
         weights: {
           "DM": 3, "IN": 4, "AD": 4, "CM": 3, "ST": 2, "TO": 3, "RL": 2, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Federasyon rozetini göster, blöf yap.",
+        text: "Federasyon rozeti tak, 'resmi görevlileriz' diye blöf yap ve uzaklaş.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 3, "TO": 3, "RL": 3, "RI": 4
         }
       },
       {
         id: "D",
-        text: "Topları ateşle, çatışmaya gir.",
+        text: "Topları ateşle, aktif çatışmaya gir ve korsanları sindir.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 4, "TO": 2, "RL": 1, "RI": 5
         }
@@ -303,28 +303,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Ekonomik faydayı vurgula.",
+        text: "Bu teslimat tamamen ekonomik fayda için; yatırımınıza maksimum getiriyi sağlamak istiyoruz.",
         weights: {
           "DM": 3, "IN": 3, "AD": 2, "CM": 3, "ST": 3, "TO": 4, "RL": 5, "RI": 1
         }
       },
       {
         id: "B",
-        text: "Enerjinin insanlara katkısını anlat.",
+        text: "Amacımız, enerji çekirdeğiyle insanlığın yaşam kalitesini en üst düzeye çıkarmak.",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 5, "ST": 2, "TO": 3, "RL": 5, "RI": 1
         }
       },
       {
         id: "C",
-        text: "\"Bu teslimat gerekli, başka seçeneğiniz yok.\"",
+        text: "Bu teslimat zorunlu ve yegâne seçenek; başka bir yolunuz yok.",
         weights: {
           "DM": 5, "IN": 1, "AD": 1, "CM": 2, "ST": 5, "TO": 5, "RL": 2, "RI": 3
         }
       },
       {
         id: "D",
-        text: "\"Detaya gerek yok, teslim edeceğim.\"",
+        text: "Detaya gerek duymuyoruz; teslimatı eksiksiz ve zamanında yapmakla meşgulüz.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 1, "ST": 4, "TO": 5, "RL": 3, "RI": 2
         }
@@ -338,28 +338,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Yardım teklif et.",
+        text: "Acil yardım önerisi yaparak ekibe destek ve kaynak sağlayıp süreci hızlandır.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 4, "ST": 2, "TO": 3, "RL": 5, "RI": 2
         }
       },
       {
         id: "B",
-        text: "\"Zamanım yok, müdahale etmeyin\" de.",
+        text: "Zamanım kısıtlı, müdahaleye gerek yok; mevcut planı sekteye uğratmadan devam et.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 1, "ST": 3, "TO": 5, "RL": 2, "RI": 3
         }
       },
       {
         id: "C",
-        text: "Sistemi analiz etmek için 10 dakika iste.",
+        text: "Sistemi derinlemesine incelemek için 10 dakika iste; sorunları bu sürede çözeceğim.",
         weights: {
           "DM": 2, "IN": 3, "AD": 3, "CM": 2, "ST": 5, "TO": 2, "RL": 3, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Terminal ekibini ikna et, öncelik al.",
+        text: "Terminal ekibini ikna edip acil öncelik tanıt; gecikmeyi bu şekilde aşacağız.",
         weights: {
           "DM": 3, "IN": 4, "AD": 3, "CM": 5, "ST": 3, "TO": 2, "RL": 4, "RI": 2
         }
@@ -373,28 +373,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Manuel kontrolle sabitle.",
+        text: "Hemen manuel kontrole geçip kargoyu sıkı şekilde sabitliyorum.",
         weights: {
           "DM": 3, "IN": 1, "AD": 5, "CM": 0, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Kargo bölmesini kapat, risk alma.",
+        text: "Kargo bölmesini kapatıp korumaya alıyorum; ekstra riski göze almıyorum.",
         weights: {
           "DM": 4, "IN": 0, "AD": 1, "CM": 0, "ST": 3, "TO": 3, "RL": 3, "RI": 1
         }
       },
       {
         id: "C",
-        text: "Mühendise bırak, dışarıdan müdahale etsin.",
+        text: "Mühendisi çağırıp teknik müdahale ettiriyorum; uzaktan gerekli onarımı yaptır.",
         weights: {
           "DM": 2, "IN": 2, "AD": 3, "CM": 2, "ST": 3, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "D",
-        text: "\"Önemli değil\" diyerek devam et.",
+        text: "Rotama devam ediyorum; ek bir aksiyon almıyorum.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 4, "RL": 1, "RI": 5
         }
@@ -408,28 +408,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Bekle, biri gelir.",
+        text: "Burada kalıp kısa süre bekle, alıcının gelmesini gözle, teslimatı hazır tut.",
         weights: {
           "DM": 3, "IN": 1, "AD": 2, "CM": 0, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Girişi zorla, teslimatı kendi yap.",
+        text: "Kilitli kapıyı zorla aç, içeri gir ve teslimatı bizzat gerçekleştir.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 1, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Üst yönetime ulaş, bilgi iste.",
+        text: "Üst yönetimi derhal arayıp net teslimat talimatı ve ek bilgi iste.",
         weights: {
           "DM": 3, "IN": 3, "AD": 3, "CM": 3, "ST": 4, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Kargoyu bırak, ayrıl.",
+        text: "Kargoyu olduğu yerde bırak ve hemen ayrıl, ek bir eylem yapmadan riski kabul et.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 4
         }
@@ -443,28 +443,28 @@ export const questions: Question[] = [
     options: [
       {
         id: "A",
-        text: "Tüm sistemleri yavaşlat, kontrollü iniş yap.",
+        text: "Tüm sistemleri yavaşlat, kontrolü koruyarak kontrollü inişi gerçekleştir.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Acil iniş moduna geç.",
+        text: "Derhal acil iniş moduna geç; son ana kadar maksimum hızı koru.",
         weights: {
           "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 3, "TO": 4, "RL": 2, "RI": 4
         }
       },
       {
         id: "C",
-        text: "Mühendisin planına güven, yönlendirmeyi ona bırak.",
+        text: "Mühendise güvenip iniş planını ona bırak; teknik kararları devreye sok.",
         weights: {
           "DM": 2, "IN": 2, "AD": 4, "CM": 2, "ST": 3, "TO": 2, "RL": 4, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Sistemi kapat, serbest düşüşe geç.",
+        text: "Sistemi tamamen kapat, serbest düşüşe geç; diğer tüm uyarıları görmezden gel.",
         weights: {
           "DM": 5, "IN": 0, "AD": 2, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
@@ -473,33 +473,33 @@ export const questions: Question[] = [
   },
   {
     id: 14,
-    text: "Telsizden yeni bir çağrı geliyor:\n\"Dur. Kargoyu incelememiz gerekiyor.\"\nİnişe saniyeler kala müdahale ediliyor.\nNe yaparsın?",
-    forwardingLine: "Kargo incelemesi geride kalınca, navigasyon çizgileri aniden kayboluyor.",
+    text: "Telsizden yeni bir çağrı geliyor:\n\n\"Dur. Kargoyu incelememiz gerekiyor.\"\n\nİnişe saniyeler kala müdahale ediliyor.\n\nNe yaparsın?",
+    forwardingLine: "\nKargo incelemesi geride kalınca, navigasyon çizgileri aniden kayboluyor.\n",
     options: [
       {
         id: "A",
-        text: "Dur, tüm sistemleri hazırla ve işbirliği yap.",
+        text: "Durumu bildir, tüm sistemleri hemen senkronize et ve kontrol gemisiyle koordinasyonu sağla.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 4, "TO": 3, "RL": 5, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Güç aktarımı simülasyonu başlat, durmadan ilerle.",
+        text: "Güç aktarım simülasyonunu başlat; duraksamadan düz yolda ilerle.",
         weights: {
           "DM": 4, "IN": 3, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 1, "RI": 5
         }
       },
       {
         id: "C",
-        text: "Federasyon kimliğini gönder ve devam et.",
+        text: "Federasyon kimliğini anında yolla, yetkini göstererek rotayı değiştirmeden devam et.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 2, "ST": 3, "TO": 4, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Sadece konumu paylaş ve rotayı değiştir.",
+        text: "Sadece mevcut konumu paylaş, mevcut navigasyonu silip hemen yeni rotaya geç.",
         weights: {
           "DM": 4, "IN": 1, "AD": 2, "CM": 1, "ST": 3, "TO": 2, "RL": 2, "RI": 4
         }
@@ -508,33 +508,33 @@ export const questions: Question[] = [
   },
   {
     id: 15,
-    text: "Ekran karardı. Koordinatlar silinmiş.\nVarış noktası görünmüyor.\nYeni rota nasıl belirlenir?",
-    forwardingLine: "Yeni rotayı belirlerken, veri ekranında \"Alıcı bilgisi: ?\" uyarısını fark ediyorsun.",
+    text: "Ekran karardı. Koordinatlar silinmiş.\n\nVarış noktası görünmüyor.\n\nYeni rota nasıl belirlenir?",
+    forwardingLine: "\nYeni rotayı belirlerken, veri ekranında \"Alıcı bilgisi: ?\" uyarısını fark ediyorsun.\n",
     options: [
       {
         id: "A",
-        text: "Manuel koordinat gir, eski kayıtlara güven.",
+        text: "Manuel koordinatları girip eski kayıtlardan güvenilir bir rota seçiyorum.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 3, "RL": 4, "RI": 2
         }
       },
       {
         id: "B",
-        text: "Yapay zekadan yeni rota iste.",
+        text: "Yapay zekaya yeni bir rota oluşturması için derhal talimat gönderiyorum.",
         weights: {
           "DM": 2, "IN": 1, "AD": 4, "CM": 0, "ST": 3, "TO": 3, "RL": 4, "RI": 3
         }
       },
       {
         id: "C",
-        text: "Terminale ulaş, oradan sinyal iste.",
+        text: "Terminale ulaşıp orada doğrudan sinyal talebi yaparak güncel konumu öğreniyorum.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 3, "ST": 4, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "D",
-        text: "Tahmini rota çiz, risk al ve devam et.",
+        text: "Haritayı tahminle çizip rotayı belirliyorum; risk alıp doğrudan devam ediyorum.",
         weights: {
           "DM": 5, "IN": 1, "AD": 2, "CM": 0, "ST": 3, "TO": 3, "RL": 2, "RI": 5
         }
@@ -543,40 +543,44 @@ export const questions: Question[] = [
   },
   {
     id: 16,
-    text: "Teslim noktasına ulaştın.\nAma sistemde sadece şu yazıyor:\n\"Alıcı: ?\"\nKime teslim edeceksin?",
-    forwardingLine: "Yük teslim edildi. Görev tamamlandı.",
+    text: "Teslim noktasına ulaştın.\n\nAma sistemde sadece şu yazıyor:\n\"Alıcı: ?\"\n\nKime teslim edeceksin?",
+    forwardingLine: "\nYük teslim edildi. Görev tamamlandı.\n",
     options: [
       {
         id: "A",
-        text: "Sisteme bildir, gelen ilk kişiye teslim et.",
+        text: "Kontrol sistemine anında bildir; gelen ilk yetkiliye kargoyu teslim et.",
         weights: {
           "DM": 4, "IN": 2, "AD": 2, "CM": 2, "ST": 3, "TO": 4, "RL": 2, "RI": 4
         }
       },
       {
         id: "B",
-        text: "Şirketin temsilcisi gelene kadar bekle.",
+        text: "Şirket temsilcisi gelene kadar bekle; yetki belgesini kontrol ettir.",
         weights: {
           "DM": 3, "IN": 2, "AD": 3, "CM": 1, "ST": 5, "TO": 2, "RL": 5, "RI": 2
         }
       },
       {
         id: "C",
-        text: "Teslimat kodunu gönder, kim yanıt verirse ona teslim et.",
+        text: "Teslimat kodunu gönderdim; kimin yanıt verdiğini onayla, sonra teslim et.",
         weights: {
           "DM": 4, "IN": 2, "AD": 3, "CM": 2, "ST": 4, "TO": 3, "RL": 3, "RI": 3
         }
       },
       {
         id: "D",
-        text: "Terminali terk et, teslimatı iptal et.",
+        text: "Terminali hemen terk et; teslimatı iptal ederek riskten uzaklaş.",
         weights: {
           "DM": 5, "IN": 0, "AD": 1, "CM": 0, "ST": 2, "TO": 2, "RL": 1, "RI": 5
         }
       }
     ]
   }
-];
+].map(q => ({
+  ...q,
+  text: q.text.replace(/\n/g, '\n\n'),
+  forwardingLine: `\n${q.forwardingLine}\n`
+}));
 
 export const competencies = [
   { name: "DM", color: "#FF6B6B", fullName: "Decision Making" },
