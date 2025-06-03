@@ -4,9 +4,9 @@
   flex-direction: column;
   height: 600px;
   max-width: 500px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #b6b6b7 0%, #180b25 100%);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+  box-shadow: 0 20px 60px rgba(133, 142, 182, 0.25);
   overflow: hidden;
   position: fixed;
   bottom: 20px;
@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #303238 0%, #145f3b 100%);
   border: none;
   border-radius: 50px;
   padding: 16px 24px;
@@ -138,7 +138,7 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(231, 232, 236, 0.1);
   border-radius: 3px;
 }
 
@@ -193,7 +193,7 @@
 }
 
 .assistant-message .message-avatar {
-  background: linear-gradient(135deg, #48cab2 0%, #2dd4bf 100%);
+  background: linear-gradient(135deg, #1d1f1f 0%, #3aa066 100%);
 }
 
 .message-content {
@@ -294,7 +294,7 @@
   border-radius: 12px;
   padding: 12px;
   font-size: 12px;
-  color: #667eea;
+  color: #485381;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
@@ -345,7 +345,7 @@
 }
 
 .send-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1b7356 0%, #1c816d 100%);
   border: none;
   border-radius: 12px;
   padding: 12px;

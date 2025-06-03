@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CVTextExtractionService } from '../../services/CVTextExtractionService';
-import '../../styles/IdentityScreen.css';
+import { CVTextExtractionService } from '../../../services/CVTextExtractionService';
+import '../../../styles/IdentityScreen.css';
 
 interface User {
   firstName: string;
@@ -146,7 +146,7 @@ const IdentityScreen2 = () => {
     }
 
     sessionStorage.setItem('user2', JSON.stringify(user));
-    navigate('/game2/test');
+    navigate('/candidate/game2/test');
   };
 
   const handleVideoLoad = () => {

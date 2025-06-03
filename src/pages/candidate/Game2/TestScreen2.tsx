@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/TestScreen.css';
+import '../../../styles/TestScreen.css';
 
 const TestScreen2 = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const TestScreen2 = () => {
     // Check if user data exists
     const storedUser = sessionStorage.getItem('user2');
     if (!storedUser) {
-      navigate('/game2');
+      navigate('/candidate/game2');
       return;
     }
   }, [navigate]);
@@ -33,14 +33,14 @@ const TestScreen2 = () => {
   };
 
   const handleBackToIdentity = () => {
-    navigate('/game2');
+    navigate('/candidate/game2');
   };
 
   const handleGoToResults = () => {
     // Set dummy answers for demo
     const demoAnswers = { 1: 'demo', 2: 'demo' };
     sessionStorage.setItem('answers2', JSON.stringify(demoAnswers));
-    navigate('/ending', { state: { fromGame2: true } });
+    navigate('/candidate/ending', { state: { fromGame2: true } });
   };
 
   return (

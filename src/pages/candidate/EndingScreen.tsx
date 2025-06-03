@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../styles/EndingScreen.css';
+import '../../styles/EndingScreen.css';
 
 const EndingScreen = () => {
   const navigate = useNavigate();
@@ -21,9 +21,9 @@ const EndingScreen = () => {
       // Check if we came from game2 to navigate to the correct results page
       const isGame2 = location.state?.fromGame2 || false;
       if (isGame2) {
-        navigate('/game2/results', { state: location.state });
+        navigate('/candidate/game2/results', { state: location.state });
       } else {
-        navigate('/results', { state: location.state });
+        navigate('/candidate/results', { state: location.state });
       }
     }, 8000);
 

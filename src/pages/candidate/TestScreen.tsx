@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { questions } from '../data/questions';
-import InteractionTracker from '../services/InteractionTracker';
-import '../styles/TestScreen.css';
+import { questions } from '../../data/questions';
+import InteractionTracker from '../../services/InteractionTracker';
+import '../../styles/TestScreen.css';
 
 interface TestState {
   currentQuestion: number;
@@ -98,7 +98,7 @@ const TestScreen = () => {
     const urlQuestionNumber = questionNumber ? parseInt(questionNumber, 10) : 1;
     
     if (currentQuestionNumber !== urlQuestionNumber) {
-      navigate(`/test/${currentQuestionNumber}`, { replace: true });
+      navigate(`/candidate/test/${currentQuestionNumber}`, { replace: true });
     }
   }, [testState.currentQuestion, questionNumber, navigate]);
 
@@ -237,7 +237,7 @@ const TestScreen = () => {
       }
       
       // Navigate immediately without showing completion state
-      navigate('/ending');
+      navigate('/candidate/ending');
     } else {
       setTestState(prev => ({
         ...prev,

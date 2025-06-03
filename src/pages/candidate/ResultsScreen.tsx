@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { questions, competencies } from '../data/questions';
-import type { SessionAnalytics } from '../services/InteractionTracker';
-import { testGoogleSheetsIntegration, testBasicConnection } from '../utils/debugGoogleSheets';
-import { BehavioralAnalyticsService, PDFImportService, PDFExportService, CVTextExtractionService } from '../services';
-import type { ImportedData } from '../services/PDFImportService';
-import type { ExportData } from '../services/PDFExportService';
-import type { CVData } from '../services';
-import PersonalizedRecommendationsComponent from '../components/PersonalizedRecommendations';
-import AIAssistantChat from '../components/AIAssistantChat';
-import UserGuidePanel from '../components/UserGuidePanel';
-import { Icons } from '../components/SvgIcons';
-import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../types/Recommendations';
-import '../styles/ResultsScreen.css';
+import { questions, competencies } from '../../data/questions';
+import type { SessionAnalytics } from '../../services/InteractionTracker';
+import { testGoogleSheetsIntegration, testBasicConnection } from '../../utils/debugGoogleSheets';
+import { BehavioralAnalyticsService, PDFImportService, PDFExportService, CVTextExtractionService } from '../../services';
+import type { ImportedData } from '../../services/PDFImportService';
+import type { ExportData } from '../../services/PDFExportService';
+import type { CVData } from '../../services';
+import PersonalizedRecommendationsComponent from '../../components/PersonalizedRecommendations';
+import AIAssistantChat from '../../components/AIAssistantChat';
+import UserGuidePanel from '../../components/UserGuidePanel';
+import { Icons } from '../../components/SvgIcons';
+import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../../types/Recommendations';
+import '../../styles/ResultsScreen.css';
 
 interface CompetencyScore {
   name: string;
@@ -546,7 +546,7 @@ const ResultsScreen = () => {
 
   const handleRestart = () => {
     sessionStorage.clear();
-    navigate('/');
+    navigate('/candidate');
   };
 
   const handleManualSubmit = () => {

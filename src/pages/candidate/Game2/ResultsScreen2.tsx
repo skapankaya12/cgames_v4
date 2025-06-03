@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/ResultsScreen.css';
+import '../../../styles/ResultsScreen.css';
 
 const ResultsScreen2 = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const ResultsScreen2 = () => {
 
     if (!storedUser || !storedAnswers) {
       console.error('Missing user or answers data for Game 2');
-      navigate('/game2');
+      navigate('/candidate/game2');
       return;
     }
 
@@ -23,18 +23,18 @@ const ResultsScreen2 = () => {
       setUser(JSON.parse(storedUser));
     } catch (error) {
       console.error('Error processing Game 2 data:', error);
-      navigate('/game2');
+      navigate('/candidate/game2');
     }
   }, [navigate]);
 
   const handleRestart = () => {
     sessionStorage.removeItem('user2');
     sessionStorage.removeItem('answers2');
-    navigate('/game2');
+    navigate('/candidate/game2');
   };
 
   const handleBackToGame1 = () => {
-    navigate('/');
+    navigate('/candidate');
   };
 
   if (!user) return null;

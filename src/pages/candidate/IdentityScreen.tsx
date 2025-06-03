@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/IdentityScreen.css';
+import '../../styles/IdentityScreen.css';
 
 const IdentityScreen = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const IdentityScreen = () => {
   };
 
   const handleStartGame = () => {
-    navigate('/form');
+    navigate('/candidate/form');
   };
 
   return (

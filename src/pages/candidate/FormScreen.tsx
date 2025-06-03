@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CVTextExtractionService } from '../services/CVTextExtractionService';
-import '../styles/FormScreen.css';
+import { CVTextExtractionService } from '../../services/CVTextExtractionService';
+import '../../styles/FormScreen.css';
 
 interface User {
   firstName: string;
@@ -146,12 +146,12 @@ const FormScreen = () => {
     }
 
     sessionStorage.setItem('user', JSON.stringify(user));
-    navigate('/test/1');
+    navigate('/candidate/test/1');
   };
 
   const handleBack = () => {
     if (currentStep === 'welcome') {
-      navigate('/');
+      navigate('/candidate');
     } else if (currentStep === 'rules') {
       setCurrentStep('welcome');
     } else if (currentStep === 'form') {
