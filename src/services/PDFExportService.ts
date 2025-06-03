@@ -593,7 +593,7 @@ export class PDFExportService {
     this.renderText('GÜÇLÜ ALANLAR', this.margins.left, this.currentY);
     
     let strengthsY = this.currentY + this.spacing.md;
-    strengths.forEach((comp, index) => {
+    strengths.forEach((comp, _index) => {
       const score = Math.round((comp.score / comp.maxScore) * 100);
       this.createCompetencyItem(this.margins.left, strengthsY, columnWidth, comp.fullName, score);
       strengthsY += 25;
@@ -604,7 +604,7 @@ export class PDFExportService {
     this.renderText('GELİŞİM ALANLARI', devX, this.currentY);
     
     let devY = this.currentY + this.spacing.md;
-    development.forEach((comp, index) => {
+    development.forEach((comp, _index) => {
       const score = Math.round((comp.score / comp.maxScore) * 100);
       this.createCompetencyItem(devX, devY, columnWidth, comp.fullName, score);
       devY += 25;

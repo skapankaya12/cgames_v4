@@ -310,50 +310,51 @@ KURALLAR:
 
   /**
    * Create HR recommendations from text when JSON parsing fails
+   * Note: Currently unused but kept for potential future use
    */
-  private createHRRecommendationsFromText(_text: string, scores: DimensionScore[]): RecommendationItem[] {
-    return scores.map(score => {
-      const percentage = (score.score / score.maxScore) * 100;
-      const dimensionName = this.getDimensionName(score.dimension);
+  // private createHRRecommendationsFromText(_text: string, _scores: DimensionScore[]): RecommendationItem[] {
+  //   return _scores.map(score => {
+  //     const percentage = (score.score / score.maxScore) * 100;
+  //     const dimensionName = this.getDimensionName(score.dimension);
       
-      return {
-        dimension: score.dimension,
-        title: `${dimensionName} Değerlendirmesi`,
-        description: this.getHRAssessment(score.dimension, percentage),
-        reasoning: this.getHRInsight(percentage),
-        basedOn: ['Yetkinlik testi sonuçları', 'Davranışsal analiz', 'İK değerlendirme kriterleri'],
-        userBenefit: this.getHRRecommendation(score.dimension, percentage),
-        confidence: this.calculateHRConfidence(score),
-        difficultyLevel: percentage >= 70 ? 'advanced' : percentage >= 50 ? 'intermediate' : 'beginner',
-        estimatedImpact: percentage >= 70 ? 'high' : percentage >= 50 ? 'medium' : 'low',
-        priority: percentage < 50 ? 'high' : percentage < 70 ? 'medium' : 'low',
-        actionItems: this.getHRActionItems(score.dimension, percentage),
-        resources: [
-          {
-            type: 'mentorship',
-            title: 'İK Değerlendirme Raporu',
-            description: `${this.getSuitablePositions(score.dimension, percentage)} - ${this.getDevelopmentPotential(score.dimension, percentage)}`
-          }
-        ],
-        timeline: 'İşe alım süreci',
-        expectedOutcome: this.getHRAssessment(score.dimension, percentage)
-      };
-    });
-  }
+  //     return {
+  //       dimension: score.dimension,
+  //       title: `${dimensionName} Değerlendirmesi`,
+  //       description: this.getHRAssessment(score.dimension, percentage),
+  //       reasoning: this.getHRInsight(percentage),
+  //       basedOn: ['Yetkinlik testi sonuçları', 'Davranışsal analiz', 'İK değerlendirme kriterleri'],
+  //       userBenefit: this.getHRRecommendation(score.dimension, percentage),
+  //       confidence: this.calculateHRConfidence(score),
+  //       difficultyLevel: percentage >= 70 ? 'advanced' : percentage >= 50 ? 'intermediate' : 'beginner',
+  //       estimatedImpact: percentage >= 70 ? 'high' : percentage >= 50 ? 'medium' : 'low',
+  //       priority: percentage < 50 ? 'high' : percentage < 70 ? 'medium' : 'low',
+  //       actionItems: this.getHRActionItems(score.dimension, percentage),
+  //       resources: [
+  //         {
+  //           type: 'mentorship',
+  //           title: 'İK Değerlendirme Raporu',
+  //           description: `${this.getSuitablePositions(score.dimension, percentage)} - ${this.getDevelopmentPotential(score.dimension, percentage)}`
+  //         }
+  //       ],
+  //       timeline: 'İşe alım süreci',
+  //       expectedOutcome: this.getHRAssessment(score.dimension, percentage)
+  //     };
+  //   });
+  // }
 
   private getHRAssessment(dimension: string, percentage: number): string {
     const level = percentage >= 70 ? 'güçlü' : percentage >= 50 ? 'orta' : 'gelişim gerektiren';
     return `${this.getDimensionName(dimension)} alanında ${level} seviyede yetkinlik göstermektedir (${percentage.toFixed(1)}%).`;
   }
 
-  private getHRInsight(percentage: number): string {
-    if (percentage >= 70) {
-      return 'Bu alanda güçlü performans sergilemekte ve liderlik potansiyeli göstermektedir.';
-    } else if (percentage >= 50) {
-      return 'Orta seviyede yetkinlik göstermekte, gelişim planı ile desteklenebilir.';
-    }
-    return 'Bu alanda gelişim gerektirmekte, mentorluk ve eğitim desteği önerilmektedir.';
-  }
+  // private getHRInsight(percentage: number): string {
+  //   if (percentage >= 70) {
+  //     return 'Bu alanda güçlü performans sergilemekte ve liderlik potansiyeli göstermektedir.';
+  //   } else if (percentage >= 50) {
+  //     return 'Orta seviyede yetkinlik göstermekte, gelişim planı ile desteklenebilir.';
+  //   }
+  //   return 'Bu alanda gelişim gerektirmekte, mentorluk ve eğitim desteği önerilmektedir.';
+  // }
 
   private getHRRecommendation(dimension: string, percentage: number): string {
     if (percentage >= 70) {
@@ -364,7 +365,7 @@ KURALLAR:
     return `${this.getDimensionName(dimension)} alanında eğitim ve gelişim programları ile desteklenmelidir.`;
   }
 
-  private getHRActionItems(dimension: string, percentage: number): string[] {
+  private getHRActionItems(_dimension: string, percentage: number): string[] {
     const baseActions = [
       'Mülakat sürecinde bu yetkinlik alanına odaklanılmalı',
       'Referans kontrollerinde ilgili deneyimler sorgulanmalı'
@@ -390,14 +391,14 @@ KURALLAR:
     return positionMap[dimension]?.join(', ') || 'Çeşitli pozisyonlar';
   }
 
-  private getDevelopmentPotential(dimension: string, percentage: number): string {
-    if (percentage >= 70) {
-      return 'Yüksek gelişim potansiyeli, liderlik rollerine hazır';
-    } else if (percentage >= 50) {
-      return 'Orta gelişim potansiyeli, rehberlik ile gelişebilir';
-    }
-    return 'Temel gelişim ihtiyacı, yapılandırılmış eğitim gerekli';
-  }
+  // private getDevelopmentPotential(_dimension: string, percentage: number): string {
+  //   if (percentage >= 70) {
+  //     return 'Yüksek gelişim potansiyeli, liderlik rollerine hazır';
+  //   } else if (percentage >= 50) {
+  //     return 'Orta gelişim potansiyeli, rehberlik ile gelişebilir';
+  //   }
+  //   return 'Temel gelişim ihtiyacı, yapılandırılmış eğitim gerekli';
+  // }
 
   private getDimensionName(dimension: string): string {
     return this.dimensionMapping[dimension as keyof typeof this.dimensionMapping]?.name || dimension;

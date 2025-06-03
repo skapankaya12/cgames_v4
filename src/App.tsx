@@ -8,6 +8,8 @@ import ResultsScreen from './pages/candidate/ResultsScreen';
 import IdentityScreen2 from './pages/candidate/Game2/IdentityScreen2';
 import TestScreen2 from './pages/candidate/Game2/TestScreen2';
 import ResultsScreen2 from './pages/candidate/Game2/ResultsScreen2';
+import HrRegister from './pages/hr/HrRegister';
+import HrLogin from './pages/hr/HrLogin';
 import HrDashboard from './pages/hr/HrDashboard';
 import './App.css';
 
@@ -90,7 +92,11 @@ function AppContent() {
         <Route path="/candidate/game2/test" element={<TestScreen2 />} />
         <Route path="/candidate/game2/results" element={<ResultsScreen2 />} />
         
-        {/* HR routes */}
+        {/* HR authentication routes */}
+        <Route path="/hr/register" element={<HrRegister />} />
+        <Route path="/hr/login" element={<HrLogin />} />
+        
+        {/* Protected HR dashboard route */}
         <Route path="/hr" element={<HrDashboard />} />
       </Routes>
     </div>

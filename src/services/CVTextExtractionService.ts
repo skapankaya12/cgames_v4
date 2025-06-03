@@ -17,7 +17,7 @@ if (typeof window !== 'undefined') {
     // Ultimate fallback - use inline worker
     console.warn('⚠️ Worker setup failed, using inline worker:', error);
     // Let PDF.js create an inline worker as fallback
-    pdfjsLib.GlobalWorkerOptions.workerSrc = undefined;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
   }
 }
 

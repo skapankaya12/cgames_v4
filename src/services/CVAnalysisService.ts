@@ -381,7 +381,7 @@ export class CVAnalysisService {
   }
 
   private analyzeCompetencyAlignment(cvText: string): { [key: string]: { score: number; evidence: string[] } } {
-    const competencies = {
+    const competencies: { [key: string]: { keywords: string[]; score: number; evidence: string[] } } = {
       'DM': { // Karar Verme
         keywords: ['karar', 'decision', 'analiz', 'analysis', 'strateji', 'strategy'],
         score: 0,
@@ -420,7 +420,7 @@ export class CVAnalysisService {
     Object.keys(competencies).forEach(comp => {
       const competency = competencies[comp];
       
-      competency.keywords.forEach(keyword => {
+      competency.keywords.forEach((keyword: string) => {
         if (lowerCvText.includes(keyword)) {
           competency.score += 1;
           
