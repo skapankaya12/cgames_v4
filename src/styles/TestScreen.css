@@ -91,6 +91,26 @@
   object-position: center 25%;
 }
 
+/* Specific positioning for question 12 */
+.background-video[src*="12.Soru"] {
+  object-position: center top;
+}
+
+/* Specific positioning for question 13 */
+.background-video[src*="13.Soru"] {
+  object-position: center top;
+}
+
+/* Specific positioning for question 15 */
+.background-video[src*="15.Soru"] {
+  object-position: center top;
+}
+
+/* Specific positioning for question 16 */
+.background-video[src*="16.Soru"] {
+  object-position: center top;
+}
+
 .background-video.loaded {
   opacity: 1;
 }

@@ -147,17 +147,13 @@ const TestScreen = () => {
         let questionId = currentQuestion.id;
         let videoFileName = '';
         
-        // Use new videos with sound for questions 1-7
-        if (questionId >= 1 && questionId <= 7) {
-          videoFileName = `question${questionId}veo.mp4`;
+        // Use new videos with sound for questions 1-7 and 12-16
+        if ((questionId >= 1 && questionId <= 7) || (questionId >= 12 && questionId <= 16)) {
+          videoFileName = questionId >= 12 ? `${questionId}.Soru.mp4` : `question${questionId}veo.mp4`;
+          video.muted = false; // Enable sound for these questions
         } else {
-          // Swap question 12 and 13 videos since their content is reversed
-          if (questionId === 12) {
-            questionId = 13;
-          } else if (questionId === 13) {
-            questionId = 12;
-          }
           videoFileName = `question${questionId}.mp4`;
+          video.muted = true; // Keep other questions muted
         }
         
         const videoSrc = testState.isComplete 
@@ -170,9 +166,6 @@ const TestScreen = () => {
         video.pause();
         video.src = videoSrc;
         video.currentTime = 0;
-        
-        // Enable sound for questions 1-7, keep muted for others
-        video.muted = !(questionId >= 1 && questionId <= 7);
         
         // Play video when loaded
         video.load();

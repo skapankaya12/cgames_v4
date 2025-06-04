@@ -12,6 +12,7 @@ import HrRegister from './pages/hr/HrRegister';
 import HrLogin from './pages/hr/HrLogin';
 import HrDashboard from './pages/hr/HrDashboard';
 import './App.css';
+import './styles/hr.css';
 
 // Placeholder Landing Page Component
 function LandingPage() {
@@ -27,7 +28,7 @@ function LandingPage() {
       padding: '20px'
     }}>
       <div>
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome to CognitiveGames</h1>
+        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome to BokumunKuşu</h1>
         <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>
           Advanced Leadership Assessment Platform
         </p>
