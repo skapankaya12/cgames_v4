@@ -1,0 +1,494 @@
+/* CV Analysis Display Styles */
+.cv-analysis-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 32px;
+  border: 1px solid #e8f4fd;
+}
+
+.cv-analysis-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.cv-analysis-header h3 {
+  color: #1a365d;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cv-analysis-subtitle {
+  color: #64748b;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Overview Grid */
+.cv-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.cv-overview-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #cbd5e1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-overview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.cv-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cv-card-icon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.cv-card-header h4 {
+  color: #1e293b;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cv-card-content {
+  color: #475569;
+}
+
+/* Experience Card */
+.experience-years {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.years-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #3b82f6;
+  line-height: 1;
+}
+
+.years-label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.career-level {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.companies-count {
+  font-size: 14px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Skills Card */
+.skills-summary {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.skill-category {
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-count {
+  font-size: 24px;
+  font-weight: 700;
+  color: #10b981;
+  line-height: 1;
+}
+
+.skill-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Education Card */
+.education-summary {
+  text-align: center;
+}
+
+.education-item {
+  margin-bottom: 12px;
+}
+
+.institution {
+  color: #64748b;
+  font-weight: normal;
+}
+
+.certifications {
+  font-size: 14px;
+  color: #475569;
+}
+
+.certifications strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #1e293b;
+}
+
+.no-data {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* HR Insights */
+.hr-insights-section {
+  margin-bottom: 32px;
+}
+
+.hr-insights-section h4 {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.insight-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid;
+}
+
+.insight-card.overall-assessment {
+  border-left-color: #3b82f6;
+}
+
+.insight-card.strengths {
+  border-left-color: #10b981;
+}
+
+.insight-card.concerns {
+  border-left-color: #f59e0b;
+}
+
+.insight-card h5 {
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.insight-card p {
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.insight-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #475569;
+}
+
+.insight-card li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Competency Alignment */
+.competency-alignment-section {
+  margin-bottom: 32px;
+}
+
+.competency-alignment-section h4 {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.alignment-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.alignment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.alignment-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.alignment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.competency-code {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 14px;
+  background: #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.alignment-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.alignment-status.güçlü-uyum {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.alignment-status.orta-uyum {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.alignment-status.zayıf-uyum {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.cv-evidence {
+  margin-bottom: 16px;
+}
+
+.cv-evidence strong {
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.cv-evidence ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.cv-evidence li {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.alignment-recommendation {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+}
+
+.alignment-recommendation strong {
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.alignment-recommendation p {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* Detailed Skills */
+.detailed-skills-section {
+  margin-bottom: 32px;
+}
+
+.detailed-skills-section h4 {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.skills-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skill-category-section h5 {
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.skill-tag.technical {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.skill-tag.leadership {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.skill-tag.soft {
+  background: #d1fae5;
+  color: #047857;
+}
+
+/* Achievements */
+.achievements-section {
+  margin-bottom: 32px;
+}
+
+.achievements-section h4 {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  background: #fef3c7;
+  border-radius: 8px;
+  border-left: 4px solid #f59e0b;
+}
+
+.achievement-icon {
+  margin-right: 12px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.achievement-text {
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Industry Experience */
+.industry-experience-section {
+  margin-bottom: 32px;
+}
+
+.industry-experience-section h4 {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.industries-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.industry-tag {
+  padding: 8px 16px;
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cv-analysis-section {
+    padding: 20px;
+  }
+
+  .cv-overview-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .alignment-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .skills-summary {
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .cv-analysis-header h3 {
+    font-size: 24px;
+  }
+
+  .skills-tags {
+    justify-content: flex-start;
+  }
+
+  .industries-list {
+    justify-content: flex-start;
+  }
+} 

@@ -11,8 +11,15 @@ import ResultsScreen2 from './pages/candidate/Game2/ResultsScreen2';
 import HrRegister from './pages/hr/HrRegister';
 import HrLogin from './pages/hr/HrLogin';
 import HrDashboard from './pages/hr/HrDashboard';
+import ProjectsOverview from './pages/hr/ProjectsOverview';
+import ProjectCreation from './pages/hr/ProjectCreation';
+import ProjectDashboard from './pages/hr/ProjectDashboard';
+import ProjectSettings from './pages/hr/ProjectSettings';
+import Analytics from './pages/hr/Analytics';
+import Candidates from './pages/hr/Candidates';
 import './App.css';
 import './styles/hr.css';
+import './styles/navigation.css';
 
 // Placeholder Landing Page Component
 function LandingPage() {
@@ -97,8 +104,19 @@ function AppContent() {
         <Route path="/hr/register" element={<HrRegister />} />
         <Route path="/hr/login" element={<HrLogin />} />
         
-        {/* Protected HR dashboard route */}
-        <Route path="/hr" element={<HrDashboard />} />
+        {/* HR main routes - Project-based system */}
+        <Route path="/hr" element={<ProjectsOverview />} />
+        <Route path="/hr/projects" element={<ProjectsOverview />} />
+        <Route path="/hr/projects/new" element={<ProjectCreation />} />
+        <Route path="/hr/projects/:projectId" element={<ProjectDashboard />} />
+        <Route path="/hr/projects/:projectId/settings" element={<ProjectSettings />} />
+        
+        {/* HR Analytics and Candidates */}
+        <Route path="/hr/analytics" element={<Analytics />} />
+        <Route path="/hr/candidates" element={<Candidates />} />
+        
+        {/* Legacy HR dashboard route for backwards compatibility */}
+        <Route path="/hr/dashboard" element={<HrDashboard />} />
       </Routes>
     </div>
   );

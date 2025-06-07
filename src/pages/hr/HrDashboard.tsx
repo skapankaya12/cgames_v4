@@ -160,7 +160,7 @@ export default function HrDashboard() {
                   <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
                 </svg>
               </div>
-              <span className="logo-text">BokumunKuşu</span>
+              <span className="logo-text">OlivinHR</span>
             </div>
             <div className="header-info">
               <h1>Welcome back, {hrUser?.fullName || 'HR Manager'}</h1>

@@ -226,7 +226,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                          cvData.analysis.experience.years >= 8 ? '#3B82F6' :
                          cvData.analysis.experience.years >= 4 ? '#10B981' :
                          cvData.analysis.experience.years >= 2 ? '#F59E0B' : '#6B7280',
-                  marginBottom: '12px',
+                  marginBottom: '16px',
                   background: cvData.analysis.experience.years >= 15 ? 'rgba(139, 92, 246, 0.1)' : 
                             cvData.analysis.experience.years >= 8 ? 'rgba(59, 130, 246, 0.1)' :
                             cvData.analysis.experience.years >= 4 ? 'rgba(16, 185, 129, 0.1)' :
@@ -243,15 +243,61 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                    cvData.analysis.experience.years >= 4 ? 'Kıdemli Uzman' :
                    cvData.analysis.experience.years >= 2 ? 'Uzman' : 'Başlangıç Seviyesi'}
                 </div>
-                <div style={{ 
-                  fontSize: '14px', 
-                  color: '#64748b',
-                  background: 'rgba(100, 116, 139, 0.1)',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  fontWeight: '500'
-                }}>
-                  {cvData.analysis.experience.companies.length} farklı şirkette deneyim
+
+                {/* CV Extracted Information */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginTop: '16px' }}>
+                  {/* Previous Job Title */}
+                  {cvData.analysis.experience.positions.length > 0 && (
+                    <div style={{ 
+                      fontSize: '14px', 
+                      color: '#64748b',
+                      background: 'rgba(99, 102, 241, 0.1)',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(99, 102, 241, 0.2)'
+                    }}>
+                      <div style={{ fontWeight: '600', color: '#4338ca', marginBottom: '2px' }}>Son Pozisyon:</div>
+                      {cvData.analysis.experience.positions[0]}
+                    </div>
+                  )}
+
+                  {/* Location */}
+                  {cvData.analysis.personalInfo?.location && cvData.analysis.personalInfo.location !== 'Belirtilmemiş' && (
+                    <div style={{ 
+                      fontSize: '14px', 
+                      color: '#64748b',
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(16, 185, 129, 0.2)'
+                    }}>
+                      <div style={{ fontWeight: '600', color: '#047857', marginBottom: '2px' }}>Lokasyon:</div>
+                      {cvData.analysis.personalInfo.location}
+                    </div>
+                  )}
+
+                  {/* Education */}
+                  {cvData.analysis.education.degrees.length > 0 && (
+                    <div style={{ 
+                      fontSize: '14px', 
+                      color: '#64748b',
+                      background: 'rgba(245, 158, 11, 0.1)',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(245, 158, 11, 0.2)'
+                    }}>
+                      <div style={{ fontWeight: '600', color: '#d97706', marginBottom: '2px' }}>Eğitim:</div>
+                      {cvData.analysis.education.degrees[0]}
+                      {cvData.analysis.education.institutions.length > 0 && (
+                        <span style={{ color: '#92400e', fontWeight: '400' }}>
+                          {' - ' + cvData.analysis.education.institutions[0]}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
