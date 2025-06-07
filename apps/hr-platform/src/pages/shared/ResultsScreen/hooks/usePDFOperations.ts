@@ -1,10 +1,8 @@
 import { useState, useRef } from 'react';
-import { PDFImportService, PDFExportService } from '../../../../services';
-import type { ImportedData } from '../../../../services/PDFImportService';
-import type { ExportData } from '../../../../services/PDFExportService';
+import { PDFImportService, PDFExportService } from '@cgames/services';
+import type { ImportedData, ExportData, SessionAnalytics } from '@cgames/services';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
-import type { PersonalizedRecommendations } from '../../../../types/Recommendations';
+import type { PersonalizedRecommendations } from '@cgames/types';
 import { getRecommendations } from '../utils/insights';
 
 export interface UsePDFOperationsReturn {
@@ -59,7 +57,7 @@ export const usePDFOperations = (
           description: score.description,
           color: score.color
         })),
-        interactionAnalytics,
+        interactionAnalytics: interactionAnalytics || undefined,
         recommendations: getRecommendations(scores),
         personalizedRecommendations,
         exportDate: new Date().toISOString()

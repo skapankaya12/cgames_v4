@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ProjectCreationForm } from '../../../../types/project';
+import type { ProjectCreationForm } from '@cgames/types';
 
 interface ProjectCreationStep1Props {
   formData: ProjectCreationForm;

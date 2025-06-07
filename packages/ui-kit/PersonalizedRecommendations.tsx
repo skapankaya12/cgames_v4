@@ -3,7 +3,7 @@ import type { PersonalizedRecommendations, RecommendationItem, DimensionScore } 
 import type { CVData } from '@cgames/types/CVTypes';
 import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
 import { Icons } from './SvgIcons';
-import '../styles/PersonalizedRecommendations.css';
+
 
 interface PersonalizedRecommendationsProps {
   recommendations: PersonalizedRecommendations | null;

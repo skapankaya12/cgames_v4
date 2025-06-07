@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { BehavioralAnalyticsService } from '../../../../services';
-import type { PersonalizedRecommendations, UserAnalyticsData, DimensionScore } from '../../../../types/Recommendations';
+import { BehavioralAnalyticsService } from '@cgames/services';
+import type { PersonalizedRecommendations, DimensionScore } from '@cgames/types';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
-import type { CVData } from '../../../../services';
+import type { SessionAnalytics, CVData } from '@cgames/services';
 
 export interface UsePersonalizedRecommendationsReturn {
   // State
@@ -22,7 +21,7 @@ export const usePersonalizedRecommendations = (
   user: ResultsScreenUser | null,
   scores: CompetencyScore[],
   interactionAnalytics: SessionAnalytics | null,
-  cvData: CVData | null
+  _cvData: CVData | null
 ): UsePersonalizedRecommendationsReturn => {
   // State
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState<PersonalizedRecommendations | null>(null);
@@ -54,33 +53,6 @@ export const usePersonalizedRecommendations = (
     try {
       console.log('🤖 Generating personalized AI recommendations...');
       
-      // Prepare user analytics data
-      const userAnalyticsData: UserAnalyticsData = {
-        candidateName: `${user.firstName} ${user.lastName}`,
-        testDate: new Date().toISOString(),
-        competencyScores: scores.map(score => ({
-          dimension: score.abbreviation,
-          score: score.score,
-          maxScore: score.maxScore,
-          displayName: score.fullName,
-          category: score.category
-        })) as DimensionScore[],
-        sessionAnalytics: interactionAnalytics ? {
-          totalTime: interactionAnalytics.totalTime,
-          questionTimes: interactionAnalytics.questionTimes,
-          changedAnswers: interactionAnalytics.changedAnswers,
-          behaviorPatterns: interactionAnalytics.behaviorPatterns,
-          deviceInfo: interactionAnalytics.deviceInfo,
-          sessionId: interactionAnalytics.sessionId,
-          userAgent: interactionAnalytics.userAgent
-        } : undefined,
-        cvData: cvData ? {
-          fileName: cvData.fileName,
-          analysis: cvData.analysis,
-          hrInsights: cvData.hrInsights
-        } : undefined
-      };
-
       // Generate AI recommendations using BehavioralAnalyticsService
       const analyticsService = new BehavioralAnalyticsService();
       

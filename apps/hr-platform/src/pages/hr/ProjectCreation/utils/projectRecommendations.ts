@@ -1,4 +1,4 @@
-import type { ProjectCreationForm } from '../../../../types/project';
+import type { ProjectCreationForm } from '@cgames/types';
 
 export function generateRecommendations(data: ProjectCreationForm) {
   // Simple recommendation logic - can be enhanced with AI later

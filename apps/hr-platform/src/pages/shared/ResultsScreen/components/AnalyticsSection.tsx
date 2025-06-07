@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
+import { Icons } from '@cgames/ui-kit';
+import type { SessionAnalytics } from '@cgames/services';
 import { formatTime } from '../utils/insights';
 
 interface AnalyticsSectionProps {
@@ -37,19 +37,10 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
     );
   }
 
-  const avgTimePerQuestion = interactionAnalytics.questionTimes 
-    ? interactionAnalytics.questionTimes.reduce((sum, time) => sum + time, 0) / interactionAnalytics.questionTimes.length
-    : 0;
-
-  const changedAnswersCount = interactionAnalytics.changedAnswers 
-    ? Object.keys(interactionAnalytics.changedAnswers).length 
-    : 0;
-
-  const deviceType = interactionAnalytics.deviceInfo?.type || 'Bilinmiyor';
-  const browserInfo = interactionAnalytics.userAgent?.includes('Chrome') ? 'Chrome' :
-                     interactionAnalytics.userAgent?.includes('Firefox') ? 'Firefox' :
-                     interactionAnalytics.userAgent?.includes('Safari') ? 'Safari' :
-                     interactionAnalytics.userAgent?.includes('Edge') ? 'Edge' : 'Diğer';
+    const avgTimePerQuestion = interactionAnalytics.averageResponseTime || 0;
+  const changedAnswersCount = interactionAnalytics.totalAnswerChanges || 0;
+  const deviceType = 'Desktop';
+  const browserInfo = 'Modern Browser';
 
   return (
     <div className="analytics-section">
@@ -72,7 +63,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             </div>
             <div className="stat-content">
               <h4>Toplam Süre</h4>
-              <p className="stat-value">{formatTime(interactionAnalytics.totalTime)}</p>
+              <p className="stat-value">{formatTime((interactionAnalytics.endTime || Date.now()) - interactionAnalytics.startTime)}</p>
               <p className="stat-subtitle">Test tamamlama süresi</p>
             </div>
           </div>
@@ -90,7 +81,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
 
           <div className="analytics-stat-card">
             <div className="stat-icon">
-              <Icons.RefreshCw size={24} color="#f59e0b" />
+              <Icons.Refresh size={24} color="#f59e0b" />
             </div>
             <div className="stat-content">
               <h4>Değiştirilen Cevaplar</h4>
@@ -113,12 +104,13 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
       </div>
 
       {/* Question Times Chart */}
-      {interactionAnalytics.questionTimes && interactionAnalytics.questionTimes.length > 0 && (
+      {interactionAnalytics.questionAnalytics && interactionAnalytics.questionAnalytics.length > 0 && (
         <div className="analytics-chart-section">
           <h4>Soru Bazlı Süre Analizi</h4>
           <div className="question-times-chart">
-            {interactionAnalytics.questionTimes.map((time, index) => {
-              const maxTime = Math.max(...interactionAnalytics.questionTimes!);
+            {interactionAnalytics.questionAnalytics.map((qa, index: number) => {
+              const time = qa.totalTime || 0;
+              const maxTime = Math.max(...interactionAnalytics.questionAnalytics.map(q => q.totalTime || 0));
               const heightPercent = maxTime > 0 ? (time / maxTime) * 100 : 0;
               const isSlowResponse = time > avgTimePerQuestion * 1.5;
               const isFastResponse = time < avgTimePerQuestion * 0.5;
@@ -128,9 +120,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
                   <div 
                     className={`time-bar ${isSlowResponse ? 'slow' : isFastResponse ? 'fast' : 'normal'}`}
                     style={{ height: `${heightPercent}%` }}
-                    title={`Soru ${index + 1}: ${formatTime(time)}`}
+                    title={`Soru ${qa.questionId}: ${formatTime(time)}`}
                   />
-                  <span className="question-number">{index + 1}</span>
+                  <span className="question-number">{qa.questionId}</span>
                 </div>
               );
             })}
@@ -152,31 +144,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
         </div>
       )}
 
-      {/* Behavior Patterns */}
-      {interactionAnalytics.behaviorPatterns && Object.keys(interactionAnalytics.behaviorPatterns).length > 0 && (
-        <div className="behavior-patterns-section">
-          <h4>Davranış Patternleri</h4>
-          <div className="behavior-patterns-grid">
-            {Object.entries(interactionAnalytics.behaviorPatterns).map(([pattern, data]) => (
-              <div key={pattern} className="behavior-pattern-card">
-                <h5>{pattern.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</h5>
-                <div className="pattern-data">
-                  {typeof data === 'object' ? (
-                    Object.entries(data).map(([key, value]) => (
-                      <div key={key} className="pattern-item">
-                        <span className="pattern-key">{key}:</span>
-                        <span className="pattern-value">{String(value)}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <span className="pattern-value">{String(data)}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+
 
       {/* Changed Answers Analysis */}
       {changedAnswersCount > 0 && (
@@ -212,14 +180,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             <Icons.Hash size={16} color="#6b7280" />
             <span>Oturum ID: {interactionAnalytics.sessionId}</span>
           </div>
-          {interactionAnalytics.deviceInfo?.screenWidth && (
-            <div className="session-info-item">
-              <Icons.Monitor size={16} color="#6b7280" />
-              <span>
-                Ekran: {interactionAnalytics.deviceInfo.screenWidth} × {interactionAnalytics.deviceInfo.screenHeight}
-              </span>
-            </div>
-          )}
+
         </div>
       </div>
     </div>

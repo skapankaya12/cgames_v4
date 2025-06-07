@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import type { ProjectCreationForm } from '../../../types/project';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../firebase';
+
 import { useProjectCreation } from './hooks/useProjectCreation';
 import { ProjectCreationStep1 } from './components/ProjectCreationStep1';
 import { ProjectCreationStep2 } from './components/ProjectCreationStep2';
@@ -11,13 +11,13 @@ import { ProjectCreationStep3 } from './components/ProjectCreationStep3';
 import { ProjectCreationStep4 } from './components/ProjectCreationStep4';
 import { ProjectCreationNavigation } from './components/ProjectCreationNavigation';
 import { StepIndicator } from './components/StepIndicator';
-import '../../../styles/hr.css';
+
 
 export default function ProjectCreation() {
   const navigate = useNavigate();
   const auth = getAuth();
   const [companyId, setCompanyId] = useState<string | null>(null);
-  const [hrUser, setHrUser] = useState<any>(null);
+  const [, setHrUser] = useState<any>(null);
 
   const {
     formData,
@@ -26,7 +26,7 @@ export default function ProjectCreation() {
     error,
     skillInput,
     challengeInput,
-    setCurrentStep,
+
     setSkillInput,
     setChallengeInput,
     handleInputChange,

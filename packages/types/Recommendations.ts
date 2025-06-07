@@ -57,6 +57,15 @@ export interface PersonalizedRecommendations {
   dataUsed?: string[];
   confidenceScore?: number;
   cvIntegrated?: boolean;
+  overallAssessment?: string;
+  strengths?: string[];
+  developmentAreas?: string[];
+  careerGuidance?: string[];
+  actionPlan?: Array<{
+    title?: string;
+    description: string;
+    timeframe?: string;
+  }>;
 }
 
 export interface UserAnalyticsData {

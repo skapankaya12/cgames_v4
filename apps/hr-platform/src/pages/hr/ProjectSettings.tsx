@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import type { Project, ProjectCreationForm } from '../../types/project';
+import { db } from '../../firebase';
+import type { Project, ProjectCreationForm } from '@cgames/types';
 
 export default function ProjectSettings() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -101,7 +101,7 @@ export default function ProjectSettings() {
   }, [auth, navigate, projectId]);
 
   const handleInputChange = (field: keyof ProjectCreationForm, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev: ProjectCreationForm) => ({ ...prev, [field]: value }));
   };
 
   const handleSave = async () => {

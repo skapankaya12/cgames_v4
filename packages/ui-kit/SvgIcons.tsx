@@ -135,6 +135,83 @@ export const EditIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor
   </svg>
 );
 
+// Alert Circle Icon
+export const AlertCircleIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none"/>
+    <line x1="12" y1="8" x2="12" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 16H12.01" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Timer Icon
+export const TimerIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <circle cx="12" cy="13" r="8" stroke={color} strokeWidth="2" fill="none"/>
+    <path d="M12 9V13L15 15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 2H15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Smartphone Icon
+export const SmartphoneIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <rect x="5" y="2" width="14" height="20" rx="2" ry="2" stroke={color} strokeWidth="2" fill="none"/>
+    <line x1="12" y1="18" x2="12.01" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Alert Triangle Icon
+export const AlertTriangleIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke={color} strokeWidth="2" fill="none"/>
+    <line x1="12" y1="9" x2="12" y2="13" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 17H12.01" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Hash Icon
+export const HashIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <line x1="4" y1="9" x2="20" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="4" y1="15" x2="20" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="10" y1="3" x2="8" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="16" y1="3" x2="14" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Monitor Icon
+export const MonitorIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke={color} strokeWidth="2" fill="none"/>
+    <line x1="8" y1="21" x2="16" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="12" y1="17" x2="12" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Lightbulb Icon
+export const LightbulbIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M9 21H15M12 3C8.686 3 6 5.686 6 9C6 11.209 7.025 13.175 8.648 14.358C9.244 14.822 9.5 15.6 9.5 16.5V17C9.5 17.828 10.172 18.5 11 18.5H13C13.828 18.5 14.5 17.828 14.5 17V16.5C14.5 15.6 14.756 14.822 15.352 14.358C16.975 13.175 18 11.209 18 9C18 5.686 15.314 3 12 3Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Trophy Icon
+export const TrophyIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M6 9H4.5C3.67 9 3 8.33 3 7.5V6C3 5.17 3.67 4.5 4.5 4.5H6M18 9H19.5C20.33 9 21 8.33 21 7.5V6C21 5.17 20.33 4.5 19.5 4.5H18M12 15C15.314 15 18 12.314 18 9V4.5C18 3.119 16.881 2 15.5 2H8.5C7.119 2 6 3.119 6 4.5V9C6 12.314 8.686 15 12 15ZM8 21H16M12 15V19" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// BarChart3 Icon
+export const BarChart3Icon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <line x1="12" y1="20" x2="12" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="18" y1="20" x2="18" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="6" y1="20" x2="6" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // Export all icons as a convenient object
 export const Icons = {
   AI: AIIcon,
@@ -153,4 +230,13 @@ export const Icons = {
   Clock: ClockIcon,
   Refresh: RefreshIcon,
   Edit: EditIcon,
+  AlertCircle: AlertCircleIcon,
+  Timer: TimerIcon,
+  Smartphone: SmartphoneIcon,
+  AlertTriangle: AlertTriangleIcon,
+  Hash: HashIcon,
+  Monitor: MonitorIcon,
+  Lightbulb: LightbulbIcon,
+  Trophy: TrophyIcon,
+  BarChart3: BarChart3Icon,
 }; 

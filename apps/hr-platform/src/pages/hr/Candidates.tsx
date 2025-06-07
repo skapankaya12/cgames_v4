@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, query, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import type { Project } from '@types/project';
-import Navigation from '@ui/Navigation';
-import '../../styles/navigation.css';
-import '../../styles/candidates.css';
+import type { Project } from '@cgames/types';
+import { Navigation } from '@cgames/ui-kit';
+
 
 interface Candidate {
   id: string;

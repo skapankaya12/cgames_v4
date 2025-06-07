@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { SharedResultsScreen } from './shared/ResultsScreen';
 
 /**

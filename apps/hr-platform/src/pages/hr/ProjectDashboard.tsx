@@ -10,8 +10,8 @@ import {
   getDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { db } from '@/firebase';
-import type { Project, ProjectCandidate } from '../../types/project';
+import { db } from '../../firebase';
+import type { Project, ProjectCandidate } from '@cgames/types';
 
 export default function ProjectDashboard() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -26,7 +26,7 @@ export default function ProjectDashboard() {
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [companyId, setCompanyId] = useState<string | null>(null);
-  const [hrUser, setHrUser] = useState<any>(null);
+  const [, setHrUser] = useState<any>(null);
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'invited' | 'completed' | 'in-progress'>('all');
 
   useEffect(() => {
@@ -238,7 +238,7 @@ export default function ProjectDashboard() {
           <div className="section-card">
             <div className="card-header">
               <h2>Project Overview</h2>
-              <span className={`status-badge ${project.status === 'active' ? 'status-active' : project.status === 'paused' ? 'status-paused' : 'status-completed'}`}>
+              <span className={`status-badge ${project.status === 'active' ? 'status-active' : 'status-completed'}`}>
                 {project.status}
               </span>
             </div>
@@ -293,7 +293,7 @@ export default function ProjectDashboard() {
                       <div className="info-item">
                         <span className="label">Key Skills:</span>
                         <div className="tag-list">
-                          {project.customization.keySkills.map((skill, index) => (
+                          {project.customization.keySkills.map((skill: string, index: number) => (
                             <span key={index} className="tag">{skill}</span>
                           ))}
                         </div>
@@ -312,7 +312,7 @@ export default function ProjectDashboard() {
                     <div className="info-item">
                       <span className="label">Focus Areas:</span>
                       <div className="tag-list">
-                        {project.recommendations.focusAreas.map((area, index) => (
+                        {project.recommendations.focusAreas.map((area: string, index: number) => (
                           <span key={index} className="tag focus-area">{area}</span>
                         ))}
                       </div>
@@ -320,7 +320,7 @@ export default function ProjectDashboard() {
                     <div className="info-item">
                       <span className="label">Suggested Games:</span>
                       <div className="tag-list">
-                        {project.recommendations.suggestedGames.map((game, index) => (
+                        {project.recommendations.suggestedGames.map((game: string, index: number) => (
                           <span key={index} className="tag game">{game}</span>
                         ))}
                       </div>

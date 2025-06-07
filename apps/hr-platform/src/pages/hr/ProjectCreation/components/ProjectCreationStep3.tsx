@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ProjectCreationForm } from '../../../../types/project';
+import type { ProjectCreationForm } from '@cgames/types';
 
 interface ProjectCreationStep3Props {
   formData: ProjectCreationForm;
@@ -95,7 +95,7 @@ export const ProjectCreationStep3: React.FC<ProjectCreationStep3Props> = ({
           </div>
           
           <div className="tags-display">
-            {formData.keySkills.map((skill, index) => (
+            {formData.keySkills.map((skill: string, index: number) => (
               <span key={index} className="tag">
                 {skill}
                 <button

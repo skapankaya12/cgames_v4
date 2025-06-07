@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
+import { Icons } from '@cgames/ui-kit';
 import type { CompetencyScore } from '../types/results';
 import { getScorePercentage, getScoreLevelColor, getInsight } from '../utils/insights';
 

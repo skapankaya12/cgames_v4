@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, query, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import type { Project } from '@types/project';
-import Navigation from '@ui/Navigation';
+import type { Project } from '@cgames/types';
+import { Navigation } from '@cgames/ui-kit';
 
 export default function ProjectsOverview() {
   const navigate = useNavigate();

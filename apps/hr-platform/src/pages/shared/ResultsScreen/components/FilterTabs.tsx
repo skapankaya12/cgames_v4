@@ -1,7 +1,7 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
+import { Icons } from '@cgames/ui-kit';
 import type { FilterType, FeedbackRatings } from '../types/results';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
+import type { SessionAnalytics } from '@cgames/services';
 
 interface FilterTabsProps {
   currentFilter: FilterType;

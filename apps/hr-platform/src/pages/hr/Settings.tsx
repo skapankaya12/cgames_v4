@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import Navigation from '../../components/Navigation';
-import '../../styles/navigation.css';
+import { db } from '../../firebase';
+import { Navigation } from '@cgames/ui-kit';
+
 
 export default function Settings() {
   const navigate = useNavigate();

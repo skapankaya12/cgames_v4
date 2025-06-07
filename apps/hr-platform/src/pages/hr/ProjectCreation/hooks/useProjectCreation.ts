@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import type { ProjectCreationForm } from '../../../../types/project';
+import { db } from '../../../../firebase';
+import type { ProjectCreationForm } from '@cgames/types';
 import { generateRecommendations } from '../utils/projectRecommendations';
 import { validateStep } from '../utils/formValidation';
 
@@ -35,12 +35,12 @@ export function useProjectCreation(companyId: string | null, navigate: (path: st
   const [challengeInput, setChallengeInput] = useState('');
 
   const handleInputChange = (field: keyof ProjectCreationForm, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev: ProjectCreationForm) => ({ ...prev, [field]: value }));
   };
 
   const addToArrayField = (field: 'keySkills' | 'cultureValues' | 'challenges' | 'gamePreferences', value: string) => {
     if (value.trim() && !formData[field].includes(value.trim())) {
-      setFormData(prev => ({
+      setFormData((prev: ProjectCreationForm) => ({
         ...prev,
         [field]: [...prev[field], value.trim()]
       }));
@@ -48,9 +48,9 @@ export function useProjectCreation(companyId: string | null, navigate: (path: st
   };
 
   const removeFromArrayField = (field: 'keySkills' | 'cultureValues' | 'challenges' | 'gamePreferences', value: string) => {
-    setFormData(prev => ({
+    setFormData((prev: ProjectCreationForm) => ({
       ...prev,
-      [field]: prev[field].filter(item => item !== value)
+      [field]: prev[field].filter((item: string) => item !== value)
     }));
   };
 

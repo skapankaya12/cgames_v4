@@ -1,4 +1,4 @@
-import type { ProjectCreationForm } from '../../../../types/project';
+import type { ProjectCreationForm } from '@cgames/types';
 
 export function validateStep(step: number, formData: ProjectCreationForm): boolean {
   switch (step) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Icons } from './SvgIcons';
-import '../styles/UserGuidePanel.css';
+
 
 interface UserGuidePanelProps {
   currentFilter: string;

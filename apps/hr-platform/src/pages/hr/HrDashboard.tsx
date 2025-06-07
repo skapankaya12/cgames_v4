@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import type { Candidate } from '@types/hr';
+import type { Candidate } from '@cgames/types';
 
 export default function HrDashboard() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);

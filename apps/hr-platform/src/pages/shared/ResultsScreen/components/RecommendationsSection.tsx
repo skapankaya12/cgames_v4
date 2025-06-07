@@ -1,9 +1,8 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
-import PersonalizedRecommendationsComponent from '../../../../components/PersonalizedRecommendations';
-import type { PersonalizedRecommendations } from '../../../../types/Recommendations';
+import { Icons, PersonalizedRecommendations as PersonalizedRecommendationsComponent } from '@cgames/ui-kit';
+import type { PersonalizedRecommendations } from '@cgames/types';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
-import type { CVData } from '../../../../services';
+import type { CVData } from '@cgames/services';
 import { getRecommendations } from '../utils/insights';
 
 interface RecommendationsSectionProps {
@@ -13,7 +12,6 @@ interface RecommendationsSectionProps {
   scores: CompetencyScore[];
   user: ResultsScreenUser | null;
   cvData: CVData | null;
-  sessionId: string;
   onGenerateRecommendations: () => Promise<void>;
 }
 
@@ -24,7 +22,6 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   scores,
   user,
   cvData,
-  sessionId,
   onGenerateRecommendations
 }) => {
   const generalRecommendations = getRecommendations(scores);
@@ -161,7 +158,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           </h4>
           
           <div className="action-plan-timeline">
-            {personalizedRecommendations.actionPlan.map((action, index) => (
+            {personalizedRecommendations.actionPlan.map((action: any, index: number) => (
               <div key={index} className="action-plan-item">
                 <div className="action-timeline-dot"></div>
                 <div className="action-content">

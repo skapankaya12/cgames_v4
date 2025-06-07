@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ProjectCreationForm } from '../../../../types/project';
+import type { ProjectCreationForm } from '@cgames/types';
 
 interface ProjectCreationStep4Props {
   formData: ProjectCreationForm;
@@ -84,7 +84,7 @@ export const ProjectCreationStep4: React.FC<ProjectCreationStep4Props> = ({
           </div>
           
           <div className="tags-display">
-            {formData.challenges.map((challenge, index) => (
+            {formData.challenges.map((challenge: string, index: number) => (
               <span key={index} className="tag">
                 {challenge}
                 <button
