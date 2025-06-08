@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/IdentityScreen.css';
+import '@cgames/ui-kit/styles/IdentityScreen.css';
 
 const IdentityScreen = () => {
   const navigate = useNavigate();

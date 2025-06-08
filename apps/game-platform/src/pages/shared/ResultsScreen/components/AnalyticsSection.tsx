@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
+import { Icons } from '@cgames/ui-kit';
+import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import { formatTime } from '../utils/insights';
 
 interface AnalyticsSectionProps {
@@ -72,7 +72,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             </div>
             <div className="stat-content">
               <h4>Toplam Süre</h4>
-              <p className="stat-value">{formatTime(interactionAnalytics.totalTime)}</p>
+              <p className="stat-value">{formatTime(interactionAnalytics.totalTime || 0)}</p>
               <p className="stat-subtitle">Test tamamlama süresi</p>
             </div>
           </div>
@@ -90,7 +90,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
 
           <div className="analytics-stat-card">
             <div className="stat-icon">
-              <Icons.RefreshCw size={24} color="#f59e0b" />
+              <Icons.Refresh size={24} color="#f59e0b" />
             </div>
             <div className="stat-content">
               <h4>Değiştirilen Cevaplar</h4>

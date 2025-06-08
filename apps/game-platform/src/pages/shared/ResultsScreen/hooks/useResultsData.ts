@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { questions, competencies } from '../../../../data/questions';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
+import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import type { CompetencyScore, ResultsScreenUser, FilterType } from '../types/results';
-import type { PersonalizedRecommendations } from '../../../../types/Recommendations';
-import type { CVData } from '../../../../services';
-import { CVTextExtractionService } from '../../../../services/CVTextExtractionService';
+import type { PersonalizedRecommendations } from '@cgames/types/Recommendations';
+import type { CVData } from '@cgames/services';
+import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
 
 export interface UseResultsDataReturn {
   // Data state
@@ -49,10 +49,10 @@ export const useResultsData = (): UseResultsDataReturn => {
   });
   
   // Loading states
-  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [isLoadingRecommendations] = useState(false);
   
   // Error states
-  const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+  const [recommendationsError, _setRecommendationsError] = useState<string | null>(null);
   const [dataError, setDataError] = useState<string | null>(null);
   
   // Session ID for AI

@@ -5,18 +5,26 @@ import type { CVAnalysisResult, CVData } from '@cgames/types/CVTypes';
 // Re-export for backwards compatibility
 export type { CVData, CVAnalysisResult } from '@cgames/types/CVTypes';
 
-// Configure PDF.js worker - use a more robust approach for Vite
+// Configure PDF.js worker - use built-in worker for better reliability
 if (typeof window !== 'undefined') {
-  // In browser environment
+  // In browser environment, use built-in worker from the package
   try {
-    // Use the worker file from public directory for better reliability
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-    console.log('✅ PDF.js worker configured with public directory worker');
+    // Use the built-in worker URL from pdfjs-dist package
+    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+      'pdfjs-dist/build/pdf.worker.min.mjs',
+      import.meta.url
+    ).toString();
+    console.log('✅ PDF.js worker configured with built-in worker');
   } catch (error) {
-    // Ultimate fallback - use inline worker
-    console.warn('⚠️ Worker setup failed, using inline worker:', error);
-    // Let PDF.js create an inline worker as fallback
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    try {
+      // Fallback to CDN with correct version
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
+      console.log('✅ PDF.js worker configured with CDN fallback');
+    } catch (cdnError) {
+      // Ultimate fallback - disable worker (slower but more compatible)
+      console.warn('⚠️ All worker setups failed, using fallback mode:', cdnError);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    }
   }
 }
 

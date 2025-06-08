@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { questions } from '../../../data/questions';
-import InteractionTracker from '../../../services/InteractionTracker';
+import InteractionTracker from '@cgames/services/InteractionTracker';
 import { useTestState } from './hooks/useTestState';
 import { useVideoManager } from './hooks/useVideoManager';
 import { TestProgress } from './components/TestProgress';
@@ -10,7 +10,7 @@ import { TestNarration } from './components/TestNarration';
 import { TestOptions } from './components/TestOptions';
 import { ForwardingMessage } from './components/ForwardingMessage';
 import { CompletionScreen } from './components/CompletionScreen';
-import '../../../styles/TestScreen.css';
+import '@cgames/ui-kit/styles/TestScreen.css';
 
 const TestScreen = () => {
   const navigate = useNavigate();
@@ -29,8 +29,7 @@ const TestScreen = () => {
     currentQuestion,
     progress,
     handleAnswer,
-    handlePrevious,
-    setError
+    handlePrevious
   } = useTestState(questions, questionNumber, navigate, trackerRef);
 
   const {

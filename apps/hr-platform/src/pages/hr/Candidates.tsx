@@ -5,6 +5,9 @@ import { collection, getDocs, query, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import type { Project } from '@cgames/types';
 import { Navigation } from '@cgames/ui-kit';
+import '@cgames/ui-kit/styles/hr.css';
+import '@cgames/ui-kit/styles/navigation.css';
+import '@cgames/ui-kit/styles/candidates.css';
 
 
 interface Candidate {

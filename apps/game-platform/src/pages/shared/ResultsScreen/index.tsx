@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icons } from '../../../components/SvgIcons';
-import UserGuidePanel from '../../../components/UserGuidePanel';
-import AIAssistantChat from '../../../components/AIAssistantChat';
+import { Icons, UserGuidePanel, AIAssistantChat } from '@cgames/ui-kit';
 import { FilterTabs } from './components/FilterTabs';
 import { ScoreDisplay } from './components/ScoreDisplay';
 import { AnalyticsSection } from './components/AnalyticsSection';
@@ -13,10 +11,10 @@ import { useSubmitResults } from './hooks/useSubmitResults';
 import { useFeedback } from './hooks/useFeedback';
 import { usePDFOperations } from './hooks/usePDFOperations';
 import { usePersonalizedRecommendations } from './hooks/usePersonalizedRecommendations';
-import type { FilterType } from './types/results';
+// import type { FilterType } from './types/results';
 
 // Import the CSS file (assuming it's in the styles directory)
-import '../../../styles/ResultsScreen.css';
+import '@cgames/ui-kit/styles/ResultsScreen.css';
 
 export const SharedResultsScreen: React.FC = () => {
   const navigate = useNavigate();

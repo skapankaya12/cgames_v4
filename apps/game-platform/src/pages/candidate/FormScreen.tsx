@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CVTextExtractionService } from '@svc/CVTextExtractionService';
-import '../../styles/FormScreen.css';
+import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
+import { Icons } from '@cgames/ui-kit';
+import '@cgames/ui-kit/styles/FormScreen.css';
 
 interface User {
   firstName: string;
@@ -211,12 +212,7 @@ const FormScreen = () => {
       <div className="rules-content">
         <div className="rule-item">
           <div className="rule-icon">
-            <img 
-              src="oneselection.png" 
-              alt="One Selection" 
-              className="rule-icon-image"
-              onError={(e) => console.error('Failed to load image:', e)} 
-            />
+            <Icons.Target size={48} color="#667eea" />
           </div>
           <div className="rule-text">
             <strong>Her sahnede yalnızca bir seçim yapacaksın</strong>
@@ -226,12 +222,7 @@ const FormScreen = () => {
         
         <div className="rule-item">
           <div className="rule-icon">
-            <img 
-              src="changeanswer.png" 
-              alt="Change Answer" 
-              className="rule-icon-image"
-              onError={(e) => console.error('Failed to load image:', e)}
-            />
+            <Icons.Refresh size={48} color="#10b981" />
           </div>
           <div className="rule-text">
             <strong>Cevabını değiştirebilirsin</strong>
@@ -241,12 +232,7 @@ const FormScreen = () => {
         
         <div className="rule-item">
           <div className="rule-icon">
-            <img 
-              src="norightwrong.png" 
-              alt="No Right Wrong" 
-              className="rule-icon-image"
-              onError={(e) => console.error('Failed to load image:', e)}
-            />
+            <Icons.Check size={48} color="#f59e0b" />
           </div>
           <div className="rule-text">
             <strong>Doğru ya da yanlış cevap yok</strong>

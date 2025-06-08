@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import type InteractionTracker from '../../../../services/InteractionTracker';
+import type InteractionTracker from '@cgames/services/InteractionTracker';
 
 interface TestState {
   currentQuestion: number;

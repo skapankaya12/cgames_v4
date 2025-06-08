@@ -17,9 +17,12 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["./packages/ui-kit/*"],
-      "@svc/*": ["./packages/services/*"],
-      "@types/*": ["./packages/types/*"]
+      "@cgames/ui-kit": ["./packages/ui-kit"],
+      "@cgames/ui-kit/*": ["./packages/ui-kit/*"],
+      "@cgames/services": ["./packages/services"],
+      "@cgames/services/*": ["./packages/services/*"],
+      "@cgames/types": ["./packages/types"],
+      "@cgames/types/*": ["./packages/types/*"]
     }
   },
   "include": ["apps/**/*", "packages/**/*"],

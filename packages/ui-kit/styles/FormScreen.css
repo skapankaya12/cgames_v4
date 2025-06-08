@@ -203,18 +203,7 @@
   flex-shrink: 0;
 }
 
-.rule-icon-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  /* Removing the filter that might be making images invisible */
-  /* filter: brightness(0) invert(1); */
-  transition: all 0.3s ease;
-}
-
-.rule-item:hover .rule-icon-image {
-  transform: scale(1.1);
-}
+/* Removed rule-icon-image styles - now using SVG icons */
 
 .rule-text {
   flex: 1;

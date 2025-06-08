@@ -30,6 +30,7 @@ export interface SessionAnalytics {
   sessionId: string;
   startTime: number;
   endTime?: number;
+  totalTime?: number;
   totalQuestions: number;
   completedQuestions: number;
   totalAnswerChanges: number;
@@ -37,6 +38,16 @@ export interface SessionAnalytics {
   averageResponseTime: number;
   questionAnalytics: QuestionAnalytics[];
   events: InteractionEvent[];
+  // Additional properties expected by the UI components
+  questionTimes?: number[];
+  changedAnswers?: Record<string, any>;
+  behaviorPatterns?: Record<string, any>;
+  deviceInfo?: {
+    type?: string;
+    screenWidth?: number;
+    screenHeight?: number;
+  };
+  userAgent?: string;
 }
 
 class InteractionTracker {
@@ -308,17 +319,56 @@ class InteractionTracker {
       ? responseTimes.reduce((sum, time) => sum + time, 0) / responseTimes.length 
       : 0;
 
+    // Calculate total session time
+    const totalTime = now - this.sessionStartTime;
+
+    // Extract question times for analytics
+    const questionTimes = questionAnalyticsArray
+      .map(q => q.totalTime || 0)
+      .filter(time => time > 0);
+
+    // Build changed answers map
+    const changedAnswers: Record<string, any> = {};
+    questionAnalyticsArray.forEach(q => {
+      if (q.answerChanges > 0) {
+        changedAnswers[q.questionId.toString()] = {
+          changes: q.answerChanges,
+          revisions: q.revisions
+        };
+      }
+    });
+
+    // Basic behavior patterns
+    const behaviorPatterns: Record<string, any> = {
+      revisionRate: questionAnalyticsArray.length > 0 ? totalAnswerChanges / questionAnalyticsArray.length : 0,
+      backNavigationRate: questionAnalyticsArray.length > 0 ? totalBackNavigations / questionAnalyticsArray.length : 0,
+      completionRate: questionAnalyticsArray.length > 0 ? completedQuestions / questionAnalyticsArray.length : 0
+    };
+
+    // Basic device info (if available)
+    const deviceInfo = typeof window !== 'undefined' ? {
+      type: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+      screenWidth: window.screen?.width,
+      screenHeight: window.screen?.height
+    } : undefined;
+
     return {
       sessionId: this.sessionId,
       startTime: this.sessionStartTime,
       endTime: now,
+      totalTime,
       totalQuestions: questionAnalyticsArray.length,
       completedQuestions,
       totalAnswerChanges,
       totalBackNavigations,
       averageResponseTime,
       questionAnalytics: questionAnalyticsArray,
-      events: [...this.events]
+      events: [...this.events],
+      questionTimes,
+      changedAnswers,
+      behaviorPatterns,
+      deviceInfo,
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : undefined
     };
   }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { SessionAnalytics } from '../../../../services/InteractionTracker';
+import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
 import { testGoogleSheetsIntegration, testBasicConnection } from '../../../../utils/debugGoogleSheets';
 

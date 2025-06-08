@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../../styles/ResultsScreen.css';
+import '@cgames/ui-kit/styles/ResultsScreen.css';
 
 const ResultsScreen2 = () => {
   const navigate = useNavigate();

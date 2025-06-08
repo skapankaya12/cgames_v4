@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Header } from '@ui/Header';
+import { Header } from '@cgames/ui-kit';
 import IdentityScreen from './pages/candidate/IdentityScreen';
 import FormScreen from './pages/candidate/FormScreen';
 import TestScreen from './pages/candidate/TestScreen';

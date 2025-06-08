@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icons } from '../../../../components/SvgIcons';
-import PersonalizedRecommendationsComponent from '../../../../components/PersonalizedRecommendations';
-import type { PersonalizedRecommendations } from '../../../../types/Recommendations';
+import { Icons } from '@cgames/ui-kit';
+import { PersonalizedRecommendations as PersonalizedRecommendationsComponent } from '@cgames/ui-kit';
+import type { PersonalizedRecommendations } from '@cgames/types/Recommendations';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
-import type { CVData } from '../../../../services';
+import type { CVData } from '@cgames/services';
 import { getRecommendations } from '../utils/insights';
 
 interface RecommendationsSectionProps {
@@ -24,7 +24,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   scores,
   user,
   cvData,
-  sessionId,
+  // sessionId, // Temporarily commented out unused parameter
   onGenerateRecommendations
 }) => {
   const generalRecommendations = getRecommendations(scores);
@@ -165,8 +165,8 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
               <div key={index} className="action-plan-item">
                 <div className="action-timeline-dot"></div>
                 <div className="action-content">
-                  <h5>{action.title || `Eylem ${index + 1}`}</h5>
-                  <p>{action.description || action}</p>
+                  <h5>{typeof action === 'object' && action?.title ? action.title : `Eylem ${index + 1}`}</h5>
+                  <p>{typeof action === 'object' ? action.description : action}</p>
                   {action.timeframe && (
                     <span className="action-timeframe">{action.timeframe}</span>
                   )}

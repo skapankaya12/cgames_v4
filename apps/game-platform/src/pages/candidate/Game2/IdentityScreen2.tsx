@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CVTextExtractionService } from '../../../services/CVTextExtractionService';
-import '../../../styles/IdentityScreen.css';
+import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
+import '@cgames/ui-kit/styles/IdentityScreen.css';
 
 interface User {
   firstName: string;

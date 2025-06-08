@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -13,13 +12,22 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "emitDeclarationOnly": false,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@cgames/ui-kit": ["../../packages/ui-kit"],
+      "@cgames/ui-kit/*": ["../../packages/ui-kit/*"],
+      "@cgames/services": ["../../packages/services"],
+      "@cgames/services/*": ["../../packages/services/*"],
+      "@cgames/types": ["../../packages/types"],
+      "@cgames/types/*": ["../../packages/types/*"]
+    }
   },
-  "include": ["src", "../../packages/*/"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*", "../../packages/ui-kit/**/*", "../../packages/services/**/*", "../../packages/types/**/*"],
+  "exclude": ["node_modules", "dist", "../../packages/*/node_modules", "../../packages/*/dist"]
 } 

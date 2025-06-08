@@ -4,6 +4,8 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { Navigation } from '@cgames/ui-kit';
+import '@cgames/ui-kit/styles/hr.css';
+import '@cgames/ui-kit/styles/navigation.css';
 
 
 export default function Settings() {

@@ -5,6 +5,8 @@ import { collection, getDocs, query, doc, getDoc, updateDoc } from 'firebase/fir
 import { db } from '../../firebase';
 import type { Project } from '@cgames/types';
 import { Navigation } from '@cgames/ui-kit';
+import '@cgames/ui-kit/styles/hr.css';
+import '@cgames/ui-kit/styles/navigation.css';
 
 export default function ProjectsOverview() {
   const navigate = useNavigate();

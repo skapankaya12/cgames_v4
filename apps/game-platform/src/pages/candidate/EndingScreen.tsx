@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../../styles/EndingScreen.css';
+import '@cgames/ui-kit/styles/EndingScreen.css';
 
 const EndingScreen = () => {
   const navigate = useNavigate();
