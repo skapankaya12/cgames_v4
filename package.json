@@ -18,6 +18,7 @@
     "dev:game": "turbo run dev --filter=game-platform",
     "build:hr": "turbo run build --filter=hr-platform",
     "build:game": "turbo run build --filter=game-platform",
+    "vercel-build": "npm run build:hr",
     "ngrok": "ngrok http 5173"
   },
   "dependencies": {
