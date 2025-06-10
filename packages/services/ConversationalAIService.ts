@@ -37,19 +37,13 @@ export class ConversationalAIService {
   };
 
   constructor() {
-    const apiKey = process.env.VITE_OPENAI_API_KEY;
-    
-    if (!apiKey) {
-      console.error('❌ OpenAI API key not found in environment variables');
-      throw new Error('OpenAI API key not configured. Please set VITE_OPENAI_API_KEY in your .env file');
-    }
-
+    // Initialize with dummy OpenAI instance, will check API key when methods are called
     this.openai = new OpenAI({
-      apiKey: apiKey,
-      dangerouslyAllowBrowser: true // Note: In production, this should be handled server-side
+      apiKey: 'dummy-key', // Will be replaced when methods are called
+      dangerouslyAllowBrowser: true
     });
     
-    console.log('🤖 Conversational AI Service initialized successfully with OpenAI');
+    console.log('🤖 Conversational AI Service initialized (API key will be checked when needed)');
   }
 
   /**
@@ -62,6 +56,21 @@ export class ConversationalAIService {
   ): Promise<string> {
     try {
       console.log('🚀 Generating AI response for HR prompt:', userPrompt);
+      
+      // Check if we have a valid API key
+      const apiKey = process.env.VITE_OPENAI_API_KEY;
+      if (!apiKey || apiKey === 'dummy-key') {
+        console.warn('⚠️ No valid OpenAI API key found, falling back to placeholder response');
+        return 'Bu özellik şu anda kullanılamıyor. Lütfen OpenAI API anahtarını yapılandırın.';
+      }
+      
+      // Re-initialize OpenAI with real API key if needed
+      if (this.openai.apiKey === 'dummy-key') {
+        this.openai = new OpenAI({
+          apiKey: apiKey,
+          dangerouslyAllowBrowser: true
+        });
+      }
       
       const contextPrompt = this.buildContextualPrompt(userPrompt, context, conversationHistory);
       

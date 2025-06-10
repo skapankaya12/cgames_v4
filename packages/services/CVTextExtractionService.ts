@@ -34,9 +34,14 @@ export class CVTextExtractionService {
   constructor() {
     this.cvAnalysisService = new CVAnalysisService();
     
-    // Log PDF.js configuration for debugging
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔧 PDF.js configured for development');
+    // Log PDF.js configuration for debugging (safe environment check)
+    try {
+      if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+        console.log('🔧 PDF.js configured for development');
+      }
+    } catch (error) {
+      // Ignore environment variable access errors during build
+      console.log('🔧 PDF.js configured');
     }
   }
 

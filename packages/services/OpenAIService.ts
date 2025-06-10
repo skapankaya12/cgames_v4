@@ -22,27 +22,13 @@ export class OpenAIService {
   };
 
   constructor() {
-    // Get API key from environment variables (secure approach)
-    const apiKey = process.env.VITE_OPENAI_API_KEY;
-    
-    if (!apiKey) {
-      console.warn('⚠️ OpenAI API key not found in environment variables');
-      console.log('💡 To enable AI recommendations, add VITE_OPENAI_API_KEY to your .env file');
-      console.log('💡 The system will use fallback recommendations instead');
-      // Don't throw error, just log warning and let it fallback
-      this.openai = new OpenAI({
-        apiKey: 'dummy-key', // Dummy key for initialization
-        dangerouslyAllowBrowser: true
-      });
-      return;
-    }
-
+    // Initialize with dummy OpenAI instance, will check API key when methods are called
     this.openai = new OpenAI({
-      apiKey: apiKey,
-      dangerouslyAllowBrowser: true // Note: In production, this should be handled server-side
+      apiKey: 'dummy-key', // Will be replaced when methods are called
+      dangerouslyAllowBrowser: true
     });
     
-    console.log('🤖 OpenAI Service initialized successfully');
+    console.log('🤖 OpenAI Service initialized (API key will be checked when needed)');
   }
 
   /**
