@@ -6,8 +6,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "build": "npx tsc",
-    "type-check": "npx tsc --noEmit",
+    "build": "npm exec tsc",
+    "type-check": "npm exec tsc -- --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "clean": "rm -rf dist"
   },
