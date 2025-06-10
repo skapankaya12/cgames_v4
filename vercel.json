@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd /vercel/source && npm run build:hr",
+  "buildCommand": "turbo run build --filter=hr-platform",
   "outputDirectory": "apps/hr-platform/dist",
   "installCommand": "npm install",
   "framework": null,
