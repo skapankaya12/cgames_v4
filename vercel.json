@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:hr",
+  "buildCommand": "cd /vercel/source && npm run build:hr",
   "outputDirectory": "apps/hr-platform/dist",
   "installCommand": "npm install",
   "framework": null,
