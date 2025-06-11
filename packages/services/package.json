@@ -20,10 +20,10 @@
     "jspdf": "^3.0.1",
     "openai": "^4.103.0",
     "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^5.2.133"
+    "pdfjs-dist": "^5.2.133",
+    "typescript": "latest"
   },
   "devDependencies": {
-    "@types/pdf-parse": "^1.1.5",
-    "typescript": "latest"
+    "@types/pdf-parse": "^1.1.5"
   }
 } 
