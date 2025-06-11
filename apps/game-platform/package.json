@@ -7,6 +7,7 @@
     "dev": "vite --port 5174",
     "build": "npx tsc && vite build",
     "build:vercel": "cd ../.. && npm run build:game",
+    "build:hr": "npm run build:vercel",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "npm exec tsc -- --noEmit",
