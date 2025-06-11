@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, './src'),
       '@ui': path.resolve(__dirname, '../../packages/ui-kit'),
       '@svc': path.resolve(__dirname, '../../packages/services'),
       '@types': path.resolve(__dirname, '../../packages/types'),
@@ -21,7 +22,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0', // Expose to all network interfaces
-    port: 5173, // Specify the port explicitly
+    port: 5174, // Specify the port explicitly (matching package.json dev script)
     strictPort: true, // Don't try another port if this one is taken
     // This will allow all hosts, so we don't need to update for new ngrok URLs
     cors: true, // Enable CORS for all origins

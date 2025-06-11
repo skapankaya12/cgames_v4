@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build:game",
+  "outputDirectory": "apps/game-platform/dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "env": {
+    "NODE_VERSION": "20",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production",
+      "NODE_VERSION": "20"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, immutable, max-age=31536000"
+        }
+      ]
+    }
+  ]
+} 
