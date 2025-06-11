@@ -4,6 +4,9 @@
     "declaration": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "noEmit": false,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
     "paths": {
       "@cgames/types": ["../types"],
       "@cgames/types/*": ["../types/*"]
