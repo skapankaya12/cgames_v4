@@ -21,7 +21,8 @@
     "openai": "^4.103.0",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.2.133",
-    "typescript": "latest"
+    "typescript": "latest",
+    "@types/node": "^20.0.0"
   },
   "devDependencies": {
     "@types/pdf-parse": "^1.1.5"
