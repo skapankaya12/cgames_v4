@@ -4,6 +4,13 @@
     "declaration": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "noEmit": false,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "paths": {
       "@cgames/types": ["../types"],
       "@cgames/types/*": ["../types/*"],
