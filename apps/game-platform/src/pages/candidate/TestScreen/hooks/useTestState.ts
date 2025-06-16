@@ -49,7 +49,7 @@ export function useTestState(
 
   const [testState, setTestState] = useState<TestState>(() => {
     // Load answers from sessionStorage if available
-    const savedAnswers = sessionStorage.getItem('testAnswers');
+    const savedAnswers = sessionStorage.getItem('answers');
     return {
       currentQuestion: getInitialQuestion(),
       answers: savedAnswers ? JSON.parse(savedAnswers) : {},
@@ -78,7 +78,7 @@ export function useTestState(
 
   // Save answers to sessionStorage whenever they change
   useEffect(() => {
-    sessionStorage.setItem('testAnswers', JSON.stringify(testState.answers));
+    sessionStorage.setItem('answers', JSON.stringify(testState.answers));
   }, [testState.answers]);
 
   // Update URL when current question changes

@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icons, UserGuidePanel, AIAssistantChat } from '@cgames/ui-kit';
-import { FilterTabs } from './components/FilterTabs';
+import { Icons, AIAssistantChat } from '@cgames/ui-kit';
+import { DashboardOverview } from './components/DashboardOverview';
 import { ScoreDisplay } from './components/ScoreDisplay';
 import { AnalyticsSection } from './components/AnalyticsSection';
 import { RecommendationsSection } from './components/RecommendationsSection';
 import { FeedbackForm } from './components/FeedbackForm';
+import { NavigationSidebar } from './components/NavigationSidebar';
+import { ContextualHelp } from './components/ContextualHelp';
 import { useResultsData } from './hooks/useResultsData';
 import { useSubmitResults } from './hooks/useSubmitResults';
 import { useFeedback } from './hooks/useFeedback';
-import { usePDFOperations } from './hooks/usePDFOperations';
 import { usePersonalizedRecommendations } from './hooks/usePersonalizedRecommendations';
-// import type { FilterType } from './types/results';
 
 // Import the CSS file (assuming it's in the styles directory)
 import '@cgames/ui-kit/styles/ResultsScreen.css';
+// Import game platform specific overrides
+import '../../../GameResultsOverride.css';
+
+type ViewType = 'dashboard' | 'yetkinlikler' | 'davranış-analizi' | 'öneriler' | 'feedback';
 
 export const SharedResultsScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -59,19 +63,6 @@ export const SharedResultsScreen: React.FC = () => {
     getSliderPosition
   } = useFeedback(user);
 
-  // PDF operations
-  const {
-    isImporting,
-    importError,
-    importSuccess,
-    fileInputRef,
-    handleExportData,
-    handleImportClick,
-    handleFileSelect,
-    setImportError,
-    setImportSuccess
-  } = usePDFOperations(user, scores, interactionAnalytics, storedRecommendations);
-
   // Personalized recommendations
   const {
     personalizedRecommendations,
@@ -80,9 +71,10 @@ export const SharedResultsScreen: React.FC = () => {
     generatePersonalizedRecommendations
   } = usePersonalizedRecommendations(user, scores, interactionAnalytics, cvData);
 
-  // UI state
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [isGuidePanelCollapsed, setIsGuidePanelCollapsed] = useState(false);
+  // UI state - Updated to use ViewType
+  const [currentView, setCurrentView] = useState<ViewType>('dashboard');
+  const [showContextualHelp, setShowContextualHelp] = useState(false);
+  const [helpContext, setHelpContext] = useState<string>('');
 
   // Debug functions setup for console
   useEffect(() => {
@@ -103,14 +95,6 @@ export const SharedResultsScreen: React.FC = () => {
     if (isDataLoaded && user && scores.length > 0) {
       console.log('📊 Data loaded successfully, auto-submit disabled to prevent 403 errors');
       console.log('💡 You can manually submit using the "Sonuçları Gönder" button');
-      // Temporary disable auto-submit to prevent Google Sheets 403 errors
-      // const submitResults = async () => {
-      //   console.log('🚀 Auto-submitting results...');
-      //   handleManualSubmit();
-      // };
-      
-      // const timeoutId = setTimeout(submitResults, 1000);
-      // return () => clearTimeout(timeoutId);
     }
   }, [isDataLoaded, user, scores]);
 
@@ -119,18 +103,45 @@ export const SharedResultsScreen: React.FC = () => {
     if (scores.length > 0 && !storedRecommendations && !isLoadingRecommendations) {
       const timeoutId = setTimeout(() => {
         generatePersonalizedRecommendations();
-      }, 2000); // Delay to allow other processes to complete
+      }, 2000);
       
       return () => clearTimeout(timeoutId);
     }
   }, [scores, storedRecommendations, isLoadingRecommendations, generatePersonalizedRecommendations]);
 
-  const renderFilteredContent = () => {
-    switch (currentFilter) {
-      case 'davranış-analizi':
-        return <AnalyticsSection interactionAnalytics={interactionAnalytics} />;
+  const handleViewChange = (view: ViewType) => {
+    setCurrentView(view);
+    // Update legacy currentFilter for compatibility
+    if (view === 'dashboard') setCurrentFilter('öneriler');
+    else if (view === 'yetkinlikler') setCurrentFilter('yetkinlikler');
+    else if (view === 'davranış-analizi') setCurrentFilter('davranış-analizi');
+    else if (view === 'öneriler') setCurrentFilter('öneriler');
+    else if (view === 'feedback') setCurrentFilter('feedback');
+  };
+
+  const showContextHelp = (context: string) => {
+    setHelpContext(context);
+    setShowContextualHelp(true);
+  };
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return (
+          <DashboardOverview
+            scores={scores}
+            user={user}
+            interactionAnalytics={interactionAnalytics}
+            personalizedRecommendations={personalizedRecommendations || storedRecommendations}
+            isLoadingRecommendations={isLoadingRecommendations}
+            onViewChange={handleViewChange}
+            onShowHelp={showContextHelp}
+          />
+        );
       case 'yetkinlikler':
-        return <ScoreDisplay scores={scores} />;
+        return <ScoreDisplay scores={scores} onShowHelp={showContextHelp} />;
+      case 'davranış-analizi':
+        return <AnalyticsSection interactionAnalytics={interactionAnalytics} onShowHelp={showContextHelp} />;
       case 'öneriler':
         return (
           <RecommendationsSection
@@ -142,6 +153,7 @@ export const SharedResultsScreen: React.FC = () => {
             cvData={cvData}
             sessionId={sessionId}
             onGenerateRecommendations={generatePersonalizedRecommendations}
+            onShowHelp={showContextHelp}
           />
         );
       case 'feedback':
@@ -156,19 +168,19 @@ export const SharedResultsScreen: React.FC = () => {
             onSliderClick={handleSliderClick}
             onSubmit={handleFeedbackSubmit}
             getSliderPosition={getSliderPosition}
+            onShowHelp={showContextHelp}
           />
         );
       default:
         return (
-          <RecommendationsSection
-            personalizedRecommendations={personalizedRecommendations || storedRecommendations}
-            isLoadingRecommendations={isLoadingRecommendations}
-            recommendationsError={recommendationsError}
+          <DashboardOverview
             scores={scores}
             user={user}
-            cvData={cvData}
-            sessionId={sessionId}
-            onGenerateRecommendations={generatePersonalizedRecommendations}
+            interactionAnalytics={interactionAnalytics}
+            personalizedRecommendations={personalizedRecommendations || storedRecommendations}
+            isLoadingRecommendations={isLoadingRecommendations}
+            onViewChange={handleViewChange}
+            onShowHelp={showContextHelp}
           />
         );
     }
@@ -203,84 +215,55 @@ export const SharedResultsScreen: React.FC = () => {
   }
 
   return (
-    <div className="modern-results-container">
-      {/* User Guide Panel */}
-      <UserGuidePanel 
-        currentFilter={currentFilter} 
-        onCollapseChange={setIsGuidePanelCollapsed} 
+    <div className="modern-results-container dashboard-2025">
+      {/* Navigation Sidebar */}
+      <NavigationSidebar 
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        scores={scores}
+        interactionAnalytics={interactionAnalytics}
+        feedbackSubmitSuccess={feedbackSubmitSuccess}
+        isLoadingRecommendations={isLoadingRecommendations}
       />
       
-      {/* Main Content Wrapper */}
-      <div className={`main-content-wrapper ${isGuidePanelCollapsed ? 'guide-collapsed' : ''}`}>
+      {/* Main Content Area */}
+      <div className="dashboard-main-content">
         {/* Header */}
-        <div className="modern-header">
-          <div className="header-left">
-            <h1>Sonuçlar</h1>
-            {user && (
-              <p className="user-info">
-                {user.firstName} {user.lastName}
-                {user.company && ` - ${user.company}`}
-              </p>
-            )}
-          </div>
-          <div className="header-right">
-            <div className="header-controls">
-              <button className="export-button" onClick={handleExportData}>
-                PDF Dışa Aktar
-              </button>
+        <div className="dashboard-header">
+          <div className="header-content">
+            <div className="header-left">
+              {user && (
+                <p className="user-info">
+                  <Icons.User size={16} />
+                  {user.firstName} {user.lastName}
+                  {user.company && ` - ${user.company}`}
+                </p>
+              )}
+            </div>
+            <div className="header-actions">
               <button 
-                className="import-button" 
-                onClick={handleImportClick}
-                disabled={isImporting}
-              >
-                {isImporting ? 'İçe Aktarılıyor...' : 'PDF İçe Aktar'}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf"
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
-              />
-              <button 
-                className="manual-submit-button" 
+                className="action-button primary" 
                 onClick={handleManualSubmit}
                 disabled={isSubmitting}
-                style={{
-                  backgroundColor: isSubmitting ? '#ccc' : '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                  marginLeft: '8px'
-                }}
               >
+                <Icons.Send size={16} />
                 {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
               </button>
+              <button 
+                className="action-button secondary" 
+                onClick={handleRestart}
+                title="Yeni test başlat"
+              >
+                <Icons.RotateCcw size={16} />
+                Yeni Test
+              </button>
             </div>
-            <button className="restart-button" onClick={handleRestart}>
-              Yeni Test
-            </button>
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <FilterTabs
-          currentFilter={currentFilter}
-          onFilterChange={setCurrentFilter}
-          scoresCount={scores.length}
-          interactionAnalytics={interactionAnalytics}
-          feedbackSubmitSuccess={feedbackSubmitSuccess}
-          feedbackText={feedbackText}
-          feedbackRatings={feedbackRatings}
-          isDropdownOpen={isFilterDropdownOpen}
-          onDropdownToggle={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-        />
-
         {/* Main Content */}
-        <div className="modern-content">
-          {renderFilteredContent()}
+        <div className="dashboard-content">
+          {renderCurrentView()}
         </div>
 
         {/* Status Messages */}
@@ -293,31 +276,11 @@ export const SharedResultsScreen: React.FC = () => {
           </div>
         )}
 
-        {isImporting && (
-          <div className="status-overlay">
-            <div className="status-message loading">
-              <div className="spinner"></div>
-              PDF dosyası içe aktarılıyor...
-            </div>
-          </div>
-        )}
-
         {submitError && (
           <div className="status-overlay">
             <div className="status-message error">
               {submitError}
               <button onClick={() => setSubmitError(null)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {importError && (
-          <div className="status-overlay">
-            <div className="status-message error">
-              {importError}
-              <button onClick={() => setImportError(null)}>
                 <Icons.Close size={16} />
               </button>
             </div>
@@ -334,34 +297,31 @@ export const SharedResultsScreen: React.FC = () => {
             </div>
           </div>
         )}
-
-        {importSuccess && (
-          <div className="status-overlay">
-            <div className="status-message success">
-              PDF dosyası başarıyla içe aktarıldı!
-              <button onClick={() => setImportSuccess(false)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* AI Assistant Chat - only show if we have scores */}
-        {scores.length > 0 && (
-          <AIAssistantChat
-            scores={scores.map(score => ({
-              dimension: score.abbreviation,
-              score: score.score,
-              maxScore: score.maxScore,
-              displayName: score.fullName,
-              category: score.category
-            }))}
-            candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
-            cvData={cvData || undefined}
-            sessionId={sessionId}
-          />
-        )}
       </div>
+
+      {/* Contextual Help */}
+      {showContextualHelp && (
+        <ContextualHelp
+          context={helpContext}
+          onClose={() => setShowContextualHelp(false)}
+        />
+      )}
+
+      {/* AI Assistant Chat - Floating */}
+      {scores.length > 0 && (
+        <AIAssistantChat
+          scores={scores.map(score => ({
+            dimension: score.abbreviation,
+            score: score.score,
+            maxScore: score.maxScore,
+            displayName: score.fullName,
+            category: score.category
+          }))}
+          candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
+          cvData={cvData || undefined}
+          sessionId={sessionId}
+        />
+      )}
     </div>
   );
 };

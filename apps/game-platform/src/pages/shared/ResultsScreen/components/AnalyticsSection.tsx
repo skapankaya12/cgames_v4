@@ -5,23 +5,34 @@ import { formatTime } from '../utils/insights';
 
 interface AnalyticsSectionProps {
   interactionAnalytics: SessionAnalytics | null;
+  onShowHelp: (context: string) => void;
 }
 
 export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ 
-  interactionAnalytics 
+  interactionAnalytics,
+  onShowHelp 
 }) => {
   if (!interactionAnalytics) {
     return (
       <div className="analytics-section">
-        <h3 style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px',
-          marginBottom: '24px'
-        }}>
-          <Icons.Brain size={24} color="#667eea" />
-          <span>Davranış Analizi</span>
-        </h3>
+        <div className="section-header-with-help">
+          <h3 style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px',
+            marginBottom: '24px'
+          }}>
+            <Icons.Brain size={24} color="#667eea" />
+            <span>Davranış Analizi</span>
+          </h3>
+          <button 
+            className="help-button"
+            onClick={() => onShowHelp('behavior-analysis')}
+            title="Bu sayfayı anlamak için yardım alın"
+          >
+            <Icons.Lightbulb size={20} />
+          </button>
+        </div>
         
         <div className="analytics-no-data">
           <div className="no-data-icon">
@@ -53,15 +64,24 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
 
   return (
     <div className="analytics-section">
-      <h3 style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '8px',
-        marginBottom: '24px'
-      }}>
-        <Icons.Brain size={24} color="#667eea" />
-        <span>Davranış Analizi</span>
-      </h3>
+      <div className="section-header-with-help">
+        <h3 style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          marginBottom: '24px'
+        }}>
+          <Icons.Brain size={24} color="#667eea" />
+          <span>Davranış Analizi</span>
+        </h3>
+        <button 
+          className="help-button"
+          onClick={() => onShowHelp('behavior-analysis')}
+          title="Bu sayfayı anlamak için yardım alın"
+        >
+          <Icons.Lightbulb size={20} />
+        </button>
+      </div>
 
       {/* Overview Stats */}
       <div className="analytics-overview">

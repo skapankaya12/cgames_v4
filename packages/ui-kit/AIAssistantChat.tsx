@@ -3,7 +3,7 @@ import { ConversationalAIService } from '@cgames/services';
 import type { ConversationMessage, ConversationContext } from '@cgames/services';
 import type { DimensionScore } from '@cgames/types/Recommendations';
 import type { CVData } from '@cgames/services';
-
+import './styles/AIAssistantChat.css';
 
 interface AIAssistantChatProps {
   scores: DimensionScore[];

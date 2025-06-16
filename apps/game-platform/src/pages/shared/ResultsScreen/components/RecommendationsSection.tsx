@@ -15,6 +15,7 @@ interface RecommendationsSectionProps {
   cvData: CVData | null;
   sessionId: string;
   onGenerateRecommendations: () => Promise<void>;
+  onShowHelp: (context: string) => void;
 }
 
 export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
@@ -25,22 +26,32 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   user,
   cvData,
   // sessionId, // Temporarily commented out unused parameter
-  onGenerateRecommendations
+  onGenerateRecommendations,
+  onShowHelp
 }) => {
   const generalRecommendations = getRecommendations(scores);
 
   return (
     <div className="recommendations-section">
       <div className="recommendations-header">
-        <h3 style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px',
-          marginBottom: '24px'
-        }}>
-          <Icons.Brain size={24} color="#667eea" />
-          <span>Kişiselleştirilmiş Öneriler</span>
-        </h3>
+        <div className="section-header-with-help">
+          <h3 style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px',
+            marginBottom: '24px'
+          }}>
+            <Icons.Brain size={24} color="#667eea" />
+            <span>Kişiselleştirilmiş Öneriler</span>
+          </h3>
+          <button 
+            className="help-button"
+            onClick={() => onShowHelp('recommendations')}
+            title="Bu sayfayı anlamak için yardım alın"
+          >
+            <Icons.Brain size={20} />
+          </button>
+        </div>
         
         {!personalizedRecommendations && !isLoadingRecommendations && (
           <button 
@@ -67,85 +78,6 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           category: score.category
         }))}
       />
-
-      {/* General Recommendations */}
-      <div className="general-recommendations-section">
-        <h4 style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px',
-          marginBottom: '16px'
-        }}>
-          <Icons.Target size={20} color="#f59e0b" />
-          <span>Genel Gelişim Önerileri</span>
-        </h4>
-        
-        <div className="recommendations-grid">
-          {generalRecommendations.length > 0 ? (
-            generalRecommendations.map((recommendation, index) => (
-              <div key={index} className="recommendation-item">
-                <div className="recommendation-icon">
-                  <Icons.Target size={16} color="#667eea" />
-                </div>
-                <p>{recommendation}</p>
-              </div>
-            ))
-          ) : (
-            <div className="no-recommendations">
-              <Icons.Check size={24} color="#10b981" />
-              <p>Tüm yetkinlik alanlarında güçlü performans gösteriyorsunuz!</p>
-            </div>
-          )}
-        </div>
-
-        {/* Additional Static Recommendations */}
-        <div className="static-recommendations">
-          <h5>Genel Liderlik Gelişim Önerileri</h5>
-          <div className="static-recommendations-grid">
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.Book size={16} color="#8b5cf6" />
-              </div>
-              <p>Liderlik gelişimi için düzenli okuma alışkanlığı edinin</p>
-            </div>
-            
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.Target size={16} color="#3b82f6" />
-              </div>
-              <p>Hedef belirleme ve takip sistemleri kullanın</p>
-            </div>
-            
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.User size={16} color="#10b981" />
-              </div>
-              <p>Mentorluk programlarına katılım sağlayın</p>
-            </div>
-            
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.Analytics size={16} color="#f59e0b" />
-              </div>
-              <p>360 derece geri bildirim süreçlerinde yer alın</p>
-            </div>
-            
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.User size={16} color="#ef4444" />
-              </div>
-              <p>Sektör ağınızı genişletmek için networking etkinliklerine katılın</p>
-            </div>
-            
-            <div className="recommendation-item">
-              <div className="recommendation-icon">
-                <Icons.Brain size={16} color="#6366f1" />
-              </div>
-              <p>Stratejik düşünme becerilerinizi geliştirmek için vaka analizleri yapın</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Action Planning Section */}
       {personalizedRecommendations?.actionPlan && personalizedRecommendations.actionPlan.length > 0 && (

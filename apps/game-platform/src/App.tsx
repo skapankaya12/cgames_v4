@@ -13,50 +13,15 @@ import './App.css';
 // Placeholder Landing Page Component
 function LandingPage() {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white',
-      textAlign: 'center',
-      padding: '20px'
-    }}>
-      <div>
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome to BokumunKuşu</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>
-          Advanced Leadership Assessment Platform
-        </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a 
-            href="/candidate" 
-            style={{ 
-              padding: '12px 24px', 
-              background: 'rgba(255,255,255,0.2)', 
-              border: '2px solid rgba(255,255,255,0.3)',
-              borderRadius: '8px', 
-              color: 'white', 
-              textDecoration: 'none',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
-          >
+    <div className="landing-page">
+      <div className="landing-content">
+        <h1>Welcome to BokumunKuşu</h1>
+        <p>Advanced Leadership Assessment Platform</p>
+        <div className="landing-buttons">
+          <a href="/candidate" className="landing-button">
             Start Assessment
           </a>
-          <a 
-            href="/candidate/game2" 
-            style={{ 
-              padding: '12px 24px', 
-              background: 'rgba(255,255,255,0.1)', 
-              border: '2px solid rgba(255,255,255,0.2)',
-              borderRadius: '8px', 
-              color: 'white', 
-              textDecoration: 'none',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
-          >
+          <a href="/candidate/game2" className="landing-button secondary">
             Game 2 Assessment
           </a>
         </div>

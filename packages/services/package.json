@@ -12,19 +12,12 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@cgames/types": "workspace:*",
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.9.0",
-    "firebase": "^11.8.1",
-    "google-spreadsheet": "^4.1.4",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^3.0.1",
-    "openai": "^4.103.0",
-    "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^5.2.133",
-    "typescript": "latest",
-    "@types/node": "^20.0.0"
+    "openai": "^4.103.0"
   },
   "devDependencies": {
-    "@types/pdf-parse": "^1.1.5"
+    "typescript": "^5.0.2"
   }
 } 

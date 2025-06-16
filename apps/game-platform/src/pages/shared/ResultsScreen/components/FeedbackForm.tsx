@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icons } from '@cgames/ui-kit';
 import type { FeedbackRatings } from '../types/results';
 
 interface FeedbackFormProps {
@@ -11,6 +12,7 @@ interface FeedbackFormProps {
   onSliderClick: (event: React.MouseEvent<HTMLDivElement>, ratingType: keyof FeedbackRatings) => void;
   onSubmit: () => Promise<void>;
   getSliderPosition: (value: number) => string;
+  onShowHelp: (context: string) => void;
 }
 
 export const FeedbackForm: React.FC<FeedbackFormProps> = ({
@@ -22,7 +24,8 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   onFeedbackTextChange,
   onSliderClick,
   onSubmit,
-  getSliderPosition
+  getSliderPosition,
+  onShowHelp
 }) => {
   const ratingLabels: { [K in keyof FeedbackRatings]: string } = {
     accuracy: 'Sonuçların Doğruluğu (1-10)',
@@ -37,10 +40,21 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
   return (
     <div className="feedback-form-section">
-      <h3>Test Deneyimi Geri Bildirimi</h3>
-      <p className="feedback-description">
-        Test deneyiminizi değerlendirerek gelişim sürecimize katkıda bulunun.
-      </p>
+      <div className="section-header-with-help">
+        <div>
+          <h3>Test Deneyimi Geri Bildirimi</h3>
+          <p className="feedback-description">
+            Test deneyiminizi değerlendirerek gelişim sürecimize katkıda bulunun.
+          </p>
+        </div>
+        <button 
+          className="help-button"
+          onClick={() => onShowHelp('feedback')}
+          title="Bu sayfayı anlamak için yardım alın"
+        >
+          <Icons.Brain size={20} />
+        </button>
+      </div>
       
       <div className="feedback-form">
         {/* Rating Sliders */}

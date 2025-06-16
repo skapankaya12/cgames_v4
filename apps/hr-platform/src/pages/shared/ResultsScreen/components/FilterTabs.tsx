@@ -27,10 +27,30 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   onDropdownToggle
 }) => {
   const filterOptions = [
-    { value: 'öneriler' as FilterType, label: 'AI Öneriler' },
-    { value: 'yetkinlikler' as FilterType, label: 'Yetkinlikler' },
-    { value: 'davranış-analizi' as FilterType, label: 'Davranış Analizi' },
-    { value: 'feedback' as FilterType, label: 'Geri Bildirim' }
+    { 
+      value: 'öneriler' as FilterType, 
+      label: 'AI Öneriler',
+      description: 'Kişiselleştirilmiş değerlendirme ve öneriler',
+      category: 'primary'
+    },
+    { 
+      value: 'yetkinlikler' as FilterType, 
+      label: 'Yetkinlikler',
+      description: `${scoresCount} yetkinlik alanı analizi`,
+      category: 'assessment'
+    },
+    { 
+      value: 'davranış-analizi' as FilterType, 
+      label: 'Davranış Analizi',
+      description: 'Davranış patternleri ve zaman analizi',
+      category: 'behavioral'
+    },
+    { 
+      value: 'feedback' as FilterType, 
+      label: 'Geri Bildirim',
+      description: 'Test deneyiminizi değerlendirin',
+      category: 'feedback'
+    }
   ];
 
   const getStatusForFilter = (filterValue: FilterType) => {
@@ -38,49 +58,49 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
       case 'öneriler':
         return (
           <span className="status-ready">
-            <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+            <Icons.Check size={16} color="currentColor" />
             Hazır
           </span>
         );
       case 'yetkinlikler':
         return (
           <span className="status-ready">
-            <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
-            Hazır
+            <Icons.Check size={16} color="currentColor" />
+            {scoresCount > 0 ? `${scoresCount} Yetkinlik` : 'Hazır'}
           </span>
         );
       case 'davranış-analizi':
         return interactionAnalytics ? (
           <span className="status-ready">
-            <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
-            Hazır
+            <Icons.Check size={16} color="currentColor" />
+            Analiz Tamamlandı
           </span>
         ) : (
           <span className="status-limited">
-            <Icons.Warning size={16} color="#f59e0b" style={{ marginRight: '4px' }} />
-            Sınırlı veri
+            <Icons.AlertCircle size={16} color="currentColor" />
+            Sınırlı Veri
           </span>
         );
       case 'feedback':
         if (feedbackSubmitSuccess) {
           return (
             <span className="status-ready">
-              <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
+              <Icons.CheckCircle size={16} color="currentColor" />
               Gönderildi
             </span>
           );
         } else if (feedbackText.trim() || Object.values(feedbackRatings).some(rating => rating > 0)) {
           return (
             <span className="status-pending">
-              <Icons.Edit size={16} color="#667eea" style={{ marginRight: '4px' }} />
+              <Icons.Edit size={16} color="currentColor" />
               Dolduruldu
             </span>
           );
         } else {
           return (
             <span className="status-ready">
-              <Icons.Check size={16} color="#10b981" style={{ marginRight: '4px' }} />
-              Hazır
+              <Icons.MessageSquare size={16} color="currentColor" />
+              Bekliyor
             </span>
           );
         }
@@ -90,35 +110,39 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   };
 
   const getIconForFilter = (filterValue: FilterType, isActive: boolean) => {
-    const color = isActive ? 'white' : '#667eea';
     const size = 32;
 
     switch (filterValue) {
       case 'öneriler':
-        return <Icons.AI size={size} color={color} />;
+        return <Icons.Brain size={size} color="white" />;
       case 'yetkinlikler':
-        return <Icons.Analytics size={size} color={color} />;
+        return <Icons.BarChart3 size={size} color="white" />;
       case 'davranış-analizi':
-        return <Icons.Brain size={size} color={color} />;
+        return <Icons.Activity size={size} color="white" />;
       case 'feedback':
-        return <Icons.Message size={size} color={color} />;
+        return <Icons.MessageSquare size={size} color="white" />;
       default:
-        return null;
+        return <Icons.FileText size={size} color="white" />;
     }
   };
 
-  const getDescriptionForFilter = (filterValue: FilterType) => {
+  const getProgressInfo = (filterValue: FilterType) => {
     switch (filterValue) {
       case 'öneriler':
-        return 'Kişiselleştirilmiş değerlendirme ve öneriler';
+        return { completed: true, total: 1, current: 1 };
       case 'yetkinlikler':
-        return `${scoresCount} yetkinlik alanı analizi`;
+        return { completed: scoresCount > 0, total: Math.max(scoresCount, 1), current: scoresCount };
       case 'davranış-analizi':
-        return 'Davranış patternleri ve zaman analizi';
+        return { completed: !!interactionAnalytics, total: 1, current: interactionAnalytics ? 1 : 0 };
       case 'feedback':
-        return 'Test deneyiminizi değerlendirin';
+        const hasContent = feedbackText.trim() || Object.values(feedbackRatings).some(rating => rating > 0);
+        return { 
+          completed: feedbackSubmitSuccess, 
+          total: 1, 
+          current: feedbackSubmitSuccess ? 1 : (hasContent ? 0.5 : 0) 
+        };
       default:
-        return '';
+        return { completed: false, total: 1, current: 0 };
     }
   };
 
@@ -136,46 +160,192 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
         <button 
           className="filter-button"
           onClick={onDropdownToggle}
+          aria-expanded={isDropdownOpen}
+          aria-haspopup="listbox"
         >
-          {filterOptions.find(opt => opt.value === currentFilter)?.label}
-          <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></span>
+          <span className="filter-button-content">
+            {getIconForFilter(currentFilter, true)}
+            <span className="filter-button-text">
+              {filterOptions.find(opt => opt.value === currentFilter)?.label}
+            </span>
+          </span>
+          <Icons.ChevronDown 
+            size={20} 
+            className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}
+          />
         </button>
         {isDropdownOpen && (
-          <div className="filter-dropdown-menu">
-            {filterOptions.map(option => (
-              <button
-                key={option.value}
-                className={`filter-option ${currentFilter === option.value ? 'active' : ''}`}
-                onClick={() => handleFilterClick(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
+          <div className="filter-dropdown-menu" role="listbox">
+            {filterOptions.map(option => {
+              const progressInfo = getProgressInfo(option.value);
+              return (
+                <button
+                  key={option.value}
+                  className={`filter-option ${currentFilter === option.value ? 'active' : ''}`}
+                  onClick={() => handleFilterClick(option.value)}
+                  role="option"
+                  aria-selected={currentFilter === option.value}
+                >
+                  <div className="filter-option-icon">
+                    {getIconForFilter(option.value, currentFilter === option.value)}
+                  </div>
+                  <div className="filter-option-content">
+                    <span className="filter-option-label">{option.label}</span>
+                    <span className="filter-option-description">{option.description}</span>
+                    <div className="filter-option-status">
+                      {getStatusForFilter(option.value)}
+                    </div>
+                  </div>
+                  {progressInfo.total > 1 && (
+                    <div className="filter-option-progress">
+                      <span className="progress-text">
+                        {Math.floor(progressInfo.current)}/{progressInfo.total}
+                      </span>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill"
+                          style={{ width: `${(progressInfo.current / progressInfo.total) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Desktop Tab Cards */}
+      {/* Enhanced Desktop Navigation Cards */}
       <div className="content-overview-section">
+        <div className="section-header">
+          <h2 className="section-title">Sonuç Ekranı Rehberi</h2>
+          <p className="section-subtitle">
+            Bu ekranda aday değerlendirme sonuçlarınızı görüntüleyebilir ve analiz edebilirsiniz.
+          </p>
+        </div>
+        
         <div className="content-navigation-cards">
-          {filterOptions.map(option => (
-            <div 
-              key={option.value}
-              className={`content-nav-card ${currentFilter === option.value ? 'active' : ''}`}
-              onClick={() => handleFilterClick(option.value)}
-            >
-              <div className="nav-card-icon">
-                {getIconForFilter(option.value, currentFilter === option.value)}
-              </div>
-              <div className="nav-card-content">
-                <h4>{option.label}</h4>
-                <p>{getDescriptionForFilter(option.value)}</p>
-                <div className="nav-card-status">
-                  {getStatusForFilter(option.value)}
+          {filterOptions.map((option, index) => {
+            const progressInfo = getProgressInfo(option.value);
+            const isActive = currentFilter === option.value;
+            const completionPercentage = progressInfo.total > 0 
+              ? (progressInfo.current / progressInfo.total) * 100 
+              : 0;
+            
+            return (
+              <div 
+                key={option.value}
+                className={`content-nav-card ${isActive ? 'active' : ''} ${option.category}`}
+                onClick={() => handleFilterClick(option.value)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleFilterClick(option.value);
+                  }
+                }}
+                aria-label={`${option.label} - ${option.description}`}
+              >
+                <div className="nav-card-header">
+                  <div className="nav-card-icon">
+                    {getIconForFilter(option.value, isActive)}
+                  </div>
+                  {progressInfo.total > 1 && (
+                    <div className="nav-card-progress">
+                      <div className="progress-circle">
+                        <svg viewBox="0 0 36 36" className="circular-chart">
+                          <path
+                            className="circle-bg"
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            className="circle"
+                            strokeDasharray={`${completionPercentage}, 100`}
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                        </svg>
+                        <span className="progress-percentage">
+                          {Math.round(completionPercentage)}%
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
+                
+                <div className="nav-card-content">
+                  <h4 className="nav-card-title">{option.label}</h4>
+                  <p className="nav-card-description">{option.description}</p>
+                  
+                  <div className="nav-card-footer">
+                    <div className="nav-card-status">
+                      {getStatusForFilter(option.value)}
+                    </div>
+                    
+                    {isActive && (
+                      <div className="nav-card-indicator">
+                        <Icons.ChevronRight size={16} color="var(--candidate-primary)" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Card Enhancement Lines */}
+                <div className="nav-card-accent-line" />
+                
+                {/* Card Number for Visual Hierarchy */}
+                <div className="nav-card-number">{index + 1}</div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        {/* Enhanced Progress Indicator */}
+        <div className="overall-progress-section">
+          <div className="progress-header">
+            <h3 className="progress-title">Genel İlerleme</h3>
+            <p className="progress-subtitle">Tüm değerlendirme alanlarındaki durumunuz</p>
+          </div>
+          
+          <div className="progress-steps">
+            {filterOptions.map((option, index) => {
+              const progressInfo = getProgressInfo(option.value);
+              const isCompleted = progressInfo.completed;
+              const isActive = currentFilter === option.value;
+              
+              return (
+                <React.Fragment key={option.value}>
+                  <div 
+                    className={`progress-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`}
+                    onClick={() => handleFilterClick(option.value)}
+                  >
+                    <div className="step-icon">
+                      {isCompleted ? (
+                        <Icons.Check size={16} color="white" />
+                      ) : (
+                        <span className="step-number">{index + 1}</span>
+                      )}
+                    </div>
+                    <div className="step-content">
+                      <span className="step-label">{option.label}</span>
+                      <div className="step-status">
+                        {getStatusForFilter(option.value)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {index < filterOptions.length - 1 && (
+                    <div className={`progress-connector ${isCompleted ? 'completed' : ''}`} />
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>

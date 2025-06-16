@@ -5,81 +5,81 @@ import { getScorePercentage, getScoreLevelColor, getInsight } from '../utils/ins
 
 interface ScoreDisplayProps {
   scores: CompetencyScore[];
+  onShowHelp: (context: string) => void;
 }
 
-export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores }) => {
+export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores, onShowHelp }) => {
+  if (scores.length === 0) {
+    return (
+      <div className="score-display empty-state">
+        <div className="empty-state-content">
+          <Icons.Analytics size={48} color="#9ca3af" />
+          <h3>Henüz veri bulunmuyor</h3>
+          <p>Oyun tamamlandıktan sonra skorlarınız burada görüntülenecek.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="yetkinlikler-section">
-      <h3 style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '8px',
-        marginBottom: '24px'
-      }}>
-        <Icons.Analytics size={24} color="#667eea" />
-        <span>Yetkinlik Analizi</span>
-      </h3>
-      
-      <div className="competency-grid">
+    <div className="score-display">
+      <div className="section-header">
+        <h2>Yetkinlik Skorları</h2>
+        <button className="section-help-button" onClick={() => onShowHelp('competencies')}>
+          <Icons.Lightbulb size={20} />
+          Yardım
+        </button>
+      </div>
+
+      <div className="scores-grid">
         {scores.map((score, index) => {
           const percentage = getScorePercentage(score.score, score.maxScore);
           const levelColor = getScoreLevelColor(percentage);
           const insight = getInsight(score.abbreviation, score.score);
-
+          
+          // Get performance level
+          const getPerformanceLevel = (percentage: number) => {
+            if (percentage >= 80) return { label: 'Mükemmel', color: '#10b981' };
+            if (percentage >= 60) return { label: 'İyi', color: '#708238' };
+            if (percentage >= 40) return { label: 'Orta', color: '#f59e0b' };
+            return { label: 'Gelişim Gerekli', color: '#ef4444' };
+          };
+          
+          const performanceLevel = getPerformanceLevel(percentage);
+          
           return (
-            <div key={index} className="competency-card">
-              <div className="competency-header">
-                <div className="competency-info">
-                  <h4 className="competency-name">
-                    {score.fullName}
-                    <span className="competency-abbrev">({score.abbreviation})</span>
-                  </h4>
-                  <p className="competency-description">{score.description}</p>
-                </div>
-                <div className="competency-score-circle">
-                  <div 
-                    className="score-progress"
-                    style={{
-                      background: `conic-gradient(${levelColor} ${percentage * 3.6}deg, #e5e7eb 0deg)`
-                    }}
-                  >
-                    <div className="score-inner">
-                      <span className="score-percentage">{percentage}%</span>
-                    </div>
+            <div key={index} className="score-card">
+              <div className="score-header">
+                <div className="score-title">
+                  <h3>{score.fullName}</h3>
+                  <div className="score-level">
+                    <Icons.Lightbulb size={16} color={levelColor} />
+                    <span style={{ color: performanceLevel.color }}>
+                      {performanceLevel.label}
+                    </span>
                   </div>
+                </div>
+                <div className="score-percentage">
+                  <span className="percentage-value" style={{ color: levelColor }}>
+                    {percentage}%
+                  </span>
                 </div>
               </div>
               
-              <div className="competency-details">
+              <div className="score-progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ 
+                    width: `${percentage}%`, 
+                    backgroundColor: levelColor 
+                  }}
+                />
+              </div>
+              
+              <div className="score-details">
                 <div className="score-breakdown">
-                  <span className="score-text">
-                    Puan: {score.score} / {score.maxScore}
-                  </span>
-                  <div 
-                    className="score-bar"
-                    style={{
-                      background: `linear-gradient(to right, ${levelColor} ${percentage}%, #e5e7eb ${percentage}%)`
-                    }}
-                  />
-                </div>
-                
-                <div className="competency-insight">
-                  <div className="insight-icon">
-                    <Icons.Lightbulb size={16} color={levelColor} />
-                  </div>
-                  <p className="insight-text">{insight}</p>
-                </div>
-                
-                <div className="competency-category">
-                  <span 
-                    className="category-badge"
-                    style={{ 
-                      backgroundColor: `${levelColor}20`,
-                      color: levelColor,
-                      border: `1px solid ${levelColor}40`
-                    }}
-                  >
-                    {score.category}
+                  <span className="score-raw">
+                    {score.score} / {score.maxScore} puan
                   </span>
                 </div>
               </div>
@@ -88,48 +88,44 @@ export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores }) => {
         })}
       </div>
 
-      {/* Summary Section */}
-      <div className="competency-summary">
-        <h4>Yetkinlik Özeti</h4>
-        <div className="summary-stats">
-          <div className="summary-stat">
-            <div className="stat-icon">
-              <Icons.Trophy size={20} color="#10b981" />
-            </div>
-            <div className="stat-content">
-              <span className="stat-label">En Güçlü Yetkinlik</span>
-              <span className="stat-value">
-                {scores.length > 0 ? scores[0].fullName : 'Veri yok'}
-              </span>
-            </div>
+      {/* Summary Cards */}
+      <div className="score-summary">
+        <div className="summary-card best-score">
+          <div className="summary-icon">
+            <Icons.Trophy size={20} color="#10b981" />
           </div>
-          
-          <div className="summary-stat">
-            <div className="stat-icon">
-              <Icons.Target size={20} color="#f59e0b" />
-            </div>
-            <div className="stat-content">
-              <span className="stat-label">Gelişim Alanı</span>
-              <span className="stat-value">
-                {scores.length > 0 ? scores[scores.length - 1].fullName : 'Veri yok'}
-              </span>
-            </div>
+          <div className="summary-content">
+            <h4>En İyi Performans</h4>
+            <p>{scores[0]?.fullName}</p>
+            <span className="summary-score">
+              {getScorePercentage(scores[0]?.score || 0, scores[0]?.maxScore || 100)}%
+            </span>
           </div>
-          
-          <div className="summary-stat">
-            <div className="stat-icon">
-              <Icons.BarChart3 size={20} color="#667eea" />
-            </div>
-            <div className="stat-content">
-              <span className="stat-label">Ortalama Performans</span>
-              <span className="stat-value">
-                {scores.length > 0 
-                  ? `${Math.round(scores.reduce((sum, score) => 
-                      sum + getScorePercentage(score.score, score.maxScore), 0) / scores.length)}%`
-                  : 'Veri yok'
-                }
-              </span>
-            </div>
+        </div>
+
+        <div className="summary-card needs-improvement">
+          <div className="summary-icon">
+            <Icons.Target size={20} color="#f59e0b" />
+          </div>
+          <div className="summary-content">
+            <h4>Gelişim Alanı</h4>
+            <p>{scores[scores.length - 1]?.fullName}</p>
+            <span className="summary-score">
+              {getScorePercentage(scores[scores.length - 1]?.score || 0, scores[scores.length - 1]?.maxScore || 100)}%
+            </span>
+          </div>
+        </div>
+
+        <div className="summary-card average-score">
+          <div className="summary-icon">
+            <Icons.BarChart3 size={20} color="#667eea" />
+          </div>
+          <div className="summary-content">
+            <h4>Ortalama Performans</h4>
+            <p>{scores.length} yetkinlik alanı</p>
+            <span className="summary-score">
+              {Math.round(scores.reduce((sum, score) => sum + getScorePercentage(score.score, score.maxScore), 0) / scores.length)}%
+            </span>
           </div>
         </div>
       </div>

@@ -1,11 +1,11 @@
-/* Personalized Recommendations Styles - Enhanced for Transparency */
+/* Personalized Recommendations Styles - Enhanced with Brand Colors */
 .recommendations-section {
   background: #ffffff;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(112, 130, 56, 0.1); /* Brand shadow */
   margin-bottom: 32px;
-  border: 1px solid #d1fae5;
+  border: 1px solid rgba(184, 192, 168, 0.3); /* Brand border */
 }
 
 .recommendations-header {
@@ -14,18 +14,18 @@
 }
 
 .recommendations-header h3 {
-  color: #1a365d;
+  color: #2F2F2F; /* Brand dark color */
   font-size: 28px;
   font-weight: 700;
   margin: 0 0 12px 0;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #708238 0%, #B8C0A8 100%); /* Brand gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .recommendations-subtitle {
-  color: #64748b;
+  color: #708238; /* Brand primary color */
   font-size: 16px;
   margin: 0 0 24px 0;
   line-height: 1.5;
@@ -33,11 +33,11 @@
 
 /* AI Transparency Info */
 .ai-transparency-info {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, #F1EFE8 0%, rgba(184, 192, 168, 0.1) 100%); /* Brand light gradient */
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
-  border: 1px solid #bbf7d0;
+  border: 1px solid rgba(184, 192, 168, 0.2); /* Brand border */
 }
 
 .ai-info-grid {
@@ -56,7 +56,7 @@
 .ai-info-label {
   font-size: 12px;
   font-weight: 600;
-  color: #64748b;
+  color: #708238; /* Brand primary color */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
@@ -65,7 +65,7 @@
 .ai-info-value {
   font-size: 16px;
   font-weight: 700;
-  color: #1e293b;
+  color: #2F2F2F; /* Brand dark color */
 }
 
 /* Loading State */
@@ -74,14 +74,14 @@
   flex-direction: column;
   align-items: center;
   padding: 60px 20px;
-  color: #64748b;
+  color: #708238; /* Brand primary color */
 }
 
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid #e2e8f0;
-  border-top: 4px solid #22c55e;
+  border: 4px solid rgba(184, 192, 168, 0.3);
+  border-top: 4px solid #708238; /* Brand primary color */
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -90,7 +90,7 @@
 .recommendations-loading small {
   margin-top: 8px;
   font-size: 14px;
-  color: #94a3b8;
+  color: #B8C0A8; /* Brand secondary color */
 }
 
 @keyframes spin {
@@ -100,28 +100,30 @@
 
 /* Error State */
 .recommendations-error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: #F1EFE8; /* Brand light background */
+  border: 1px solid rgba(112, 130, 56, 0.3); /* Brand border */
   border-radius: 12px;
   padding: 24px;
   text-align: center;
-  color: #dc2626;
+  color: #2F2F2F; /* Brand dark color */
 }
 
 .recommendations-error h4 {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
+  color: #708238; /* Brand primary color */
 }
 
 .recommendations-error p {
   margin: 0 0 16px 0;
   font-size: 14px;
+  color: #708238; /* Brand primary color */
 }
 
 .retry-button {
-  background: #dc2626;
-  color: white;
+  background: linear-gradient(135deg, #708238 0%, #B8C0A8 100%); /* Brand gradient */
+  color: #F1EFE8; /* Brand light color */
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
@@ -132,8 +134,9 @@
 }
 
 .retry-button:hover {
-  background: #b91c1c;
+  background: linear-gradient(135deg, #5d6b2e 0%, #a8b296 100%); /* Darker brand gradient */
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(112, 130, 56, 0.3);
 }
 
 /* Generate AI Recommendations Button */
@@ -143,8 +146,8 @@
 }
 
 .generate-ai-recommendations-btn {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: white;
+  background: linear-gradient(135deg, #708238 0%, #B8C0A8 100%); /* Brand gradient */
+  color: #F1EFE8; /* Brand light color */
   border: none;
   border-radius: 12px;
   padding: 16px 32px;
@@ -155,16 +158,18 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 4px 16px rgba(112, 130, 56, 0.2); /* Brand shadow */
 }
 
 .generate-ai-recommendations-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 24px rgba(112, 130, 56, 0.3); /* Brand shadow */
+  background: linear-gradient(135deg, #5d6b2e 0%, #a8b296 100%); /* Darker brand gradient */
 }
 
 .generate-ai-recommendations-btn:disabled {
-  background: #d1d5db;
+  background: #B8C0A8; /* Brand secondary color */
+  color: rgba(47, 47, 47, 0.5);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -179,16 +184,16 @@
 
 .recommendation-card {
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(184, 192, 168, 0.3); /* Brand border */
   border-radius: 12px;
   padding: 24px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(112, 130, 56, 0.05); /* Brand shadow */
 }
 
 .recommendation-card:hover {
-  border-color: #22c55e;
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.1);
+  border-color: #708238; /* Brand primary color */
+  box-shadow: 0 8px 24px rgba(112, 130, 56, 0.15); /* Brand shadow */
   transform: translateY(-2px);
 }
 

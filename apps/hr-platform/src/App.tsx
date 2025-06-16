@@ -10,53 +10,42 @@ import Analytics from './pages/hr/Analytics';
 import Candidates from './pages/hr/Candidates';
 import './App.css';
 
-// Placeholder Landing Page Component
+// Landing Page Component
 function LandingPage() {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white',
-      textAlign: 'center',
-      padding: '20px'
-    }}>
-      <div>
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome to BokumunKuşu</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>
+    <div className="full-page-container landing-container">
+      <div className="landing-background">
+        <div className="landing-shapes">
+          <div className="landing-shape"></div>
+          <div className="landing-shape"></div>
+          <div className="landing-shape"></div>
+        </div>
+      </div>
+      
+      <div className="landing-content">
+        <h1 className="landing-title">Welcome to BokumunKuşu</h1>
+        <p className="landing-subtitle">
           Advanced Leadership Assessment Platform
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="landing-actions">
           <a 
             href="/hr" 
-            style={{ 
-              padding: '12px 24px', 
-              background: 'rgba(255,255,255,0.2)', 
-              border: '2px solid rgba(255,255,255,0.3)',
-              borderRadius: '8px', 
-              color: 'white', 
-              textDecoration: 'none',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
+            className="landing-button primary"
+            aria-label="Access HR Dashboard"
           >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+            </svg>
             HR Dashboard
           </a>
           <a 
             href="/hr/register" 
-            style={{ 
-              padding: '12px 24px', 
-              background: 'rgba(255,255,255,0.1)', 
-              border: '2px solid rgba(255,255,255,0.2)',
-              borderRadius: '8px', 
-              color: 'white', 
-              textDecoration: 'none',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
+            className="landing-button"
+            aria-label="Register new account"
           >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+            </svg>
             Register
           </a>
         </div>

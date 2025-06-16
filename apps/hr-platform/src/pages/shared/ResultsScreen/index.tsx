@@ -9,11 +9,11 @@ import { FeedbackForm } from './components/FeedbackForm';
 import { useResultsData } from './hooks/useResultsData';
 import { useSubmitResults } from './hooks/useSubmitResults';
 import { useFeedback } from './hooks/useFeedback';
-import { usePDFOperations } from './hooks/usePDFOperations';
 import { usePersonalizedRecommendations } from './hooks/usePersonalizedRecommendations';
 
 
 // Import the CSS file (assuming it's in the styles directory)
+import '@cgames/ui-kit/styles/ResultsScreen.css';
 
 
 export const SharedResultsScreen: React.FC = () => {
@@ -58,19 +58,6 @@ export const SharedResultsScreen: React.FC = () => {
     handleFeedbackSubmit,
     getSliderPosition
   } = useFeedback(user);
-
-  // PDF operations
-  const {
-    isImporting,
-    importError,
-    importSuccess,
-    fileInputRef,
-    handleExportData,
-    handleImportClick,
-    handleFileSelect,
-    setImportError,
-    setImportSuccess
-  } = usePDFOperations(user, scores, interactionAnalytics, storedRecommendations);
 
   // Personalized recommendations
   const {
@@ -202,164 +189,105 @@ export const SharedResultsScreen: React.FC = () => {
 
   return (
     <div className="modern-results-container">
-      {/* User Guide Panel */}
-      <UserGuidePanel 
-        currentFilter={currentFilter} 
-        onCollapseChange={setIsGuidePanelCollapsed} 
-      />
-      
-      {/* Main Content Wrapper */}
-      <div className={`main-content-wrapper ${isGuidePanelCollapsed ? 'guide-collapsed' : ''}`}>
-        {/* Header */}
-        <div className="modern-header">
-          <div className="header-left">
-            <h1>Sonuçlar</h1>
+      {/* Top Navigation Bar */}
+      <div className="results-header">
+        <div className="header-content">
+          <div className="title-section">
+            <h1>🎯 Liderlik Yetenekleri Analizi</h1>
             {user && (
               <p className="user-info">
+                <Icons.User size={16} />
                 {user.firstName} {user.lastName}
                 {user.company && ` - ${user.company}`}
               </p>
             )}
           </div>
-          <div className="header-right">
-            <div className="header-controls">
-              <button className="export-button" onClick={handleExportData}>
-                PDF Dışa Aktar
-              </button>
-              <button 
-                className="import-button" 
-                onClick={handleImportClick}
-                disabled={isImporting}
-              >
-                {isImporting ? 'İçe Aktarılıyor...' : 'PDF İçe Aktar'}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf"
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
-              />
-              <button 
-                className="manual-submit-button" 
-                onClick={handleManualSubmit}
-                disabled={isSubmitting}
-                style={{
-                  backgroundColor: isSubmitting ? '#ccc' : '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                  marginLeft: '8px'
-                }}
-              >
-                {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
-              </button>
-            </div>
-            <button className="restart-button" onClick={handleRestart}>
+          
+          <div className="action-buttons">
+            <button className="primary-button" onClick={handleManualSubmit} disabled={isSubmitting}>
+              <Icons.Send size={16} />
+              {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
+            </button>
+            <button className="secondary-button" onClick={handleRestart}>
+              <Icons.RotateCcw size={16} />
               Yeni Test
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Filter Tabs */}
+      {/* Main Content Container */}
+      <div className="results-content">
+        {/* Filter Navigation */}
         <FilterTabs
           currentFilter={currentFilter}
           onFilterChange={setCurrentFilter}
-          scoresCount={scores.length}
-          interactionAnalytics={interactionAnalytics}
-          feedbackSubmitSuccess={feedbackSubmitSuccess}
-          feedbackText={feedbackText}
-          feedbackRatings={feedbackRatings}
           isDropdownOpen={isFilterDropdownOpen}
-          onDropdownToggle={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+          onToggleDropdown={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
         />
 
-        {/* Main Content */}
-        <div className="modern-content">
-          {renderFilteredContent()}
-        </div>
-
-        {/* Status Messages */}
-        {isSubmitting && (
-          <div className="status-overlay">
-            <div className="status-message loading">
-              <div className="spinner"></div>
-              Sonuçlar kaydediliyor...
-            </div>
+        {/* Results Display */}
+        <div className="content-area">
+          <div className="main-content">
+            {renderFilteredContent()}
           </div>
-        )}
 
-        {isImporting && (
-          <div className="status-overlay">
-            <div className="status-message loading">
-              <div className="spinner"></div>
-              PDF dosyası içe aktarılıyor...
-            </div>
-          </div>
-        )}
-
-        {submitError && (
-          <div className="status-overlay">
-            <div className="status-message error">
-              {submitError}
-              <button onClick={() => setSubmitError(null)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {importError && (
-          <div className="status-overlay">
-            <div className="status-message error">
-              {importError}
-              <button onClick={() => setImportError(null)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {submitSuccess && (
-          <div className="status-overlay">
-            <div className="status-message success">
-              Sonuçlar başarıyla kaydedildi!
-              <button onClick={() => setSubmitSuccess(false)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {importSuccess && (
-          <div className="status-overlay">
-            <div className="status-message success">
-              PDF dosyası başarıyla içe aktarıldı!
-              <button onClick={() => setImportSuccess(false)}>
-                <Icons.Close size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* AI Assistant Chat - only show if we have scores */}
-        {scores.length > 0 && (
-          <AIAssistantChat
-            scores={scores.map(score => ({
-              dimension: score.abbreviation,
-              score: score.score,
-              maxScore: score.maxScore,
-              displayName: score.fullName,
-              category: score.category
-            }))}
-            candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
-            cvData={cvData || undefined}
-            sessionId={sessionId}
+          {/* User Guide Panel */}
+          <UserGuidePanel
+            isCollapsed={isGuidePanelCollapsed}
+            onToggle={() => setIsGuidePanelCollapsed(!isGuidePanelCollapsed)}
+            currentFilter={currentFilter}
           />
-        )}
+        </div>
       </div>
+
+      {/* Status Messages */}
+      {isSubmitting && (
+        <div className="status-overlay">
+          <div className="status-message loading">
+            <div className="spinner"></div>
+            Sonuçlar kaydediliyor...
+          </div>
+        </div>
+      )}
+
+      {submitError && (
+        <div className="status-overlay">
+          <div className="status-message error">
+            {submitError}
+            <button onClick={() => setSubmitError(null)}>
+              <Icons.Close size={16} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {submitSuccess && (
+        <div className="status-overlay">
+          <div className="status-message success">
+            Sonuçlar başarıyla kaydedildi!
+            <button onClick={() => setSubmitSuccess(false)}>
+              <Icons.Close size={16} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* AI Assistant Chat - Floating */}
+      {scores.length > 0 && (
+        <AIAssistantChat
+          scores={scores.map(score => ({
+            dimension: score.abbreviation,
+            score: score.score,
+            maxScore: score.maxScore,
+            displayName: score.fullName,
+            category: score.category
+          }))}
+          candidateName={user ? `${user.firstName} ${user.lastName}` : undefined}
+          cvData={cvData || undefined}
+          sessionId={sessionId}
+        />
+      )}
     </div>
   );
 };

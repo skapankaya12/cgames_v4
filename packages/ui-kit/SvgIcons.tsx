@@ -212,6 +212,40 @@ export const BarChart3Icon: React.FC<IconProps> = ({ size = 24, color = 'current
   </svg>
 );
 
+// Download Icon
+export const DownloadIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M21 15V19A2 2 0 0119 21H5A2 2 0 013 19V15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="7,10 12,15 17,10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="12" y1="15" x2="12" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Upload Icon
+export const UploadIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M21 15V19A2 2 0 0119 21H5A2 2 0 013 19V15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="17,8 12,3 7,8" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="12" y1="3" x2="12" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Send Icon
+export const SendIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <line x1="22" y1="2" x2="11" y2="13" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polygon points="22,2 15,22 11,13 2,9 22,2" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// RotateCcw Icon (Rotate Counter-Clockwise)
+export const RotateCcwIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="1,4 1,10 7,10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M3.51 15A9 9 0 1 0 6 5L1 10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // Export all icons as a convenient object
 export const Icons = {
   AI: AIIcon,
@@ -239,4 +273,8 @@ export const Icons = {
   Lightbulb: LightbulbIcon,
   Trophy: TrophyIcon,
   BarChart3: BarChart3Icon,
+  Download: DownloadIcon,
+  Upload: UploadIcon,
+  Send: SendIcon,
+  RotateCcw: RotateCcwIcon,
 }; 

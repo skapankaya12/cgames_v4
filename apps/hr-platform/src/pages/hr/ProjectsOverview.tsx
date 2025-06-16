@@ -159,27 +159,41 @@ export default function ProjectsOverview() {
 
   if (loading) {
     return (
-      <div className="hr-dashboard-loading" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
-        <div className="loading-spinner-large"></div>
-        <p>Loading your projects...</p>
-      </div>
+      <>
+        <Navigation 
+          isCollapsed={isNavCollapsed} 
+          setIsCollapsed={setIsNavCollapsed} 
+          hrUser={hrUser} 
+        />
+        <div className={`hr-dashboard-loading ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+          <div className="loading-spinner-large"></div>
+          <p>Loading your projects...</p>
+        </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="hr-dashboard-error" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
-        <div className="error-icon">
-          <svg viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
+      <>
+        <Navigation 
+          isCollapsed={isNavCollapsed} 
+          setIsCollapsed={setIsNavCollapsed} 
+          hrUser={hrUser} 
+        />
+        <div className={`hr-dashboard-error ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+          <div className="error-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <h2>Something went wrong</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()} className="retry-button">
+            Try Again
+          </button>
         </div>
-        <h2>Something went wrong</h2>
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()} className="retry-button">
-          Try Again
-        </button>
-      </div>
+      </>
     );
   }
 
@@ -194,7 +208,7 @@ export default function ProjectsOverview() {
         hrUser={hrUser} 
       />
       
-      <div className="hr-dashboard" style={{ marginLeft: isNavCollapsed ? '72px' : '280px', transition: 'margin-left 0.3s ease' }}>
+      <div className={`hr-dashboard ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
         {/* Header */}
         <header className="dashboard-header">
           <div className="header-content">

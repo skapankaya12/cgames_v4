@@ -476,4 +476,902 @@
     text-align: center;
     gap: 8px;
   }
+}
+
+/* Enhanced Candidates Results Screen with UX-Focused Design */
+:root {
+  /* Candidate Results Color Palette */
+  --candidate-primary: #708238;       /* Olive Green - Primary actions */
+  --candidate-primary-light: #8a9b4a; /* Hover states */
+  --candidate-secondary: #B8C0A8;     /* Sage - Secondary elements */
+  --candidate-background: #F1EFE8;    /* Soft Beige - Main background */
+  --candidate-surface: #ffffff;       /* White - Cards */
+  --candidate-text: #2F2F2F;          /* Charcoal - Primary text */
+  --candidate-text-secondary: #5a5a5a; /* Secondary text */
+  --candidate-text-muted: #888888;    /* Muted text */
+  
+  /* Status Colors with Psychology */
+  --status-excellent: #10b981;        /* Green - Excellent performance */
+  --status-good: #6366f1;            /* Indigo - Good performance */
+  --status-average: #f59e0b;         /* Amber - Average performance */
+  --status-needs-improvement: #ef4444; /* Red - Needs improvement */
+  --status-pending: #8b5cf6;         /* Purple - Pending/In progress */
+  
+  /* Spacing Scale */
+  --candidate-space-xs: 0.25rem;
+  --candidate-space-sm: 0.5rem; 
+  --candidate-space-md: 1rem;
+  --candidate-space-lg: 1.5rem;
+  --candidate-space-xl: 2rem;
+  --candidate-space-2xl: 3rem;
+  
+  /* Typography */
+  --candidate-text-xs: 0.75rem;
+  --candidate-text-sm: 0.875rem;
+  --candidate-text-base: 1rem;
+  --candidate-text-lg: 1.125rem;
+  --candidate-text-xl: 1.25rem;
+  --candidate-text-2xl: 1.5rem;
+  --candidate-text-3xl: 1.875rem;
+  
+  /* Shadows */
+  --candidate-shadow-sm: 0 1px 2px 0 rgba(47, 47, 47, 0.05);
+  --candidate-shadow-md: 0 4px 6px -1px rgba(47, 47, 47, 0.1);
+  --candidate-shadow-lg: 0 10px 15px -3px rgba(47, 47, 47, 0.1);
+  --candidate-shadow-hover: 0 8px 25px -5px rgba(112, 130, 56, 0.2);
+  
+  /* Border Radius */
+  --candidate-radius-sm: 6px;
+  --candidate-radius-md: 8px;
+  --candidate-radius-lg: 12px;
+  --candidate-radius-xl: 16px;
+  --candidate-radius-2xl: 24px;
+}
+
+/* Enhanced Candidate Results Header */
+.candidate-results-header {
+  background: var(--candidate-surface);
+  padding: var(--candidate-space-xl);
+  box-shadow: var(--candidate-shadow-md);
+  border-bottom: 1px solid var(--candidate-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.candidate-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.candidate-info-section {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-lg);
+}
+
+.candidate-avatar-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--candidate-primary), var(--candidate-secondary));
+  border-radius: var(--candidate-radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--candidate-text-xl);
+  font-weight: 700;
+  box-shadow: var(--candidate-shadow-md);
+  flex-shrink: 0;
+}
+
+.candidate-details-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-xs);
+}
+
+.candidate-name-main {
+  font-size: var(--candidate-text-3xl);
+  font-weight: 700;
+  color: var(--candidate-text);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.candidate-role-main {
+  font-size: var(--candidate-text-lg);
+  color: var(--candidate-text-secondary);
+  font-weight: 500;
+  margin: 0;
+}
+
+.candidate-meta-info {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-md);
+  font-size: var(--candidate-text-sm);
+  color: var(--candidate-text-muted);
+}
+
+.candidate-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-xs);
+}
+
+/* Enhanced Action Buttons */
+.candidate-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-sm);
+}
+
+.candidate-action-btn {
+  padding: var(--candidate-space-md) var(--candidate-space-lg);
+  border-radius: var(--candidate-radius-lg);
+  font-weight: 600;
+  font-size: var(--candidate-text-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--candidate-space-sm);
+  min-height: 44px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.candidate-action-btn.primary {
+  background: var(--status-excellent);
+  color: white;
+  border-color: var(--status-excellent);
+}
+
+.candidate-action-btn.primary:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: var(--candidate-shadow-hover);
+}
+
+.candidate-action-btn.secondary {
+  background: var(--candidate-surface);
+  color: var(--candidate-primary);
+  border-color: var(--candidate-secondary);
+}
+
+.candidate-action-btn.secondary:hover {
+  background: var(--candidate-secondary);
+  color: var(--candidate-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--candidate-shadow-md);
+}
+
+.candidate-action-btn.warning {
+  background: var(--candidate-surface);
+  color: var(--status-average);
+  border-color: var(--status-average);
+}
+
+.candidate-action-btn.warning:hover {
+  background: var(--status-average);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px -5px rgba(245, 158, 11, 0.3);
+}
+
+/* Enhanced Navigation Tabs */
+.candidate-nav-tabs {
+  background: var(--candidate-surface);
+  border-bottom: 1px solid var(--candidate-secondary);
+  overflow-x: auto;
+}
+
+.candidate-nav-tabs-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--candidate-space-xl);
+}
+
+.candidate-nav-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-sm);
+  padding: var(--candidate-space-lg) var(--candidate-space-xl);
+  color: var(--candidate-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--candidate-text-sm);
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.candidate-nav-tab:hover {
+  color: var(--candidate-primary);
+  background: rgba(112, 130, 56, 0.05);
+}
+
+.candidate-nav-tab.active {
+  color: var(--candidate-primary);
+  border-bottom-color: var(--candidate-primary);
+  background: rgba(112, 130, 56, 0.05);
+}
+
+.candidate-nav-tab-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Enhanced Content Sections */
+.candidate-content-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--candidate-space-xl);
+  background: var(--candidate-background);
+  min-height: calc(100vh - 200px);
+}
+
+/* AI Evaluation Results */
+.ai-evaluation-section {
+  background: var(--candidate-surface);
+  border-radius: var(--candidate-radius-xl);
+  padding: var(--candidate-space-2xl);
+  margin-bottom: var(--candidate-space-xl);
+  box-shadow: var(--candidate-shadow-md);
+  border: 1px solid var(--candidate-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-evaluation-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--candidate-primary), var(--candidate-secondary));
+}
+
+.ai-evaluation-header {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-md);
+  margin-bottom: var(--candidate-space-xl);
+}
+
+.ai-evaluation-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--candidate-primary), var(--candidate-secondary));
+  border-radius: var(--candidate-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: var(--candidate-shadow-sm);
+}
+
+.ai-evaluation-title {
+  font-size: var(--candidate-text-2xl);
+  font-weight: 700;
+  color: var(--candidate-text);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.ai-evaluation-subtitle {
+  font-size: var(--candidate-text-base);
+  color: var(--candidate-text-secondary);
+  margin: var(--candidate-space-xs) 0 0 0;
+}
+
+/* Enhanced Profile Analysis Cards */
+.profile-analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--candidate-space-xl);
+  margin-bottom: var(--candidate-space-2xl);
+}
+
+.profile-analysis-card {
+  background: var(--candidate-surface);
+  border-radius: var(--candidate-radius-xl);
+  padding: var(--candidate-space-xl);
+  border: 1px solid var(--candidate-secondary);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--candidate-shadow-sm);
+}
+
+.profile-analysis-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--candidate-primary), var(--candidate-secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-analysis-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--candidate-shadow-lg);
+  border-color: var(--candidate-primary);
+}
+
+.profile-analysis-card:hover::before {
+  opacity: 1;
+}
+
+.analysis-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-md);
+  margin-bottom: var(--candidate-space-lg);
+}
+
+.analysis-card-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(112, 130, 56, 0.1);
+  border-radius: var(--candidate-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--candidate-primary);
+}
+
+.analysis-card-title {
+  font-size: var(--candidate-text-xl);
+  font-weight: 700;
+  color: var(--candidate-text);
+  margin: 0;
+}
+
+.analysis-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-md);
+}
+
+/* Enhanced Competency Display */
+.competency-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--candidate-space-md);
+  background: rgba(112, 130, 56, 0.05);
+  border-radius: var(--candidate-radius-md);
+  border: 1px solid rgba(112, 130, 56, 0.1);
+}
+
+.competency-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-xs);
+  flex: 1;
+}
+
+.competency-name {
+  font-size: var(--candidate-text-base);
+  font-weight: 600;
+  color: var(--candidate-text);
+  margin: 0;
+}
+
+.competency-description {
+  font-size: var(--candidate-text-sm);
+  color: var(--candidate-text-secondary);
+  margin: 0;
+}
+
+.competency-score-display {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-md);
+}
+
+.competency-score-number {
+  font-size: var(--candidate-text-xl);
+  font-weight: 700;
+  color: var(--candidate-primary);
+  min-width: 40px;
+  text-align: center;
+}
+
+.competency-progress-bar {
+  width: 80px;
+  height: 8px;
+  background: rgba(184, 192, 168, 0.2);
+  border-radius: var(--candidate-radius-sm);
+  overflow: hidden;
+}
+
+.competency-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--candidate-primary), var(--candidate-secondary));
+  border-radius: var(--candidate-radius-sm);
+  transition: width 0.3s ease;
+}
+
+/* Enhanced Skills Assessment */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--candidate-space-lg);
+  margin-top: var(--candidate-space-xl);
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-sm);
+  padding: var(--candidate-space-lg);
+  background: var(--candidate-surface);
+  border-radius: var(--candidate-radius-lg);
+  border: 1px solid var(--candidate-secondary);
+  transition: all 0.2s ease;
+}
+
+.skill-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--candidate-shadow-md);
+  border-color: var(--candidate-primary);
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skill-name {
+  font-size: var(--candidate-text-base);
+  font-weight: 600;
+  color: var(--candidate-text);
+  margin: 0;
+}
+
+.skill-level {
+  padding: var(--candidate-space-xs) var(--candidate-space-sm);
+  border-radius: var(--candidate-radius-md);
+  font-size: var(--candidate-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skill-level.excellent {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--status-excellent);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.skill-level.good {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--status-good);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.skill-level.average {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--status-average);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.skill-level.needs-improvement {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--status-needs-improvement);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.skill-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(184, 192, 168, 0.2);
+  border-radius: var(--candidate-radius-sm);
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  border-radius: var(--candidate-radius-sm);
+  transition: width 0.3s ease;
+}
+
+.skill-progress-fill.excellent {
+  background: var(--status-excellent);
+}
+
+.skill-progress-fill.good {
+  background: var(--status-good);
+}
+
+.skill-progress-fill.average {
+  background: var(--status-average);
+}
+
+.skill-progress-fill.needs-improvement {
+  background: var(--status-needs-improvement);
+}
+
+/* Enhanced Behavioral Analysis */
+.behavioral-analysis-section {
+  margin-top: var(--candidate-space-2xl);
+}
+
+.behavioral-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--candidate-space-lg);
+  margin-top: var(--candidate-space-xl);
+}
+
+.behavioral-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--candidate-space-xl);
+  background: var(--candidate-surface);
+  border-radius: var(--candidate-radius-xl);
+  border: 1px solid var(--candidate-secondary);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.behavioral-metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--candidate-primary), var(--candidate-secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.behavioral-metric:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--candidate-shadow-lg);
+  border-color: var(--candidate-primary);
+}
+
+.behavioral-metric:hover::before {
+  opacity: 1;
+}
+
+.behavioral-metric-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--candidate-primary), var(--candidate-secondary));
+  border-radius: var(--candidate-radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: var(--candidate-space-lg);
+  box-shadow: var(--candidate-shadow-sm);
+}
+
+.behavioral-metric-value {
+  font-size: var(--candidate-text-3xl);
+  font-weight: 700;
+  color: var(--candidate-text);
+  margin: 0 0 var(--candidate-space-sm) 0;
+  letter-spacing: -0.025em;
+}
+
+.behavioral-metric-label {
+  font-size: var(--candidate-text-sm);
+  color: var(--candidate-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.behavioral-metric-description {
+  font-size: var(--candidate-text-sm);
+  color: var(--candidate-text-muted);
+  margin: var(--candidate-space-sm) 0 0 0;
+  line-height: 1.5;
+}
+
+/* Enhanced Recommendations Section */
+.recommendations-section {
+  background: var(--candidate-surface);
+  border-radius: var(--candidate-radius-xl);
+  padding: var(--candidate-space-2xl);
+  margin-top: var(--candidate-space-2xl);
+  border: 1px solid var(--candidate-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.recommendations-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--candidate-primary), var(--candidate-secondary));
+}
+
+.recommendations-header {
+  display: flex;
+  align-items: center;
+  gap: var(--candidate-space-md);
+  margin-bottom: var(--candidate-space-xl);
+}
+
+.recommendations-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--candidate-primary), var(--candidate-secondary));
+  border-radius: var(--candidate-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: var(--candidate-shadow-sm);
+}
+
+.recommendations-title {
+  font-size: var(--candidate-text-2xl);
+  font-weight: 700;
+  color: var(--candidate-text);
+  margin: 0;
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-lg);
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--candidate-space-md);
+  padding: var(--candidate-space-lg);
+  background: rgba(112, 130, 56, 0.05);
+  border-radius: var(--candidate-radius-lg);
+  border-left: 4px solid var(--candidate-primary);
+}
+
+.recommendation-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--candidate-primary);
+  border-radius: var(--candidate-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-top: 2px;
+}
+
+.recommendation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--candidate-space-xs);
+}
+
+.recommendation-title {
+  font-size: var(--candidate-text-base);
+  font-weight: 600;
+  color: var(--candidate-text);
+  margin: 0;
+}
+
+.recommendation-description {
+  font-size: var(--candidate-text-sm);
+  color: var(--candidate-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .candidate-header-content {
+    flex-direction: column;
+    gap: var(--candidate-space-lg);
+    align-items: stretch;
+  }
+
+  .candidate-info-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--candidate-space-md);
+  }
+
+  .candidate-details-main {
+    align-items: center;
+  }
+
+  .candidate-meta-info {
+    flex-direction: column;
+    gap: var(--candidate-space-sm);
+  }
+
+  .candidate-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .candidate-action-btn {
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .candidate-nav-tabs-container {
+    padding: 0 var(--candidate-space-md);
+  }
+
+  .candidate-nav-tab {
+    padding: var(--candidate-space-md) var(--candidate-space-lg);
+    font-size: var(--candidate-text-xs);
+  }
+
+  .candidate-content-section {
+    padding: var(--candidate-space-md);
+  }
+
+  .ai-evaluation-section {
+    padding: var(--candidate-space-lg);
+  }
+
+  .profile-analysis-grid {
+    grid-template-columns: 1fr;
+    gap: var(--candidate-space-lg);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: var(--candidate-space-md);
+  }
+
+  .behavioral-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--candidate-space-md);
+  }
+
+  .behavioral-metric {
+    padding: var(--candidate-space-lg);
+  }
+
+  .behavioral-metric-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--candidate-space-md);
+  }
+
+  .behavioral-metric-value {
+    font-size: var(--candidate-text-2xl);
+  }
+
+  .recommendations-section {
+    padding: var(--candidate-space-lg);
+  }
+
+  .recommendation-item {
+    padding: var(--candidate-space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .candidate-results-header {
+    padding: var(--candidate-space-md);
+  }
+
+  .candidate-avatar-large {
+    width: 64px;
+    height: 64px;
+    font-size: var(--candidate-text-lg);
+  }
+
+  .candidate-name-main {
+    font-size: var(--candidate-text-2xl);
+  }
+
+  .candidate-role-main {
+    font-size: var(--candidate-text-base);
+  }
+
+  .candidate-actions {
+    flex-direction: column;
+    gap: var(--candidate-space-sm);
+  }
+
+  .candidate-action-btn {
+    width: 100%;
+  }
+
+  .behavioral-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .competency-score-display {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--candidate-space-sm);
+  }
+
+  .competency-progress-bar {
+    width: 100%;
+  }
+}
+
+/* Animation Enhancements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-analysis-card,
+.skill-item,
+.behavioral-metric,
+.recommendation-item {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.profile-analysis-card:nth-child(2) { animation-delay: 0.1s; }
+.profile-analysis-card:nth-child(3) { animation-delay: 0.2s; }
+.skill-item:nth-child(2) { animation-delay: 0.1s; }
+.skill-item:nth-child(3) { animation-delay: 0.2s; }
+.skill-item:nth-child(4) { animation-delay: 0.3s; }
+.behavioral-metric:nth-child(2) { animation-delay: 0.1s; }
+.behavioral-metric:nth-child(3) { animation-delay: 0.2s; }
+.behavioral-metric:nth-child(4) { animation-delay: 0.3s; }
+
+/* Print Styles */
+@media print {
+  .candidate-results-header,
+  .candidate-nav-tabs,
+  .candidate-actions {
+    background: white !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .candidate-action-btn {
+    display: none;
+  }
+  
+  .profile-analysis-card,
+  .skill-item,
+  .behavioral-metric {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
 } 
