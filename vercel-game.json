@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run postinstall && npm run build:game",
+  "buildCommand": "cd apps/game-platform && npm install && npm run build",
   "outputDirectory": "apps/game-platform/dist",
-  "installCommand": "npm install",
+  "installCommand": "cd apps/game-platform && npm install",
   "framework": null,
   "env": {
     "NODE_VERSION": "20",

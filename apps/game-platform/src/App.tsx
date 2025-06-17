@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Header } from '@cgames/ui-kit';
 import Play from './pages/candidate/Play';
 import IdentityScreen from './pages/candidate/IdentityScreen';
 import FormScreen from './pages/candidate/FormScreen';
@@ -10,6 +9,17 @@ import IdentityScreen2 from './pages/candidate/Game2/IdentityScreen2';
 import TestScreen2 from './pages/candidate/Game2/TestScreen2';
 import ResultsScreen2 from './pages/candidate/Game2/ResultsScreen2';
 import './App.css';
+
+// Simple header component to replace @cgames/ui-kit Header
+function Header() {
+  return (
+    <header className="app-header">
+      <div className="header-content">
+        <h1>BokumunKuşu Assessment</h1>
+      </div>
+    </header>
+  );
+}
 
 // Placeholder Landing Page Component
 function LandingPage() {
