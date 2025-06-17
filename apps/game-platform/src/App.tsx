@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from '@cgames/ui-kit';
+import Play from './pages/candidate/Play';
 import IdentityScreen from './pages/candidate/IdentityScreen';
 import FormScreen from './pages/candidate/FormScreen';
 import TestScreen from './pages/candidate/TestScreen';
@@ -42,6 +43,9 @@ function AppContent() {
       <Routes>
         {/* Main website landing page */}
         <Route path="/" element={<LandingPage />} />
+        
+        {/* Play route for invite tokens */}
+        <Route path="/play" element={<Play />} />
         
         {/* Candidate routes */}
         <Route path="/candidate" element={<IdentityScreen />} />
