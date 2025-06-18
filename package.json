@@ -21,12 +21,13 @@
     "vercel-build": "npm run build:hr",
     "vercel-install": "npm ci --only=production",
     "postinstall": "turbo run build --filter=@cgames/types --filter=@cgames/services --filter=@cgames/ui-kit",
-    "ngrok": "ngrok http 5173"
+    "ngrok": "ngrok http 5173",
+    "dev:api": "tsx simple-api-server.mjs"
   },
   "dependencies": {
-    "@cgames/services": "workspace:*",
-    "@cgames/types": "workspace:*",
-    "@cgames/ui-kit": "workspace:*",
+    "@cgames/services": "file:./packages/services",
+    "@cgames/types": "file:./packages/types",
+    "@cgames/ui-kit": "file:./packages/ui-kit",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@google/generative-ai": "^0.24.1",
@@ -40,7 +41,8 @@
     "react-router-dom": "^6.22.1",
     "recharts": "^2.12.0",
     "@vitejs/plugin-react": "^4.4.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "tsx": "^4.19.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

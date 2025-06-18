@@ -2,7 +2,7 @@
   "version": 2,
   "buildCommand": "npm run build:hr",
   "outputDirectory": "apps/hr-platform/dist",
-  "installCommand": "npm install",
+  "installCommand": "npm install --legacy-peer-deps",
   "framework": null,
   "env": {
     "NODE_VERSION": "20",
@@ -14,7 +14,16 @@
       "NODE_VERSION": "20"
     }
   },
+  "functions": {
+    "apps/hr-platform/api/**/*.ts": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/apps/hr-platform/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
