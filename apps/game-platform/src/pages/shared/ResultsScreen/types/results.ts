@@ -25,6 +25,7 @@ export interface FeedbackRatings {
 export interface ResultsScreenUser {
   firstName: string;
   lastName: string;
+  email?: string;
   company?: string;
 }
 

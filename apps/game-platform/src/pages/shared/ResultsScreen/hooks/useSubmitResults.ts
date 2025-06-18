@@ -86,7 +86,7 @@ export const useSubmitResults = (
       const candidateInfo = {
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email,
+        email: inviteData.candidateEmail || 'unknown@example.com',
         company: user.company
       };
 

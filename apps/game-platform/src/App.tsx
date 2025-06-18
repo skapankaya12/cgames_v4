@@ -40,7 +40,6 @@ function InviteHandler() {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    const game = searchParams.get('game');
 
     if (!token) {
       setError('No invitation token provided');
@@ -49,13 +48,13 @@ function InviteHandler() {
     }
 
     // Validate token and get invite details
-    validateInviteToken(token, game)
+    validateInviteToken(token)
       .then((inviteData) => {
         // Store invite data in sessionStorage for use throughout the assessment
         sessionStorage.setItem('currentInvite', JSON.stringify(inviteData));
         
         // Route to appropriate game based on selected game
-        const selectedGame = inviteData.selectedGame || game || 'Leadership Scenario Game';
+        const selectedGame = inviteData.selectedGame || 'Leadership Scenario Game';
         routeToGame(selectedGame, inviteData);
       })
       .catch((err) => {
@@ -65,7 +64,7 @@ function InviteHandler() {
       });
   }, [searchParams, navigate]);
 
-  const validateInviteToken = async (token: string, game: string | null) => {
+  const validateInviteToken = async (token: string) => {
     const response = await fetch(`/api/invites/validate?token=${token}`, {
       method: 'GET',
       headers: {

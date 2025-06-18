@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   collection,
@@ -6,13 +7,10 @@ import {
   query,
   doc,
   getDoc,
-  where,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
 import { InviteServiceClient } from '@cgames/services';
 import type { Candidate } from '@cgames/types';
-import { Navigation } from '@cgames/ui-kit';
 import '@cgames/ui-kit/styles/hr.css';
 import '@cgames/ui-kit/styles/navigation.css';
 
