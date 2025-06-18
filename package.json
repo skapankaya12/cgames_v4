@@ -16,11 +16,10 @@
     "clean": "turbo run clean",
     "dev:hr": "turbo run dev --filter=hr-platform",
     "dev:game": "turbo run dev --filter=game-platform",
-    "build:hr": "turbo run build --filter=hr-platform",
+    "build:hr": "turbo run build --filter=@cgames/types --filter=@cgames/services --filter=@cgames/ui-kit && turbo run build --filter=hr-platform",
     "build:game": "turbo run build --filter=game-platform",
     "vercel-build": "npm run build:hr",
     "vercel-install": "npm ci --only=production",
-    "postinstall": "turbo run build --filter=@cgames/types --filter=@cgames/services --filter=@cgames/ui-kit",
     "ngrok": "ngrok http 5173",
     "dev:api": "tsx simple-api-server.mjs"
   },
