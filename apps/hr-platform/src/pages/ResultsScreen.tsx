@@ -1,4 +1,3 @@
-
 import { SharedResultsScreen } from './shared/ResultsScreen';
 
 /**
