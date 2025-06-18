@@ -23,6 +23,10 @@ packages/
 - Responsive design with dark sci-fi UI theme
 - Session-based storage with CV integration
 - AI-powered conversational interface for HR professionals
+- **NEW**: Smart invite system with game selection per project
+- **NEW**: Real-time status tracking and results flow
+- **NEW**: Custom domain support (game.olivinhr.com)
+- **NEW**: Thank you screens and completion tracking
 
 ## Getting Started
 
@@ -30,6 +34,7 @@ packages/
 
 - Node.js (v18 or higher)
 - npm (v10 or higher)
+- Vercel CLI (for deployment)
 
 ### Installation
 
@@ -41,36 +46,113 @@ packages/
 3. Set up environment variables (see Environment Setup below)
 4. Start the development server:
    ```bash
-   npm run dev:hr
+   npm run dev:hr    # For HR platform
+   npm run dev:game  # For Game platform
    ```
 
 ## Environment Setup
 
-Create a `.env` file in the project root with the following variables:
+### Required Environment Variables
 
+Create environment variables in your Vercel dashboard with the following:
+
+#### **Firebase Configuration**
 ```bash
-# Firebase Configuration
 VITE_FIREBASE_API_KEY=your_firebase_api_key_here
 VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_CLIENT_EMAIL=your_service_account_email
+FIREBASE_PRIVATE_KEY=your_service_account_private_key
+```
 
-# OpenAI Configuration  
+#### **OpenAI Configuration**  
+```bash
 VITE_OPENAI_API_KEY=your_openai_api_key_here
+```
 
-# Node Environment
+#### **SendGrid Configuration**
+```bash
+SENDGRID_API_KEY=your_sendgrid_api_key
+```
+
+#### **Platform URLs**
+```bash
+VITE_GAME_PLATFORM_URL=https://game.olivinhr.com
 NODE_ENV=production
 ```
 
-⚠️ **IMPORTANT**: Never commit your actual API keys to the repository. The `.env` file is ignored by git for security.
+⚠️ **IMPORTANT**: Never commit your actual API keys to the repository. Set these as environment variables in your Vercel dashboard.
+
+## Deployment
+
+### Two-Platform Setup
+
+This system requires two separate Vercel deployments:
+
+#### **1. HR Platform (app.olivinhr.com)**
+```bash
+# Deploy with main vercel.json
+vercel --prod
+```
+
+#### **2. Game Platform (game.olivinhr.com)**
+```bash
+# Deploy with game-specific config
+vercel --prod --config vercel-game.json
+```
+
+### Domain Configuration
+
+1. **HR Platform**: Configure `app.olivinhr.com` to point to the main Vercel deployment
+2. **Game Platform**: Configure `game.olivinhr.com` to point to the game deployment
+
+### Environment Variables Setup
+
+In your Vercel dashboard, add all the environment variables listed above to **both** deployments.
+
+## System Flow
+
+### Complete Assessment Flow
+
+1. **HR sends invite** → Email with game.olivinhr.com link + token
+2. **Candidate clicks link** → Game platform validates token & routes to correct game
+3. **Candidate completes assessment** → Results submitted to Firebase
+4. **Status updates automatically** → HR sees "Completed" status
+5. **HR views results** → Detailed competency breakdown and analytics
+6. **Candidate sees thank you page** → Professional completion experience
+
+### Game Selection Per Project
+
+- HR selects preferred games during project creation
+- Each invite includes the selected game type
+- Candidates are automatically routed to the correct assessment
+- Future-proof for multiple game types
 
 ## Development
 
 - `npm run dev:hr` - Start HR platform development server
-- `npm run dev:game` - Start game platform development server
+- `npm run dev:game` - Start game platform development server  
 - `npm run build:hr` - Build HR platform for production
 - `npm run build:game` - Build game platform for production
-- `npm run lint` - Run ESLint across all packages
-- `npm run type-check` - Run TypeScript type checking
+
+## Testing
+
+After deployment, test these critical paths:
+
+1. **HR Login & Project Creation**
+2. **Send Invite with Game Selection**
+3. **Candidate Assessment Flow**
+4. **Results Submission & Thank You**
+5. **HR Results Viewing**
+
+## Support
+
+For deployment issues or questions, check:
+- Vercel deployment logs
+- Browser console for client-side errors
+- API endpoint responses
+- Firebase console for data flow
 
 ## Technologies Used
 
@@ -83,26 +165,6 @@ NODE_ENV=production
 - **Storage**: Firebase
 - **PDF Processing**: PDF.js
 - **Build**: Vite, TypeScript
-
-## Deployment
-
-### Vercel Deployment
-
-This project is optimized for Vercel deployment with Turborepo:
-
-1. Connect your repository to Vercel
-2. Vercel will automatically detect the Turborepo configuration
-3. Set up the following environment variables in Vercel:
-   - `VITE_FIREBASE_API_KEY`
-   - `VITE_FIREBASE_AUTH_DOMAIN`
-   - `VITE_FIREBASE_PROJECT_ID`
-   - `VITE_OPENAI_API_KEY`
-   - `NODE_ENV` (set to "production")
-
-The `vercel.json` configuration will automatically:
-- Build only the HR platform using `turbo run build --filter=hr-platform`
-- Output to `apps/hr-platform/dist`
-- Handle routing for single-page application
 
 ## Security Notes
 

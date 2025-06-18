@@ -162,11 +162,30 @@ async function createInvite(data: {
   sentBy: string;
   projectId?: string;
   roleTag?: string;
+  selectedGame?: string;
 }) {
   console.log('🔄 [CreateInvite] Starting invite creation for:', data.candidateEmail);
   
   try {
     const db = getFirestore();
+    
+    // If projectId is provided, get the selected game from project
+    let selectedGame = data.selectedGame;
+    if (data.projectId && !selectedGame) {
+      try {
+        const projectDoc = await db.collection('companies').doc('default').collection('projects').doc(data.projectId).get();
+        if (projectDoc.exists) {
+          const projectData = projectDoc.data();
+          // Get the first preferred game or default to first suggested game
+          selectedGame = projectData?.customization?.gamePreferences?.[0] || 
+                       projectData?.recommendations?.suggestedGames?.[0] || 
+                       'Leadership Scenario Game';
+        }
+      } catch (error) {
+        console.warn('⚠️ [CreateInvite] Could not fetch project game preferences:', error);
+        selectedGame = 'Leadership Scenario Game'; // Default fallback
+      }
+    }
     
     // Generate UUID-like ID
     const inviteId = 'invite_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
@@ -181,6 +200,7 @@ async function createInvite(data: {
       sentBy: data.sentBy,
       projectId: data.projectId || '',
       roleTag: data.roleTag || 'candidate',
+      selectedGame: selectedGame || 'Leadership Scenario Game',
       companyId: 'default',
     };
 
@@ -205,6 +225,7 @@ async function sendInvitationEmail(data: {
   projectId?: string;
   roleTag?: string;
   companyName: string;
+  selectedGame?: string;
 }) {
   console.log('📧 [SendGridService] Starting email send to:', data.candidateEmail);
   
@@ -221,10 +242,10 @@ async function sendInvitationEmail(data: {
     sgMail.setApiKey(apiKey);
     
     const gameBaseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://cgames-game-platform.vercel.app'
+      ? process.env.VITE_GAME_PLATFORM_URL || 'https://game.olivinhr.com'
       : 'http://localhost:5174';
     
-    const inviteUrl = `${gameBaseUrl}?token=${data.token}`;
+    const inviteUrl = `${gameBaseUrl}?token=${data.token}&game=${encodeURIComponent(data.selectedGame || 'Leadership Scenario Game')}`;
     
     console.log('✉️ [SendGridService] Preparing email message...');
     const msg = {
@@ -328,7 +349,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       token: invite.token,
       projectId: projectId || '',
       roleTag: roleTag || 'candidate',
-      companyName: 'OlivinHR'
+      companyName: 'OlivinHR',
+      selectedGame: invite.selectedGame
     });
 
     console.log('✅ [Invites API] Invite created and email sent successfully');

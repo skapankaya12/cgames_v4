@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
 import { testGoogleSheetsIntegration, testBasicConnection } from '../../../../utils/debugGoogleSheets';
@@ -35,15 +36,25 @@ export const useSubmitResults = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const navigate = useNavigate();
 
-  // Direct Google Sheets API endpoint
-  const API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
+  // Get invite data from session storage
+  const getInviteData = () => {
+    try {
+      return JSON.parse(sessionStorage.getItem('currentInvite') || '{}');
+    } catch {
+      return {};
+    }
+  };
+
+  // Direct Google Sheets API endpoint (legacy - keeping for backward compatibility)
+  const LEGACY_API_URL = `https://script.google.com/macros/s/AKfycbw6qC8GtrcClw9dCD_GZBZ7muzId_uD9GOserb-L5pJCY9c8zB-E7yH6ZA8v7VB-p9g/exec`;
 
   const handleRestart = () => {
     window.location.href = '/';
   };
 
-  const handleManualSubmit = () => {
+  const handleManualSubmit = async () => {
     if (!user || !answers || scores.length === 0) {
       setSubmitError('Eksik veri: Sonuçlar gönderilemedi. Lütfen testi yeniden başlatın.');
       return;
@@ -53,139 +64,151 @@ export const useSubmitResults = (
     setSubmitError(null);
     setSubmitSuccess(false);
 
-    const payload = {
-      user,
-      answers,
-      competencyScores: scores
-    };
+    try {
+      const inviteData = getInviteData();
+      console.log('🚀 [Submit Results] Starting submission with invite data:', inviteData);
 
-    console.log('=== MANUAL SUBMIT ===');
-    console.log('Submitting payload:', payload);
+      // Prepare results payload
+      const results = {
+        totalScore: scores.reduce((sum, score) => sum + score.score, 0),
+        maxScore: scores.reduce((sum, score) => sum + score.maxScore, 0),
+        competencyScores: scores.map(score => ({
+          competency: score.fullName,
+          abbreviation: score.abbreviation,
+          score: score.score,
+          maxScore: score.maxScore,
+          percentage: Math.round((score.score / score.maxScore) * 100)
+        })),
+        answers: answers,
+        interactionAnalytics: interactionAnalytics
+      };
 
-    const submitWithFetch = async () => {
-      let imageHandled = false; // Declare at function scope
-      
-      try {
-        const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
-        console.log('Manual submit URL length:', url.length);
-        console.log('Manual submit URL preview:', url.substring(0, 300) + '...');
+      const candidateInfo = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        company: user.company
+      };
 
-        // Method 1: Fetch with no-cors (with timeout)
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-          
-          await fetch(url, { 
-            method: 'GET', 
-            mode: 'no-cors',
-            cache: 'no-cache',
-            signal: controller.signal
+      // Submit to our new API if we have invite token
+      if (inviteData.token) {
+        console.log('📊 [Submit Results] Submitting to new API endpoint');
+        
+        const response = await fetch('/api/submit-results', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token: inviteData.token,
+            results: results,
+            candidateInfo: candidateInfo
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ [Submit Results] API submission successful:', data);
+
+        // Set success and navigate to thank you page
+        setSubmitSuccess(true);
+        
+        // Wait a moment for the success message to show, then redirect
+        setTimeout(() => {
+          navigate('/thank-you', { 
+            state: { 
+              inviteData: inviteData,
+              results: results,
+              candidateInfo: candidateInfo
+            } 
           });
-          clearTimeout(timeoutId);
-          console.log('✅ Manual fetch submission completed');
-        } catch (fetchError) {
-          console.warn('⚠️ Manual fetch failed (continuing with other methods):', fetchError);
-          // Don't throw error, continue with other methods
-        }
-
-        // Method 2: Image fallback (with timeout)
-        const img = new Image();
+        }, 2000);
         
-        const imageTimeout = setTimeout(() => {
-          if (!imageHandled) {
-            imageHandled = true;
-            console.warn('⚠️ Image submission timeout (continuing anyway)');
-            setSubmitSuccess(true); // Assume success since Google Sheets API is unreliable
-          }
-        }, 8000); // 8 second timeout
-        
-        img.onload = () => {
-          if (!imageHandled) {
-            imageHandled = true;
-            clearTimeout(imageTimeout);
-            console.log('✅ Manual image submission successful');
-            setSubmitSuccess(true);
-          }
-        };
-        img.onerror = (e) => {
-          if (!imageHandled) {
-            imageHandled = true;
-            clearTimeout(imageTimeout);
-            console.warn('⚠️ Manual image submission failed (Google Sheets API issue):', e);
-            // Don't set error - Google Sheets API is often unreliable
-            setSubmitSuccess(true); // Mark as success anyway
-          }
-        };
-        img.src = url;
-        img.style.display = 'none';
-        document.body.appendChild(img);
-
-        // Method 3: Iframe fallback
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.style.width = '1px';
-        iframe.style.height = '1px';
-        iframe.src = url;
-        document.body.appendChild(iframe);
-
-        // Clean up after 10 seconds
-        setTimeout(() => {
-          if (document.body.contains(img)) {
-            document.body.removeChild(img);
-          }
-          if (document.body.contains(iframe)) {
-            document.body.removeChild(iframe);
-          }
-        }, 10000);
-
-        // Submit interaction analytics if available
-        if (interactionAnalytics) {
-          try {
-            const analyticsWithUser = {
-              ...interactionAnalytics,
-              user
-            };
-
-            const submitInteractionWithFetch = async () => {
-              try {
-                const interactionUrl = `${API_URL}?interactionData=${encodeURIComponent(JSON.stringify(analyticsWithUser))}`;
-                console.log('Submitting interaction analytics...');
-
-                await fetch(interactionUrl, { 
-                  method: 'GET', 
-                  mode: 'no-cors',
-                  cache: 'no-cache'
-                });
-
-                console.log('✅ Interaction analytics submitted');
-              } catch (error) {
-                console.warn('⚠️ Interaction analytics submission failed:', error);
-              }
-            };
-
-            await submitInteractionWithFetch();
-          } catch (analyticsError) {
-            console.warn('⚠️ Error submitting analytics:', analyticsError);
-          }
-        }
-
-        // Set success after a shorter delay (if not already set by image handler)
-        setTimeout(() => {
-          if (!imageHandled) {
-            console.log('📤 Submission completed (assuming success due to no-cors limitations)');
-            setSubmitSuccess(true);
-          }
-        }, 1000);
-
-      } catch (error) {
-        console.error('❌ Manual submission failed:', error);
-        setSubmitError(`Sonuçlar gönderilirken hata oluştu: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
-      } finally {
-        setIsSubmitting(false);
+      } else {
+        // Fallback to legacy Google Sheets submission
+        console.log('⚠️ [Submit Results] No invite token found, using legacy submission');
+        await legacySubmit({ user, answers, competencyScores: scores });
       }
-    };
 
-    submitWithFetch();
+    } catch (error) {
+      console.error('❌ [Submit Results] Submission failed:', error);
+      setSubmitError(`Sonuçlar gönderilirken hata oluştu: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Legacy submission method (keeping for backward compatibility)
+  const legacySubmit = async (payload: any) => {
+    console.log('📤 [Submit Results] Using legacy Google Sheets submission');
+    
+    let imageHandled = false;
+    
+    try {
+      const url = `${LEGACY_API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+      
+      // Method 1: Fetch with no-cors (with timeout)
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        await fetch(url, { 
+          method: 'GET', 
+          mode: 'no-cors',
+          cache: 'no-cache',
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        console.log('✅ Legacy fetch submission completed');
+      } catch (fetchError) {
+        console.warn('⚠️ Legacy fetch failed:', fetchError);
+      }
+
+      // Method 2: Image fallback
+      const img = new Image();
+      
+      const imageTimeout = setTimeout(() => {
+        if (!imageHandled) {
+          imageHandled = true;
+          console.warn('⚠️ Legacy image timeout');
+          setSubmitSuccess(true);
+        }
+      }, 8000);
+      
+      img.onload = () => {
+        if (!imageHandled) {
+          imageHandled = true;
+          clearTimeout(imageTimeout);
+          console.log('✅ Legacy image submission successful');
+          setSubmitSuccess(true);
+        }
+      };
+      img.onerror = () => {
+        if (!imageHandled) {
+          imageHandled = true;
+          clearTimeout(imageTimeout);
+          console.warn('⚠️ Legacy image failed');
+          setSubmitSuccess(true); // Mark as success anyway due to API unreliability
+        }
+      };
+      img.src = url;
+      img.style.display = 'none';
+      document.body.appendChild(img);
+
+      // Clean up
+      setTimeout(() => {
+        if (document.body.contains(img)) {
+          document.body.removeChild(img);
+        }
+      }, 10000);
+
+    } catch (error) {
+      console.error('❌ Legacy submission error:', error);
+      throw error;
+    }
   };
 
   // Debug functions for console testing
@@ -197,7 +220,7 @@ export const useSubmitResults = (
       console.log("User:", user);
       console.log("Answers:", answers);
       console.log("Scores:", scores);
-      console.log("API_URL:", API_URL);
+      console.log("LEGACY_API_URL:", LEGACY_API_URL);
       
       if (user && answers && scores.length > 0) {
         const payload = {
@@ -206,7 +229,7 @@ export const useSubmitResults = (
           competencyScores: scores
         };
         
-        const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+        const url = `${LEGACY_API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
         console.log("Current payload:", payload);
         console.log("URL length:", url.length);
         console.log("URL preview:", url.substring(0, 300) + "...");
@@ -232,17 +255,17 @@ export const useSubmitResults = (
         };
         
         try {
-          const url = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+          const url = `${LEGACY_API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
           console.log("Fetch URL:", url.substring(0, 200) + "...");
           
-          const _response = await fetch(url, {
+          const response = await fetch(url, {
             method: 'GET',
             mode: 'no-cors'
           });
           
           console.log("✅ Fetch completed");
-          console.log("Response status:", _response.status);
-          console.log("Response type:", _response.type);
+          console.log("Response status:", response.status);
+          console.log("Response type:", response.type);
           
         } catch (error) {
           console.error("❌ Fetch failed:", error);
@@ -261,7 +284,7 @@ export const useSubmitResults = (
         console.log("Force submitting payload:", payload);
         
         // Method 1: Image
-        const url1 = `${API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
+        const url1 = `${LEGACY_API_URL}?data=${encodeURIComponent(JSON.stringify(payload))}`;
         const img = new Image();
         img.onload = () => console.log("✅ Image method successful");
         img.onerror = (e) => console.log("❌ Image method failed:", e);

@@ -11,6 +11,7 @@ export class SendGridService {
     projectId?: string;
     roleTag?: string;
     companyName: string;
+    selectedGame?: string;
   }) {
     console.log('📧 [SendGridService] Sending invitation email to:', data.candidateEmail);
     
@@ -26,10 +27,10 @@ export class SendGridService {
       sgMail.setApiKey(apiKey);
       
       const gameBaseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://cgames-game-platform.vercel.app'
+        ? process.env.VITE_GAME_PLATFORM_URL || 'https://game.olivinhr.com'
         : 'http://localhost:5174';
       
-      const inviteUrl = `${gameBaseUrl}?token=${data.token}`;
+      const inviteUrl = `${gameBaseUrl}?token=${data.token}&game=${encodeURIComponent(data.selectedGame || 'Leadership Scenario Game')}`;
       
       const msg = {
         to: data.candidateEmail,

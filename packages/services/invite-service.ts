@@ -15,6 +15,7 @@ export class InviteService {
     sentBy: string;
     projectId?: string;
     roleTag?: string;
+    selectedGame?: string;
   }) {
     try {
       // Dynamic imports to avoid bundling in client-side code
@@ -22,6 +23,25 @@ export class InviteService {
       const { v4: uuidv4 } = await import('uuid');
       
       const db = getFirestore();
+      
+      // If projectId is provided, get the selected game from project
+      let selectedGame = data.selectedGame;
+      if (data.projectId && !selectedGame) {
+        try {
+          const projectDoc = await db.collection('companies').doc('default').collection('projects').doc(data.projectId).get();
+          if (projectDoc.exists) {
+            const projectData = projectDoc.data();
+            // Get the first preferred game or default to first suggested game
+            selectedGame = projectData?.customization?.gamePreferences?.[0] || 
+                         projectData?.recommendations?.suggestedGames?.[0] || 
+                         'Leadership Scenario Game';
+          }
+        } catch (error) {
+          console.warn('⚠️ [InviteService] Could not fetch project game preferences:', error);
+          selectedGame = 'Leadership Scenario Game'; // Default fallback
+        }
+      }
+      
       const inviteId = uuidv4();
       const token = uuidv4().replace(/-/g, ''); // Simple token generation
       
@@ -34,6 +54,7 @@ export class InviteService {
         sentBy: data.sentBy,
         projectId: data.projectId || '',
         roleTag: data.roleTag || 'candidate',
+        selectedGame: selectedGame || 'Leadership Scenario Game',
         companyId: 'default', // This should come from the auth context
       };
 

@@ -544,7 +544,11 @@ export default function ProjectDashboard() {
                             {candidate.status === 'Completed' ? (
                               <button 
                                 className="action-button primary"
-                                onClick={() => {/* Load and show candidate results modal */}}
+                                onClick={() => {
+                                  // View results functionality
+                                  console.log('View results for:', candidate.email);
+                                  // TODO: Implement results modal similar to HrDashboard
+                                }}
                               >
                                 <svg viewBox="0 0 20 20" fill="currentColor">
                                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />

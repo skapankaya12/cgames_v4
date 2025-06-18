@@ -53,7 +53,9 @@ export default async function handler(
         candidateEmail: invite.candidateEmail,
         projectId: invite.projectId,
         roleTag: invite.roleTag,
-        status: invite.status
+        selectedGame: invite.selectedGame,
+        status: invite.status,
+        token: invite.token
       }
     });
 

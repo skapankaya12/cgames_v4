@@ -6,22 +6,175 @@ import {
   query,
   doc,
   getDoc,
+  where,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { InviteServiceClient } from '@cgames/services';
 import type { Candidate } from '@cgames/types';
+import { Navigation } from '@cgames/ui-kit';
+import '@cgames/ui-kit/styles/hr.css';
+import '@cgames/ui-kit/styles/navigation.css';
+
+// Results Modal Component
+const ResultsModal = ({ candidate, onClose }: { candidate: any, onClose: () => void }) => {
+  const [results, setResults] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(`/api/get-results?candidateEmail=${encodeURIComponent(candidate.email)}`);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch results: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+          setResults(data.result);
+        } else {
+          throw new Error(data.error || 'Failed to fetch results');
+        }
+        
+      } catch (err: any) {
+        console.error('Error fetching results:', err);
+        setError(err.message || 'Failed to load results');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [candidate.email]);
+
+  if (loading) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Loading results...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="error-state">
+            <h3>Error Loading Results</h3>
+            <p>{error}</p>
+            <button onClick={onClose} className="button-secondary">Close</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content large">
+        <div className="modal-header">
+          <h2>Assessment Results - {candidate.email}</h2>
+          <button onClick={onClose} className="close-button">×</button>
+        </div>
+        
+        <div className="modal-body">
+          {results && (
+            <div className="results-overview">
+              <div className="results-summary">
+                <div className="summary-card">
+                  <h3>Overall Score</h3>
+                  <div className="score-display">
+                    <span className="score">{results.results.totalScore}</span>
+                    <span className="max-score">/ {results.results.maxScore}</span>
+                    <span className="percentage">
+                      ({Math.round((results.results.totalScore / results.results.maxScore) * 100)}%)
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="summary-card">
+                  <h3>Assessment Details</h3>
+                  <p><strong>Game:</strong> {results.selectedGame}</p>
+                  <p><strong>Submitted:</strong> {new Date(results.submittedAt).toLocaleString()}</p>
+                  <p><strong>Role:</strong> {results.invite?.roleTag || 'General Assessment'}</p>
+                </div>
+              </div>
+
+              <div className="competency-breakdown">
+                <h3>Competency Breakdown</h3>
+                <div className="competency-grid">
+                  {results.results.competencyScores.map((comp: any, index: number) => (
+                    <div key={index} className="competency-item">
+                      <div className="competency-header">
+                        <span className="competency-name">{comp.competency}</span>
+                        <span className="competency-score">{comp.score}/{comp.maxScore}</span>
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${comp.percentage}%` }}
+                        ></div>
+                      </div>
+                      <span className="competency-percentage">{comp.percentage}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {results.candidateInfo && (
+                <div className="candidate-info">
+                  <h3>Candidate Information</h3>
+                  <div className="info-grid">
+                    <p><strong>Name:</strong> {results.candidateInfo.firstName} {results.candidateInfo.lastName}</p>
+                    <p><strong>Email:</strong> {results.candidateInfo.email}</p>
+                    {results.candidateInfo.company && (
+                      <p><strong>Company:</strong> {results.candidateInfo.company}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        
+        <div className="modal-footer">
+          <button onClick={onClose} className="button-primary">Close</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function HrDashboard() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [newEmail, setNewEmail] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [inviteError, setInviteError] = useState<string | null>(null);
-  const [inviteLoading, setInviteLoading] = useState(false);
   const [companyId, setCompanyId] = useState<string | null>(null);
-  const [hrUser, setHrUser] = useState<any>(null);
+  
+  // Invite form state
+  const [newEmail, setNewEmail] = useState('');
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  
+  // Filter state
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'invited' | 'completed' | 'in-progress'>('all');
+  
+  // Results modal state
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [showResultsModal, setShowResultsModal] = useState(false);
+  const [hrUser, setHrUser] = useState<any>(null);
+
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -106,6 +259,16 @@ export default function HrDashboard() {
     } finally {
       setInviteLoading(false);
     }
+  };
+
+  const handleViewResults = (candidate: Candidate) => {
+    setSelectedCandidate(candidate);
+    setShowResultsModal(true);
+  };
+
+  const closeResultsModal = () => {
+    setSelectedCandidate(null);
+    setShowResultsModal(false);
   };
 
   const filteredCandidates = candidates.filter(candidate => {
@@ -399,7 +562,7 @@ export default function HrDashboard() {
                             {candidate.status === 'Completed' ? (
                               <button 
                                 className="action-button primary"
-                                onClick={() => {/* Load and show candidate results modal */}}
+                                onClick={() => handleViewResults(candidate)}
                               >
                                 <svg viewBox="0 0 20 20" fill="currentColor">
                                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -427,6 +590,14 @@ export default function HrDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Results Modal */}
+      {showResultsModal && selectedCandidate && (
+        <ResultsModal
+          candidate={selectedCandidate}
+          onClose={closeResultsModal}
+        />
+      )}
     </div>
   );
 } 
