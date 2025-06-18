@@ -3,7 +3,11 @@
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NODE_ENV",
-    "NODE_VERSION"
+    "NODE_VERSION",
+    "SENDGRID_API_KEY",
+    "FIREBASE_PROJECT_ID",
+    "FIREBASE_CLIENT_EMAIL",
+    "FIREBASE_PRIVATE_KEY"
   ],
   "tasks": {
     "build": {
@@ -11,6 +15,10 @@
       "outputs": ["dist/**", ".next/**"],
       "env": [
         "NODE_VERSION",
+        "SENDGRID_API_KEY",
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY",
         "VITE_FIREBASE_API_KEY",
         "VITE_FIREBASE_AUTH_DOMAIN",
         "VITE_FIREBASE_PROJECT_ID",
@@ -22,6 +30,10 @@
       "outputs": ["dist/**", ".next/**"],
       "env": [
         "NODE_VERSION",
+        "SENDGRID_API_KEY",
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY",
         "VITE_FIREBASE_API_KEY",
         "VITE_FIREBASE_AUTH_DOMAIN",
         "VITE_FIREBASE_PROJECT_ID",
@@ -33,6 +45,10 @@
       "outputs": ["dist/**"],
       "env": [
         "NODE_VERSION",
+        "SENDGRID_API_KEY",
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY",
         "VITE_FIREBASE_API_KEY",
         "VITE_FIREBASE_AUTH_DOMAIN",
         "VITE_FIREBASE_PROJECT_ID",
@@ -47,6 +63,10 @@
       "persistent": true,
       "env": [
         "NODE_VERSION",
+        "SENDGRID_API_KEY",
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY",
         "VITE_FIREBASE_API_KEY",
         "VITE_FIREBASE_AUTH_DOMAIN",
         "VITE_FIREBASE_PROJECT_ID",

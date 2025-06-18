@@ -105,7 +105,7 @@ export class InviteServiceClient {
 
       console.log('📡 [InviteServiceClient] API response status:', response.status);
 
-      const data: CreateInviteResponse = await response.json();
+      const data = await response.json() as CreateInviteResponse;
       console.log('📦 [InviteServiceClient] API response data:', data);
 
       if (!response.ok) {
