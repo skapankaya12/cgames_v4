@@ -2,39 +2,24 @@
   "version": 2,
   "functions": {
     "api/*.ts": {
-      "runtime": "@vercel/node@2.15.10"
+      "runtime": "@vercel/node@2.6.0"
+    },
+    "test.js": {
+      "runtime": "@vercel/node@2.6.0"
     }
   },
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build:hr",
-  "outputDirectory": "apps/hr-platform/dist",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
+      "src": "/test",
+      "dest": "/test.js"
+    },
     {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/apps/hr-platform/dist/$1"
     }
   ]
 } 
