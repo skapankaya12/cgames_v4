@@ -3,6 +3,14 @@
   "buildCommand": "npm run build:hr",
   "outputDirectory": "apps/hr-platform/dist",
   "installCommand": "npm install",
+  "env": {
+    "NODE_VERSION": "18.x"
+  },
+  "build": {
+    "env": {
+      "NODE_VERSION": "18.x"
+    }
+  },
   "functions": {
     "api/*.ts": {
       "runtime": "@vercel/node@2.15.0"
