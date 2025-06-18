@@ -72,7 +72,7 @@ export class InviteService {
  */
 export class InviteServiceClient {
   private static readonly API_BASE_URL = process.env.NODE_ENV === 'production' 
-    ? 'https://cgames-hr-platform.vercel.app'
+    ? 'https://app.olivinhr.com'
     : 'http://localhost:3001';
 
   /**

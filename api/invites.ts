@@ -21,6 +21,14 @@ if (!getApps().length) {
 
 const db = getFirestore();
 
+// CORS headers configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // Allow all origins for now
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400', // 24 hours
+};
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -29,13 +37,26 @@ export default async function handler(
   console.log('   Method:', req.method);
   console.log('   Headers:', {
     authorization: req.headers.authorization ? 'Bearer [PRESENT]' : 'MISSING',
-    'content-type': req.headers['content-type']
+    'content-type': req.headers['content-type'],
+    origin: req.headers.origin
   });
   console.log('   Body:', req.body);
   console.log('   ENV • SENDGRID_API_KEY is set?', Boolean(process.env.SENDGRID_API_KEY));
   console.log('   ENV • FIREBASE_PROJECT_ID is set?', Boolean(process.env.FIREBASE_PROJECT_ID));
 
-  // Only allow POST requests
+  // Set CORS headers for all requests
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    console.log('✅ [Invite API] Handling OPTIONS preflight request');
+    res.status(200).end();
+    return;
+  }
+
+  // Only allow POST requests (after OPTIONS)
   if (req.method !== 'POST') {
     console.log('❌ [Invite API] Method not allowed:', req.method);
     res.status(405).json({ success: false, error: 'Method not allowed' });
