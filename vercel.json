@@ -10,13 +10,13 @@
     }
   },
   "env": {
-    "NODE_VERSION": "20",
+    "NODE_VERSION": "18.x",
     "NODE_ENV": "production"
   },
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "NODE_VERSION": "20"
+      "NODE_VERSION": "18.x"
     }
   },
   "rewrites": [
