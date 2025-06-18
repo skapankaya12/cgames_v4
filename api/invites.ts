@@ -259,7 +259,7 @@ async function sendInvitationEmail(data: {
   }
 }
 
-export default function handler(req: any, res: any) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Invites API] Request received:', req.method, req.url);
   
   // Set CORS headers
@@ -272,18 +272,16 @@ export default function handler(req: any, res: any) {
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
       console.log('✅ [Invites API] Handling OPTIONS request');
-      res.status(200).json({ success: true });
-      return;
+      return res.status(200).json({ success: true });
     }
 
     // Only allow POST requests
     if (req.method !== 'POST') {
       console.log('❌ [Invites API] Method not allowed:', req.method);
-      res.status(405).json({ 
+      return res.status(405).json({ 
         success: false, 
         error: 'Method not allowed' 
       });
-      return;
     }
 
     console.log('📨 [Invites API] Processing POST request');
@@ -295,55 +293,61 @@ export default function handler(req: any, res: any) {
     // Validate email
     if (!email) {
       console.log('❌ [Invites API] Missing email');
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: 'Email is required'
       });
-      return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       console.log('❌ [Invites API] Invalid email format:', email);
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: 'Invalid email format'
       });
-      return;
     }
 
-    // Create a simple invite (no database for now)
-    const inviteId = 'invite_' + Math.random().toString(36).substr(2, 9) + Date.now();
-    const token = Math.random().toString(36).substr(2, 32);
+    // Initialize Firebase
+    initializeFirebase();
 
-    const invite = {
-      id: inviteId,
+    // Create invite in database
+    console.log('🔄 [Invites API] Creating invite in database...');
+    const invite = await createInvite({
       candidateEmail: email,
-      token: token,
-      status: 'pending',
-      sentAt: Date.now(),
+      sentBy: 'system', // In a real app, this would come from the authenticated user
       projectId: projectId || '',
       roleTag: roleTag || 'candidate'
-    };
+    });
 
-    console.log('✅ [Invites API] Created invite:', inviteId);
+    // Send invitation email
+    console.log('📧 [Invites API] Sending invitation email...');
+    await sendInvitationEmail({
+      candidateEmail: email,
+      token: invite.token,
+      projectId: projectId || '',
+      roleTag: roleTag || 'candidate',
+      companyName: 'OlivinHR'
+    });
+
+    console.log('✅ [Invites API] Invite created and email sent successfully');
 
     // Success response
-    const response = {
+    const response: CreateInviteResponse = {
       success: true,
-      invite: invite,
-      message: 'Invite created successfully (simplified version - no email sent yet)'
+      invite: invite
     };
 
-    console.log('✅ [Invites API] Sending success response');
-    res.status(201).json(response);
+    return res.status(201).json(response);
 
   } catch (error: any) {
     console.error('🚨 [Invites API] Error:', error);
-    res.status(500).json({
+    
+    // Don't show successful fallback - show the actual error
+    return res.status(500).json({
       success: false,
-      error: error?.message || 'Internal server error'
+      error: error?.message || 'Failed to create invite and send email'
     });
   }
 } 

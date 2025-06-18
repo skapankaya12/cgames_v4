@@ -109,7 +109,7 @@ export class InviteServiceClient {
       const token = await user.getIdToken();
       console.log('🔑 [InviteServiceClient] Got Firebase token for user:', user.uid);
 
-      let response = await fetch(`${this.API_BASE_URL}/api/create-invite`, {
+      const response = await fetch(`${this.API_BASE_URL}/api/invites`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -118,22 +118,9 @@ export class InviteServiceClient {
         body: JSON.stringify({
           email: request.email,
           projectId: request.projectId,
-          role: request.roleTag || 'candidate'
+          roleTag: request.roleTag || 'candidate'
         }),
       });
-
-      // If create-invite fails, fallback to the old invites endpoint
-      if (!response.ok && response.status === 500) {
-        console.log('⚠️ [InviteServiceClient] create-invite failed, trying fallback invites endpoint');
-        response = await fetch(`${this.API_BASE_URL}/api/invites`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify(request),
-        });
-      }
 
       console.log('📡 [InviteServiceClient] API response status:', response.status);
 
@@ -142,32 +129,7 @@ export class InviteServiceClient {
       if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
         console.error('🚨 [InviteServiceClient] Non-JSON response:', text);
-        
-        // Check if this is the FUNCTION_INVOCATION_FAILED error
-        if (text.includes('FUNCTION_INVOCATION_FAILED') || text.includes('A server error has occurred')) {
-          console.warn('⚠️ [InviteServiceClient] API deployment issue detected, using fallback');
-          
-          // Return a mock successful response for development
-          const mockInvite = {
-            id: 'mock_' + Math.random().toString(36).substr(2, 9),
-            candidateEmail: request.email,
-            token: Math.random().toString(36).substr(2, 32),
-            status: 'pending' as const,
-            sentAt: Date.now(),
-            projectId: request.projectId,
-            roleTag: request.roleTag
-          };
-          
-          // Show a warning to the user
-          alert(`⚠️ API Deployment Issue Detected!\n\nThe invite API is currently not working due to a deployment issue.\nThis is a MOCK invite that has been created for testing.\n\nEmail: ${request.email}\nTo fix this, the API functions need to be properly deployed.`);
-          
-          return {
-            success: true,
-            invite: mockInvite
-          };
-        }
-        
-        throw new Error('Server returned non-JSON response: ' + text.substring(0, 100));
+        throw new Error(`Server returned non-JSON response. This usually indicates a deployment or configuration issue. Status: ${response.status}`);
       }
 
       const data = await response.json() as CreateInviteResponse;
@@ -181,24 +143,28 @@ export class InviteServiceClient {
         throw new Error(data.error || 'Failed to create invite');
       }
 
-      console.log('✅ [InviteServiceClient] Invite created successfully');
+      console.log('✅ [InviteServiceClient] Invite created and email sent successfully');
       return data;
       
     } catch (error) {
       console.error('🚨 [InviteServiceClient] Error creating invite:', error);
       
-      // If it's a network error or the API is completely down, provide a helpful message
-      if (error instanceof Error && (
-        error.message.includes('fetch') || 
-        error.message.includes('Network') ||
-        error.message.includes('FUNCTION_INVOCATION_FAILED')
-      )) {
-        console.warn('⚠️ [InviteServiceClient] API seems to be down, providing helpful error message');
+      // Provide helpful error messages but don't mask failures with fake success
+      if (error instanceof Error) {
+        if (error.message.includes('fetch') || error.message.includes('Network')) {
+          throw new Error(`Network error: Unable to reach the invite API. Please check your internet connection and try again.`);
+        }
         
-        // Return a more helpful error message
-        throw new Error(`API Deployment Issue: The invite API is not responding properly. This is likely due to a Vercel deployment configuration issue. Please check:\n\n1. Vercel environment variables are set\n2. API functions are properly deployed\n3. No build conflicts with serverless functions\n\nOriginal error: ${error.message}`);
+        if (error.message.includes('SENDGRID_API_KEY')) {
+          throw new Error(`Email service configuration error: The system is not properly configured to send invitation emails. Please contact support.`);
+        }
+        
+        if (error.message.includes('FIREBASE')) {
+          throw new Error(`Database configuration error: The system is not properly configured to store invitations. Please contact support.`);
+        }
       }
       
+      // Re-throw the original error - don't create fake success responses
       throw error;
     }
   }
