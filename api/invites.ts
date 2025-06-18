@@ -25,15 +25,44 @@ interface CreateInviteResponse {
 }
 
 // Initialize Firebase Admin
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
-  });
+let firebaseInitialized = false;
+function initializeFirebase() {
+  if (!firebaseInitialized && !getApps().length) {
+    try {
+      console.log('🔥 [Firebase] Initializing Firebase Admin...');
+      
+      const requiredEnvVars = {
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
+      };
+
+      // Check if all required environment variables are present
+      for (const [key, value] of Object.entries(requiredEnvVars)) {
+        if (!value) {
+          throw new Error(`Missing required environment variable: ${key}`);
+        }
+      }
+
+      initializeApp({
+        credential: cert({
+          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
+          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
+          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        }),
+      });
+      
+      firebaseInitialized = true;
+      console.log('✅ [Firebase] Firebase Admin initialized successfully');
+    } catch (error) {
+      console.error('🚨 [Firebase] Error initializing Firebase Admin:', error);
+      throw error;
+    }
+  }
 }
+
+// Initialize Firebase on startup
+initializeFirebase();
 
 const db = getFirestore();
 
@@ -201,6 +230,9 @@ export default async function handler(
     console.log('   ENV • SENDGRID_API_KEY is set?', Boolean(process.env.SENDGRID_API_KEY));
     console.log('   ENV • FIREBASE_PROJECT_ID is set?', Boolean(process.env.FIREBASE_PROJECT_ID));
 
+    // Ensure Firebase is initialized
+    initializeFirebase();
+
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
       console.log('✅ [Invite API] Handling OPTIONS preflight request');
@@ -220,6 +252,7 @@ export default async function handler(
       const authHeader = req.headers.authorization;
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log('❌ [Invite API] Missing or invalid authorization header');
         res.status(401).json({
           success: false,
           error: 'Authentication required'
@@ -228,12 +261,16 @@ export default async function handler(
       }
 
       const token = authHeader.substring(7);
+      console.log('🔐 [Invite API] Verifying auth token...');
       const { uid } = await verifyAuthToken(token);
+      console.log('✅ [Invite API] Auth token verified for user:', uid);
       
       // Get HR user data
       let hrUser;
       try {
+        console.log('👤 [Invite API] Fetching HR user data...');
         hrUser = await getHrUser(uid);
+        console.log('✅ [Invite API] HR user found:', hrUser.email);
       } catch (error) {
         if (error instanceof Error && error.message.includes('HR user not found')) {
           // Auto-initialize HR user
@@ -247,6 +284,7 @@ export default async function handler(
           const companyDoc = await db.collection('companies').doc(defaultCompanyId).get();
           
           if (!companyDoc.exists) {
+            console.log('🏢 [Invite API] Creating default company...');
             await db.collection('companies').doc(defaultCompanyId).set({
               id: defaultCompanyId,
               name: 'Default Company',
@@ -271,11 +309,13 @@ export default async function handler(
           
           console.log('✅ [Invite API] HR user auto-initialized');
         } else {
+          console.error('🚨 [Invite API] Error getting HR user:', error);
           throw error;
         }
       }
       
       if (!hasPermission(hrUser?.role || 'user', 'invite')) {
+        console.log('❌ [Invite API] Insufficient permissions for user role:', hrUser?.role);
         res.status(403).json({ 
           success: false, 
           error: 'Insufficient permissions to send invites' 
@@ -286,6 +326,7 @@ export default async function handler(
       const { email, projectId, roleTag }: CreateInviteRequest = req.body;
 
       if (!email) {
+        console.log('❌ [Invite API] Missing email in request body');
         res.status(400).json({ 
           success: false, 
           error: 'Email is required' 
@@ -296,6 +337,7 @@ export default async function handler(
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
+        console.log('❌ [Invite API] Invalid email format:', email);
         res.status(400).json({ 
           success: false, 
           error: 'Invalid email format' 
@@ -311,14 +353,14 @@ export default async function handler(
         projectId,
         roleTag
       });
-      console.log('✅ Invite created:', invite.id);
+      console.log('✅ [Invite API] Invite created:', invite.id);
 
       // Get company name for email
       const companyDoc = await db.collection('companies').doc(hrUser?.companyId || 'default-company').get();
       const companyName = companyDoc.exists ? companyDoc.data()?.name : 'Company';
 
       // Send invitation email
-      console.log('📧 Attempting to send email to:', email);
+      console.log('📧 [Invite API] Attempting to send email to:', email);
       try {
         await sendInvitationEmail({
           candidateEmail: email,
@@ -327,10 +369,12 @@ export default async function handler(
           roleTag,
           companyName
         });
-        console.log('✉️ Email sent successfully to', email);
+        console.log('✉️ [Invite API] Email sent successfully to', email);
       } catch (emailError) {
-        console.error('🚨 SendGrid error:', emailError);
-        throw emailError;
+        console.error('🚨 [Invite API] SendGrid error:', emailError);
+        
+        // Don't fail the whole request if email fails, but log it
+        console.log('⚠️ [Invite API] Continuing despite email failure - invite still created');
       }
 
       const response: CreateInviteResponse = {
@@ -346,11 +390,13 @@ export default async function handler(
         }
       };
 
+      console.log('✅ [Invite API] Request completed successfully');
       res.status(201).json(response);
-    } catch (error) {
-      console.error('🚨 [Invite API] Processing error:', error);
       
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    } catch (innerError) {
+      console.error('🚨 [Invite API] Processing error:', innerError);
+      
+      const errorMessage = innerError instanceof Error ? innerError.message : 'Unknown error occurred';
       
       // Handle specific authentication errors
       if (errorMessage.includes('Missing or invalid authorization header')) {
@@ -369,6 +415,14 @@ export default async function handler(
         return;
       }
       
+      if (errorMessage.includes('Missing required environment variable')) {
+        res.status(500).json({ 
+          success: false, 
+          error: 'Server configuration error' 
+        });
+        return;
+      }
+      
       if (errorMessage.includes('SENDGRID_API_KEY')) {
         res.status(500).json({ 
           success: false, 
@@ -383,15 +437,26 @@ export default async function handler(
       });
     }
   } catch (outerError) {
-    console.error('🚨 [Invite API] Critical error:', outerError);
+    console.error('🚨 [Invite API] Critical error in outer handler:', outerError);
     
+    // Ensure CORS headers are set even on error
     Object.entries(corsHeaders).forEach(([key, value]) => {
-      res.setHeader(key, value);
+      try {
+        res.setHeader(key, value);
+      } catch (headerError) {
+        console.error('Failed to set header:', headerError);
+      }
     });
     
-    res.status(500).json({ 
-      success: false, 
-      error: 'Internal server error' 
-    });
+    try {
+      if (!res.headersSent) {
+        res.status(500).json({ 
+          success: false, 
+          error: outerError instanceof Error ? outerError.message : 'Internal server error'
+        });
+      }
+    } catch (responseError) {
+      console.error('🚨 [Invite API] Failed to send error response:', responseError);
+    }
   }
 } 

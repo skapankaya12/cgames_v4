@@ -1,4 +1,16 @@
 import type { CreateInviteRequest, CreateInviteResponse } from '@cgames/types';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+
+// Initialize Firebase Admin if not already initialized
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
 
 /**
  * Server-side service for managing invites
@@ -14,55 +26,65 @@ export class InviteService {
     projectId?: string;
     roleTag?: string;
   }) {
-    // Import Firebase Admin dynamically to avoid client-side issues
-    const { getFirestore } = await import('firebase-admin/firestore');
-    const { v4: uuidv4 } = await import('uuid');
-    
-    const db = getFirestore();
-    const inviteId = uuidv4();
-    const token = uuidv4().replace(/-/g, ''); // Simple token generation
-    
-    const invite = {
-      id: inviteId,
-      candidateEmail: data.candidateEmail,
-      token,
-      status: 'pending' as const,
-      sentAt: Date.now(),
-      sentBy: data.sentBy,
-      projectId: data.projectId || '',
-      roleTag: data.roleTag || 'candidate',
-      companyId: 'default', // This should come from the auth context
-    };
+    try {
+      // Import Firebase Admin dynamically to avoid client-side issues
+      const { getFirestore } = await import('firebase-admin/firestore');
+      const { v4: uuidv4 } = await import('uuid');
+      
+      const db = getFirestore();
+      const inviteId = uuidv4();
+      const token = uuidv4().replace(/-/g, ''); // Simple token generation
+      
+      const invite = {
+        id: inviteId,
+        candidateEmail: data.candidateEmail,
+        token,
+        status: 'pending' as const,
+        sentAt: Date.now(),
+        sentBy: data.sentBy,
+        projectId: data.projectId || '',
+        roleTag: data.roleTag || 'candidate',
+        companyId: 'default', // This should come from the auth context
+      };
 
-    // Save to Firestore
-    await db.collection('invites').doc(inviteId).set(invite);
-    
-    return invite;
+      // Save to Firestore
+      await db.collection('invites').doc(inviteId).set(invite);
+      
+      return invite;
+    } catch (error) {
+      console.error('🚨 [InviteService] Error creating invite:', error);
+      throw error;
+    }
   }
 
   /**
    * Validate an invite token
    */
   static async validateInvite(token: string) {
-    const { getFirestore } = await import('firebase-admin/firestore');
-    const db = getFirestore();
-    
-    const query = db.collection('invites').where('token', '==', token).limit(1);
-    const snapshot = await query.get();
-    
-    if (snapshot.empty) {
-      throw new Error('Invalid invite token');
+    try {
+      const { getFirestore } = await import('firebase-admin/firestore');
+      const db = getFirestore();
+      
+      const query = db.collection('invites').where('token', '==', token).limit(1);
+      const snapshot = await query.get();
+      
+      if (snapshot.empty) {
+        throw new Error('Invalid invite token');
+      }
+      
+      const inviteDoc = snapshot.docs[0];
+      const inviteData = inviteDoc.data();
+      const invite = { id: inviteDoc.id, ...inviteData };
+      
+      if (inviteData?.status !== 'pending') {
+        throw new Error('Invite token has already been used or expired');
+      }
+      
+      return invite;
+    } catch (error) {
+      console.error('🚨 [InviteService] Error validating invite:', error);
+      throw error;
     }
-    
-    const inviteDoc = snapshot.docs[0];
-    const inviteData = inviteDoc.data();
-    const invite = { id: inviteDoc.id, ...inviteData };
-    
-    if (inviteData?.status !== 'pending') {
-      throw new Error('Invite token has already been used or expired');
-    }
-    
-    return invite;
   }
 }
 
