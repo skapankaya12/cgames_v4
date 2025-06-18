@@ -1,26 +1,14 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-// CORS headers configuration
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400',
-  'Content-Type': 'application/json',
-};
-
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-): Promise<void> {
+export default function handler(req: any, res: any) {
   console.log('🚀 [Simple Invite API] === HANDLER START ===');
   console.log('🔔 [Simple Invite API] Method:', req.method);
   console.log('🔔 [Simple Invite API] URL:', req.url);
 
   // Set CORS headers
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Content-Type', 'application/json');
 
   try {
     // Handle preflight OPTIONS request
@@ -37,20 +25,8 @@ export default async function handler(
       return;
     }
 
-    // Log environment variables
-    console.log('🔍 [Simple Invite API] Environment Check:');
-    console.log('   • NODE_ENV:', process.env.NODE_ENV);
-    console.log('   • VERCEL:', process.env.VERCEL);
-    console.log('   • SENDGRID_API_KEY present:', Boolean(process.env.SENDGRID_API_KEY));
-    console.log('   • FIREBASE_PROJECT_ID present:', Boolean(process.env.FIREBASE_PROJECT_ID));
-
     // Log request details
     console.log('📋 [Simple Invite API] Request Details:');
-    console.log('   • Headers:', {
-      authorization: req.headers.authorization ? 'Bearer [PRESENT]' : 'MISSING',
-      'content-type': req.headers['content-type'],
-      origin: req.headers.origin
-    });
     console.log('   • Body:', req.body);
 
     // Basic validation
@@ -99,15 +75,13 @@ export default async function handler(
       message: 'Mock invite created successfully (no email sent)'
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('🚨 [Simple Invite API] === ERROR ===');
-    console.error('🚨 [Simple Invite API] Error type:', typeof error);
-    console.error('🚨 [Simple Invite API] Error message:', error instanceof Error ? error.message : String(error));
-    console.error('🚨 [Simple Invite API] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('🚨 [Simple Invite API] Error message:', error?.message || 'Unknown error');
     
     res.status(500).json({ 
       success: false, 
-      error: error instanceof Error ? error.message : 'Internal server error'
+      error: error?.message || 'Internal server error'
     });
   } finally {
     console.log('🏁 [Simple Invite API] === HANDLER END ===');
