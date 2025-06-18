@@ -4,6 +4,9 @@
   "functions": {
     "api/*.ts": {
       "runtime": "@vercel/node@2.6.0"
+    },
+    "api/*.js": {
+      "runtime": "@vercel/node@2.6.0"
     }
   },
   "routes": [
