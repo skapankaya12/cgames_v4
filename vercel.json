@@ -7,9 +7,16 @@
     },
     "api/*.js": {
       "runtime": "@vercel/node@2.6.0"
+    },
+    "ping.js": {
+      "runtime": "@vercel/node@2.6.0"
     }
   },
   "routes": [
+    {
+      "src": "/ping",
+      "dest": "/ping.js"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
