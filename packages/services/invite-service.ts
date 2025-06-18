@@ -76,46 +76,6 @@ export class InviteServiceClient {
     : 'http://localhost:3001';
 
   /**
-   * Initialize HR user profile
-   */
-  static async initializeHrUser(): Promise<void> {
-    console.log('🔄 [InviteServiceClient] Initializing HR user profile');
-    
-    try {
-      // Get the current user's Firebase token for authentication
-      const { getAuth } = await import('firebase/auth');
-      const auth = getAuth();
-      const user = auth.currentUser;
-      
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-
-      const token = await user.getIdToken();
-      
-      const response = await fetch(`${this.API_BASE_URL}/api/init-hr-user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}: Failed to initialize HR user`);
-      }
-
-      console.log('✅ [InviteServiceClient] HR user initialized:', data.message);
-      
-    } catch (error) {
-      console.error('🚨 [InviteServiceClient] Error initializing HR user:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Create a new invite
    */
   static async createInvite(request: CreateInviteRequest): Promise<CreateInviteResponse> {
@@ -157,16 +117,6 @@ export class InviteServiceClient {
       console.log('📦 [InviteServiceClient] API response data:', data);
 
       if (!response.ok) {
-        // If the error is "User profile not found", try to initialize the HR user
-        if (response.status === 404 && data.error?.includes('User profile not found')) {
-          console.log('🔄 [InviteServiceClient] HR user not found, initializing...');
-          await this.initializeHrUser();
-          
-          // Retry the original request
-          console.log('🔄 [InviteServiceClient] Retrying invite creation...');
-          return this.createInvite(request);
-        }
-        
         throw new Error(data.error || `HTTP ${response.status}: Failed to create invite`);
       }
 
