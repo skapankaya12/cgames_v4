@@ -1,24 +1,14 @@
 import type { CreateInviteRequest, CreateInviteResponse } from '@cgames/types';
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-
-// Initialize Firebase Admin if not already initialized
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
-  });
-}
 
 /**
  * Server-side service for managing invites
  * Used by API functions for database operations
+ * NOTE: This should ONLY be used in server-side code (API functions)
  */
 export class InviteService {
   /**
    * Create a new invite in the database
+   * IMPORTANT: This method should only be used in server-side code
    */
   static async createInvite(data: {
     candidateEmail: string;
@@ -27,7 +17,7 @@ export class InviteService {
     roleTag?: string;
   }) {
     try {
-      // Import Firebase Admin dynamically to avoid client-side issues
+      // Dynamic imports to avoid bundling in client-side code
       const { getFirestore } = await import('firebase-admin/firestore');
       const { v4: uuidv4 } = await import('uuid');
       
@@ -59,6 +49,7 @@ export class InviteService {
 
   /**
    * Validate an invite token
+   * IMPORTANT: This method should only be used in server-side code
    */
   static async validateInvite(token: string) {
     try {
@@ -91,6 +82,7 @@ export class InviteService {
 /**
  * Client-side service for managing invites
  * Makes HTTP requests to the invite API endpoints
+ * This is safe to use in client-side code
  */
 export class InviteServiceClient {
   private static readonly API_BASE_URL = process.env.NODE_ENV === 'production' 
@@ -99,6 +91,7 @@ export class InviteServiceClient {
 
   /**
    * Create a new invite
+   * This method is safe to use in client-side code
    */
   static async createInvite(request: CreateInviteRequest): Promise<CreateInviteResponse> {
     console.log('🚀 [InviteServiceClient] createInvite called with:', request);
