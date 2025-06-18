@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icons } from '@cgames/ui-kit';
 import type { CompetencyScore } from '../types/results';
-import { getScorePercentage, getScoreLevelColor, getInsight } from '../utils/insights';
+import { getScorePercentage, getScoreLevelColor } from '../utils/insights';
 
 interface ScoreDisplayProps {
   scores: CompetencyScore[];
@@ -35,7 +35,7 @@ export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores, onShowHelp }
         {scores.map((score, index) => {
           const percentage = getScorePercentage(score.score, score.maxScore);
           const levelColor = getScoreLevelColor(percentage);
-          const insight = getInsight(score.abbreviation, score.score);
+          // const insight = getInsight(score.abbreviation, score.score);
           
           // Get performance level
           const getPerformanceLevel = (percentage: number) => {

@@ -1,6 +1,72 @@
 import type { CreateInviteRequest, CreateInviteResponse } from '@cgames/types';
 
 /**
+ * Server-side service for managing invites
+ * Used by API functions for database operations
+ */
+export class InviteService {
+  /**
+   * Create a new invite in the database
+   */
+  static async createInvite(data: {
+    candidateEmail: string;
+    sentBy: string;
+    projectId?: string;
+    roleTag?: string;
+  }) {
+    // Import Firebase Admin dynamically to avoid client-side issues
+    const { getFirestore } = await import('firebase-admin/firestore');
+    const { v4: uuidv4 } = await import('uuid');
+    
+    const db = getFirestore();
+    const inviteId = uuidv4();
+    const token = uuidv4().replace(/-/g, ''); // Simple token generation
+    
+    const invite = {
+      id: inviteId,
+      candidateEmail: data.candidateEmail,
+      token,
+      status: 'pending' as const,
+      sentAt: Date.now(),
+      sentBy: data.sentBy,
+      projectId: data.projectId || '',
+      roleTag: data.roleTag || 'candidate',
+      companyId: 'default', // This should come from the auth context
+    };
+
+    // Save to Firestore
+    await db.collection('invites').doc(inviteId).set(invite);
+    
+    return invite;
+  }
+
+  /**
+   * Validate an invite token
+   */
+  static async validateInvite(token: string) {
+    const { getFirestore } = await import('firebase-admin/firestore');
+    const db = getFirestore();
+    
+    const query = db.collection('invites').where('token', '==', token).limit(1);
+    const snapshot = await query.get();
+    
+    if (snapshot.empty) {
+      throw new Error('Invalid invite token');
+    }
+    
+    const inviteDoc = snapshot.docs[0];
+    const inviteData = inviteDoc.data();
+    const invite = { id: inviteDoc.id, ...inviteData };
+    
+    if (inviteData?.status !== 'pending') {
+      throw new Error('Invite token has already been used or expired');
+    }
+    
+    return invite;
+  }
+}
+
+/**
  * Client-side service for managing invites
  * Makes HTTP requests to the invite API endpoints
  */

@@ -4,7 +4,7 @@ import { PersonalizedRecommendations as PersonalizedRecommendationsComponent } f
 import type { PersonalizedRecommendations } from '@cgames/types/Recommendations';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
 import type { CVData } from '@cgames/services';
-import { getRecommendations } from '../utils/insights';
+// import { getRecommendations } from '../utils/insights';
 
 interface RecommendationsSectionProps {
   personalizedRecommendations: PersonalizedRecommendations | null;
@@ -29,7 +29,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   onGenerateRecommendations,
   onShowHelp
 }) => {
-  const generalRecommendations = getRecommendations(scores);
+  // const generalRecommendations = getRecommendations(scores);
 
   return (
     <div className="recommendations-section">

@@ -2,7 +2,7 @@ import React from 'react';
 import { Icons } from '@cgames/ui-kit';
 import type { CompetencyScore } from '../types/results';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
-import type { PersonalizedRecommendations } from '@cgames/services/RecommendationService';
+// import type { PersonalizedRecommendations } from '@cgames/services/RecommendationService';
 import { getScorePercentage, getScoreLevelColor } from '../utils/insights';
 
 type ViewType = 'dashboard' | 'yetkinlikler' | 'davranış-analizi' | 'öneriler' | 'feedback';
@@ -17,7 +17,7 @@ interface DashboardOverviewProps {
   scores: CompetencyScore[];
   user: User | null;
   interactionAnalytics: SessionAnalytics | null;
-  personalizedRecommendations: PersonalizedRecommendations | null;
+  personalizedRecommendations: any | null;
   isLoadingRecommendations: boolean;
   onViewChange: (view: ViewType) => void;
   onShowHelp: (context: string) => void;
@@ -40,8 +40,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const topCompetency = scores.length > 0 ? scores[0] : null;
   const improvementArea = scores.length > 0 ? scores[scores.length - 1] : null;
   
-  const totalTimeSpent = interactionAnalytics?.totalTimeSpent || 0;
-  const totalInteractions = interactionAnalytics?.totalInteractions || 0;
+  const totalTimeSpent = (interactionAnalytics as any)?.totalTimeSpent || 0;
+  const totalInteractions = (interactionAnalytics as any)?.totalInteractions || 0;
 
   // Get performance level
   const getPerformanceLevel = (score: number) => {

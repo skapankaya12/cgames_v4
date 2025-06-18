@@ -31,7 +31,7 @@ export const SharedResultsScreen: React.FC = () => {
     interactionAnalytics,
     personalizedRecommendations: storedRecommendations,
     cvData,
-    currentFilter,
+    // currentFilter,
     setCurrentFilter,
     sessionId,
     isDataLoaded,
