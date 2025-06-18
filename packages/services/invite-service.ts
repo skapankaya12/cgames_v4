@@ -109,14 +109,31 @@ export class InviteServiceClient {
       const token = await user.getIdToken();
       console.log('🔑 [InviteServiceClient] Got Firebase token for user:', user.uid);
 
-      const response = await fetch(`${this.API_BASE_URL}/api/invites`, {
+      let response = await fetch(`${this.API_BASE_URL}/api/create-invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify({
+          email: request.email,
+          projectId: request.projectId,
+          role: request.roleTag || 'candidate'
+        }),
       });
+
+      // If create-invite fails, fallback to the old invites endpoint
+      if (!response.ok && response.status === 500) {
+        console.log('⚠️ [InviteServiceClient] create-invite failed, trying fallback invites endpoint');
+        response = await fetch(`${this.API_BASE_URL}/api/invites`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(request),
+        });
+      }
 
       console.log('📡 [InviteServiceClient] API response status:', response.status);
 

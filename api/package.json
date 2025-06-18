@@ -10,7 +10,8 @@
     "@vercel/node": "^3.0.0",
     "@sendgrid/mail": "^8.1.0",
     "firebase-admin": "^12.0.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "firebase": "^10.7.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
