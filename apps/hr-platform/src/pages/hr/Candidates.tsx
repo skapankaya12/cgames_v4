@@ -26,6 +26,7 @@ interface Candidate {
   stage: 'application' | 'assessment' | 'interview' | 'offer' | 'hired' | 'rejected';
   notes?: string;
   source?: string;
+  gameType?: string;
 }
 
 export default function Candidates() {
@@ -43,6 +44,8 @@ export default function Candidates() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'invitedAt' | 'score' | 'status'>('invitedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [showGameModal, setShowGameModal] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState<string>('');
 
   // Mock candidate data - in a real app, this would come from Firestore
   const generateMockCandidates = (projects: Project[]): Candidate[] => {
@@ -79,7 +82,8 @@ export default function Candidates() {
           completedAt: status === 'completed' ? new Date(Date.now() - Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toISOString() : undefined,
           score: status === 'completed' ? Math.floor(Math.random() * 40) + 60 : undefined,
           notes: Math.random() > 0.7 ? 'Strong technical background, good communication skills' : undefined,
-          source: sources[Math.floor(Math.random() * sources.length)]
+          source: sources[Math.floor(Math.random() * sources.length)],
+          gameType: Math.random() > 0.5 ? 'Leadership Scenario Game' : undefined
         });
       }
     });
@@ -127,27 +131,27 @@ export default function Candidates() {
       }
     });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'invited': return '#3B82F6';
-      case 'in-progress': return '#F59E0B';
-      case 'completed': return '#10B981';
-      case 'hired': return '#059669';
-      case 'rejected': return '#EF4444';
-      default: return '#6B7280';
-    }
+
+
+  const handleChangeGame = (candidateId: string) => {
+    setSelectedCandidate(candidateId);
+    setShowGameModal(true);
   };
 
-  const getStageColor = (stage: string) => {
-    switch (stage) {
-      case 'application': return '#8B5CF6';
-      case 'assessment': return '#3B82F6';
-      case 'interview': return '#F59E0B';
-      case 'offer': return '#10B981';
-      case 'hired': return '#059669';
-      case 'rejected': return '#EF4444';
-      default: return '#6B7280';
-    }
+  const handleResendInvite = async (candidateId: string) => {
+    // Implementation for resending invite
+    console.log('Resending invite for:', candidateId);
+  };
+
+  const handleViewResults = (candidateId: string) => {
+    // Implementation for viewing results
+    console.log('Viewing results for:', candidateId);
+  };
+
+  const handleUpdateGame = (game: string) => {
+    // Implementation for updating game
+    console.log('Updating game for candidate:', selectedCandidate, 'to:', game);
+    setShowGameModal(false);
   };
 
   useEffect(() => {
@@ -358,110 +362,81 @@ export default function Candidates() {
             <div className="section-card">
               <div className="candidates-table">
                 <div className="table-header">
-                  <div className="table-row header">
-                    <div className="table-cell candidate-info">Candidate</div>
-                    <div className="table-cell project">Project</div>
-                    <div className="table-cell status">Status</div>
-                    <div className="table-cell stage">Stage</div>
-                    <div className="table-cell score">Score</div>
-                    <div className="table-cell source">Source</div>
-                    <div className="table-cell invited">Invited</div>
-                    <div className="table-cell actions">Actions</div>
-                  </div>
+                  <div className="table-cell candidate">Candidate</div>
+                  <div className="table-cell status">Status</div>
+                  <div className="table-cell game">Game</div>
+                  <div className="table-cell date">Date Invited</div>
+                  <div className="table-cell date">Date Completed</div>
+                  <div className="table-cell actions">Actions</div>
                 </div>
-                
+
                 <div className="table-body">
                   {filteredAndSortedCandidates.map((candidate) => (
                     <div key={candidate.id} className="table-row">
-                      <div className="table-cell candidate-info">
-                        <div className="candidate-details">
+                      <div className="table-cell candidate">
+                        <div className="candidate-info">
                           <div className="candidate-avatar">
                             {candidate.name.split(' ').map(n => n[0]).join('')}
                           </div>
-                          <div className="candidate-text">
-                            <div className="candidate-name">{candidate.name}</div>
-                            <div className="candidate-email">{candidate.email}</div>
-                            <div className="candidate-role">{candidate.position}</div>
+                          <div className="candidate-details">
+                            <span className="candidate-name">{candidate.name}</span>
+                            <span className="candidate-id">ID: {candidate.id?.substring(0, 8) || 'N/A'}</span>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div className="table-cell project">
-                        <div className="project-badge">
-                          {candidate.projectName}
-                        </div>
-                        <div className="department-text">{candidate.department}</div>
                       </div>
                       
                       <div className="table-cell status">
                         <span 
-                          className="status-badge"
-                          style={{ backgroundColor: getStatusColor(candidate.status) }}
+                          className={`status-badge ${candidate.status}`}
                         >
-                          {candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
+                          {candidate.status === 'invited' && '📧 Pending'}
+                          {candidate.status === 'in-progress' && '🎮 In Progress'}
+                          {candidate.status === 'completed' && '✅ Completed'}
+                          {candidate.status === 'hired' && '✅ Hired'}
+                          {candidate.status === 'rejected' && '❌ Rejected'}
                         </span>
                       </div>
-                      
-                      <div className="table-cell stage">
-                        <span 
-                          className="stage-badge"
-                          style={{ backgroundColor: getStageColor(candidate.stage) }}
-                        >
-                          {candidate.stage.charAt(0).toUpperCase() + candidate.stage.slice(1)}
-                        </span>
+
+                      <div className="table-cell game">
+                        <span className="game-tag">{candidate.gameType || 'Leadership Scenario Game'}</span>
                       </div>
-                      
-                      <div className="table-cell score">
-                        {candidate.score ? (
-                          <div className="score-display">
-                            <span className="score-value">{candidate.score}</span>
-                            <div className="score-bar">
-                              <div 
-                                className="score-fill" 
-                                style={{ width: `${candidate.score}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="no-score">-</span>
-                        )}
+
+                      <div className="table-cell date">
+                        {candidate.invitedAt ? new Date(candidate.invitedAt).toLocaleDateString() : '—'}
                       </div>
-                      
-                      <div className="table-cell source">
-                        <span className="source-text">{candidate.source}</span>
+
+                      <div className="table-cell date">
+                        {candidate.status === 'completed' ? new Date(candidate.completedAt || '').toLocaleDateString() : '—'}
                       </div>
-                      
-                      <div className="table-cell invited">
-                        <div className="date-info">
-                          <span className="date-text">
-                            {new Date(candidate.invitedAt).toLocaleDateString()}
-                          </span>
-                          <span className="days-ago">
-                            {Math.floor((Date.now() - new Date(candidate.invitedAt).getTime()) / (1000 * 60 * 60 * 24))} days ago
-                          </span>
-                        </div>
-                      </div>
-                      
+
                       <div className="table-cell actions">
-                        <div className="action-buttons">
-                          <button className="action-btn view" title="View Details">
-                            <svg viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                            </svg>
+                        {candidate.status === 'invited' && (
+                          <div className="action-buttons">
+                            <button 
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => handleResendInvite(candidate.id)}
+                            >
+                              Resend
+                            </button>
+                            <button 
+                              className="btn btn-outline btn-sm"
+                              onClick={() => handleChangeGame(candidate.id)}
+                            >
+                              Change Game
+                            </button>
+                          </div>
+                        )}
+                        {candidate.status === 'completed' && (
+                          <button 
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleViewResults(candidate.id)}
+                          >
+                            View Results
                           </button>
-                          <button className="action-btn edit" title="Edit Candidate">
-                            <svg viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                            </svg>
-                          </button>
-                          <button className="action-btn message" title="Send Message">
-                            <svg viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                            </svg>
-                          </button>
-                        </div>
+                        )}
+                        {candidate.status === 'in-progress' && (
+                          <span className="status-text">In Progress...</span>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -481,6 +456,54 @@ export default function Candidates() {
           </div>
         </div>
       </div>
+
+      {/* Game Selection Modal */}
+      {showGameModal && (
+        <div className="modal-overlay" onClick={() => setShowGameModal(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Change Assessment Game</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowGameModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Select a new game for this candidate:</p>
+              <div className="game-selection">
+                {['Leadership Scenario Game', 'Team Building Simulation', 'Crisis Management Scenarios', 
+                  'Strategic Planning Exercise', 'Negotiation Simulation', 'Communication Challenges'].map(game => (
+                  <label key={game} className="game-option">
+                    <input 
+                      type="radio" 
+                      name="selectedGame" 
+                      value={game}
+                      onChange={() => {}}
+                    />
+                    <span className="game-title">{game}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => setShowGameModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn btn-primary"
+                onClick={() => handleUpdateGame('Leadership Scenario Game')}
+              >
+                Update Game
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 } 

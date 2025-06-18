@@ -23,15 +23,6 @@ export const ProjectCreationStep4: React.FC<ProjectCreationStep4Props> = ({
     'Performance management', 'Decision making with incomplete data'
   ];
 
-  const assessmentGames = [
-    'Leadership Scenario Game',
-    'Team Building Simulation',
-    'Crisis Management Scenarios',
-    'Strategic Planning Exercise',
-    'Negotiation Simulation',
-    'Communication Challenges'
-  ];
-
   return (
     <div className="form-step">
       <h3>Assessment Customization</h3>
@@ -101,61 +92,63 @@ export const ProjectCreationStep4: React.FC<ProjectCreationStep4Props> = ({
       </div>
 
       <div className="form-group">
-        <label>Preferred Assessment Games</label>
-        <div className="checkbox-group">
-          {assessmentGames.map((game) => (
-            <label key={game} className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={formData.gamePreferences.includes(game)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    addToArrayField('gamePreferences', game);
-                  } else {
-                    removeFromArrayField('gamePreferences', game);
-                  }
-                }}
-              />
-              {game}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className="form-group">
         <div className="recommendations-preview">
-          <h4>Assessment Preview</h4>
-          <p>Based on your selections, we'll focus on:</p>
-          <ul>
-            {formData.roleTitle === 'director' || formData.roleTitle === 'principal' ? (
-              <>
-                <li>Strategic Thinking & Decision Making</li>
-                <li>Leadership & Vision</li>
-              </>
-            ) : formData.roleTitle === 'senior' ? (
-              <>
-                <li>Technical Leadership</li>
-                <li>Team Management</li>
-              </>
-            ) : (
-              <>
-                <li>Team Collaboration</li>
-                <li>Problem Solving</li>
-              </>
-            )}
-            {formData.managementStyle === 'coaching' && (
-              <li>Mentoring & Development Skills</li>
-            )}
-            {formData.workMode === 'remote' && (
-              <li>Remote Team Management</li>
-            )}
-          </ul>
-          <p>
+          <h4>Assessment Configuration Summary</h4>
+          
+          <div className="config-item">
+            <strong>Selected Games ({formData.gamePreferences.length}):</strong>
+            <div className="tag-list">
+              {formData.gamePreferences.length > 0 ? (
+                formData.gamePreferences.map((game: string, index: number) => (
+                  <span key={index} className="tag game-tag">{game}</span>
+                ))
+              ) : (
+                <span className="no-selection">No games selected - please go back to Step 2</span>
+              )}
+            </div>
+          </div>
+
+          <div className="config-item">
+            <strong>Focus Areas:</strong>
+            <ul>
+              {formData.roleTitle === 'director' || formData.roleTitle === 'principal' ? (
+                <>
+                  <li>Strategic Thinking & Decision Making</li>
+                  <li>Leadership & Vision</li>
+                </>
+              ) : formData.roleTitle === 'senior' ? (
+                <>
+                  <li>Technical Leadership</li>
+                  <li>Team Management</li>
+                </>
+              ) : (
+                <>
+                  <li>Team Collaboration</li>
+                  <li>Problem Solving</li>
+                </>
+              )}
+              {formData.managementStyle === 'coaching' && (
+                <li>Mentoring & Development Skills</li>
+              )}
+              {formData.workMode === 'remote' && (
+                <li>Remote Team Management</li>
+              )}
+            </ul>
+          </div>
+
+          <div className="config-item">
             <strong>Estimated Duration:</strong> {
               formData.roleTitle === 'director' || formData.roleTitle === 'principal' ? '45' :
               formData.roleTitle === 'senior' ? '40' : '30'
-            } minutes
-          </p>
+            } minutes per game
+          </div>
+
+          <div className="config-item">
+            <strong>Total Assessment Time:</strong> {
+              (formData.roleTitle === 'director' || formData.roleTitle === 'principal' ? 45 :
+              formData.roleTitle === 'senior' ? 40 : 30) * formData.gamePreferences.length
+            } minutes ({formData.gamePreferences.length} games)
+          </div>
         </div>
       </div>
     </div>

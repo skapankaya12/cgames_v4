@@ -32,4 +32,20 @@ export default defineConfig({
       '.ngrok-free.app' // Allow all ngrok-free.app subdomains
     ]
   },
+  define: {
+    'process.env': {}
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        'firebase-admin',
+        'firebase-admin/app', 
+        'firebase-admin/firestore',
+        '@google-cloud/firestore',
+        'google-auth-library',
+        'jsonwebtoken',
+        'uuid'
+      ]
+    }
+  }
 })

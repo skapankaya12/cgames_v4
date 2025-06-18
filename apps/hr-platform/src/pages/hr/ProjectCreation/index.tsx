@@ -80,6 +80,8 @@ export default function ProjectCreation() {
           <ProjectCreationStep2
             formData={formData}
             handleInputChange={handleInputChange}
+            addToArrayField={addToArrayField}
+            removeFromArrayField={removeFromArrayField}
           />
         );
       case 3:

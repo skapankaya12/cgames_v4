@@ -4,16 +4,29 @@ import type { ProjectCreationForm } from '@cgames/types';
 interface ProjectCreationStep2Props {
   formData: ProjectCreationForm;
   handleInputChange: (field: keyof ProjectCreationForm, value: any) => void;
+  addToArrayField: (field: 'keySkills' | 'cultureValues' | 'challenges' | 'gamePreferences', value: string) => void;
+  removeFromArrayField: (field: 'keySkills' | 'cultureValues' | 'challenges' | 'gamePreferences', value: string) => void;
 }
 
 export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
   formData,
-  handleInputChange
+  handleInputChange,
+  addToArrayField,
+  removeFromArrayField
 }) => {
+  const assessmentGames = [
+    'Leadership Scenario Game',
+    'Team Building Simulation', 
+    'Crisis Management Scenarios',
+    'Strategic Planning Exercise',
+    'Negotiation Simulation',
+    'Communication Challenges'
+  ];
+
   return (
     <div className="form-step">
-      <h3>Role Details</h3>
-      <p className="step-description">Tell us more about the specific role requirements</p>
+      <h3>Role Details & Assessment Games</h3>
+      <p className="step-description">Tell us more about the specific role requirements and select assessment games</p>
 
       <div className="form-row">
         <div className="form-group">
@@ -90,6 +103,62 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
           onChange={(e) => handleInputChange('industryFocus', e.target.value)}
           placeholder="e.g., Technology, Finance, Healthcare"
         />
+      </div>
+
+      {/* Game Selection Section */}
+      <div className="form-group assessment-games-section">
+        <label>Assessment Games for This Project *</label>
+        <p className="field-description">Select which games candidates will take for this project. You can choose multiple games.</p>
+        <div className="checkbox-group">
+          {assessmentGames.map((game) => (
+            <label key={game} className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={formData.gamePreferences.includes(game)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    addToArrayField('gamePreferences', game);
+                  } else {
+                    removeFromArrayField('gamePreferences', game);
+                  }
+                }}
+              />
+              <span className="game-title">{game}</span>
+              <span className="game-description">
+                {game === 'Leadership Scenario Game' && 'Assess leadership and decision-making skills'}
+                {game === 'Team Building Simulation' && 'Evaluate team collaboration and communication'}
+                {game === 'Crisis Management Scenarios' && 'Test problem-solving under pressure'}
+                {game === 'Strategic Planning Exercise' && 'Measure strategic thinking and planning abilities'}
+                {game === 'Negotiation Simulation' && 'Assess negotiation and interpersonal skills'}
+                {game === 'Communication Challenges' && 'Evaluate communication and presentation skills'}
+              </span>
+            </label>
+          ))}
+        </div>
+        
+        {formData.gamePreferences.length === 0 && (
+          <p className="validation-message">Please select at least one assessment game for this project.</p>
+        )}
+        
+        {formData.gamePreferences.length > 0 && (
+          <div className="selected-games-preview">
+            <h4>Selected Games ({formData.gamePreferences.length}):</h4>
+            <div className="tag-list">
+              {formData.gamePreferences.map((game: string, index: number) => (
+                <span key={index} className="tag game-tag">
+                  {game}
+                  <button
+                    type="button"
+                    onClick={() => removeFromArrayField('gamePreferences', game)}
+                    className="remove-tag"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
