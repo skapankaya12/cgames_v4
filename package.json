@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": "18.x"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"

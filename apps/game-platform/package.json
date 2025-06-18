@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "vite --port 5174",
     "build": "npx tsc && vite build",
@@ -26,7 +29,7 @@
     "react-router-dom": "^6.22.1",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "@types/node": "^20.0.0",
+    "@types/node": "^18.0.0",
     "@vitejs/plugin-react": "^4.4.1",
     "typescript": "latest",
     "vite": "^6.3.5"
