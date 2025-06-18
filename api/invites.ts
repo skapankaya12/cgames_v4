@@ -61,18 +61,52 @@ function initializeFirebase() {
   }
 }
 
-// Initialize Firebase on startup
-initializeFirebase();
-
-const db = getFirestore();
-
 // CORS headers configuration
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Max-Age': '86400',
+  'Content-Type': 'application/json',
 };
+
+/**
+ * Safely set response headers
+ */
+function setResponseHeaders(res: VercelResponse, headers: Record<string, string>) {
+  try {
+    Object.entries(headers).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+  } catch (headerError) {
+    console.error('🚨 [Headers] Failed to set headers:', headerError);
+  }
+}
+
+/**
+ * Safely send JSON response
+ */
+function sendJsonResponse(res: VercelResponse, statusCode: number, data: any) {
+  try {
+    if (res.headersSent) {
+      console.log('⚠️ [Response] Headers already sent, cannot send response');
+      return;
+    }
+    
+    setResponseHeaders(res, corsHeaders);
+    res.status(statusCode).json(data);
+  } catch (responseError) {
+    console.error('🚨 [Response] Failed to send JSON response:', responseError);
+    // Last resort - try to send a basic error
+    try {
+      if (!res.headersSent) {
+        res.status(500).end('Internal Server Error');
+      }
+    } catch (finalError) {
+      console.error('🚨 [Response] Complete failure to send response:', finalError);
+    }
+  }
+}
 
 /**
  * Verify Firebase ID token
@@ -96,6 +130,7 @@ async function verifyAuthToken(token: string): Promise<{ uid: string }> {
  * Get HR user data from Firestore
  */
 async function getHrUser(uid: string) {
+  const db = getFirestore();
   const hrDoc = await db.collection('hrUsers').doc(uid).get();
   
   if (!hrDoc.exists) {
@@ -128,26 +163,37 @@ async function createInvite(data: {
   projectId?: string;
   roleTag?: string;
 }) {
-  // Generate UUID-like ID
-  const inviteId = 'invite_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-  const token = Math.random().toString(36).substr(2, 32); // Simple token generation
+  console.log('🔄 [CreateInvite] Starting invite creation for:', data.candidateEmail);
   
-  const invite = {
-    id: inviteId,
-    candidateEmail: data.candidateEmail,
-    token,
-    status: 'pending' as const,
-    sentAt: Date.now(),
-    sentBy: data.sentBy,
-    projectId: data.projectId || '',
-    roleTag: data.roleTag || 'candidate',
-    companyId: 'default',
-  };
+  try {
+    const db = getFirestore();
+    
+    // Generate UUID-like ID
+    const inviteId = 'invite_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    const token = Math.random().toString(36).substr(2, 32); // Simple token generation
+    
+    const invite = {
+      id: inviteId,
+      candidateEmail: data.candidateEmail,
+      token,
+      status: 'pending' as const,
+      sentAt: Date.now(),
+      sentBy: data.sentBy,
+      projectId: data.projectId || '',
+      roleTag: data.roleTag || 'candidate',
+      companyId: 'default',
+    };
 
-  // Save to Firestore
-  await db.collection('invites').doc(inviteId).set(invite);
-  
-  return invite;
+    console.log('💾 [CreateInvite] Saving invite to Firestore:', inviteId);
+    // Save to Firestore
+    await db.collection('invites').doc(inviteId).set(invite);
+    
+    console.log('✅ [CreateInvite] Invite created successfully:', inviteId);
+    return invite;
+  } catch (error) {
+    console.error('🚨 [CreateInvite] Error creating invite:', error);
+    throw error;
+  }
 }
 
 /**
@@ -160,9 +206,10 @@ async function sendInvitationEmail(data: {
   roleTag?: string;
   companyName: string;
 }) {
-  console.log('📧 [SendGridService] Sending invitation email to:', data.candidateEmail);
+  console.log('📧 [SendGridService] Starting email send to:', data.candidateEmail);
   
   try {
+    console.log('📦 [SendGridService] Importing @sendgrid/mail...');
     const sgMail = (await import('@sendgrid/mail')).default;
     
     const apiKey = process.env.SENDGRID_API_KEY;
@@ -170,6 +217,7 @@ async function sendInvitationEmail(data: {
       throw new Error('SENDGRID_API_KEY environment variable is not set');
     }
     
+    console.log('🔑 [SendGridService] Setting SendGrid API key...');
     sgMail.setApiKey(apiKey);
     
     const gameBaseUrl = process.env.NODE_ENV === 'production' 
@@ -178,6 +226,7 @@ async function sendInvitationEmail(data: {
     
     const inviteUrl = `${gameBaseUrl}?token=${data.token}`;
     
+    console.log('✉️ [SendGridService] Preparing email message...');
     const msg = {
       to: data.candidateEmail,
       from: 'noreply@olivinhr.com',
@@ -200,6 +249,7 @@ async function sendInvitationEmail(data: {
       `,
     };
     
+    console.log('🚀 [SendGridService] Sending email via SendGrid...');
     await sgMail.send(msg);
     console.log('✅ [SendGridService] Email sent successfully to:', data.candidateEmail);
     
@@ -213,51 +263,69 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
-  // Set CORS headers for all requests first
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
+  console.log('🚀 [Invite API] === HANDLER START ===');
+  console.log('🔔 [Invite API] Method:', req.method);
+  console.log('🔔 [Invite API] URL:', req.url);
+
+  // Always set CORS headers first
+  setResponseHeaders(res, corsHeaders);
 
   try {
-    console.log('🔔 [Invite API] handler invoked');
-    console.log('   Method:', req.method);
-    console.log('   Headers:', {
+    // Log environment variables availability
+    console.log('🔍 [Invite API] Environment Check:');
+    console.log('   • NODE_ENV:', process.env.NODE_ENV);
+    console.log('   • VERCEL:', process.env.VERCEL);
+    console.log('   • SENDGRID_API_KEY present:', Boolean(process.env.SENDGRID_API_KEY));
+    console.log('   • FIREBASE_PROJECT_ID present:', Boolean(process.env.FIREBASE_PROJECT_ID));
+    console.log('   • FIREBASE_CLIENT_EMAIL present:', Boolean(process.env.FIREBASE_CLIENT_EMAIL));
+    console.log('   • FIREBASE_PRIVATE_KEY present:', Boolean(process.env.FIREBASE_PRIVATE_KEY));
+
+    // Log request details
+    console.log('📋 [Invite API] Request Details:');
+    console.log('   • Headers:', {
       authorization: req.headers.authorization ? 'Bearer [PRESENT]' : 'MISSING',
       'content-type': req.headers['content-type'],
-      origin: req.headers.origin
+      origin: req.headers.origin,
+      'user-agent': req.headers['user-agent']?.substring(0, 50)
     });
-    console.log('   Body:', req.body);
-    console.log('   ENV • SENDGRID_API_KEY is set?', Boolean(process.env.SENDGRID_API_KEY));
-    console.log('   ENV • FIREBASE_PROJECT_ID is set?', Boolean(process.env.FIREBASE_PROJECT_ID));
-
-    // Ensure Firebase is initialized
-    initializeFirebase();
+    console.log('   • Body:', req.body);
 
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
       console.log('✅ [Invite API] Handling OPTIONS preflight request');
-      res.status(200).end();
-      return;
+      return sendJsonResponse(res, 200, { success: true });
     }
 
     // Only allow POST requests (after OPTIONS)
     if (req.method !== 'POST') {
       console.log('❌ [Invite API] Method not allowed:', req.method);
-      res.status(405).json({ success: false, error: 'Method not allowed' });
-      return;
+      return sendJsonResponse(res, 405, { success: false, error: 'Method not allowed' });
     }
 
+    // Initialize Firebase (with enhanced error handling)
+    console.log('🔥 [Invite API] Initializing Firebase...');
+    try {
+      initializeFirebase();
+      console.log('✅ [Invite API] Firebase initialized successfully');
+    } catch (firebaseError) {
+      console.error('🚨 [Invite API] Firebase initialization failed:', firebaseError);
+      return sendJsonResponse(res, 500, { 
+        success: false, 
+        error: 'Server configuration error - Firebase initialization failed' 
+      });
+    }
+
+    // Process the invite request
     try {
       // Authenticate user
       const authHeader = req.headers.authorization;
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         console.log('❌ [Invite API] Missing or invalid authorization header');
-        res.status(401).json({
+        return sendJsonResponse(res, 401, {
           success: false,
           error: 'Authentication required'
         });
-        return;
       }
 
       const token = authHeader.substring(7);
@@ -280,6 +348,7 @@ export default async function handler(
           const userRecord = await auth.getUser(uid);
           
           // Create default company if it doesn't exist
+          const db = getFirestore();
           const defaultCompanyId = 'default-company';
           const companyDoc = await db.collection('companies').doc(defaultCompanyId).get();
           
@@ -316,33 +385,30 @@ export default async function handler(
       
       if (!hasPermission(hrUser?.role || 'user', 'invite')) {
         console.log('❌ [Invite API] Insufficient permissions for user role:', hrUser?.role);
-        res.status(403).json({ 
+        return sendJsonResponse(res, 403, { 
           success: false, 
           error: 'Insufficient permissions to send invites' 
         });
-        return;
       }
 
       const { email, projectId, roleTag }: CreateInviteRequest = req.body;
 
       if (!email) {
         console.log('❌ [Invite API] Missing email in request body');
-        res.status(400).json({ 
+        return sendJsonResponse(res, 400, { 
           success: false, 
           error: 'Email is required' 
         });
-        return;
       }
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         console.log('❌ [Invite API] Invalid email format:', email);
-        res.status(400).json({ 
+        return sendJsonResponse(res, 400, { 
           success: false, 
           error: 'Invalid email format' 
         });
-        return;
       }
 
       // Create the invite
@@ -356,6 +422,7 @@ export default async function handler(
       console.log('✅ [Invite API] Invite created:', invite.id);
 
       // Get company name for email
+      const db = getFirestore();
       const companyDoc = await db.collection('companies').doc(hrUser?.companyId || 'default-company').get();
       const companyName = companyDoc.exists ? companyDoc.data()?.name : 'Company';
 
@@ -391,7 +458,7 @@ export default async function handler(
       };
 
       console.log('✅ [Invite API] Request completed successfully');
-      res.status(201).json(response);
+      return sendJsonResponse(res, 201, response);
       
     } catch (innerError) {
       console.error('🚨 [Invite API] Processing error:', innerError);
@@ -400,63 +467,51 @@ export default async function handler(
       
       // Handle specific authentication errors
       if (errorMessage.includes('Missing or invalid authorization header')) {
-        res.status(401).json({ 
+        return sendJsonResponse(res, 401, { 
           success: false, 
           error: 'Authentication required' 
         });
-        return;
       }
       
       if (errorMessage.includes('Invalid authentication token')) {
-        res.status(401).json({ 
+        return sendJsonResponse(res, 401, { 
           success: false, 
           error: 'Invalid authentication token' 
         });
-        return;
       }
       
       if (errorMessage.includes('Missing required environment variable')) {
-        res.status(500).json({ 
+        return sendJsonResponse(res, 500, { 
           success: false, 
           error: 'Server configuration error' 
         });
-        return;
       }
       
       if (errorMessage.includes('SENDGRID_API_KEY')) {
-        res.status(500).json({ 
+        return sendJsonResponse(res, 500, { 
           success: false, 
           error: 'Email service not configured' 
         });
-        return;
       }
 
-      res.status(500).json({ 
+      return sendJsonResponse(res, 500, { 
         success: false, 
         error: errorMessage 
       });
     }
   } catch (outerError) {
-    console.error('🚨 [Invite API] Critical error in outer handler:', outerError);
+    console.error('🚨 [Invite API] === CRITICAL OUTER ERROR ===');
+    console.error('🚨 [Invite API] Error type:', typeof outerError);
+    console.error('🚨 [Invite API] Error name:', outerError instanceof Error ? outerError.name : 'Unknown');
+    console.error('🚨 [Invite API] Error message:', outerError instanceof Error ? outerError.message : String(outerError));
+    console.error('🚨 [Invite API] Error stack:', outerError instanceof Error ? outerError.stack : 'No stack trace');
     
-    // Ensure CORS headers are set even on error
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      try {
-        res.setHeader(key, value);
-      } catch (headerError) {
-        console.error('Failed to set header:', headerError);
-      }
+    // Final fallback response
+    return sendJsonResponse(res, 500, { 
+      success: false, 
+      error: outerError instanceof Error ? outerError.message : 'Internal server error'
     });
-    
-    try {
-      if (!res.headersSent) {
-        res.status(500).json({ 
-          success: false, 
-          error: outerError instanceof Error ? outerError.message : 'Internal server error'
-        });
-      }
-    } catch (responseError) {
-      console.error('🚨 [Invite API] Failed to send error response:', responseError);
-    }
+  } finally {
+    console.log('🏁 [Invite API] === HANDLER END ===');
   }
 } 
