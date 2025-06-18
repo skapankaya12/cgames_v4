@@ -222,6 +222,11 @@ export const SharedResultsScreen: React.FC = () => {
         <FilterTabs
           currentFilter={currentFilter}
           onFilterChange={setCurrentFilter}
+          scoresCount={scores.length}
+          interactionAnalytics={interactionAnalytics}
+          feedbackSubmitSuccess={feedbackSubmitSuccess}
+          feedbackText={feedbackText}
+          feedbackRatings={feedbackRatings}
           isDropdownOpen={isFilterDropdownOpen}
           onToggleDropdown={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
         />

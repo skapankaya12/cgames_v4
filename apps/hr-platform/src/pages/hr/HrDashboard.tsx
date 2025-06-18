@@ -5,11 +5,11 @@ import {
   getDocs,
   query,
   doc,
-  setDoc,
   getDoc,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { InviteServiceClient } from '@cgames/services';
 import type { Candidate } from '@cgames/types';
 
 export default function HrDashboard() {
@@ -64,31 +64,45 @@ export default function HrDashboard() {
   }, [auth, navigate]);
 
   const handleInvite = async () => {
+    console.log('🚀 [HrDashboard] handleInvite called for:', newEmail);
     setInviteError(null);
     setInviteLoading(true);
+    
     try {
       const user = auth.currentUser;
       if (!user || !companyId) throw new Error('Not authenticated or no company ID');
 
-      const newDocRef = doc(collection(db, `companies/${companyId}/candidates`));
-      await setDoc(newDocRef, {
+      console.log('🔄 [HrDashboard] Using InviteServiceClient.createInvite...');
+      
+      // Use our proper invite service instead of direct Firestore
+      const result = await InviteServiceClient.createInvite({
         email: newEmail,
-        status: 'Invited',
-        dateInvited: new Date().toISOString(),
+        // Add roleTag: 'General Assessment' for dashboard invites
+        roleTag: 'General Assessment'
       });
 
+      console.log('✅ [HrDashboard] Invite created successfully:', result);
+
+      // Add the candidate to local state (for UI display)
       setCandidates((prev) => [
         ...prev,
         {
-          id: newDocRef.id,
+          id: result.invite!.id,
           email: newEmail,
           status: 'Invited',
           dateInvited: new Date().toISOString(),
+          inviteToken: result.invite!.token, // Store token for reference
         },
       ]);
+      
       setNewEmail('');
+      
+      // Show success message
+      alert(`✅ Invitation sent successfully to ${newEmail}! They will receive an email with assessment instructions.`);
+      
     } catch (err: any) {
-      setInviteError(`Failed to invite: ${err.message}`);
+      console.error('🚨 [HrDashboard] Invite failed:', err);
+      setInviteError(`Failed to send invite: ${err.message}`);
     } finally {
       setInviteLoading(false);
     }

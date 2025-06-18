@@ -10,6 +10,7 @@ export interface Candidate {
   status: 'Invited' | 'InProgress' | 'Completed';
   dateInvited: string;
   dateCompleted?: string;
+  inviteToken?: string;
 }
 
 export interface CandidateResultDetail {

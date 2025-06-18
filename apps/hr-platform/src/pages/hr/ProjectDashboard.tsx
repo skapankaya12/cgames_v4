@@ -6,11 +6,11 @@ import {
   getDocs,
   query,
   doc,
-  setDoc,
   getDoc,
   updateDoc,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { InviteServiceClient } from '@cgames/services';
 import type { Project, ProjectCandidate } from '@cgames/types';
 
 export default function ProjectDashboard() {
@@ -87,26 +87,33 @@ export default function ProjectDashboard() {
   }, [auth, navigate, projectId]);
 
   const handleInvite = async () => {
+    console.log('🚀 [ProjectDashboard] handleInvite called for:', newEmail, 'project:', projectId);
     setInviteError(null);
     setInviteLoading(true);
+    
     try {
       const user = auth.currentUser;
       if (!user || !companyId || !projectId) throw new Error('Not authenticated or missing data');
 
-      const newDocRef = doc(collection(db, `companies/${companyId}/projects/${projectId}/candidates`));
-      await setDoc(newDocRef, {
+      console.log('🔄 [ProjectDashboard] Using InviteServiceClient.createInvite...');
+      
+      // Use our proper invite service instead of direct Firestore
+      const result = await InviteServiceClient.createInvite({
         email: newEmail,
-        status: 'Invited',
-        dateInvited: new Date().toISOString(),
         projectId: projectId,
+        roleTag: project?.roleInfo.position || 'Project Assessment'
       });
 
+      console.log('✅ [ProjectDashboard] Invite created successfully:', result);
+
+      // Add the candidate to local state (for UI display)
       const newCandidate: ProjectCandidate = {
-        id: newDocRef.id,
+        id: result.invite!.id,
         email: newEmail,
         status: 'Invited',
         dateInvited: new Date().toISOString(),
         projectId: projectId,
+        inviteToken: result.invite!.token, // Store token for reference
       };
 
       setCandidates((prev) => [...prev, newCandidate]);
@@ -126,8 +133,13 @@ export default function ProjectDashboard() {
       }
 
       setNewEmail('');
+      
+      // Show success message
+      alert(`✅ Invitation sent successfully to ${newEmail} for ${project?.roleInfo.position}! They will receive an email with assessment instructions.`);
+      
     } catch (err: any) {
-      setInviteError(`Failed to invite: ${err.message}`);
+      console.error('🚨 [ProjectDashboard] Invite failed:', err);
+      setInviteError(`Failed to send invite: ${err.message}`);
     } finally {
       setInviteLoading(false);
     }

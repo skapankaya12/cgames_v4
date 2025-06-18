@@ -5,4 +5,7 @@ export * from './CompetencyScore';
 export * from './hr';
 export * from './project';
 export * from './Recommendations';
-export * from './CVTypes'; 
+export * from './CVTypes';
+export * from './company';
+export * from './invite';
+export * from './api'; 

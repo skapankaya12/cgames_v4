@@ -246,6 +246,126 @@ export const RotateCcwIcon: React.FC<IconProps> = ({ size = 24, color = 'current
   </svg>
 );
 
+// CheckCircle Icon
+export const CheckCircleIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// MessageSquare Icon
+export const MessageSquareIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M21 15A2 2 0 0 1 19 17H7L4 20V6A2 2 0 0 1 6 4H19A2 2 0 0 1 21 6V15Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Activity Icon
+export const ActivityIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// FileText Icon
+export const FileTextIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M14 2H6A2 2 0 0 0 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8L14 2Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="14,2 14,8 20,8" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="16" y1="13" x2="8" y2="13" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="16" y1="17" x2="8" y2="17" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="10,9 9,9 8,9" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// ChevronDown Icon
+export const ChevronDownIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="6,9 12,15 18,9" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// ChevronRight Icon
+export const ChevronRightIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="9,18 15,12 9,6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// TrendingUp Icon
+export const TrendingUpIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="23,6 13.5,15.5 8.5,10.5 1,18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="17,6 23,6 23,12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Award Icon
+export const AwardIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <circle cx="12" cy="8" r="7" stroke={color} strokeWidth="2" fill="none"/>
+    <polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// PieChart Icon
+export const PieChartIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M21.21 15.89A10 10 0 1 1 8 2.83" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M22 12A10 10 0 0 0 12 2V12Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Folder Icon
+export const FolderIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M22 19A2 2 0 0 1 20 21H4A2 2 0 0 1 2 19V5A2 2 0 0 1 4 3H9L11 6H20A2 2 0 0 1 22 8V19Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Tag Icon
+export const TagIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M20.59 13.41L13.42 20.58A2 2 0 0 1 12 21A2 2 0 0 1 10.59 20.58L2.41 12.41A2 2 0 0 1 2 11.41V4A2 2 0 0 1 4 2H11.58A2 2 0 0 1 12.41 2.41L20.58 10.58A2 2 0 0 1 20.59 13.41Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="7" y1="7" x2="7.01" y2="7" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// CheckSquare Icon
+export const CheckSquareIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <polyline points="9,11 12,14 22,4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21 12V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H16" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// BookOpen Icon
+export const BookOpenIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M2 3H8A4 4 0 0 1 12 7A4 4 0 0 1 16 3H22V18H16A4 4 0 0 0 12 22A4 4 0 0 0 8 18H2V3Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Users Icon
+export const UsersIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <path d="M17 21V19A4 4 0 0 0 13 15H5A4 4 0 0 0 1 19V21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="9" cy="7" r="4" stroke={color} strokeWidth="2" fill="none"/>
+    <path d="M23 21V19A4 4 0 0 0 19 15.13" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 3.13A4 4 0 0 1 16 11.87" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Calendar Icon
+export const CalendarIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke={color} strokeWidth="2" fill="none"/>
+    <line x1="16" y1="2" x2="16" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="8" y1="2" x2="8" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="3" y1="10" x2="21" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // Export all icons as a convenient object
 export const Icons = {
   AI: AIIcon,
@@ -277,4 +397,19 @@ export const Icons = {
   Upload: UploadIcon,
   Send: SendIcon,
   RotateCcw: RotateCcwIcon,
+  CheckCircle: CheckCircleIcon,
+  MessageSquare: MessageSquareIcon,
+  Activity: ActivityIcon,
+  FileText: FileTextIcon,
+  ChevronDown: ChevronDownIcon,
+  ChevronRight: ChevronRightIcon,
+  TrendingUp: TrendingUpIcon,
+  Award: AwardIcon,
+  PieChart: PieChartIcon,
+  Folder: FolderIcon,
+  Tag: TagIcon,
+  CheckSquare: CheckSquareIcon,
+  BookOpen: BookOpenIcon,
+  Users: UsersIcon,
+  Calendar: CalendarIcon,
 }; 

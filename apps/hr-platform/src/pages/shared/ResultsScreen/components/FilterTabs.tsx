@@ -12,7 +12,8 @@ interface FilterTabsProps {
   feedbackText: string;
   feedbackRatings: FeedbackRatings;
   isDropdownOpen: boolean;
-  onDropdownToggle: () => void;
+  onDropdownToggle?: () => void;
+  onToggleDropdown?: () => void;
 }
 
 export const FilterTabs: React.FC<FilterTabsProps> = ({
@@ -24,8 +25,16 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   feedbackText,
   feedbackRatings,
   isDropdownOpen,
-  onDropdownToggle
+  onDropdownToggle,
+  onToggleDropdown
 }) => {
+  const handleDropdownToggle = () => {
+    if (onToggleDropdown) {
+      onToggleDropdown();
+    } else if (onDropdownToggle) {
+      onDropdownToggle();
+    }
+  };
   const filterOptions = [
     { 
       value: 'öneriler' as FilterType, 
@@ -109,7 +118,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
     }
   };
 
-  const getIconForFilter = (filterValue: FilterType, isActive: boolean) => {
+  const getIconForFilter = (filterValue: FilterType) => {
     const size = 32;
 
     switch (filterValue) {
@@ -149,7 +158,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   const handleFilterClick = (filterValue: FilterType) => {
     onFilterChange(filterValue);
     if (isDropdownOpen) {
-      onDropdownToggle();
+      handleDropdownToggle();
     }
   };
 
@@ -159,12 +168,12 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
       <div className="filter-dropdown">
         <button 
           className="filter-button"
-          onClick={onDropdownToggle}
+          onClick={handleDropdownToggle}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
         >
           <span className="filter-button-content">
-            {getIconForFilter(currentFilter, true)}
+            {getIconForFilter(currentFilter)}
             <span className="filter-button-text">
               {filterOptions.find(opt => opt.value === currentFilter)?.label}
             </span>
@@ -187,7 +196,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
                   aria-selected={currentFilter === option.value}
                 >
                   <div className="filter-option-icon">
-                    {getIconForFilter(option.value, currentFilter === option.value)}
+                    {getIconForFilter(option.value)}
                   </div>
                   <div className="filter-option-content">
                     <span className="filter-option-label">{option.label}</span>
@@ -250,7 +259,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
               >
                 <div className="nav-card-header">
                   <div className="nav-card-icon">
-                    {getIconForFilter(option.value, isActive)}
+                    {getIconForFilter(option.value)}
                   </div>
                   {progressInfo.total > 1 && (
                     <div className="nav-card-progress">

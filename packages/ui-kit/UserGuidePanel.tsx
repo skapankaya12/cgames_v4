@@ -5,17 +5,26 @@ import './styles/UserGuidePanel.css';
 
 interface UserGuidePanelProps {
   currentFilter: string;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
   onCollapseChange?: (isCollapsed: boolean) => void;
 }
 
-const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, onCollapseChange }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollapsed: externalIsCollapsed, onToggle, onCollapseChange }) => {
+  const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
 
+  // Use external isCollapsed if provided, otherwise use internal state
+  const isCollapsed = externalIsCollapsed !== undefined ? externalIsCollapsed : internalIsCollapsed;
+
   const handleCollapseToggle = () => {
-    const newCollapsedState = !isCollapsed;
-    setIsCollapsed(newCollapsedState);
-    onCollapseChange?.(newCollapsedState);
+    if (onToggle) {
+      onToggle();
+    } else {
+      const newCollapsedState = !isCollapsed;
+      setInternalIsCollapsed(newCollapsedState);
+      onCollapseChange?.(newCollapsedState);
+    }
   };
 
   const guideContent = {

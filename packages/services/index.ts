@@ -5,4 +5,5 @@ export type { CVData } from './CVTextExtractionService';
 export { CVTextExtractionService } from './CVTextExtractionService';
 export { BehavioralAnalyticsService } from './BehavioralAnalyticsService';
 export { default as InteractionTracker } from './InteractionTracker';
-export type { SessionAnalytics } from './InteractionTracker'; 
+export type { SessionAnalytics } from './InteractionTracker';
+export { InviteServiceClient } from './invite-service'; 
