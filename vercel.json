@@ -1,10 +1,8 @@
 {
   "version": 2,
+  "installCommand": "npm install",
   "functions": {
     "api/*.ts": {
-      "runtime": "@vercel/node@2.6.0"
-    },
-    "test.js": {
       "runtime": "@vercel/node@2.6.0"
     }
   },
@@ -14,12 +12,8 @@
       "dest": "/api/$1"
     },
     {
-      "src": "/test",
-      "dest": "/test.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/apps/hr-platform/dist/$1"
+      "dest": "/index.html"
     }
   ]
 } 
