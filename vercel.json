@@ -5,10 +5,10 @@
   "installCommand": "npm install",
   "functions": {
     "api/*.ts": {
-      "runtime": "@vercel/node@2.6.0"
+      "runtime": "@vercel/node@2.15.0"
     },
     "api/*.js": {
-      "runtime": "@vercel/node@2.6.0"
+      "runtime": "@vercel/node@2.15.0"
     }
   },
   "routes": [
