@@ -107,7 +107,14 @@ export const testGoogleSheetsIntegration = () => {
     const params = new URLSearchParams({
       action: 'feedback',
       feedback: 'This is a test feedback message for debugging purposes.',
-      rating: '5',
+      accuracy: '5',
+      gameExperience: '4',
+      fairness: '5',
+      usefulness: '4',
+      recommendation: '5',
+      purchaseLikelihood: '3',
+      valueForMoney: '4',
+      technicalPerformance: '5',
       timestamp: new Date().toISOString(),
       firstName: 'Test',
       lastName: 'User'

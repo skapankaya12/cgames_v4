@@ -10,13 +10,15 @@ interface PersonalizedRecommendationsProps {
   isLoading: boolean;
   error?: string | null;
   competencyScores?: DimensionScore[]; // Add competency scores for alignment
+  onShowHelp?: (context: string) => void; // Add help callback
 }
 
 const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendationsProps> = ({
   recommendations,
   isLoading,
   error = null,
-  competencyScores = []
+  competencyScores = [],
+  onShowHelp
 }: PersonalizedRecommendationsProps) => {
   // CV Analysis state
   const [cvData, setCvData] = React.useState<CVData | null>(null);
@@ -109,7 +111,8 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '16px'
+          marginBottom: '16px',
+          position: 'relative'
         }}>
           <div style={{
             background: 'rgba(255, 255, 255, 0.2)',
@@ -128,6 +131,25 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
               AI Destekli Değerlendirme
             </span>
           </div>
+          {onShowHelp && (
+            <button 
+              onClick={() => onShowHelp('recommendations')}
+              style={{
+                position: 'absolute',
+                right: '16px',
+                background: 'rgba(255, 255, 255, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '12px',
+                padding: '8px',
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              title="Bu sayfayı anlamak için yardım alın"
+            >
+              <Icons.Lightbulb size={20} color="white" />
+            </button>
+          )}
         </div>
         <h3 style={{
           color: 'white',
@@ -141,14 +163,14 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           Aday Profil Analizi
         </h3>
         <p style={{
-          color: 'rgba(41, 33, 33, 0.9)',
+          color: 'rgba(246, 241, 241, 0.9)',
           fontSize: '16px',
           margin: '0',
           textAlign: 'center',
           fontWeight: '400',
           textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
         }}>
-          Özgeçmiş ve yetkinlik testi verilerine dayalı kapsamlı değerlendirme
+          
         </p>
       </div>
 
@@ -672,31 +694,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   }}>
                     Mülakat Rehberi ve Öneriler
                   </div>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    marginBottom: '16px',
-                    marginTop: '16px'
-                  }}>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      borderRadius: '10px',
-                      padding: '6px',
-                      marginRight: '12px'
-                    }}>
-                      <Icons.Analytics size={16} color="white" />
-                    </div>
-                    <h5 style={{ 
-                      color: '#047857', 
-                      margin: '0', 
-                      fontSize: '16px',
-                      fontWeight: '700',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.3px'
-                    }}>
-                     
-                    </h5>
-                  </div>
+
                   <p style={{ 
                     color: '#1e293b', 
                     lineHeight: '1.7', 

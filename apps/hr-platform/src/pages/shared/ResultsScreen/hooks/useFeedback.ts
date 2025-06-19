@@ -79,22 +79,27 @@ export const useFeedback = (user: ResultsScreenUser | null): UseFeedbackReturn =
     setFeedbackSubmitError(null);
 
     try {
-      const feedbackData = {
-        user: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          company: user.company || 'Belirtilmemiş'
-        },
-        ratings: feedbackRatings,
-        feedbackText: feedbackText.trim(),
+      // Create URL parameters that match Google Apps Script expectations
+      const params = new URLSearchParams({
+        action: 'feedback',
+        feedback: feedbackText.trim(),
+        accuracy: feedbackRatings.accuracy.toString(),
+        gameExperience: feedbackRatings.gameExperience.toString(),
+        fairness: feedbackRatings.fairness.toString(),
+        usefulness: feedbackRatings.usefulness.toString(),
+        recommendation: feedbackRatings.recommendation.toString(),
+        purchaseLikelihood: feedbackRatings.purchaseLikelihood.toString(),
+        valueForMoney: feedbackRatings.valueForMoney.toString(),
+        technicalPerformance: feedbackRatings.technicalPerformance.toString(),
         timestamp: new Date().toISOString(),
-        submissionType: 'feedback'
-      };
+        firstName: user.firstName,
+        lastName: user.lastName
+      });
 
-      const url = `${FEEDBACK_API_URL}?feedbackData=${encodeURIComponent(JSON.stringify(feedbackData))}`;
+      const url = `${FEEDBACK_API_URL}?${params.toString()}`;
       
       console.log('=== SUBMITTING FEEDBACK ===');
-      console.log('Feedback data:', feedbackData);
+      console.log('Feedback parameters:', Object.fromEntries(params));
       console.log('Feedback URL length:', url.length);
 
       // Method 1: Fetch with no-cors (most reliable for Google Apps Script)
@@ -111,55 +116,69 @@ export const useFeedback = (user: ResultsScreenUser | null): UseFeedbackReturn =
 
       // Method 2: Image fallback for better success tracking
       const img = new Image();
+      let isCompleted = false;
+      
       img.onload = () => {
-        console.log('✅ Feedback image submission successful');
-        setFeedbackSubmitSuccess(true);
-        
-        // Clear form after successful submission
-        setFeedbackText('');
-        setFeedbackRatings({
-          accuracy: 0,
-          gameExperience: 0,
-          fairness: 0,
-          usefulness: 0,
-          recommendation: 0,
-          purchaseLikelihood: 0,
-          valueForMoney: 0,
-          technicalPerformance: 0,
-        });
+        if (!isCompleted) {
+          isCompleted = true;
+          console.log('✅ Feedback image submission successful');
+          setFeedbackSubmitSuccess(true);
+          
+          // Clear form after successful submission
+          setFeedbackText('');
+          setFeedbackRatings({
+            accuracy: 0,
+            gameExperience: 0,
+            fairness: 0,
+            usefulness: 0,
+            recommendation: 0,
+            purchaseLikelihood: 0,
+            valueForMoney: 0,
+            technicalPerformance: 0,
+          });
+        }
       };
+      
       img.onerror = (e) => {
-        console.warn('⚠️ Feedback image submission failed:', e);
-        setFeedbackSubmitError('Geri bildirim gönderilirken ağ hatası oluştu. Lütfen tekrar deneyin.');
+        if (!isCompleted) {
+          isCompleted = true;
+          console.warn('⚠️ Feedback image submission failed:', e);
+          setFeedbackSubmitError('Geri bildirim gönderilirken ağ hatası oluştu. Lütfen tekrar deneyin.');
+        }
       };
+      
       img.src = url;
       img.style.display = 'none';
       document.body.appendChild(img);
 
-      // Method 3: Iframe fallback
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.src = url;
-      document.body.appendChild(iframe);
+      // Timeout-based success detection (fallback)
+      setTimeout(() => {
+        if (!isCompleted) {
+          isCompleted = true;
+          console.log('✅ Feedback submission completed (timeout-based)');
+          setFeedbackSubmitSuccess(true);
+          
+          // Clear form after successful submission
+          setFeedbackText('');
+          setFeedbackRatings({
+            accuracy: 0,
+            gameExperience: 0,
+            fairness: 0,
+            usefulness: 0,
+            recommendation: 0,
+            purchaseLikelihood: 0,
+            valueForMoney: 0,
+            technicalPerformance: 0,
+          });
+        }
+      }, 3000);
 
       // Clean up after 10 seconds
       setTimeout(() => {
         if (document.body.contains(img)) {
           document.body.removeChild(img);
         }
-        if (document.body.contains(iframe)) {
-          document.body.removeChild(iframe);
-        }
       }, 10000);
-
-      // Show success after a reasonable delay if no errors
-      setTimeout(() => {
-        if (!feedbackSubmitError) {
-          setFeedbackSubmitSuccess(true);
-        }
-      }, 3000);
 
     } catch (error) {
       console.error('❌ Feedback submission error:', error);

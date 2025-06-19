@@ -33,43 +33,24 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
   return (
     <div className="recommendations-section">
-      <div className="recommendations-header">
-        <div className="section-header-with-help">
-          <h3 style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px',
-            marginBottom: '24px'
-          }}>
-            <Icons.Brain size={24} color="#667eea" />
-            <span>Kişiselleştirilmiş Öneriler</span>
-          </h3>
-          <button 
-            className="help-button"
-            onClick={() => onShowHelp('recommendations')}
-            title="Bu sayfayı anlamak için yardım alın"
-          >
-            <Icons.Brain size={20} />
-          </button>
-        </div>
-        
-        {!personalizedRecommendations && !isLoadingRecommendations && (
-          <button 
-            className="generate-recommendations-button"
-            onClick={onGenerateRecommendations}
-            disabled={!user || scores.length === 0}
-          >
-            <Icons.Brain size={16} style={{ marginRight: '8px' }} />
-            AI Önerileri Oluştur
-          </button>
-        )}
-      </div>
+      {!personalizedRecommendations && !isLoadingRecommendations && (
+        <button 
+          className="generate-recommendations-button"
+          onClick={onGenerateRecommendations}
+          disabled={!user || scores.length === 0}
+          style={{ marginBottom: '24px' }}
+        >
+          <Icons.Brain size={16} style={{ marginRight: '8px' }} />
+          AI Önerileri Oluştur
+        </button>
+      )}
 
       {/* AI Recommendations Component */}
       <PersonalizedRecommendationsComponent
         recommendations={personalizedRecommendations}
         isLoading={isLoadingRecommendations}
         error={recommendationsError}
+        onShowHelp={onShowHelp}
         competencyScores={scores.map(score => ({
           dimension: score.abbreviation,
           score: score.score,

@@ -16,14 +16,14 @@ function LandingPage() {
   return (
     <div className="landing-page">
       <div className="landing-content">
-        <h1>Welcome to BokumunKuşu</h1>
-        <p>Advanced Leadership Assessment Platform</p>
+        <h1>Olivin HR</h1>
+        <p>Gamified Soft Skills Assesment I DEMO VERSION</p>
         <div className="landing-buttons">
           <a href="/candidate" className="landing-button">
             Start Assessment
           </a>
           <a href="/candidate/game2" className="landing-button secondary">
-            Game 2 Assessment
+            Game 2 Assessment I Soon
           </a>
         </div>
       </div>

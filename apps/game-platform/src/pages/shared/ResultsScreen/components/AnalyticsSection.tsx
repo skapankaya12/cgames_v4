@@ -14,7 +14,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
 }) => {
   if (!interactionAnalytics) {
     return (
-      <div className="analytics-section">
+      <div className="analytics-section" style={{ backgroundColor: 'white' }}>
         <div className="section-header-with-help">
           <h3 style={{ 
             display: 'flex', 
@@ -56,14 +56,8 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
     ? Object.keys(interactionAnalytics.changedAnswers).length 
     : 0;
 
-  const deviceType = interactionAnalytics.deviceInfo?.type || 'Bilinmiyor';
-  const browserInfo = interactionAnalytics.userAgent?.includes('Chrome') ? 'Chrome' :
-                     interactionAnalytics.userAgent?.includes('Firefox') ? 'Firefox' :
-                     interactionAnalytics.userAgent?.includes('Safari') ? 'Safari' :
-                     interactionAnalytics.userAgent?.includes('Edge') ? 'Edge' : 'Diğer';
-
   return (
-    <div className="analytics-section">
+    <div className="analytics-section" style={{ backgroundColor: 'white' }}>
       <div className="section-header-with-help">
         <h3 style={{ 
           display: 'flex', 
@@ -113,20 +107,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
               <Icons.Refresh size={24} color="#f59e0b" />
             </div>
             <div className="stat-content">
-              <h4>Değiştirilen Cevaplar</h4>
+              <h4>İşaretlenen Cevaplar</h4>
               <p className="stat-value">{changedAnswersCount}</p>
-              <p className="stat-subtitle">Kararsızlık göstergesi</p>
-            </div>
-          </div>
-
-          <div className="analytics-stat-card">
-            <div className="stat-icon">
-              <Icons.Smartphone size={24} color="#8b5cf6" />
-            </div>
-            <div className="stat-content">
-              <h4>Cihaz Türü</h4>
-              <p className="stat-value">{deviceType}</p>
-              <p className="stat-subtitle">{browserInfo} tarayıcı</p>
+              <p className="stat-subtitle">16'dan fazla ise aday cevaplarını değiştirmiştir</p>
             </div>
           </div>
         </div>
@@ -198,50 +181,6 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
         </div>
       )}
 
-      {/* Changed Answers Analysis */}
-      {changedAnswersCount > 0 && (
-        <div className="changed-answers-section">
-          <h4>Cevap Değişiklikleri Analizi</h4>
-          <div className="changed-answers-insights">
-            <div className="insight-card">
-              <div className="insight-icon">
-                <Icons.AlertTriangle size={20} color="#f59e0b" />
-              </div>
-              <div className="insight-content">
-                <h5>Kararsızlık Seviyesi</h5>
-                <p>
-                  {changedAnswersCount} soruda cevabınızı değiştirdiniz. 
-                  {changedAnswersCount > 5 
-                    ? ' Bu, yüksek kararsızlık gösterebilir.'
-                    : changedAnswersCount > 2 
-                    ? ' Bu, normal düzeyde düşünce sürecidir.'
-                    : ' Bu, kararlı bir yaklaşım gösterir.'
-                  }
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Session Information */}
-      <div className="session-info-section">
-        <h4>Oturum Bilgileri</h4>
-        <div className="session-info-grid">
-          <div className="session-info-item">
-            <Icons.Hash size={16} color="#6b7280" />
-            <span>Oturum ID: {interactionAnalytics.sessionId}</span>
-          </div>
-          {interactionAnalytics.deviceInfo?.screenWidth && (
-            <div className="session-info-item">
-              <Icons.Monitor size={16} color="#6b7280" />
-              <span>
-                Ekran: {interactionAnalytics.deviceInfo.screenWidth} × {interactionAnalytics.deviceInfo.screenHeight}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 }; 

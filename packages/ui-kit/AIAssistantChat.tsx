@@ -117,7 +117,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
           className="ai-chat-toggle"
           onClick={() => setIsMinimized(false)}
         >
-          <span>🤖</span>
+          <span>💬</span>
           <span>AI Asistan</span>
           {messages.length > 1 && (
             <span className="message-count">{messages.length - 1}</span>
@@ -131,7 +131,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
     <div className="ai-assistant-chat">
       <div className="chat-header">
         <div className="chat-title">
-          <span className="chat-icon">🤖</span>
+          <span className="chat-icon">💬</span>
           <div>
             <h3>AI İK Asistanı</h3>
             <p>{candidateName || 'Aday'} Hakkında Soru Sorun</p>
@@ -178,7 +178,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
         
         {isLoading && (
           <div className="message assistant-message">
-            <div className="message-avatar">🤖</div>
+            <div className="message-avatar">💬</div>
             <div className="message-content">
               <div className="typing-indicator">
                 <span></span>

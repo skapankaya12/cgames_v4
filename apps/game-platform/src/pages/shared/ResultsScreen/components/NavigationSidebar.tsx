@@ -58,14 +58,14 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
       id: 'öneriler',
       label: 'AI Öneriler',
       icon: 'AI',
-      description: 'Kişiselleştirilmiş değerlendirme ve öneriler',
+      description: 'Adaya özel değerlendirme ve öneriler',
       isReady: !isLoadingRecommendations
     },
     {
       id: 'feedback',
       label: 'Geri Bildirim',
       icon: 'Message',
-      description: 'Test deneyiminizi değerlendirin',
+      description: 'Demo için geri bildirim gönderin',
       isReady: true
     }
   ];
@@ -90,8 +90,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
           <Icons.Brain size={24} color="#708238" />
         </div>
         <div className="nav-brand-text">
-          <h3>CognitiveGames</h3>
-          <p>Değerlendirme Sistemi</p>
+          <h2>Olivin HR</h2>
+          <p>Sonuçlar</p>
         </div>
       </div>
 
@@ -133,8 +133,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
       <div className="nav-footer">
         <div className="nav-footer-item">
-          <Icons.Lightbulb size={16} />
-          <span>Yardıma mı ihtiyacınız var?</span>
+          <Icons.Lightbulb size={50} />
+          <span>Yardım butonlarından ayrıntılı bilgi alabilirsiniz.</span>
         </div>
       </div>
     </div>

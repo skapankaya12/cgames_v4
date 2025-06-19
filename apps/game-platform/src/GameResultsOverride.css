@@ -459,37 +459,78 @@
   gap: var(--spacing-xl) !important;
 }
 
+/* New vertical performance score layout */
+.performance-score-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: var(--spacing-lg) !important;
+  text-align: center !important;
+}
+
+.score-circle-container-vertical {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.score-circle-small {
+  position: relative !important;
+  width: 80px !important;
+  height: 80px !important;
+}
+
+.circular-chart-small {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.score-center-small {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.score-number-small {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  line-height: 1 !important;
+}
+
+.score-symbol-small {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
+}
+
+.score-info-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-xs) !important;
+}
+
+.score-title-vertical {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: 0 !important;
+}
+
+.score-subtitle-vertical {
+  font-size: 0.875rem !important;
+  color: var(--text-secondary) !important;
+  margin: 0 !important;
+}
+
 .score-circle {
   width: 120px !important;
   height: 120px !important;
-}
-
-.circular-chart {
-  width: 100% !important;
-  height: 100% !important;
-  transform: rotate(-90deg) !important;
-}
-
-.circle-bg {
-  fill: none !important;
-  stroke: #e5e7eb !important;
-  stroke-width: 2 !important;
-}
-
-.circle {
-  fill: none !important;
-  stroke-width: 2 !important;
-  stroke-linecap: round !important;
-  animation: progress 1s ease-out forwards !important;
-  transform-origin: center !important;
-}
-
-.percentage {
-  fill: var(--text-primary) !important;
-  font-size: 0.875rem !important;
-  font-weight: 700 !important;
-  text-anchor: middle !important;
-  transform: rotate(90deg) !important;
 }
 
 .score-details p {
@@ -1000,6 +1041,23 @@
     flex-direction: column !important;
     text-align: center !important;
     gap: var(--spacing-lg) !important;
+  }
+  
+  .performance-score-vertical {
+    gap: var(--spacing-md) !important;
+  }
+  
+  .score-circle-small {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .score-number-small {
+    font-size: 1rem !important;
+  }
+  
+  .score-symbol-small {
+    font-size: 0.75rem !important;
   }
   
   .quick-actions-grid {

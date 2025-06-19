@@ -103,12 +103,13 @@ const TestScreen = () => {
             currentQuestion={currentQuestion}
             isTransitioning={isTransitioning}
             isLastQuestion={testState.currentQuestion === questions.length - 1}
+            selectedOption={testState.answers[currentQuestion.id]}
           />
         )}
       </div>
       
       <div className="game-footer">
-        <p className="footer-text">İsmimiz inşallah 2025. All rights reserved</p>
+        <p className="footer-text">OlivinHR 2025. All rights reserved</p>
       </div>
     </div>
   );

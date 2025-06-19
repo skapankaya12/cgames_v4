@@ -23,7 +23,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
   const getHelpContent = (context: string): HelpContent => {
     const helpContentMap: Record<string, HelpContent> = {
       'dashboard-overview': {
-        title: 'Genel Bakış Sayfası',
+        title: 'Genel Analiz Sayfası',
         description: 'Bu sayfa, bilişsel oyun değerlendirmenizin genel bir özetini sunar. Tüm önemli metrikleri tek bakışta görebilirsiniz.',
         tips: [
           'Genel performans skorunuz, tüm yetkinlik alanlarının ortalamasıdır',
@@ -43,7 +43,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
           'Her kart bir yetkinlik alanını temsil eder',
           'Yüzdelik skorlar, o alandaki performansınızı gösterir',
           'Renk kodları: Yeşil (mükemmel), Sarı (iyi), Turuncu (orta), Kırmızı (gelişim gerekli)',
-          'Kategori etiketleri, yetkinlikleri gruplandırır'
+          'AI asistanınızından ayrıntılı öneriler alabilirsiniz'
         ]
       },
       'behavior-analysis': {
@@ -59,9 +59,9 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
         title: 'AI Öneriler',
         description: 'Yapay zeka tarafından oluşturulan kişiselleştirilmiş gelişim önerileriniz.',
         tips: [
-          'Öneriler, performansınız ve davranış verilerinize dayanarak oluşturulur',
-          'Her öneri belirli bir yetkinlik alanı için tasarlanmıştır',
-          'Önerileri takip ederek gelişim sürecinizi hızlandırabilirsiniz'
+          'Öneriler, performansınız, davranış verileriniz ve CV bilgilerinize dayanarak oluşturulur',
+          'Yetkinlik ve CV uyumunu ayrıntılı inceleyebilir, aday için mülakat önerilerini görebilirsiniz',
+          'AI asistanınızdan ayrıntılı öneriler alabilirsiniz'
         ]
       },
       'feedback': {
@@ -70,7 +70,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
         tips: [
           'Puanlama sistemini kullanarak deneyiminizi değerlendirin',
           'Yazılı geri bildirimleriniz ürünümüzü geliştirmemize yardımcı olur',
-          'Tüm geri bildirimler anonim olarak değerlendirilir'
+          'Tüm geri bildirimler tarafımıza ulaşılır ve değerlendirilir'
         ]
       }
     };

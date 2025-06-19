@@ -176,10 +176,10 @@ export function useTestState(
     // Check if this is the last question
     const isLastQuestion = testState.currentQuestion === questions.length - 1;
     
-    // Set timer to move to next question after 3 seconds
+    // Set timer to move to next question after 8 seconds (increased from 3 seconds)
     timerRef.current = setTimeout(() => {
       moveToNextQuestion();
-    }, isLastQuestion ? 4000 : 3000);
+    }, isLastQuestion ? 9000 : 8000); // Also increased last question timing from 4 to 9 seconds
   };
 
   const handlePrevious = () => {

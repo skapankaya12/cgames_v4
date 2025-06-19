@@ -34,7 +34,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     usefulness: 'Faydalılık (1-10)',
     recommendation: 'Tavsiye Etme (1-10)',
     purchaseLikelihood: 'Satın Alma Olasılığı (1-10)',
-    valueForMoney: 'Fiyat Performans (1-10)',
+    valueForMoney: 'Fiyat Performans (1-10) (Oyun başına 7 Euro/320 tl)',
     technicalPerformance: 'Teknik Performans (1-10)'
   };
 
@@ -92,7 +92,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
             id="feedback-text"
             value={feedbackText}
             onChange={(e) => onFeedbackTextChange(e.target.value)}
-            placeholder="Test deneyiminiz hakkında düşüncelerinizi paylaşın..."
+            placeholder="Ürünü daha iyi hale getirmek için lütfen geri bildirimlerinizi paylaşın.."
             rows={4}
             disabled={isFeedbackSubmitting}
           />
@@ -116,7 +116,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
         {feedbackSubmitSuccess && (
           <div className="feedback-success">
-            ✅ Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
+             Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
           </div>
         )}
       </div>

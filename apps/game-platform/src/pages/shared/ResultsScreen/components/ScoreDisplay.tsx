@@ -21,6 +21,23 @@ export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores, onShowHelp }
     );
   }
 
+  // Get competency description - explaining what each competency means
+  const getCompetencyDescription = (competencyName: string) => {
+    // Define descriptions that explain what each competency means
+    const competencyDescriptions: { [key: string]: string } = {
+      'Strategic Thinking': 'Stratejik düşünme, uzun vadeli planlama yapabilme, büyük resmi görme ve karmaşık problemleri analiz ederek çözüm geliştirebilme yeteneğidir. Geleceği öngörme ve organizasyonel hedeflere yönelik stratejiler oluşturma becerisini içerir.',
+      'Communication': 'İletişim, fikirleri net ve etkili şekilde ifade etme, aktif dinleme, empati kurma ve farklı kitlelerle başarılı etkileşim kurabilme yeteneğidir. Hem sözlü hem de yazılı iletişim becerilerini kapsar.',
+      'Leadership': 'Liderlik, takımları yönlendirme, motive etme, vizyon oluşturma ve başkalarını ortak hedefler doğrultusunda etkileyebilme yeteneğidir. Karar verme, delegasyon ve ekip yönetimi becerilerini içerir.',
+      'Problem Solving': 'Problem çözme, karmaşık durumları analiz etme, alternatif çözümler geliştirme ve en uygun yaklaşımı seçerek uygulayabilme yeteneğidir. Analitik düşünme ve yaratıcı çözüm üretme becerilerini kapsar.',
+      'Adaptability': 'Uyum sağlama, değişen koşullara hızla adapte olabilme, esneklik gösterme ve belirsizlik durumlarında etkili çalışabilme yeteneğidir. Değişim yönetimi ve çeviklik becerilerini içerir.',
+      'Innovation': 'İnovasyon, yaratıcı düşünme, yeni fikirler geliştirme, mevcut süreçleri iyileştirme ve özgün çözümler üretebilme yeteneğidir. Farklı bakış açıları geliştirme ve risk alma becerilerini kapsar.',
+      'Emotional Intelligence': 'Duygusal zeka, kendi duygularını anlama ve yönetme, başkalarının duygularını fark etme ve empati kurabilme yeteneğidir. Sosyal ilişkilerde etkinlik ve duygusal öz farkındalık becerilerini içerir.',
+      'Decision Making': 'Karar verme, mevcut bilgileri değerlendirme, alternatifleri karşılaştırma ve belirsizlik durumlarında etkili kararlar alabilme yeteneğidir. Risk değerlendirmesi ve sonuç odaklı düşünme becerilerini kapsar.'
+    };
+
+    return competencyDescriptions[competencyName] || `${competencyName}, profesyonel yaşamda önemli olan ve sürekli geliştirilmesi gereken temel yetkinliklerden biridir. Bu alan, iş performansını ve kariyer gelişimini doğrudan etkileyen kritik beceriler içermektedir.`;
+  };
+
   return (
     <div className="score-display">
       <div className="section-header">
@@ -35,7 +52,7 @@ export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores, onShowHelp }
         {scores.map((score, index) => {
           const percentage = getScorePercentage(score.score, score.maxScore);
           const levelColor = getScoreLevelColor(percentage);
-          // const insight = getInsight(score.abbreviation, score.score);
+          const description = getCompetencyDescription(score.fullName);
           
           // Get performance level
           const getPerformanceLevel = (percentage: number) => {
@@ -74,6 +91,10 @@ export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ scores, onShowHelp }
                     backgroundColor: levelColor 
                   }}
                 />
+              </div>
+
+              <div className="score-description">
+                <p>{description}</p>
               </div>
               
               <div className="score-details">
