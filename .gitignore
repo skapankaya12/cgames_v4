@@ -33,3 +33,4 @@ dist-ssr
 # Turbo
 .turbo
 *.env.local.backup
+*.env.local.backup

@@ -71,8 +71,9 @@ export class OpenAIService {
       console.log('🔍 Checking import.meta.env.VITE_OPENAI_API_KEY:', {
         found: !!apiKey,
         length: apiKey ? apiKey.length : 0,
-        preview: apiKey ? `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}` : 'N/A',
-        hasWhitespace: apiKey ? /\s/.test(apiKey) : false
+        preview: apiKey ? `${apiKey.substring(0, 7)}...${apiKey.substring(apiKey.length - 4)}` : 'N/A',
+        hasWhitespace: apiKey ? /\s/.test(apiKey) : false,
+        startsWithSk: apiKey ? apiKey.startsWith('sk-') : false
       });
     }
     
@@ -82,7 +83,8 @@ export class OpenAIService {
       console.log('🔍 Checking process.env.VITE_OPENAI_API_KEY:', {
         found: !!apiKey,
         length: apiKey ? apiKey.length : 0,
-        preview: apiKey ? `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}` : 'N/A'
+        preview: apiKey ? `${apiKey.substring(0, 7)}...${apiKey.substring(apiKey.length - 4)}` : 'N/A',
+        startsWithSk: apiKey ? apiKey.startsWith('sk-') : false
       });
     }
     
@@ -90,16 +92,38 @@ export class OpenAIService {
       // Clean up any potential line breaks or extra whitespace
       const originalLength = apiKey.length;
       apiKey = apiKey.replace(/\s+/g, '').trim();
+      
+      // Validate API key format
+      const isValidFormat = apiKey.startsWith('sk-') && apiKey.length > 20;
+      const isProjectKey = apiKey.startsWith('sk-proj-');
+      
       console.log('✅ API key loaded and cleaned:', {
         originalLength,
         cleanedLength: apiKey.length,
-        preview: `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}`,
+        preview: `${apiKey.substring(0, 7)}...${apiKey.substring(apiKey.length - 4)}`,
         startsWithSk: apiKey.startsWith('sk-'),
-        isValidFormat: /^sk-proj-[A-Za-z0-9_-]+$/.test(apiKey)
+        isProjectKey,
+        isValidFormat,
+        expectedLength: 'should be 50+ characters'
       });
+      
+      if (!isValidFormat) {
+        console.error('❌ Invalid OpenAI API key format!');
+        console.error('💡 Expected format: sk-... (old format) or sk-proj-... (new project format)');
+        console.error('🔧 Current key preview:', apiKey.substring(0, 10) + '...');
+        return undefined;
+      }
+      
+      if (apiKey === 'your_openai_api_key_here') {
+        console.error('❌ Placeholder API key detected!');
+        console.error('💡 Please replace "your_openai_api_key_here" with your actual OpenAI API key');
+        return undefined;
+      }
+      
     } else {
       console.warn('❌ No OpenAI API key found in environment variables');
       console.info('💡 Make sure VITE_OPENAI_API_KEY is set in your .env.local file');
+      console.info('📁 Expected location: apps/game-platform/.env.local or apps/hr-platform/.env.local');
       console.info('🔧 Available env vars:', typeof import.meta !== 'undefined' && (import.meta as any).env ? 
         Object.keys((import.meta as any).env).filter((key: string) => key.startsWith('VITE_')) : 'No import.meta.env available'
       );
@@ -325,18 +349,21 @@ YETENEK PROFIL ANALİZİ:
 🔄 Gelişim Potansiyeli Olan Alanlar: ${moderateCompetencies.join(', ')}
 📈 Desteklenmesi Gereken Alanlar: ${developmentAreas.join(', ')}${careerInsights}
 
-GÖREV: Aşağıdaki iki paragrafı profesyonel İK uzmanı perspektifiyle yaz:
+GÖREV: Aşağıdaki iki paragrafı profesyonel İK uzmanı perspektifiyle yaz. Her paragraf 300-400 kelime olmalı ve kesinlikle hiçbir başlık, label veya işaret içermemeli - sadece düz metin olarak yaz:
 
-🎯 PARAGRAF 1 - YETENEK VE POTANSİYEL ANALİZİ (300-400 kelime):
+İLK PARAGRAF - Yetenek ve Potansiyel Analizi:
 Bu paragraf ${candidateName}'in yetenek portföyünü derinlemesine analiz etmeli. Güçlü yetkinliklerin iş performansında nasıl avantaj yaratacağını, orta seviye alanların hangi koşullarda parlamabileceğini ve gelişim gerektiren alanların hangi riskleri taşıdığını değerlendir. ${cvData ? 'CV deneyimi ile yetkinlik profili arasındaki tutarlılık/tutarsızlık noktalarını analiz et. Kariyer trajektörisi ile mevcut yetenek seviyesi arasındaki uyumu değerlendir.' : 'Davranışsal veriler ışığında adayın çalışma tarzı ve takım dinamiklerine uyum potansiyelini analiz et.'} Adayın hangi tip iş ortamlarında başarılı olacağını, hangi zorluklarla karşılaştığında güçlü yanlarını öne çıkarabileceğini ve uzun vadeli gelişim potansiyelini objektif olarak değerlendir. Şirket kültürüne adaptasyon, değişim yönetimi ve performans sürekliliği açısından analiz sun.
 
-🎯 PARAGRAF 2 - STRATEJİK MÜLAKAT REHBERİ VE KARAR DESTEĞİ (300-400 kelime):
+İKİNCİ PARAGRAF - Stratejik Mülakat Rehberi ve Karar Desteği:
 Bu paragraf işe alım sürecinde kritik öneme sahip olan mülakat stratejisi ve değerlendirme kriterlerini içermeli. Hangi davranışsal sorularla adayın gerçek potansiyelini ortaya çıkarabileceğini, hangi senaryolarla güçlü ve zayıf yönlerini test edebileceğini açıkla. ${cvData ? 'CV deneyiminden yola çıkarak hangi somut projeleri ve başarıları detaylandırmasını isteyeceğini belirt.' : 'Hangi hipotetik iş durumlarıyla yetkinliklerini gözlemleyebileceğini açıkla.'} Pozisyon uygunluğu için kritik olan başarı faktörlerini ve risk mitigasyon stratejilerini sun. Takım uyumu, şirket değerleriyle uyum ve uzun vadeli başarı potansiyeli açısından nelere dikkat edilmesi gerektiğini belirt. İK ve işe alım müdürlerine yönelik somut karar destek önerileri ve entegrasyon planı önerileri ver.
 
 KRİTİK KURALLAR:
 ❌ "Bu aday %X puan aldı" veya benzeri skorları tekrar etme
 ❌ Genel klişe ifadeler kullanma ("iyi bir aday", "ortalama performans" vb.)
 ❌ Test sonuçlarını özetleme, onun yerine analiz et
+❌ Hiçbir başlık, emoji veya label kullanma (🎯, PARAGRAF 1, vb.)
+❌ Paragraf numaraları veya başlıklar ekleme
+✅ Sadece düz metin olarak iki paragraf yaz
 ✅ Stratejik öngörüler ve derinlemesine analiz sun  
 ✅ Somut iş durumları ve örnekler ver
 ✅ Uygulanabilir mülakat stratejileri öner
@@ -344,7 +371,7 @@ KRİTİK KURALLAR:
 ✅ İki paragrafı net şekilde ayır (aralarında boş satır)
 ✅ Her paragraf 300+ kelime olsun ve özelleştirilmiş olsun
 
-NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bir üst düzey İK stratejistisin!`;
+YANIT FORMATI: Sadece iki paragraf düz metin olarak ver. Başlık, emoji, numara veya işaret kullanma!`;
   }
 
   /**
@@ -354,20 +381,45 @@ NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bi
     console.log('🔍 OpenAI Service: parseAIResponse called with text length:', text.length);
     console.log('🔍 OpenAI Service: Raw OpenAI response preview:', text.substring(0, 300) + '...');
     
-    // Clean the text and split into paragraphs
-    const cleanText = text.trim();
+    // Clean the text more thoroughly - remove any instructional content
+    let cleanText = text.trim();
+    
+    // Remove any instructional headers or labels that might leak through
+    const instructionalPatterns = [
+      /🎯\s*PARAGRAF\s*\d+[^:]*:/gi,
+      /İLK\s*PARAGRAF[^:]*:/gi,
+      /İKİNCİ\s*PARAGRAF[^:]*:/gi,
+      /YETENEK\s*VE\s*POTANSİYEL\s*ANALİZİ[^:]*:/gi,
+      /STRATEJİK\s*MÜLAKAT[^:]*:/gi,
+      /KARAR\s*DESTEĞİ[^:]*:/gi,
+      /GÖREV[^:]*:/gi,
+      /KRİTİK\s*KURALLAR[^:]*:/gi,
+      /YANIT\s*FORMATI[^:]*:/gi
+    ];
+    
+    instructionalPatterns.forEach(pattern => {
+      cleanText = cleanText.replace(pattern, '');
+    });
+    
+    // Remove any bullet points or formatting artifacts
+    cleanText = cleanText.replace(/^[•\-\*]\s*/gm, '');
+    cleanText = cleanText.replace(/^✅|❌/gm, '');
+    cleanText = cleanText.replace(/^\d+\.\s*/gm, '');
+    
+    // Clean up extra whitespace
+    cleanText = cleanText.replace(/\n{3,}/g, '\n\n').trim();
+    
     const paragraphs = cleanText.split('\n\n').filter(p => p.trim().length > 50);
     
-    console.log('🔍 OpenAI Service: Found paragraphs:', paragraphs.length);
+    console.log('🔍 OpenAI Service: Found paragraphs after cleaning:', paragraphs.length);
     paragraphs.forEach((p, index) => {
       console.log(`📄 OpenAI Service: Paragraph ${index + 1} (${p.length} chars):`, p.substring(0, 100) + '...');
     });
     
     // If we have insufficient content, this means OpenAI API failed
     if (paragraphs.length === 0 || cleanText.length < 100) {
-      console.error('❌ OpenAI Service: OpenAI response is too short or empty!');
+      console.error('❌ OpenAI Service: OpenAI response is too short or empty after cleaning!');
       console.error('🔍 OpenAI Service: Raw response:', text);
-      console.error('🔍 OpenAI Service: Raw response length:', text.length);
       console.error('🔍 OpenAI Service: Clean text length:', cleanText.length);
       console.error('🔍 OpenAI Service: Paragraphs found:', paragraphs.length);
       console.error('⚠️ OpenAI Service: This indicates an OpenAI API issue - NOT using fallback templates');
@@ -376,8 +428,8 @@ NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bi
       return [{
         dimension: 'AI_REPORT',
         title: 'AI Destekli Aday Değerlendirme Raporu',
-        description: 'OpenAI API yanıtı yetersiz - lütfen tekrar deneyin veya API key kontrolü yapın.',
-        reasoning: 'OpenAI servisi geçici olarak kullanılamıyor. API key ve bağlantı kontrolü gerekli.',
+        description: 'OpenAI API yanıtı yetersiz - lütfen API key kontrolü yapın ve tekrar deneyin.',
+        reasoning: 'OpenAI servisi düzgün çalışmıyor. VITE_OPENAI_API_KEY değerini .env.local dosyasında kontrol edin.',
         basedOn: ['OpenAI API Error'],
         userBenefit: 'API key kontrolü gerekli',
         confidence: 0,
@@ -388,7 +440,7 @@ NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bi
         resources: [{
           type: 'case-study',
           title: 'API Error Report',
-          description: 'OpenAI API bağlantı hatası'
+          description: 'OpenAI API bağlantı hatası - .env.local dosyasında VITE_OPENAI_API_KEY kontrol edin'
         }],
         timeline: 'Derhal',
         expectedOutcome: 'API bağlantısı düzeltilmeli'
@@ -402,7 +454,7 @@ NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bi
     console.log('🔍 OpenAI Service: Processing paragraphs - first:', firstParagraph.length, 'chars, second:', secondParagraph.length, 'chars');
     
     // If we only have one paragraph, split it or create a second one
-    if (paragraphs.length === 1) {
+    if (paragraphs.length === 1 && firstParagraph.length > 400) {
       console.log('🔄 OpenAI Service: Only one paragraph found, attempting to split...');
       const sentences = firstParagraph.split('. ');
       if (sentences.length > 6) {
@@ -414,6 +466,9 @@ NOT: Sen sadece test skorlarını rapor eden değil, yetenek analitiği yapan bi
         console.log('⚠️ OpenAI Service: Paragraph too short to split, generating second paragraph');
         secondParagraph = this.generateSecondParagraph(scores);
       }
+    } else if (paragraphs.length === 1) {
+      console.log('⚠️ OpenAI Service: Single short paragraph found, generating second paragraph');
+      secondParagraph = this.generateSecondParagraph(scores);
     }
 
     // Validate that we have substantial content
