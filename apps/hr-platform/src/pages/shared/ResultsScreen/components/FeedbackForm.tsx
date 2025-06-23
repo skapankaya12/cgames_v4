@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icons } from '@cgames/ui-kit';
 import type { FeedbackRatings } from '../types/results';
 
 interface FeedbackFormProps {
@@ -102,7 +103,8 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
         {feedbackSubmitSuccess && (
           <div className="feedback-success">
-            ✅ Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
+            <Icons.Check size={20} color="#059669" />
+            Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
           </div>
         )}
       </div>

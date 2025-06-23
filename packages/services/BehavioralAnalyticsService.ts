@@ -435,18 +435,38 @@ export class BehavioralAnalyticsService {
     userInfo?: { firstName: string; lastName: string }
   ): Promise<PersonalizedRecommendations> {
     try {
-      console.log('=== GENERATING AI-POWERED RECOMMENDATIONS WITH OPENAI GPT-3.5-turbo ===');
+      console.log('=== BEHAVIORAL ANALYTICS: STARTING AI RECOMMENDATION GENERATION ===');
+      console.log('📊 BehavioralAnalytics: Input validation:', {
+        scoresCount: scores.length,
+        sessionId: sessionId,
+        hasUserInfo: !!userInfo,
+        userInfo: userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : 'Anonymous',
+        scoresBreakdown: scores.map(s => `${s.dimension}: ${s.score}/${s.maxScore || 100}`)
+      });
       
       // Check for CV data to enhance recommendations
       const cvService = new CVTextExtractionService();
       const cvData = cvService.getCVData();
       
       if (cvData) {
-        console.log('✅ CV data found, enhancing AI recommendations with CV analysis');
-        console.log(`📄 CV file: ${cvData.fileName}, Experience: ${cvData.analysis.experience.years} years`);
+        console.log('✅ BehavioralAnalytics: CV data found, enhancing AI recommendations with CV analysis');
+        console.log('📄 BehavioralAnalytics: CV details:', {
+          fileName: cvData.fileName,
+          experienceYears: cvData.analysis.experience.years,
+          companiesCount: cvData.analysis.experience.companies.length,
+          technicalSkillsCount: cvData.analysis.skills.technical.length,
+          leadershipSkillsCount: cvData.analysis.skills.leadership.length,
+          softSkillsCount: cvData.analysis.skills.soft.length,
+          degreesCount: cvData.analysis.education.degrees.length,
+          hrAssessment: cvData.hrInsights.overallAssessment.substring(0, 100) + '...'
+        });
       } else {
-        console.log('📋 No CV data found, using standard AI recommendations');
+        console.log('📋 BehavioralAnalytics: No CV data found, using standard AI recommendations');
+        console.log('💡 BehavioralAnalytics: To enhance AI analysis, candidate should upload a CV');
       }
+      
+      console.log('🚀 BehavioralAnalytics: Calling OpenAI Service for AI generation...');
+      console.log('🔧 BehavioralAnalytics: OpenAI configuration check...');
       
       // Use OpenAI Service for recommendations with CV data if available
       const recommendations = await this.openAI.generatePersonalizedRecommendations(
@@ -456,13 +476,134 @@ export class BehavioralAnalyticsService {
         cvData || undefined // Pass CV data if available
       );
       
-      console.log('✅ OpenAI recommendations generated successfully');
+      console.log('✅ BehavioralAnalytics: OpenAI recommendations generated successfully!');
+      console.log('📋 BehavioralAnalytics: Final recommendation validation:', {
+        hasRecommendations: !!recommendations,
+        model: recommendations.aiModel,
+        confidence: recommendations.confidenceScore,
+        cvIntegrated: recommendations.cvIntegrated,
+        totalRecommendationsCount: recommendations.recommendations?.length || 0,
+        dataUsedCount: recommendations.dataUsed?.length || 0,
+        generatedAt: recommendations.generatedAt,
+        sessionId: recommendations.sessionId
+      });
+      
+      // Validate AI report specifically
+      const aiReports = recommendations.recommendations?.filter(rec => rec.dimension === 'AI_REPORT') || [];
+      console.log('🎯 BehavioralAnalytics: AI Report validation:', {
+        aiReportCount: aiReports.length,
+        hasAIReport: aiReports.length > 0,
+        aiReportTitles: aiReports.map(r => r.title)
+      });
+      
+      if (aiReports.length > 0) {
+        aiReports.forEach((report, index) => {
+          console.log(`📄 BehavioralAnalytics: AI Report ${index + 1} content validation:`, {
+            title: report.title,
+            hasDescription: !!report.description && report.description.length > 50,
+            hasReasoning: !!report.reasoning && report.reasoning.length > 50,
+            descriptionLength: report.description?.length || 0,
+            reasoningLength: report.reasoning?.length || 0,
+            confidence: report.confidence,
+            basedOnData: report.basedOn?.length || 0
+          });
+          
+          if (report.description && report.description.length > 50) {
+            console.log(`📝 BehavioralAnalytics: AI Report ${index + 1} - First paragraph (CV+Test Analysis):`, report.description.substring(0, 150) + '...');
+          } else {
+            console.warn(`⚠️ BehavioralAnalytics: AI Report ${index + 1} - First paragraph is missing or too short!`);
+          }
+          
+          if (report.reasoning && report.reasoning.length > 50) {
+            console.log(`📝 BehavioralAnalytics: AI Report ${index + 1} - Second paragraph (Interview Guide):`, report.reasoning.substring(0, 150) + '...');
+          } else {
+            console.warn(`⚠️ BehavioralAnalytics: AI Report ${index + 1} - Second paragraph is missing or too short!`);
+          }
+        });
+      } else {
+        console.error('❌ BehavioralAnalytics: NO AI REPORT GENERATED! This is the main issue.');
+        console.log('🔍 BehavioralAnalytics: Available recommendation types:', 
+          recommendations.recommendations?.map(r => r.dimension) || ['None']);
+      }
+      
+      console.log('=== BEHAVIORAL ANALYTICS: AI RECOMMENDATION GENERATION COMPLETED ===');
       return recommendations;
       
     } catch (error) {
-      console.error('❌ OpenAI recommendation generation failed, falling back to simulated:', error);
+      console.error('❌ BehavioralAnalytics: AI recommendation generation FAILED!');
+      console.error('🔍 BehavioralAnalytics: Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack?.substring(0, 500) : 'No stack'
+      });
+      
+      // Check if this is a forced real AI error (OpenAI API key issue)
+      if (error instanceof Error && error.message.includes('Real AI generation failed')) {
+        console.error('🚨 BehavioralAnalytics: CRITICAL - Real AI generation failed!');
+        console.error('💡 BehavioralAnalytics: Your OpenAI API key has an issue - NO TEMPLATES WILL BE USED');
+        console.error('🔧 BehavioralAnalytics: Fix your API key to see real AI-generated content');
+        
+        // Return error response instead of template fallback
+        return {
+          sessionId,
+          userId: userInfo ? `${userInfo.firstName}_${userInfo.lastName}` : undefined,
+          recommendations: [{
+            dimension: 'AI_REPORT',
+            title: 'OpenAI API Bağlantı Hatası',
+            description: 'OpenAI API key ile bağlantı kurulamadı. Lütfen API key kontrolü yapın ve tekrar deneyin.',
+            reasoning: 'API key geçersiz veya kota aşımı. .env.local dosyasındaki VITE_OPENAI_API_KEY değerini kontrol edin.',
+            basedOn: ['API Error'],
+            userBenefit: 'API key düzeltilmesi gerekli',
+            confidence: 0,
+            difficultyLevel: 'advanced',
+            estimatedImpact: 'high',
+            priority: 'high',
+            actionItems: ['API key kontrolü', 'OpenAI billing kontrolü', 'Network bağlantısı kontrolü'],
+            resources: [{
+              type: 'case-study',
+              title: 'API Error - Real AI Zorunlu',
+              description: 'OpenAI API bağlantı hatası - Template kullanımı devre dışı'
+            }],
+            timeline: 'Derhal',
+            expectedOutcome: 'API bağlantısı düzeltilmeli'
+          }],
+          generatedAt: new Date().toISOString(),
+          overallInsight: 'OpenAI API bağlantı hatası - Real AI generation zorunlu tutulduğu için template kullanılmadı.',
+          aiModel: 'OpenAI API Error',
+          dataUsed: ['Error Report'],
+          confidenceScore: 0,
+          cvIntegrated: false
+        };
+      }
+      
+      // Provide detailed troubleshooting information
+      if (error instanceof Error) {
+        if (error.message.includes('API') || error.message.includes('OpenAI')) {
+          console.error('🔧 BehavioralAnalytics: OpenAI API related error - check API key and configuration');
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+          console.error('🌐 BehavioralAnalytics: Network error - check internet connection');
+        } else if (error.message.includes('timeout')) {
+          console.error('⏱️ BehavioralAnalytics: Request timeout - try again');
+        } else {
+          console.error('🔧 BehavioralAnalytics: Unexpected error type');
+        }
+      }
+      
+      console.log('⚠️ BehavioralAnalytics: This error caused fallback to template recommendations');
+      console.log('🔧 BehavioralAnalytics: Check OpenAI API key in .env.local: VITE_OPENAI_API_KEY');
+      console.log('🔧 BehavioralAnalytics: Ensure API key has proper billing and quota');
+      
       // Fallback to existing method
-      return this.generatePersonalizedRecommendations(scores, sessionId, userInfo);
+      console.log('🔄 BehavioralAnalytics: Using fallback template recommendations instead of AI');
+      const fallbackRecommendations = this.generatePersonalizedRecommendations(scores, sessionId, userInfo);
+      
+      console.log('📋 BehavioralAnalytics: Fallback recommendations generated:', {
+        hasRecommendations: !!fallbackRecommendations,
+        recommendationsCount: fallbackRecommendations.recommendations?.length || 0,
+        isAIPowered: false
+      });
+      
+      return fallbackRecommendations;
     }
   }
 } 

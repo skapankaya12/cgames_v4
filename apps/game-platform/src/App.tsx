@@ -16,7 +16,7 @@ function LandingPage() {
   return (
     <div className="landing-page">
       <div className="landing-content">
-        <h1>Olivin HR</h1>
+        <h1>OlivinHR</h1>
         <p>Gamified Soft Skills Assesment I DEMO VERSION</p>
         <div className="landing-buttons">
           <a href="/candidate" className="landing-button">

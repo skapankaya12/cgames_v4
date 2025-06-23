@@ -25,7 +25,6 @@ export const VideoDisplay: React.FC<VideoDisplayProps> = ({
         ref={videoRef}
         className={`background-video ${videoLoaded ? 'loaded' : ''}`}
         playsInline
-        loop
         onClick={handleVideoClick}
         onLoadedData={handleVideoLoad}
         onError={handleVideoError}

@@ -110,7 +110,7 @@ export const SharedResultsScreen: React.FC = () => {
       
       return () => clearTimeout(timeoutId);
     }
-  }, [scores, storedRecommendations, isLoadingRecommendations, generatePersonalizedRecommendations]);
+  }, [scores.length, storedRecommendations, isLoadingRecommendations]); // Removed generatePersonalizedRecommendations to prevent infinite loop
 
   const renderFilteredContent = () => {
     switch (currentFilter) {

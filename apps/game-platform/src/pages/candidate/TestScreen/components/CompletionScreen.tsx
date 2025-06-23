@@ -26,7 +26,6 @@ export const CompletionScreen: React.FC<CompletionScreenProps> = ({
           ref={videoRef}
           className={`background-video ${videoLoaded ? 'loaded' : ''}`}
           playsInline
-          loop
           onClick={handleVideoClick}
           onLoadedData={handleVideoLoad}
           onError={handleVideoError}

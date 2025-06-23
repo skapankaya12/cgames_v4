@@ -37,8 +37,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     ? Math.round(scores.reduce((sum, score) => sum + getScorePercentage(score.score, score.maxScore), 0) / scores.length)
     : 0;
   
-  const topCompetency = scores.length > 0 ? scores[0] : null;
-  const improvementArea = scores.length > 0 ? scores[scores.length - 1] : null;
+  // Fix: Calculate actual highest and lowest scoring competencies
+  const topCompetency = scores.length > 0 
+    ? scores.reduce((highest, current) => 
+        getScorePercentage(current.score, current.maxScore) > getScorePercentage(highest.score, highest.maxScore) 
+          ? current 
+          : highest
+      )
+    : null;
+    
+  const improvementArea = scores.length > 0 
+    ? scores.reduce((lowest, current) => 
+        getScorePercentage(current.score, current.maxScore) < getScorePercentage(lowest.score, lowest.maxScore) 
+          ? current 
+          : lowest
+      )
+    : null;
   
   // Calculate time analytics correctly - matching AnalyticsSection
   const totalTime = interactionAnalytics?.totalTime || 0;

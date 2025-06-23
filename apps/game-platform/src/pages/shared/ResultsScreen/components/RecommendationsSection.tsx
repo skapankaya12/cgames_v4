@@ -51,6 +51,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
         isLoading={isLoadingRecommendations}
         error={recommendationsError}
         onShowHelp={onShowHelp}
+
         competencyScores={scores.map(score => ({
           dimension: score.abbreviation,
           score: score.score,

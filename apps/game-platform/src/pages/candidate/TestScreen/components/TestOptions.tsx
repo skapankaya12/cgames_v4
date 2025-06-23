@@ -15,6 +15,11 @@ export const TestOptions: React.FC<TestOptionsProps> = ({
   error,
   onAnswer
 }) => {
+  // Hide options completely when transitioning to show forwarding message clearly
+  if (isTransitioning) {
+    return null;
+  }
+
   return (
     <div className="dialog-options">
       <div className="dialog-box options-box">
@@ -24,7 +29,7 @@ export const TestOptions: React.FC<TestOptionsProps> = ({
               const optionLabel = String.fromCharCode(97 + index);
               return (
                 <div 
-                  className={`radio-option ${isTransitioning ? 'disabled' : ''}`} 
+                  className="radio-option" 
                   key={option.id}
                   onClick={() => onAnswer(option.id)}
                 >
@@ -35,7 +40,6 @@ export const TestOptions: React.FC<TestOptionsProps> = ({
                     value={option.id}
                     checked={answers[currentQuestion.id] === option.id}
                     onChange={() => {}}
-                    disabled={isTransitioning}
                   />
                   <label htmlFor={option.id}>
                     <span className="option-label">{optionLabel}:</span>

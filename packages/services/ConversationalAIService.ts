@@ -37,13 +37,51 @@ export class ConversationalAIService {
   };
 
   constructor() {
-    // Initialize with dummy OpenAI instance, will check API key when methods are called
+    console.log('🤖 Initializing Conversational AI Service...');
+    
+    // Get API key from environment
+    const apiKey = this.getApiKey();
+    
+    // Initialize OpenAI instance with actual API key
     this.openai = new OpenAI({
-      apiKey: 'dummy-key', // Will be replaced when methods are called
+      apiKey: apiKey || 'dummy-key',
       dangerouslyAllowBrowser: true
     });
     
-    console.log('🤖 Conversational AI Service initialized (API key will be checked when needed)');
+    if (apiKey) {
+      console.log('🤖 Conversational AI Service initialized with API key');
+    } else {
+      console.log('🤖 Conversational AI Service initialized (no API key - will use fallback)');
+    }
+  }
+
+  /**
+   * Get OpenAI API key from environment variables (Vite compatible)
+   */
+  private getApiKey(): string | undefined {
+    let apiKey: string | undefined;
+    
+    // Try Vite's import.meta.env first (browser environment)
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      apiKey = import.meta.env.VITE_OPENAI_API_KEY as string;
+      console.log('🔍 Chat: Checking import.meta.env.VITE_OPENAI_API_KEY:', apiKey ? `Found (${apiKey.length} chars)` : 'Not found');
+    }
+    
+    // Fallback to process.env for Node.js environment
+    if (!apiKey && typeof process !== 'undefined' && process.env) {
+      apiKey = process.env.VITE_OPENAI_API_KEY;
+      console.log('🔍 Chat: Checking process.env.VITE_OPENAI_API_KEY:', apiKey ? `Found (${apiKey.length} chars)` : 'Not found');
+    }
+    
+    if (apiKey) {
+      // Clean up any potential line breaks or extra whitespace
+      apiKey = apiKey.replace(/\s+/g, '').trim();
+      console.log('✅ Chat: API key loaded and cleaned:', `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}`);
+    } else {
+      console.warn('❌ Chat: No OpenAI API key found in environment variables');
+    }
+    
+    return apiKey;
   }
 
   /**
@@ -58,28 +96,29 @@ export class ConversationalAIService {
       console.log('🚀 Generating AI response for HR prompt:', userPrompt);
       
       // Check if we have a valid API key
-      const apiKey = process.env.VITE_OPENAI_API_KEY;
+      const apiKey = this.getApiKey();
       if (!apiKey || apiKey === 'dummy-key') {
-        console.warn('⚠️ No valid OpenAI API key found, falling back to placeholder response');
+        console.warn('⚠️ Chat: No valid OpenAI API key found, falling back to placeholder response');
         return 'Bu özellik şu anda kullanılamıyor. Lütfen OpenAI API anahtarını yapılandırın.';
       }
       
-      // Re-initialize OpenAI with real API key if needed
-      if (this.openai.apiKey === 'dummy-key') {
-        this.openai = new OpenAI({
-          apiKey: apiKey,
-          dangerouslyAllowBrowser: true
-        });
-      }
+      console.log('✅ Chat: Valid API key found, proceeding with OpenAI generation...');
+      
+      // Re-initialize OpenAI with real API key
+      this.openai = new OpenAI({
+        apiKey: apiKey,
+        dangerouslyAllowBrowser: true
+      });
       
       const contextPrompt = this.buildContextualPrompt(userPrompt, context, conversationHistory);
       
+      console.log('🌐 Chat: Making OpenAI API call...');
       const completion = await this.openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
-            content: "Sen profesyonel bir İK uzmanı asistanısın. Aday değerlendirmeleri yaparak İK uzmanlarına yardımcı oluyorsun. Türkçe yanıt ver ve profesyonel bir ton kullan."
+            content: "Sen deneyimli İK uzmanı asistanısın. Aday değerlendirmeleri yaparak İK uzmanlarına stratejik destek sağlıyorsun. Test skorlarını tekrar etmek yerine analiz edip öngörüler sunuyorsun. Türkçe yanıt ver ve profesyonel bir ton kullan."
           },
           {
             role: "user",
@@ -92,11 +131,17 @@ export class ConversationalAIService {
 
       const text = completion.choices[0]?.message?.content || 'Yanıt alınamadı.';
       
-      console.log('✅ AI response generated successfully');
+      console.log('✅ Chat: AI response generated successfully');
+      console.log('📝 Chat: Response length:', text.length);
+      
       return text.trim();
       
     } catch (error) {
-      console.error('❌ Conversational AI Service error:', error);
+      console.error('❌ Chat: Conversational AI Service error:', error);
+      console.error('🔍 Chat: Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : String(error)
+      });
       throw new Error('AI yanıtı üretilirken bir hata oluştu. Lütfen tekrar deneyin.');
     }
   }

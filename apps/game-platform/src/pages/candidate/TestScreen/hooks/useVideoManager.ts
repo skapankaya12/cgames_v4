@@ -25,13 +25,15 @@ export function useVideoManager(testState: TestState, currentQuestion: any) {
         let questionId = currentQuestion.id;
         let videoFileName = '';
         
-        // Use new videos with sound for questions 1-7 and 12-16
-        if ((questionId >= 1 && questionId <= 7) || (questionId >= 12 && questionId <= 16)) {
-          videoFileName = questionId >= 12 ? `${questionId}.Soru.mp4` : `question${questionId}veo.mp4`;
-          video.muted = false; // Enable sound for these questions
-        } else {
+        // Map video filenames based on question ID
+        if (questionId >= 1 && questionId <= 7) {
+          videoFileName = `question${questionId}veo.mp4`;
+        } else if (questionId === 8 || questionId === 9) {
+          videoFileName = `${questionId}question.mp4`;
+        } else if (questionId === 10 || questionId === 11) {
           videoFileName = `question${questionId}.mp4`;
-          video.muted = true; // Keep other questions muted
+        } else if (questionId >= 12 && questionId <= 16) {
+          videoFileName = `${questionId}.Soru.mp4`;
         }
         
         const videoSrc = testState.isComplete 
@@ -39,6 +41,9 @@ export function useVideoManager(testState: TestState, currentQuestion: any) {
           : `${import.meta.env.BASE_URL}scenes/${videoFileName}`;
         
         console.log('Loading video from:', videoSrc);
+        
+        // Enable sound for all videos
+        video.muted = false;
         
         // Reset video to beginning
         video.pause();

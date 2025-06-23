@@ -472,11 +472,7 @@
   line-height: 1.4; /* Better line height for option text */
 }
 
-.radio-option.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  pointer-events: none;
-}
+
 
 /* Error Message */
 .error-message {
@@ -517,25 +513,34 @@
 /* Forwarding Message */
 .dialog-forwarding {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 50px;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  width: 80%;
-  max-width: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
   text-align: center;
 }
 
 .forwarding-message {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 15, 35, 0.95);
   color: white;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 30px 40px;
+  border-radius: 15px;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  font-size: 1.1em;
-  line-height: 1.6;
+  font-size: 1.3em;
+  line-height: 1.8;
   visibility: hidden;
+  border: 2px solid rgba(0, 191, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 191, 255, 0.2);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  width: 85%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .forwarding-message.active {
@@ -555,19 +560,19 @@
 @keyframes showForwarding {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) scale(0.9);
   }
   10% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   90% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-10px) scale(0.95);
   }
 }
 
@@ -716,7 +721,14 @@
   
   .dialog-forwarding {
     bottom: 100px;
-    width: 95%;
+  }
+  
+  .forwarding-message {
+    padding: 25px 30px;
+    font-size: 1.2em;
+    line-height: 1.7;
+    width: 90%;
+    max-width: 750px;
   }
   
   .dialog-content {
@@ -841,7 +853,14 @@
   
   .dialog-forwarding {
     bottom: 90px;
-    width: 98%;
+  }
+  
+  .forwarding-message {
+    padding: 20px 25px;
+    font-size: 1.1em;
+    line-height: 1.6;
+    width: 95%;
+    max-width: 500px;
   }
   
   .dialog-content {

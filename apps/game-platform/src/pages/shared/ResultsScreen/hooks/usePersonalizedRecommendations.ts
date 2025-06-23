@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { BehavioralAnalyticsService } from '@cgames/services';
 import type { PersonalizedRecommendations, DimensionScore } from '@cgames/types/Recommendations';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
@@ -28,59 +28,50 @@ export const usePersonalizedRecommendations = (
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState<PersonalizedRecommendations | null>(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+  
+  // Ref to prevent multiple simultaneous API calls
+  const isGeneratingRef = useRef(false);
 
-  const generatePersonalizedRecommendations = async () => {
+  const generatePersonalizedRecommendations = useCallback(async () => {
     if (!user || scores.length === 0) {
       console.warn('Cannot generate recommendations: missing user or scores data');
       return;
     }
 
-    // Check if recommendations already exist
-    const storedRecommendations = sessionStorage.getItem('personalizedRecommendations');
-    if (storedRecommendations) {
-      try {
-        const existing = JSON.parse(storedRecommendations);
-        console.log('✅ Using existing AI recommendations from storage');
-        setPersonalizedRecommendations(existing);
-        return;
-      } catch (error) {
-        console.warn('⚠️ Error parsing stored recommendations, generating new ones:', error);
-      }
+    // Prevent multiple simultaneous API calls
+    if (isGeneratingRef.current) {
+      console.log('⏸️ AI recommendation generation already in progress, skipping...');
+      return;
     }
+
+    // Check if recommendations already exist to prevent unnecessary regeneration
+    const existingRecommendations = sessionStorage.getItem('personalizedRecommendations');
+    if (existingRecommendations && !isLoadingRecommendations && personalizedRecommendations) {
+      console.log('✅ AI recommendations already available, skipping regeneration');
+      return;
+    }
+
+    console.log('🚀 AUTO-GENERATING AI RECOMMENDATIONS...');
+    console.log('👤 User:', user.firstName, user.lastName);
+    console.log('📊 Scores count:', scores.length);
+
+    // Set flag to prevent multiple calls
+    isGeneratingRef.current = true;
+
+    // Clear any old stored recommendations to force fresh generation
+    sessionStorage.removeItem('personalizedRecommendations');
+    console.log('🗑️ Cleared old stored recommendations');
+    
+    // Force clear the local state as well
+    setPersonalizedRecommendations(null);
+    console.log('🗑️ Cleared local recommendations state');
 
     setIsLoadingRecommendations(true);
     setRecommendationsError(null);
 
     try {
-      console.log('🤖 Generating personalized AI recommendations...');
+      console.log('🤖 Generating fresh AI recommendations with OpenAI...');
       
-      // Prepare user analytics data
-      /* const userAnalyticsData: UserAnalyticsData = {
-        candidateName: `${user.firstName} ${user.lastName}`,
-        testDate: new Date().toISOString(),
-        competencyScores: scores.map(score => ({
-          dimension: score.abbreviation,
-          score: score.score,
-          maxScore: score.maxScore,
-          displayName: score.fullName,
-          category: score.category
-        })) as DimensionScore[],
-        sessionAnalytics: interactionAnalytics ? {
-          totalTime: interactionAnalytics.totalTime,
-          questionTimes: interactionAnalytics.questionTimes,
-          changedAnswers: interactionAnalytics.changedAnswers,
-          behaviorPatterns: interactionAnalytics.behaviorPatterns,
-          deviceInfo: interactionAnalytics.deviceInfo,
-          sessionId: interactionAnalytics.sessionId,
-          userAgent: interactionAnalytics.userAgent
-        } : undefined,
-        cvData: cvData ? {
-          fileName: cvData.fileName,
-          analysis: cvData.analysis,
-          hrInsights: cvData.hrInsights
-        } : undefined
-      }; */
-
       // Generate AI recommendations using BehavioralAnalyticsService
       const analyticsService = new BehavioralAnalyticsService();
       
@@ -93,6 +84,8 @@ export const usePersonalizedRecommendations = (
         category: score.category
       }));
       
+      console.log('📋 Dimension scores prepared:', dimensionScores.length);
+      
       // Use AI-powered recommendations with proper parameters
       const recommendations = await analyticsService.generateAIRecommendations(
         dimensionScores,
@@ -104,12 +97,17 @@ export const usePersonalizedRecommendations = (
         throw new Error('AI servisi boş sonuç döndürdü');
       }
 
-      // Store in session storage for future use
+      // Store the NEW AI recommendations in session storage
       sessionStorage.setItem('personalizedRecommendations', JSON.stringify(recommendations));
+      console.log('💾 Stored new AI recommendations in session storage');
       
       setPersonalizedRecommendations(recommendations);
+      console.log('✅ Set new AI recommendations in local state');
       
-      console.log('✅ AI recommendations generated successfully:', {
+      console.log('✅ AUTO-GENERATED AI recommendations successfully:', {
+        model: recommendations.aiModel,
+        confidence: recommendations.confidenceScore,
+        cvIntegrated: recommendations.cvIntegrated,
         recommendationsCount: recommendations.recommendations?.length || 0,
         hasOverallAssessment: !!recommendations.overallAssessment,
         hasStrengths: !!recommendations.strengths?.length,
@@ -119,7 +117,7 @@ export const usePersonalizedRecommendations = (
       });
 
     } catch (error) {
-      console.error('❌ Failed to generate personalized recommendations:', error);
+      console.error('❌ Failed to auto-generate personalized recommendations:', error);
       
       let errorMessage = 'AI önerileri oluşturulurken hata oluştu.';
       
@@ -139,8 +137,10 @@ export const usePersonalizedRecommendations = (
       
     } finally {
       setIsLoadingRecommendations(false);
+      // Reset the flag
+      isGeneratingRef.current = false;
     }
-  };
+  }, [user, scores, interactionAnalytics, personalizedRecommendations, isLoadingRecommendations]);
 
   return {
     // State

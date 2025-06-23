@@ -116,7 +116,8 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
         {feedbackSubmitSuccess && (
           <div className="feedback-success">
-             Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
+            <Icons.Check size={20} color="#059669" />
+            Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
           </div>
         )}
       </div>

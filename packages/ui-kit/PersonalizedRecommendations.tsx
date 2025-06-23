@@ -39,7 +39,38 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
     }
   }, [competencyScores]);
 
+  // Add console logging to track AI generation
+  React.useEffect(() => {
+    if (recommendations) {
+      console.log('🎯 PersonalizedRecommendations: AI recommendations received!');
+      console.log('📊 AI Report Details:', {
+        model: recommendations.aiModel,
+        confidence: recommendations.confidenceScore,
+        cvIntegrated: recommendations.cvIntegrated,
+        totalRecommendations: recommendations.recommendations?.length || 0,
+        aiReportCount: recommendations.recommendations?.filter(rec => rec.dimension === 'AI_REPORT').length || 0,
+        generatedAt: recommendations.generatedAt
+      });
+      
+      // Log AI report content specifically
+      const aiReports = recommendations.recommendations?.filter(rec => rec.dimension === 'AI_REPORT') || [];
+      aiReports.forEach((report, index) => {
+        console.log(`📝 AI Report ${index + 1}:`, {
+          title: report.title,
+          descriptionLength: report.description?.length || 0,
+          reasoningLength: report.reasoning?.length || 0,
+          confidence: report.confidence
+        });
+        console.log(`📄 AI Report ${index + 1} - First paragraph preview:`, report.description?.substring(0, 100) + '...');
+        console.log(`📄 AI Report ${index + 1} - Second paragraph preview:`, report.reasoning?.substring(0, 100) + '...');
+      });
+    } else {
+      console.log('⚠️ PersonalizedRecommendations: No AI recommendations available');
+    }
+  }, [recommendations]);
+
   if (isLoading) {
+    console.log('🔄 PersonalizedRecommendations: AI recommendations loading...');
     return (
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -56,6 +87,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   }
 
   if (error) {
+    console.error('❌ PersonalizedRecommendations: Error occurred:', error);
     return (
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -71,6 +103,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   }
 
   if (!recommendations) {
+    console.log('⚠️ PersonalizedRecommendations: No recommendations data available');
     return (
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -559,13 +592,11 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
         </div>
       )}
 
-      {/* Simple AI Report - Only the two paragraphs */}
+      {/* AI Report Section - This is the critical part that shows the two paragraphs */}
       {recommendations.recommendations && recommendations.recommendations.length > 0 && (
-        <div className="ai-report-section" style={{ 
-          marginTop: '32px',
-          position: 'relative',
-          zIndex: 1
-        }}>
+        <>
+          
+          
           {recommendations.recommendations
             .filter(rec => rec.dimension === 'AI_REPORT')
             .map((recommendation: RecommendationItem, index: number) => (
@@ -578,7 +609,9 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 marginBottom: '24px',
                 boxShadow: '0 16px 48px rgba(0, 0, 0, 0.12)',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                marginTop: '32px',
+                zIndex: 1
               }}>
                 {/* Header with improved design */}
                 <div style={{ 
@@ -622,7 +655,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   </p>
                 </div>
 
-                {/* First Paragraph */}
+                {/* First Paragraph - CV and Test Analysis */}
                 <div style={{ marginBottom: '28px' }}>
                   <div style={{
                     background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)',
@@ -647,30 +680,24 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                     }}>
                       Yetkinlik ve CV Uyum Değerlendirmesi
                     </div>
-                    <h5 style={{ 
-                      color: '#4338ca', 
-                      margin: '16px 0 16px 0', 
-                      fontSize: '16px',
-                      fontWeight: '700',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.3px'
-                    }}>
-                      
-                    </h5>
                     <p style={{ 
                       color: '#1e293b', 
                       lineHeight: '1.7', 
-                      margin: '0',
+                      margin: '16px 0 0 0',
                       fontSize: '15px',
                       fontWeight: '500',
-                      textAlign: 'justify'
+                      textAlign: 'justify',
+                      textShadow: 'none',
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      padding: '4px 8px',
+                      borderRadius: '4px'
                     }}>
                       {recommendation.description}
                     </p>
                   </div>
                 </div>
 
-                {/* Second Paragraph */}
+                {/* Second Paragraph - Interview Guide and Recommendations */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
                   borderRadius: '16px',
@@ -698,17 +725,21 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                   <p style={{ 
                     color: '#1e293b', 
                     lineHeight: '1.7', 
-                    margin: '0',
+                    margin: '16px 0 0 0',
                     fontSize: '15px',
                     fontWeight: '500',
-                    textAlign: 'justify'
+                    textAlign: 'justify',
+                    textShadow: 'none',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    padding: '4px 8px',
+                    borderRadius: '4px'
                   }}>
                     {recommendation.reasoning}
                   </p>
                 </div>
               </div>
             ))}
-        </div>
+        </>
       )}
 
       {/* Simple footer with minimal info */}
