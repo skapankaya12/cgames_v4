@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["react", "react-dom", "node"],
+    "types": ["react", "react-dom", "node", "vite/client"],
     "paths": {
       "@cgames/types": ["../types"],
       "@cgames/types/*": ["../types/*"],
@@ -26,6 +26,6 @@
       "@cgames/services/*": ["../services/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "vite-env.d.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 } 
