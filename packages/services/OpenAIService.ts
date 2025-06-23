@@ -292,27 +292,6 @@ export class OpenAIService {
    */
   private createDetailedPromptWithCV(scores: DimensionScore[], firstName?: string, cvData?: CVData): string {
     const candidateName = firstName || 'aday';
-    
-    // Create a more detailed scores text with percentages
-    const scoresText = scores.map(score => {
-      const percentage = ((score.score / score.maxScore) * 100).toFixed(1);
-      const dimensionName = this.getDimensionName(score.dimension);
-      return `${dimensionName} (${score.dimension}): %${percentage} (${score.score}/${score.maxScore})`;
-    }).join('\n');
-
-    let cvContext = '';
-    if (cvData) {
-      cvContext = `\n\nCV VERİLERİ:
-- Deneyim: ${cvData.analysis.experience.years} yıl
-- Şirket Sayısı: ${cvData.analysis.experience.companies.length}
-- Teknik Beceri: ${cvData.analysis.skills.technical.length} adet
-- Liderlik Becerisi: ${cvData.analysis.skills.leadership.length} adet
-- Eğitim: ${cvData.analysis.education.degrees.length} derece
-- Sertifika: ${cvData.analysis.education.certifications.length} adet
-- Genel Değerlendirme: ${cvData.hrInsights.overallAssessment}
-- Güçlü Yönler: ${cvData.hrInsights.strengths.slice(0, 3).join(', ')}
-- Gelişim Alanları: ${cvData.hrInsights.concerns.slice(0, 3).join(', ')}`;
-    }
 
     // Analyze competency strengths and development areas (without percentages)  
     const strongCompetencies = scores.filter(s => (s.score / s.maxScore) >= 0.7).map(s => s.displayName || s.dimension);
