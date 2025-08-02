@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '@cgames/ui-kit/styles/hr.css';
 
@@ -24,7 +23,7 @@ export default function RestrictedSignup() {
                   <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
                 </svg>
               </div>
-              <span className="logo-text">BokumunKuşu</span>
+              <span className="logo-text">OlivinHR</span>
             </div>
             <div className="restricted-signup-content">
               <div className="restricted-icon" style={{ fontSize: '4rem', marginBottom: '1.5rem', color: '#6366F1' }}>

@@ -86,7 +86,7 @@ async function sendTeamMemberInviteEmail(data: {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #4F46E5; margin: 0;">Welcome to BokumunKuşu</h1>
+            <h1 style="color: #4F46E5; margin: 0;">Welcome to OlivinHR</h1>
             <p style="color: #6B7280; margin: 10px 0 0 0;">Leadership Assessment Platform</p>
           </div>
           

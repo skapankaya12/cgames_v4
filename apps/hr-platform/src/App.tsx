@@ -29,7 +29,7 @@ function LandingPage() {
       </div>
       
       <div className="landing-content">
-        <h1 className="landing-title">Welcome to BokumunKuşu</h1>
+        <h1 className="landing-title">Welcome to OlivinHR</h1>
         <p className="landing-subtitle">
           Advanced Leadership Assessment Platform
         </p>

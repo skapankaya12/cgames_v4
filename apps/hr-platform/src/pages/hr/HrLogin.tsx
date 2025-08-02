@@ -86,7 +86,7 @@ export default function HrLogin() {
                   <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
                 </svg>
               </div>
-              <span className="logo-text">BokumunKuşu</span>
+              <span className="logo-text">OlivinHR</span>
             </div>
             <h1 className="hr-auth-title">Welcome Back</h1>
             <p className="hr-auth-subtitle">Sign in to your HR dashboard</p>

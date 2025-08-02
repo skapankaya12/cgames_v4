@@ -119,7 +119,7 @@ export default function Navigation({ isCollapsed, setIsCollapsed, hrUser }: Navi
                 </svg>
               </div>
               <div className="logo-text">
-                <span className="company-name">BokumunKuşu</span>
+                <span className="company-name">OlivinHR</span>
                 <span className="platform-type">HR Platform</span>
               </div>
             </div>
