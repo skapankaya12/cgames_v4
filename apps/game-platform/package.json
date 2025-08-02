@@ -17,20 +17,23 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@cgames/ui-kit": "file:../../packages/ui-kit",
     "@cgames/services": "file:../../packages/services",
     "@cgames/types": "file:../../packages/types",
-    "@vercel/node": "^2.15.0",
-    "firebase-admin": "^12.0.0",
-    "dotenv": "^16.5.0",
-    "firebase": "^11.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1",
+    "@cgames/ui-kit": "file:../../packages/ui-kit",
+    "@types/node": "^18.0.0",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "@types/node": "^18.0.0",
+    "@vercel/node": "^2.15.0",
     "@vitejs/plugin-react": "^4.4.1",
+    "dotenv": "^16.5.0",
+    "firebase": "^11.8.1",
+    "firebase-admin": "^12.0.0",
+    "i18next": "^25.3.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^15.6.1",
+    "react-router-dom": "^6.22.1",
     "typescript": "latest",
     "vite": "^6.3.5"
   },
@@ -42,4 +45,4 @@
     "globals": "^16.0.0",
     "typescript-eslint": "^8.30.1"
   }
-} 
+}

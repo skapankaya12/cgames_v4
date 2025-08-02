@@ -23,10 +23,50 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
     'Communication Challenges'
   ];
 
+  // Available assessment types (currently only Space Mission is active)
+  const assessmentTypes = [
+    { value: 'Space Mission', label: 'Space Mission Assessment', description: 'Interactive space mission scenario testing decision-making under pressure' }
+  ];
+
   return (
     <div className="form-step">
-      <h3>Role Details & Assessment Games</h3>
-      <p className="step-description">Tell us more about the specific role requirements and select assessment games</p>
+      <h3>Role Details & Assessment Configuration</h3>
+      <p className="step-description">Tell us more about the specific role requirements and select the assessment type</p>
+
+      {/* NEW: Assessment Type Selection */}
+      <div className="form-group" style={{ marginBottom: '2rem' }}>
+        <label htmlFor="assessmentType">Assessment Type *</label>
+        <select
+          id="assessmentType"
+          value={formData.assessmentType || 'Space Mission'}
+          onChange={(e) => handleInputChange('assessmentType', e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: '1px solid #d1d5db',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+            backgroundColor: 'white'
+          }}
+        >
+          {assessmentTypes.map((type) => (
+            <option key={type.value} value={type.value}>
+              {type.label}
+            </option>
+          ))}
+        </select>
+        {formData.assessmentType && (
+          <small style={{ 
+            color: '#6b7280', 
+            fontSize: '0.875rem', 
+            marginTop: '0.25rem', 
+            display: 'block',
+            fontStyle: 'italic'
+          }}>
+            {assessmentTypes.find(type => type.value === formData.assessmentType)?.description}
+          </small>
+        )}
+      </div>
 
       <div className="form-row">
         <div className="form-group">
@@ -65,7 +105,7 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
             type="text"
             value={formData.location}
             onChange={(e) => handleInputChange('location', e.target.value)}
-            placeholder="e.g., Istanbul, Turkey"
+            placeholder="e.g., New York, Remote, Hybrid"
           />
         </div>
 
@@ -77,88 +117,57 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
             onChange={(e) => handleInputChange('workMode', e.target.value as any)}
           >
             <option value="remote">Remote</option>
-            <option value="hybrid">Hybrid</option>
             <option value="onsite">On-site</option>
+            <option value="hybrid">Hybrid</option>
           </select>
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="teamSize">Team Size</label>
+        <label htmlFor="department">Department</label>
         <input
-          id="teamSize"
+          id="department"
           type="text"
-          value={formData.teamSize}
-          onChange={(e) => handleInputChange('teamSize', e.target.value)}
-          placeholder="e.g., 5-10 people team"
+          value={formData.department}
+          onChange={(e) => handleInputChange('department', e.target.value)}
+          placeholder="e.g., Engineering, Marketing, Sales"
         />
       </div>
 
       <div className="form-group">
-        <label htmlFor="industryFocus">Industry Focus</label>
-        <input
-          id="industryFocus"
-          type="text"
-          value={formData.industryFocus}
-          onChange={(e) => handleInputChange('industryFocus', e.target.value)}
-          placeholder="e.g., Technology, Finance, Healthcare"
-        />
-      </div>
-
-      {/* Game Selection Section */}
-      <div className="form-group assessment-games-section">
-        <label>Assessment Games for This Project *</label>
-        <p className="field-description">Select which games candidates will take for this project. You can choose multiple games.</p>
-        <div className="checkbox-group">
-          {assessmentGames.map((game) => (
-            <label key={game} className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={formData.gamePreferences.includes(game)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    addToArrayField('gamePreferences', game);
-                  } else {
-                    removeFromArrayField('gamePreferences', game);
-                  }
-                }}
-              />
-              <span className="game-title">{game}</span>
-              <span className="game-description">
-                {game === 'Leadership Scenario Game' && 'Assess leadership and decision-making skills'}
-                {game === 'Team Building Simulation' && 'Evaluate team collaboration and communication'}
-                {game === 'Crisis Management Scenarios' && 'Test problem-solving under pressure'}
-                {game === 'Strategic Planning Exercise' && 'Measure strategic thinking and planning abilities'}
-                {game === 'Negotiation Simulation' && 'Assess negotiation and interpersonal skills'}
-                {game === 'Communication Challenges' && 'Evaluate communication and presentation skills'}
-              </span>
-            </label>
+        <label>Assessment Type</label>
+        <div className="assessment-selection">
+          {assessmentTypes.map((assessment) => (
+            <div key={assessment.value} className="assessment-option" style={{ 
+              border: '2px solid #e5e7eb', 
+              borderRadius: '8px', 
+              padding: '16px', 
+              marginBottom: '12px',
+              backgroundColor: formData.assessmentType === assessment.value ? '#f0f8ff' : 'white',
+              borderColor: formData.assessmentType === assessment.value ? '#4F46E5' : '#e5e7eb'
+            }}>
+              <label className="radio-label" style={{ cursor: 'pointer', display: 'block' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                  <input
+                    type="radio"
+                    name="assessmentType"
+                    value={assessment.value}
+                    checked={formData.assessmentType === assessment.value}
+                    onChange={(e) => handleInputChange('assessmentType', e.target.value)}
+                    style={{ marginRight: '12px' }}
+                  />
+                  <span style={{ fontWeight: '600', fontSize: '16px' }}>{assessment.label}</span>
+                </div>
+                <p style={{ margin: '0', color: '#6b7280', fontSize: '14px', paddingLeft: '24px' }}>
+                  {assessment.description}
+                </p>
+              </label>
+            </div>
           ))}
         </div>
-        
-        {formData.gamePreferences.length === 0 && (
-          <p className="validation-message">Please select at least one assessment game for this project.</p>
-        )}
-        
-        {formData.gamePreferences.length > 0 && (
-          <div className="selected-games-preview">
-            <h4>Selected Games ({formData.gamePreferences.length}):</h4>
-            <div className="tag-list">
-              {formData.gamePreferences.map((game: string, index: number) => (
-                <span key={index} className="tag game-tag">
-                  {game}
-                  <button
-                    type="button"
-                    onClick={() => removeFromArrayField('gamePreferences', game)}
-                    className="remove-tag"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        <small style={{ color: '#6b7280', fontSize: '0.875rem', marginTop: '0.5rem', display: 'block' }}>
+          Currently, only Space Mission assessment is available. More assessment types coming soon.
+        </small>
       </div>
     </div>
   );

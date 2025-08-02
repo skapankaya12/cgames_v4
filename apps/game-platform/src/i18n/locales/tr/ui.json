@@ -1,0 +1,418 @@
+{
+  "form": {
+    "welcomeStep": {
+      "title": "Hoş geldin!",
+      "stepIndicator": "{{current}} / {{total}}",
+      "missionTitle": "Göreve Atandın: Galaksiler Arası Teslimat Kaptanısın",
+      "missionDescription": "Bu kritik enerji çekirdeği, galaksi ittifakının enerji dengesini koruyacak ve evrenin geleceğini belirleyecek. Görevin: çekirdeği Nova Terminali'ne tam zamanında, eksiksiz ve doğru alıcıya ulaştırmak.",
+      "journeyDuration": "Yolculuk yaklaşık 8-10 dakika sürecek. Verdiğin her karar; liderlik tarzını, karakterini ve reflekslerini test edecek ve seni yeni bir senaryoya yönlendirecek.",
+      "missionHighlight": "Bu bir test değil! Her tercih kaptanlık tarzının yansımasıdır. Hazırsan, kaptan koltuğuna geç ve maceranı başlat."
+    },
+    "rulesStep": {
+      "title": "Kurallar & Talimatlar",
+      "rule1": {
+        "title": "Her sahnede yalnızca bir seçim yapacaksın",
+        "description": "Dikkatli düşün ve en iyi seni yansıtan seçimi yap"
+      },
+      "rule2": {
+        "title": "Cevabını değiştirebilirsin",
+        "description": "\"Geri\" butonuna basarak önceki seçimini gözden geçirebilirsin"
+      },
+      "rule3": {
+        "title": "Doğru ya da yanlış cevap yok",
+        "description": "Sistem senin yetkinliklerini ve davranış reflekslerini analiz eder"
+      },
+      "privacyNotice": "Verdiğin cevaplar analiz için kaydedilecek ve gizli tutulacaktır."
+    },
+    "formStep": {
+      "title": "Kişisel Bilgiler",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "company": "Şirket",
+      "uploadCV": "CV Yükle (Opsiyonel)",
+      "uploadCVDescription": "Kişiselleştirilmiş öneriler için CV'nizi yükleyin",
+      "selectFile": "PDF dosyası seçin (Maksimum 10MB)",
+      "fileSelected": "Dosya Seçildi",
+      "cvSecurity": "CV'niz analiz için güvenli şekilde saklanacak ve sadece test sonuçlarınızla birlikte kullanılacaktır.",
+      "consent": "Onaylıyorum",
+      "processingCV": "CV Analiz Ediliyor...",
+      "uploading": "Yükleniyor..."
+    },
+    "errors": {
+      "pdfOnly": "Lütfen sadece PDF dosyası seçin.",
+      "fileSize": "Dosya boyutu 10MB'dan küçük olmalıdır.",
+      "cvAnalysisFailed": "CV analizi başarısız oldu, ancak dosya yine de yüklenecek.",
+      "allFields": "Lütfen tüm alanları doldurunuz.",
+      "consentRequired": "Teste başlamak için onay vermeniz gerekmektedir.",
+      "pdfUploadFailed": "PDF yükleme başarısız oldu. Devam etmek istiyor musunuz?"
+    }
+  },
+  "test": {
+    "progressTitles": [
+      "Yük Sorumlusu ile İlk Karşılaşma",
+      "Çıkış Koridoru",
+      "Rakip Firma Teklifi",
+      "Devriye Gemisi Engeli",
+      "Navigasyon Kararı",
+      "Meteor Tehdidi",
+      "Kimlik Doğrulama",
+      "Korsan Saldırısı",
+      "Terminal İlk İletişim",
+      "Gecikme Alarmı",
+      "Kargo Sarsıntısı",
+      "Teslimat Alanı Boş",
+      "Motor Alarmı",
+      "Kargo İncelemesi",
+      "Navigasyon Kaybı",
+      "Alıcı Bilgisi Eksik"
+    ],
+    "completion": {
+      "title": "🎉 Tebrikler, Kaptan!",
+      "subtitle": "Teslimat görevini başarıyla tamamladınız.",
+      "resultsProcessing": "Sonuçlarınız hazırlanıyor..."
+    },
+    "forwarding": {
+      "lastQuestion": "Yük teslim edildi. Görev tamamlandı."
+    }
+  },
+  "results": {
+    "navigation": {
+      "overview": {
+        "label": "Genel Bakış",
+        "description": "Özetin görünümü ve anahtar metrikler"
+      },
+      "competencies": {
+        "label": "Yetkinlikler",
+        "description": "{{count}} yetkinlik alanı analizi",
+        "title": "Yetkinlik Skorları"
+      },
+      "behaviorAnalysis": {
+        "label": "Davranış Analizi",
+        "description": "Davranış patternleri ve zaman analizi",
+        "title": "Davranış Analizi",
+        "totalTime": "Toplam Süre",
+        "totalTimeSubtitle": "Test tamamlama süresi",
+        "avgQuestionTime": "Ortalama Soru Süresi",
+        "avgQuestionTimeSubtitle": "Soru başına ortalama",
+        "changedAnswers": "Değiştirilen Cevaplar",
+        "changedAnswersSubtitle": "Revize edilen yanıt sayısı",
+        "testStrategy": "Test Stratejisi",
+        "testStrategySubtitle": "Yaklaşım analizi"
+      },
+      "recommendations": {
+        "label": "AI Öneriler",
+        "description": "Adaya özel değerlendirme ve öneriler"
+      },
+      "feedback": {
+        "label": "Geri Bildirim",
+        "description": "Demo için geri bildirim gönderin"
+      }
+    },
+    "dashboard": {
+      "welcome": "Hoş geldiniz, {{name}}!",
+      "completedOn": "Değerlendirme {{date}} tarihinde tamamlandı. Aşağıda genel performansınızı ve detaylı analizleri görebilirsiniz.",
+      "overallPerformance": "Genel Performans",
+      "overallPerformanceDescription": "Tüm alanlar genelindeki genel yetkinlik seviyeniz",
+      "strongestCompetency": "En Güçlü Yetkinlik",
+      "developmentArea": "Gelişim Alanı",
+      "quickAccess": "Hızlı Erişim",
+      "aiInsights": "AI Öngörüler",
+      "aiInsightsDescription": "Kişiselleştirilmiş öneriler ve stratejik içgörüler",
+      "viewDetails": "Detayları Gör",
+      "generateInsights": "Öngörü Oluştur",
+      "aiAnalysisSummary": "AI analizinize göre {{strengthsCount}} güçlü yönünüz ve {{developmentCount}} gelişim alanınız belirlendi.",
+      "recommendationsReady": "Kişiselleştirilmiş önerileriniz hazır! Ayrıntılı bilgi almak için tıklayınız.",
+      "noRecommendations": "AI öneriler oluşturulmadı."
+    },
+    "competencyDescriptions": {
+      "Karar Verme": "Karar verme, mevcut bilgileri değerlendirme, alternatifleri karşılaştırma ve belirsizlik durumlarında etkili kararlar alabilme yeteneğidir. Risk değerlendirmesi ve sonuç odaklı düşünme becerilerini kapsar.",
+      "İnisiyatif": "İnisiyatif, fırsatları proaktif olarak belirleme, harekete geçme ve sorumluluğu üstlenme yeteneğidir. Girişimcilik ruhu ve öncülük etme becerilerini içerir.",
+      "Uyum Sağlama": "Uyum sağlama, değişen koşullara hızla adapte olabilme, esneklik gösterme ve belirsizlik durumlarında etkili çalışabilme yeteneğidir. Değişim yönetimi ve çeviklik becerilerini içerir.",
+      "İletişim": "İletişim, fikirleri net ve etkili şekilde ifade etme, aktif dinleme, empati kurma ve farklı kitlelerle başarılı etkileşim kurabilme yeteneğidir. Hem sözlü hem de yazılı iletişim becerilerini kapsar.",
+      "Stratejik Düşünce": "Stratejik düşünme, uzun vadeli planlama yapabilme, büyük resmi görme ve karmaşık problemleri analiz ederek çözüm geliştirebilme yeteneğidir. Geleceği öngörme ve organizasyonel hedeflere yönelik stratejiler oluşturma becerisini içerir.",
+      "Zaman Yönetimi": "Zaman yönetimi, zamanı etkili bir şekilde planlama, önceliklendirme ve kullanma yeteneğidir. Verimlilik artırma ve deadline yönetimi becerilerini kapsar.",
+      "Risk Liderliği": "Risk liderliği, belirsizlik durumlarında liderlik yapabilme, riskleri yönetme ve takımı yönlendirme yeteneğidir. Crisis management ve karar verme becerilerini içerir.",
+      "Risk Zekası": "Risk zekası, potansiyel riskleri önceden fark etme, değerlendirme ve uygun önlemler alma yeteneğidir. Risk analizi ve öngörü becerilerini kapsar.",
+      "Liderlik": "Liderlik, takımları yönlendirme, motive etme, vizyon oluşturma ve başkalarını ortak hedefler doğrultusunda etkileyebilme yeteneğidir. Karar verme, delegasyon ve ekip yönetimi becerilerini içerir.",
+      "Problem Çözme": "Problem çözme, karmaşık durumları analiz etme, alternatif çözümler geliştirme ve en uygun yaklaşımı seçerek uygulayabilme yeteneğidir. Analitik düşünme ve yaratıcı çözüm üretme becerilerini kapsar.",
+      "İnovasyon": "İnovasyon, yaratıcı düşünme, yeni fikirler geliştirme, mevcut süreçleri iyileştirme ve özgün çözümler üretebilme yeteneğidir. Farklı bakış açıları geliştirme ve risk alma becerilerini kapsar.",
+      "Duygusal Zeka": "Duygusal zeka, kendi duygularını anlama ve yönetme, başkalarının duygularını fark etme ve empati kurabilme yeteneğidir. Sosyal ilişkilerde etkinlik ve duygusal öz farkındalık becerilerini içerir."
+    },
+    "performanceLevels": {
+      "excellent": "Mükemmel",
+      "good": "İyi",
+      "average": "Orta",
+      "needsDevelopment": "Gelişim Gerekli"
+    },
+    "feedback": {
+      "title": "Test Deneyimi Geri Bildirimi",
+      "description": "Test deneyiminizi değerlendirerek gelişim sürecimize katkıda bulunun.",
+      "ratings": {
+        "accuracy": "Sonuçların Doğruluğu (1-10)",
+        "gameExperience": "Test Deneyimi (1-10)",
+        "fairness": "Adalet (1-10)",
+        "usefulness": "Faydalılık (1-10)",
+        "recommendation": "Tavsiye Etme (1-10)",
+        "purchaseLikelihood": "Satın Alma Olasılığı (1-10)",
+        "valueForMoney": "Fiyat Performans (1-10) (Oyun başına 7 Euro/320 tl)",
+        "technicalPerformance": "Teknik Performans (1-10)"
+      },
+      "evaluationCriteria": "Değerlendirme Kriterleri",
+      "additionalComments": "Ek Yorumlarınız:",
+      "placeholder": "Ürünü daha iyi hale getirmek için lütfen geri bildirimlerinizi paylaşın..",
+      "submitButton": "Geri Bildirim Gönder",
+      "submitting": "Gönderiliyor...",
+      "success": "Teşekkürler! Geri bildiriminiz alındı.",
+      "error": "Geri bildirim gönderilirken hata oluştu. Lütfen tekrar deneyin."
+    },
+    "aiAssistant": {
+      "title": "AI İK Asistanı",
+      "subtitle": "{{name}} Hakkında Soru Sorun",
+      "welcomeMessage": "Merhaba! {{candidateName}} hakkında sorularınızı yanıtlamaya hazırım. Mülakat soruları, email taslakları, gelişim önerileri veya pozisyon uygunluğu gibi konularda yardımcı olabilirim.",
+      "placeholder": "{{candidateName}} hakkında soru sorun... (örn: \"mülakat soruları öner\" veya \"email taslağı hazırla\")",
+      "minimize": "Küçült",
+      "exampleQuestions": "Örnek Sorular:",
+      "quickActions": {
+        "interview_questions": "Mülakat Soruları",
+        "email_draft": "Email Taslağı", 
+        "development_plan": "Gelişim Planı"
+      },
+      "errorMessage": "Üzgünüm, yanıt üretilirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "loading": "AI analiz ediyor..."
+    },
+    "competencies": {
+      "title": "Yetkinlik Skorları",
+      "noDataTitle": "Henüz veri bulunmuyor",
+      "noDataDescription": "Oyun tamamlandıktan sonra skorlarınız burada görüntülenecek.",
+      "bestPerformance": "En İyi Performans",
+      "developmentArea": "Gelişim Alanı", 
+      "averagePerformance": "Ortalama Performans",
+      "competencyAreas": "yetkinlik alanı",
+      "points": "puan",
+      "help": "Yardım"
+    },
+    "behaviorAnalysis": {
+      "title": "Davranış Analizi",
+      "noDataTitle": "Davranış Verileri Bulunamadı",
+      "noDataDescription": "Bu testte detaylı davranış analizi verisi toplanmamış. Yeni testlerde daha kapsamlı analiz için test süresince etkileşim verileri kaydedilecektir.",
+      "totalTime": "Toplam Süre", 
+      "totalTimeSubtitle": "Test tamamlama süresi",
+      "avgQuestionTime": "Ortalama Soru Süresi",
+      "avgQuestionTimeSubtitle": "Soru başına ortalama",
+      "changedAnswers": "Değiştirilen Cevaplar",
+      "changedAnswersSubtitle": "16'dan fazla ise aday cevaplarını değiştirmiştir",
+      "questionTimeAnalysis": "Soru Bazlı Süre Analizi",
+      "behaviorPatterns": "Davranış Patternleri",
+      "fastResponse": "Hızlı cevap",
+      "normalTempo": "Normal tempo", 
+      "slowResponse": "Yavaş cevap"
+    },
+    "personalizedRecommendations": {
+      "title": "AI Destekli Aday Değerlendirme Raporu",
+      "loadingMessage": "AI ile aday değerlendirme raporu hazırlanıyor...",
+      "loadingSubMessage": "Yetkinlik skorları analiz ediliyor...",
+      "errorMessage": "AI değerlendirme raporu yüklenirken bir hata oluştu:",
+      "noDataMessage": "Henüz AI destekli aday değerlendirme raporu bulunmuyor.",
+      "noDataSubMessage": "Rapor oluşturmak için yukarıdaki butona tıklayın.",
+      "aiSupportedAssessment": "AI Destekli Değerlendirme",
+      "candidateProfileAnalysis": "Aday Profil Analizi",
+      "experienceProfile": "Deneyim Profili",
+      "yearsProfessionalExperience": "Yıl Profesyonel Deneyim",
+      "skillPortfolio": "Beceri Portföyü",
+      "technical": "Teknik",
+      "leadership": "Liderlik",
+      "softSkills": "Soft Skills",
+      "hrAssessment": "İK Değerlendirmesi",
+      "overallAssessment": "Genel Değerlendirme",
+      "outstandingStrengths": "Öne Çıkan Güçlü Yönler",
+      "lastPosition": "Son Pozisyon:",
+      "location": "Lokasyon:",  
+      "education": "Eğitim:",
+      "aiAnalysisReport": "Yapay Zeka Analiz Raporu",
+      "aiBasedComprehensiveAssessment": "AI tabanlı kapsamlı aday değerlendirme ve öneriler",
+      "competencyAndCVAlignment": "Yetkinlik ve CV Uyum Değerlendirmesi",
+      "interviewGuideAndRecommendations": "Mülakat Rehberi ve Öneriler",
+      "generatedWithAI": "AI ile Oluşturuldu",
+      "analysisData": "Analiz Verisi",
+      "noCVAnalysisMessage": "Bu analiz sadece yetkinlik testi verilerine dayanmaktadır.",
+      "noCVDetailMessage": "CV yüklemediğiniz için detaylı CV analizi mevcut değil.",
+      "seniorExecutive": "Üst Düzey Yönetici",
+      "middleManager": "Orta Düzey Yönetici",
+      "seniorSpecialist": "Kıdemli Uzman",
+      "specialist": "Uzman",
+      "entryLevel": "Başlangıç Seviyesi"
+    }
+  },
+  "help": {
+    "dashboardOverview": {
+      "title": "Genel Analiz Sayfası",
+      "description": "Bu sayfa, bilişsel oyun değerlendirmenizin genel bir özetini sunar. Tüm önemli metrikleri tek bakışta görebilirsiniz.",
+      "tips": [
+        "Genel performans skorunuz, tüm yetkinlik alanlarının ortalamasıdır",
+        "En güçlü yetkinlik ve gelişim alanı kartları, odaklanmanız gereken noktaları gösterir",
+        "Hızlı erişim kartlarını kullanarak detaylı analizlere geçebilirsiniz",
+        "AI öngörüler kartında kişiselleştirilmiş önerilerinizin özeti bulunur"
+      ],
+      "relatedActions": [
+        {
+          "label": "Yetkinlik detaylarını gör",
+          "action": "view-competencies"
+        },
+        {
+          "label": "AI önerilerini incele",
+          "action": "view-recommendations"
+        }
+      ]
+    },
+    "competencies": {
+      "title": "Yetkinlikler Sayfası",
+      "description": "Bu sayfada tüm yetkinlik alanlarınızın detaylı analizini görebilirsiniz.",
+      "tips": [
+        "Her kart bir yetkinlik alanını temsil eder",
+        "Yüzdelik skorlar, o alandaki performansınızı gösterir",
+        "Renk kodları: Yeşil (mükemmel), Sarı (iyi), Turuncu (orta), Kırmızı (gelişim gerekli)",
+        "AI asistanınızından ayrıntılı öneriler alabilirsiniz"
+      ],
+      "categories": {
+        "title": "Yetkinlik Kategorileri",
+        "leadership": "Liderlik",
+        "leadershipDescription": "Ekip yönetimi ve karar alma",
+        "communication": "İletişim",
+        "communicationDescription": "Sözlü ve yazılı iletişim becerileri",
+        "problemSolving": "Problem Çözme",
+        "problemSolvingDescription": "Analitik düşünce ve yaratıcılık",
+        "teamwork": "Takım Çalışması",
+        "teamworkDescription": "İş birliği ve uyum",
+        "stressManagement": "Stres Yönetimi",
+        "stressManagementDescription": "Baskı altında performans"
+      },
+      "scoring": {
+        "title": "📈 Skor Yorumlama",
+        "high": "Yüksek (80%+)",
+        "highDescription": "Güçlü yetkinlik alanı",
+        "medium": "Orta (50-80%)",
+        "mediumDescription": "Gelişim potansiyeli var",
+        "low": "Düşük (50%-altı)",
+        "lowDescription": "Gelişim odaklı alan"
+      }
+    },
+    "behaviorAnalysis": {
+      "title": "Davranış Analizi",
+      "description": "Oyun sırasındaki davranış patternlerinizi ve etkileşim verilerinizi gösterir.",
+      "tips": [
+        "Zaman analizi, oyunları tamamlama sürenizi gösterir",
+        "Etkileşim verileri, oyun stratejileriniz hakkında bilgi verir",
+        "Bu veriler, bilişsel süreçlerinizi anlamaya yardımcı olur"
+      ],
+      "indicators": {
+        "title": "Önemli Göstergeler",
+        "decisionMaking": "Karar Verme Hızı",
+        "decisionMakingDescription": "Kritik durumlar için önemli",
+        "riskTaking": "Risk Alma Eğilimi",
+        "riskTakingDescription": "İnovasyon potansiyeli",
+        "adaptability": "Uyum Kabiliyeti",
+        "adaptabilityDescription": "Değişen şartlara adaptasyon",
+        "motivation": "Motivasyon Kaynakları",
+        "motivationDescription": "Uzun vadeli başarı faktörleri"
+      }
+    },
+    "recommendations": {
+      "title": "AI Öneriler",
+      "description": "Yapay zeka tarafından oluşturulan kişiselleştirilmiş gelişim önerileriniz.",
+      "tips": [
+        "Öneriler, performansınız, davranış verileriniz ve CV bilgilerinize dayanarak oluşturulur",
+        "Yetkinlik ve CV uyumunu ayrıntılı inceleyebilir, aday için mülakat önerilerini görebilirsiniz",
+        "AI asistanınızdan ayrıntılı öneriler alabilirsiniz"
+      ]
+    },
+    "feedback": {
+      "title": "Geri Bildirim",
+      "description": "Test deneyiminiz hakkında görüşlerinizi paylaşabileceğiniz sayfa.",
+      "tips": [
+        "Puanlama sistemini kullanarak deneyiminizi değerlendirin",
+        "Yazılı geri bildirimleriniz ürünümüzü geliştirmemize yardımcı olur",
+        "Tüm geri bildirimler tarafımıza ulaşılır ve değerlendirilir"
+      ],
+      "testExperience": {
+        "title": "Test Deneyimi Değerlendirmesi",
+        "description": "Test deneyiminizi değerlendirin ve sistemin geliştirilmesine katkıda bulunun."
+      },
+      "evaluationCriteria": {
+        "title": "Değerlendirme Kriterleri",
+        "accuracy": "Doğruluk",
+        "accuracyDescription": "Sonuçların gerçekçiliği",
+        "experience": "Deneyim",
+        "experienceDescription": "Test alma deneyimi",
+        "fairness": "Adalet",
+        "fairnessDescription": "Objektif değerlendirme",
+        "utility": "Fayda",
+        "utilityDescription": "Sonuçların kullanışlılığı"
+      },
+      "note": {
+        "title": "Not",
+        "description": "Geri bildirimleriniz sistemin geliştirilmesi için çok değerli."
+      }
+    },
+    "aiAssessment": {
+      "title": "AI Değerlendirme",
+      "description": "AI destekli değerlendirme sistemi, aday performansını kapsamlı şekilde analiz eder.",
+      "howItWorks": {
+        "title": "Nasıl Çalışır?",
+        "step1": "Yetkinlik test sonuçları otomatik analiz edilir",
+        "step2": "CV verileri ile test sonuçları karşılaştırılır",
+        "step3": "Pozisyon gereksinimleri ile uyum değerlendirilir",
+        "step4": "Gelişim alanları ve öneriler sunulur"
+      },
+      "tip": {
+        "title": "İpucu",
+        "description": "AI asistan ile etkileşime geçerek daha detaylı bilgi alabilirsiniz."
+      }
+    },
+    "guideTitle": "📚 Kullanım Rehberi",
+    "expandGuide": "Rehberi Genişlet",
+    "collapseGuide": "Rehberi Daralt",
+    "currentContext": {
+      "indicator": "📍 Şu anda görüntülenen"
+    },
+    "quickTips": {
+      "title": "Hızlı İpuçları",
+      "clickCards": "Kartlara tıklayarak geçiş yapın",
+      "chatWithAI": "AI asistan ile sohbet edin",
+      "downloadResults": "Sonuçları PDF olarak indirin"
+    },
+    "ipuclari": "İpuçları",
+    "ilgiliIslemler": "İlgili İşlemler",
+    "helpButtonTitle": "Bu sayfayı anlamak için yardım alın",
+    "helpButtonDescription": "Yardım butonlarından detaylı bilgi alabilirsiniz."
+  },
+  "demo": {
+    "game2": {
+      "title": "🚀 Game 2 - Yakında",
+      "demoMessage": "Bu bir demo sayfasıdır",
+      "description": "Game 2'nin test soruları henüz hazırlanmaktadır. Şu anda sadece yapının nasıl çalışacağını görebilirsiniz.",
+      "featuresPreview": "Yakında gelecek özellikler:",
+      "features": [
+        "🌌 Yeni galaktik senaryolar",
+        "🎯 Farklı liderlik zorlukları",
+        "📊 Gelişmiş analiz sistemi",
+        "🔄 Karşılaştırmalı sonuçlar",
+        "⚡ Dinamik soru yapısı"
+      ],
+      "navigation": "Demo sonuçları görmek için \"Demo Sonuçları\" butonuna tıklayabilirsiniz.",
+      "comingSoon": "Yakında",
+      "secondMission": "İkinci galaktik görevin yakında hazır olacak.",
+      "newChallenges": "Yeni senaryolar, farklı kararlar ve daha da zorlu liderlik testleri seni bekliyor.",
+      "sameStructure": "Bu oyun da aynı yapıda olacak: kimlik girişi, test soruları ve sonuçlar.",
+      "upcoming": "Yakında:",
+      "newScenarios": "• Yeni galaktik senaryolar",
+      "differentChallenges": "• Farklı liderlik zorlukları",
+      "advancedAnalysis": "• Gelişmiş analiz sistemi",
+      "comparativeResults": "• Karşılaştırmalı sonuçlar",
+      "demoResults": "Demo Sonuçları",
+      "backToGame1": "Game 1'e Git",
+      "restartDemo": "Demo'yu Yeniden Başlat",
+      "demoResultsMessage": "Game 2 hazır olduğunda, aynı yapıda ancak yeni sorular ve senaryolarla karşınızda olacak.",
+      "tryGame1": "Şimdilik Game 1'i deneyimleyebilir veya bu demo sayfasını yeniden ziyaret edebilirsiniz."
+    }
+  }
+} 

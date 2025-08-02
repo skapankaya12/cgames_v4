@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ForwardingMessageProps {
   currentQuestion: any;
@@ -13,11 +14,12 @@ export const ForwardingMessage: React.FC<ForwardingMessageProps> = ({
   isLastQuestion,
   selectedOption
 }) => {
+  const { t } = useTranslation('ui');
   const [forwardingLine, setForwardingLine] = useState<string>('');
 
   useEffect(() => {
     if (isLastQuestion) {
-      setForwardingLine('Yük teslim edildi. Görev tamamlandı.');
+      setForwardingLine(t('test.forwarding.lastQuestion'));
       return;
     }
 

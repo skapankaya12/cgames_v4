@@ -5,6 +5,7 @@ import type { CompetencyScore, ResultsScreenUser, FilterType } from '../types/re
 import type { PersonalizedRecommendations } from '@cgames/types/Recommendations';
 import type { CVData } from '@cgames/services';
 import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
+import { getCompetencies } from '../../../../utils/questionsUtils';
 
 export interface UseResultsDataReturn {
   // Data state
@@ -165,11 +166,14 @@ export const useResultsData = (): UseResultsDataReturn => {
       "RI": "risk"
     };
 
+    // Use the language-aware competencies function instead of hardcoded Turkish ones
+    const translatedCompetencies = getCompetencies();
+    
     const competencyScores: { [key: string]: number } = {};
     const maxCompetencyScores: { [key: string]: number } = {};
     
     // Initialize scores
-    competencies.forEach(comp => {
+    translatedCompetencies.forEach(comp => {
       competencyScores[comp.name] = 0;
       maxCompetencyScores[comp.name] = 0;
     });
@@ -188,7 +192,7 @@ export const useResultsData = (): UseResultsDataReturn => {
     
     // Calculate maximum possible scores
     questions.forEach(question => {
-      competencies.forEach(comp => {
+      translatedCompetencies.forEach(comp => {
         const highestWeight = Math.max(
           ...question.options.map(option => option.weights[comp.name] || 0)
         );
@@ -197,7 +201,7 @@ export const useResultsData = (): UseResultsDataReturn => {
     });
 
     // Create final scores array
-    const finalScores = competencies.map(comp => ({
+    const finalScores = translatedCompetencies.map(comp => ({
       name: comp.name,
       score: competencyScores[comp.name],
       maxScore: maxCompetencyScores[comp.name],

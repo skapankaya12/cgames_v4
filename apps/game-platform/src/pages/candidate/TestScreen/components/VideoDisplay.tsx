@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VideoDisplayProps {
   videoRef: React.RefObject<HTMLVideoElement>;
@@ -19,6 +20,7 @@ export const VideoDisplay: React.FC<VideoDisplayProps> = ({
   handleVideoError,
   handleVideoClick
 }) => {
+  const { t } = useTranslation('common');
   return (
     <div className="fullscreen-video">
       <video 
@@ -40,12 +42,12 @@ export const VideoDisplay: React.FC<VideoDisplayProps> = ({
       
       {videoError && (
         <div className="video-error">
-          <p>Video yüklenemedi</p>
+          <p>{t('validation.videoLoadFailed')}</p>
           <button 
             onClick={() => window.location.reload()}
             className="retry-button"
           >
-            Yeniden Dene
+            {t('buttons.retry')}
           </button>
         </div>
       )}

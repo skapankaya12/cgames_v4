@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BehavioralAnalyticsService } from '@cgames/services';
 import type { PersonalizedRecommendations, DimensionScore } from '@cgames/types/Recommendations';
 import type { CompetencyScore, ResultsScreenUser } from '../types/results';
@@ -24,6 +25,9 @@ export const usePersonalizedRecommendations = (
   interactionAnalytics: SessionAnalytics | null,
   _cvData: CVData | null
 ): UsePersonalizedRecommendationsReturn => {
+  // Translation hook to get current language
+  const { i18n } = useTranslation();
+  
   // State
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState<PersonalizedRecommendations | null>(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
@@ -90,7 +94,8 @@ export const usePersonalizedRecommendations = (
       const recommendations = await analyticsService.generateAIRecommendations(
         dimensionScores,
         interactionAnalytics?.sessionId || `session-${Date.now()}`,
-        { firstName: user.firstName, lastName: user.lastName }
+        { firstName: user.firstName, lastName: user.lastName },
+        i18n.language // Pass the current language
       );
 
       if (!recommendations) {

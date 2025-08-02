@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { questions } from '../../../data/questions';
+import { useTranslation } from 'react-i18next';
+import { getTranslatedQuestions } from '../../../utils/questionsUtils';
 import InteractionTracker from '@cgames/services/InteractionTracker';
 import { useTestState } from './hooks/useTestState';
 import { useVideoManager } from './hooks/useVideoManager';
@@ -15,6 +16,23 @@ import '@cgames/ui-kit/styles/TestScreen.css';
 const TestScreen = () => {
   const navigate = useNavigate();
   const { questionNumber } = useParams<{ questionNumber: string }>();
+  const { t, i18n } = useTranslation('common');
+  
+  // Get translated questions - this will update when language changes
+  const questions = getTranslatedQuestions();
+  
+  // Safety check - ensure we have questions loaded
+  if (!questions || questions.length === 0) {
+    console.warn('Questions not loaded yet, showing loading state');
+    return (
+      <div className="dialog-game-container">
+        <div className="loading-screen">
+          <div className="loading-spinner"></div>
+          <p>Loading questions...</p>
+        </div>
+      </div>
+    );
+  }
   
   // Initialize interaction tracker
   const trackerRef = useRef<InteractionTracker | null>(null);
@@ -49,8 +67,30 @@ const TestScreen = () => {
     }
   }, [API_URL]);
 
+  // Force re-render when language changes to update questions
+  useEffect(() => {
+    // This effect will run when i18n.language changes
+    console.log('Language changed to:', i18n.language);
+    console.log('Questions after language change:', questions.length, 'questions loaded');
+    console.log('Current question:', currentQuestion?.id, currentQuestion?.text?.substring(0, 50) + '...');
+  }, [i18n.language, questions, currentQuestion]);
+
   // If test is complete, show completion screen
   if (testState.isComplete) {
+    // Prepare test results for submission
+    const testResults = {
+      answers: testState.answers,
+      timeSpent: testState.timeSpent || null,
+      totalQuestions: questions.length,
+      completedQuestions: Object.keys(testState.answers).length,
+      gameMetadata: {
+        questionIds: questions.map(q => q.id),
+        language: i18n.language,
+        startTime: testState.startTime,
+        endTime: new Date().toISOString()
+      }
+    };
+
     return (
       <CompletionScreen
         videoRef={videoRef}
@@ -60,6 +100,7 @@ const TestScreen = () => {
         handleVideoLoad={handleVideoLoad}
         handleVideoError={handleVideoError}
         handleVideoClick={handleVideoClick}
+        testResults={testResults}
       />
     );
   }
@@ -109,7 +150,7 @@ const TestScreen = () => {
       </div>
       
       <div className="game-footer">
-        <p className="footer-text">OlivinHR 2025. All rights reserved</p>
+        <p className="footer-text">{t('app.copyright')}</p>
       </div>
     </div>
   );

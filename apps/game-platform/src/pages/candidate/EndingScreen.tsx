@@ -16,15 +16,9 @@ const EndingScreen = () => {
       setIsVisible(true);
     }, 100);
 
-    // Auto-navigate to results page after 8 seconds
+    // Auto-navigate to thank you page after 8 seconds
     const navigationTimer = setTimeout(() => {
-      // Check if we came from game2 to navigate to the correct results page
-      const isGame2 = location.state?.fromGame2 || false;
-      if (isGame2) {
-        navigate('/candidate/game2/results', { state: location.state });
-      } else {
-        navigate('/candidate/results', { state: location.state });
-      }
+      navigate('/thank-you', { state: location.state });
     }, 8000);
 
     return () => {

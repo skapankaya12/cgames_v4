@@ -146,16 +146,55 @@ export default function Analytics() {
         setHrUser(hrData);
         const userCompanyId = hrData.companyId as string;
 
-        // Load projects
-        const q = query(collection(db, `companies/${userCompanyId}/projects`));
-        const snapshot = await getDocs(q);
-        const projectsList: Project[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Project, 'id'>),
-        }));
+        // Load analytics data using API endpoint
+        try {
+          const response = await fetch(`/api/hr/getAnalytics?hrId=${user.uid}`);
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || `HTTP ${response.status}: Failed to load analytics`);
+          }
+          
+          if (!data.success) {
+            throw new Error(data.error || 'Failed to load analytics');
+          }
+        } catch (apiErr: any) {
+          console.warn('Analytics API not available, showing empty data:', apiErr.message);
+          // Set default empty analytics data for new companies
+          setProjects([]);
+          setAnalyticsData({
+            totalProjects: 0,
+            activeProjects: 0,  
+            completedProjects: 0,
+            totalCandidates: 0,
+            averageTimeToHire: 0,
+            conversionRate: 0,
+            topPerformingRoles: [],
+            monthlyTrends: [],
+            departmentBreakdown: []
+          });
+          setLoading(false);
+          return;
+        }
         
-        setProjects(projectsList);
-        setAnalyticsData(calculateAnalytics(projectsList));
+        // Map API analytics to component state
+        const { analytics } = data;
+        setProjects(analytics.projectsAnalytics);
+        setAnalyticsData({
+          totalProjects: analytics.overview.totalProjects,
+          activeProjects: analytics.overview.activeProjects,
+          completedProjects: analytics.overview.completedProjects,
+          totalCandidates: analytics.overview.totalCandidates,
+          averageTimeToHire: 0, // Not provided by API yet
+          conversionRate: analytics.overview.averageCompletionRate,
+          topPerformingRoles: analytics.topPerformingProjects.map(p => ({
+            role: p.name,
+            applications: p.candidateCount,
+            hired: Math.round(p.candidateCount * p.completionRate / 100)
+          })),
+          monthlyTrends: analytics.monthlyTrends,
+          departmentBreakdown: [] // Not provided by API yet
+        });
       } catch (err: any) {
         setError(`Failed to load analytics: ${err.message}`);
       } finally {
@@ -174,7 +213,7 @@ export default function Analytics() {
           setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
         />
-        <div className="hr-dashboard-loading" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
+        <div className={`hr-dashboard-loading ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
           <div className="loading-spinner-large"></div>
           <p>Loading analytics...</p>
         </div>
@@ -190,7 +229,7 @@ export default function Analytics() {
           setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
         />
-        <div className="hr-dashboard-error" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
+        <div className={`hr-dashboard-error ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
           <div className="error-icon">
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -211,7 +250,7 @@ export default function Analytics() {
         hrUser={hrUser} 
       />
       
-      <div className="hr-dashboard" style={{ marginLeft: isNavCollapsed ? '72px' : '280px', transition: 'margin-left 0.3s ease' }}>
+      <div className={`hr-dashboard ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
         {/* Header */}
         <header className="dashboard-header">
           <div className="header-content">
@@ -225,8 +264,9 @@ export default function Analytics() {
         </header>
 
         <div className="dashboard-content">
-          {/* Key Metrics */}
-          <div className="stats-grid">
+          <div className="dashboard-content-wrapper">
+            {/* Key Metrics */}
+            <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon total">
                 <svg viewBox="0 0 20 20" fill="currentColor">
@@ -427,6 +467,7 @@ export default function Analytics() {
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 } 

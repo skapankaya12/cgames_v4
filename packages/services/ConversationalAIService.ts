@@ -90,7 +90,8 @@ export class ConversationalAIService {
   async generateResponse(
     userPrompt: string,
     context: ConversationContext,
-    conversationHistory: ConversationMessage[] = []
+    conversationHistory: ConversationMessage[] = [],
+    language: string = 'tr'
   ): Promise<string> {
     try {
       console.log('🚀 Generating AI response for HR prompt:', userPrompt);
@@ -99,7 +100,10 @@ export class ConversationalAIService {
       const apiKey = this.getApiKey();
       if (!apiKey || apiKey === 'dummy-key') {
         console.warn('⚠️ Chat: No valid OpenAI API key found, falling back to placeholder response');
-        return 'Bu özellik şu anda kullanılamıyor. Lütfen OpenAI API anahtarını yapılandırın.';
+        const noApiKeyMessage = language === 'en' 
+          ? 'This feature is currently unavailable. Please configure the OpenAI API key.'
+          : 'Bu özellik şu anda kullanılamıyor. Lütfen OpenAI API anahtarını yapılandırın.';
+        return noApiKeyMessage;
       }
       
       console.log('✅ Chat: Valid API key found, proceeding with OpenAI generation...');
@@ -110,7 +114,10 @@ export class ConversationalAIService {
         dangerouslyAllowBrowser: true
       });
       
-      const contextPrompt = this.buildContextualPrompt(userPrompt, context, conversationHistory);
+      const contextPrompt = this.buildContextualPrompt(userPrompt, context, conversationHistory, language);
+      
+      // Get system prompt based on language
+      const systemPrompt = this.getSystemPrompt(language);
       
       console.log('🌐 Chat: Making OpenAI API call...');
       const completion = await this.openai.chat.completions.create({
@@ -118,7 +125,7 @@ export class ConversationalAIService {
         messages: [
           {
             role: "system",
-            content: "Sen deneyimli İK uzmanı asistanısın. Aday değerlendirmeleri yaparak İK uzmanlarına stratejik destek sağlıyorsun. Test skorlarını tekrar etmek yerine analiz edip öngörüler sunuyorsun. Türkçe yanıt ver ve profesyonel bir ton kullan."
+            content: systemPrompt
           },
           {
             role: "user",
@@ -129,7 +136,8 @@ export class ConversationalAIService {
         max_tokens: 1000
       });
 
-      const text = completion.choices[0]?.message?.content || 'Yanıt alınamadı.';
+      const defaultResponseText = language === 'en' ? 'No response received.' : 'Yanıt alınamadı.';
+      const text = completion.choices[0]?.message?.content || defaultResponseText;
       
       console.log('✅ Chat: AI response generated successfully');
       console.log('📝 Chat: Response length:', text.length);
@@ -142,8 +150,23 @@ export class ConversationalAIService {
         name: error instanceof Error ? error.name : 'Unknown',
         message: error instanceof Error ? error.message : String(error)
       });
-      throw new Error('AI yanıtı üretilirken bir hata oluştu. Lütfen tekrar deneyin.');
+      const errorMessage = language === 'en' 
+        ? 'An error occurred while generating the AI response. Please try again.'
+        : 'AI yanıtı üretilirken bir hata oluştu. Lütfen tekrar deneyin.';
+      throw new Error(errorMessage);
     }
+  }
+
+  /**
+   * Get system prompt based on language
+   */
+  private getSystemPrompt(language: string): string {
+    if (language === 'en') {
+      return "You are an experienced HR assistant. You provide strategic support to HR professionals by conducting candidate evaluations. Instead of repeating test scores, you analyze and provide insights. Respond in English and use a professional tone.";
+    }
+    
+    // Default to Turkish
+    return "Sen deneyimli İK uzmanı asistanısın. Aday değerlendirmeleri yaparak İK uzmanlarına stratejik destek sağlıyorsun. Test skorlarını tekrar etmek yerine analiz edip öngörüler sunuyorsun. Türkçe yanıt ver ve profesyonel bir ton kullan.";
   }
 
   /**
@@ -152,7 +175,8 @@ export class ConversationalAIService {
   private buildContextualPrompt(
     userPrompt: string, 
     context: ConversationContext, 
-    conversationHistory: ConversationMessage[]
+    conversationHistory: ConversationMessage[],
+    language: string = 'tr'
   ): string {
     const candidateName = context.candidateName || 'Aday';
     
@@ -187,6 +211,31 @@ export class ConversationalAIService {
         ).join('\n');
     }
 
+    if (language === 'en') {
+      return `You are a professional HR assistant answering HR specialist's questions about the candidate ${candidateName}.
+
+CANDIDATE COMPETENCY SCORES:
+${scoresContext}${cvContext}${historyContext}
+
+HR SPECIALIST'S QUESTION:
+${userPrompt}
+
+RESPONSE RULES:
+- Respond in English with professional language
+- Provide specific recommendations based on ${candidateName}'s data
+- Use appropriate format based on question type:
+  * Email draft requests: Write in email format
+  * Interview questions: Use numbered list
+  * Evaluation requests: Provide detailed analysis
+  * General questions: Use explanatory paragraph format
+- Support with concrete examples and data
+- Consider candidate's strengths/weaknesses
+- Use objective and constructive tone
+- Limit to maximum 300 words
+- Write only the response, no additional explanations`;
+    }
+    
+    // Default Turkish response
     return `Sen profesyonel bir İK uzmanı asistanısın. ${candidateName} adlı aday hakkında İK uzmanının sorularını yanıtlıyorsun.
 
 ADAY YETKİNLİK SKORLARI:

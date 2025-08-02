@@ -30,6 +30,15 @@ export default defineConfig({
       'localhost',
       '77b9-176-219-146-87.ngrok-free.app',
       '.ngrok-free.app' // Allow all ngrok-free.app subdomains
-    ]
+    ],
+    // Proxy API requests to local API server
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      }
+    }
   },
 })

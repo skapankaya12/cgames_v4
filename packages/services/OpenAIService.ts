@@ -139,7 +139,8 @@ export class OpenAIService {
     scores: DimensionScore[], 
     sessionId: string,
     userInfo?: { firstName: string; lastName: string },
-    cvData?: CVData
+    cvData?: CVData,
+    language: string = 'tr'
   ): Promise<PersonalizedRecommendations> {
     try {
       console.log('🚀 OpenAI Service: Starting AI-powered recommendations generation...');
@@ -179,7 +180,7 @@ export class OpenAIService {
       const enhancedScores = this.enhanceScoresWithDisplayNames(scores);
       console.log('🔄 OpenAI Service: Enhanced scores:', enhancedScores.map(s => `${s.displayName}: ${s.score}/${s.maxScore}`));
       
-      const prompt = this.createDetailedPromptWithCV(enhancedScores, userInfo?.firstName, cvData);
+      const prompt = this.createDetailedPromptWithCV(enhancedScores, userInfo?.firstName, cvData, language);
       console.log('📝 OpenAI Service: Generated prompt length:', prompt.length);
       console.log('📝 OpenAI Service: Prompt preview:', prompt.substring(0, 200) + '...');
       console.log('📝 OpenAI Service: Prompt includes CV data:', !!cvData);
@@ -187,12 +188,14 @@ export class OpenAIService {
       console.log('🌐 OpenAI Service: Making OpenAI API call...');
       console.log('🤖 OpenAI Service: Using model: gpt-3.5-turbo, temperature: 0.7, max_tokens: 2000');
       
+      const systemPrompt = this.getSystemPromptForRecommendations(language);
+      
       const completion = await this.openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
-            content: "Sen 15+ yıl deneyimli üst düzey İnsan Kaynakları Direktörü ve Yetenek Analitiği Uzmanısın. Stratejik işe alım süreçleri yönetiyor ve C-level yöneticilere danışmanlık yapıyorsun. Aday değerlendirmelerinde derinlemesine analiz, risk değerlendirmesi ve stratejik öngörüler sunuyorsun. Test skorlarını tekrar etmek yerine bu verileri yorumlayarak actionable insights üretiyorsun. Türkçe yanıt ver ve üst düzey profesyonel ton kullan."
+            content: systemPrompt
           },
           {
             role: "user",
@@ -301,6 +304,18 @@ export class OpenAIService {
   }
 
   /**
+   * Get system prompt for recommendations based on language
+   */
+  private getSystemPromptForRecommendations(language: string): string {
+    if (language === 'en') {
+      return "You are a 15+ years experienced senior Human Resources Director and Talent Analytics Expert. You manage strategic hiring processes and provide consulting to C-level executives. You provide in-depth analysis, risk assessment, and strategic insights in candidate evaluations. Instead of repeating test scores, you interpret this data to generate actionable insights. Respond in English and use a senior professional tone.";
+    }
+    
+    // Default to Turkish
+    return "Sen 15+ yıl deneyimli üst düzey İnsan Kaynakları Direktörü ve Yetenek Analitiği Uzmanısın. Stratejik işe alım süreçleri yönetiyor ve C-level yöneticilere danışmanlık yapıyorsun. Aday değerlendirmelerinde derinlemesine analiz, risk değerlendirmesi ve stratejik öngörüler sunuyorsun. Test skorlarını tekrar etmek yerine bu verileri yorumlayarak actionable insights üretiyorsun. Türkçe yanıt ver ve üst düzey profesyonel ton kullan.";
+  }
+
+  /**
    * Enhance scores with user-friendly display names
    */
   private enhanceScoresWithDisplayNames(scores: DimensionScore[]): DimensionScore[] {
@@ -314,7 +329,7 @@ export class OpenAIService {
   /**
    * Create a detailed prompt for OpenAI with HR manager focus and CV integration
    */
-  private createDetailedPromptWithCV(scores: DimensionScore[], firstName?: string, cvData?: CVData): string {
+  private createDetailedPromptWithCV(scores: DimensionScore[], firstName?: string, cvData?: CVData, language: string = 'tr'): string {
     const candidateName = firstName || 'aday';
 
     // Analyze competency strengths and development areas (without percentages)  
@@ -329,7 +344,18 @@ export class OpenAIService {
                              cvData.analysis.experience.years >= 5 ? 'mid-level' : 'junior';
       const careerPattern = cvData.analysis.experience.positions.length > cvData.analysis.experience.companies.length ? 'internal_growth' : 'external_mobility';
       
-      careerInsights = `\n\nKARİYER PROFIL ANALİZİ:
+      if (language === 'en') {
+        careerInsights = `\n\nCAREER PROFILE ANALYSIS:
+- Experience Level: ${experienceLevel} (${cvData.analysis.experience.years} years)
+- Career Pattern: ${careerPattern === 'internal_growth' ? 'Internal promotion focused, stable' : 'Movement focused, diverse experience'} 
+- Sector Diversity: ${cvData.analysis.experience.industries.length} different sectors
+- Expertise Depth: ${cvData.analysis.skills.technical.slice(0, 3).join(', ')}
+- Leadership Background: ${cvData.analysis.skills.leadership.length > 2 ? 'Strong leadership experience' : 'Limited leadership experience'}
+- HR Summary Assessment: ${cvData.hrInsights.overallAssessment.substring(0, 120)}
+- Main Strengths: ${cvData.hrInsights.strengths.slice(0, 2).join(' and ')}
+- Risk Factors: ${cvData.hrInsights.concerns.slice(0, 2).join(' and ')}`;
+      } else {
+        careerInsights = `\n\nKARİYER PROFIL ANALİZİ:
 - Deneyim Seviyesi: ${experienceLevel} (${cvData.analysis.experience.years} yıl)
 - Kariyer Deseni: ${careerPattern === 'internal_growth' ? 'İç terfi odaklı, istikrarlı' : 'Hareket odaklı, çeşitli deneyim'} 
 - Sektörel Çeşitlilik: ${cvData.analysis.experience.industries.length} farklı sektör
@@ -338,8 +364,45 @@ export class OpenAIService {
 - İK Özet Değerlendirme: ${cvData.hrInsights.overallAssessment.substring(0, 120)}
 - Ana Güçlü Yönler: ${cvData.hrInsights.strengths.slice(0, 2).join(' ve ')}
 - Risk Faktörleri: ${cvData.hrInsights.concerns.slice(0, 2).join(' ve ')}`;
+      }
     }
 
+    if (language === 'en') {
+      return `You are a senior Human Resources Director and Talent Assessment Expert. You are preparing a strategic evaluation report for ${candidateName}.
+
+IMPORTANT: NEVER repeat test scores or percentile values! The user can already see them. Your job is to provide deep analysis and strategic insights.
+
+TALENT PROFILE ANALYSIS:
+✅ Strong Areas: ${strongCompetencies.join(', ')}
+🔄 Areas with Development Potential: ${moderateCompetencies.join(', ')}
+📈 Areas Requiring Support: ${developmentAreas.join(', ')}${careerInsights}
+
+TASK: Write the following two paragraphs from a professional HR expert perspective. Each paragraph should be 300-400 words and must contain absolutely no titles, labels, or markers - just plain text:
+
+FIRST PARAGRAPH - Talent and Potential Analysis:
+This paragraph should deeply analyze ${candidateName}'s talent portfolio. Evaluate how strong competencies will create advantages in job performance, under what conditions moderate-level areas can shine, and what risks areas requiring development carry. ${cvData ? 'Analyze the consistency/inconsistency points between CV experience and competency profile. Evaluate the alignment between career trajectory and current talent level.' : 'Analyze the candidate\'s work style and team dynamics adaptation potential in light of behavioral data.'} Objectively assess in what types of work environments the candidate will be successful, under what challenges they can highlight their strengths, and their long-term development potential. Provide analysis in terms of company culture adaptation, change management, and performance continuity.
+
+SECOND PARAGRAPH - Strategic Interview Guide and Decision Support:
+This paragraph should contain interview strategy and evaluation criteria that are critical in the recruitment process. Explain what behavioral questions can reveal the candidate's true potential, what scenarios can test their strengths and weaknesses. ${cvData ? 'Specify what concrete projects and achievements from CV experience you would ask them to elaborate on.' : 'Explain what hypothetical work situations you can observe their competencies with.'} Present success factors critical for position suitability and risk mitigation strategies. Specify what to pay attention to in terms of team compatibility, alignment with company values, and long-term success potential. Provide concrete decision support recommendations and integration plan suggestions for HR and hiring managers.
+
+CRITICAL RULES:
+❌ Do not repeat "This candidate scored X%" or similar scores
+❌ Do not use general clichés ("good candidate", "average performance", etc.)
+❌ Do not summarize test results, analyze them instead
+❌ Do not use any titles, emojis, or labels (🎯, PARAGRAPH 1, etc.)
+❌ Do not add paragraph numbers or headings
+✅ Write only as plain text in two paragraphs
+✅ Provide strategic insights and in-depth analysis
+✅ Give concrete work situations and examples
+✅ Suggest applicable interview strategies
+✅ Specify risk factors and mitigation ways
+✅ Clearly separate the two paragraphs (blank line between them)
+✅ Each paragraph should be 300+ words and customized
+
+RESPONSE FORMAT: Give only two paragraphs as plain text. Do not use titles, emojis, numbers, or markers!`;
+    }
+    
+    // Default Turkish version
     return `Sen üst düzey İnsan Kaynakları Direktörü ve Yetenek Değerlendirme Uzmanısın. ${candidateName} için stratejik değerlendirme raporu hazırlıyorsun.
 
 ÖNEMLİ: Test skorlarını veya yüzdelik değerleri ASLA tekrar etme! Kullanıcı bunları zaten görebiliyor. Senin görevin derin analiz ve stratejik öngörüler sunmak.

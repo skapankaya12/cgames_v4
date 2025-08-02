@@ -93,35 +93,59 @@ export default function Navigation({ isCollapsed, setIsCollapsed, hrUser }: Navi
   };
 
   return (
-    <div className={`hr-navigation ${isCollapsed ? 'collapsed' : 'expanded'}`}>
-      {/* Header */}
-      <div className="nav-header">
-        <div className="logo-section">
-          <div className="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-            </svg>
-          </div>
-          {!isCollapsed && (
-            <div className="logo-text">
-              <span className="company-name">BokumunKuşu</span>
-              <span className="platform-type">HR Platform</span>
-            </div>
-          )}
-        </div>
+    <>
+      {/* Floating collapse button for collapsed state */}
+      {isCollapsed && (
         <button 
-          className="collapse-btn"
+          className="floating-collapse-btn"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title="Expand navigation"
+          aria-label="Expand navigation sidebar"
         >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-            <path fillRule="evenodd" d={isCollapsed 
-              ? "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-              : "M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            } clipRule="evenodd" />
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
           </svg>
         </button>
-      </div>
+      )}
+      
+      <div className={`hr-navigation ${isCollapsed ? 'collapsed' : 'expanded'}`}>
+        {/* Header - only show when expanded */}
+        {!isCollapsed && (
+          <div className="nav-header">
+            <div className="logo-section">
+              <div className="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div className="logo-text">
+                <span className="company-name">BokumunKuşu</span>
+                <span className="platform-type">HR Platform</span>
+              </div>
+            </div>
+            <button 
+              className="collapse-btn"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              title="Collapse sidebar"
+              aria-label="Collapse navigation sidebar"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        )}
+        
+        {/* Collapsed header - minimal logo only */}
+        {isCollapsed && (
+          <div className="nav-header-collapsed">
+            <div className="logo-icon-collapsed">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+              </svg>
+            </div>
+          </div>
+        )}
 
       {/* Navigation Items */}
       <nav className="nav-items">
@@ -170,5 +194,6 @@ export default function Navigation({ isCollapsed, setIsCollapsed, hrUser }: Navi
         </button>
       </div>
     </div>
+    </>
   );
 } 

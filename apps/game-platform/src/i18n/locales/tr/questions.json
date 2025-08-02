@@ -1,0 +1,31 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Loş bir depo koridorundasın. Yük Sorumlusu soğuk bir bakışla sana bakıyor ve şöyle diyor:\n\"Kargoyu vermem için 8.000 Zenix ödemelisin.\"\nGörevine başlamadan önce bu engeli nasıl aşarsın?\nNe yaparsın?",
+      "forwardingLine": "Depodan çıktığında, dar ve kalabalık çıkış koridoruna yöneliyorsun.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Parayı anında eksiksiz masaya koyuyorum; itiraz beklemeden kargoyu hemen teslim alalım.",
+          "forwardingLine": "8.000 Zenix'i gözünü kırpmadan ödedin. Yük Sorumlusu başını sallar ve sana ağır bir kutu teslim eder. Cebin hafifledi ama görev başladı. Depodan çıkar çıkmaz, kalabalık bir çıkış koridoruna yöneliyorsun."
+        },
+        {
+          "id": "B",
+          "text": "Teslimatı elden yapar yapmaz 8.000 Zenix'i derhal gönderirim; kargoyu hemen elden al.",
+          "forwardingLine": "Pazarlık teklifin önce bir sessizlik yaratıyor. Yük Sorumlusu başını sallar, \"İzini bırakma,\" diye uyararak yükü teslim eder. Sırtında sorumlulukla birlikte, çıkışa doğru yöneliyorsun; her adımın ardında bir şüphe var."
+        },
+        {
+          "id": "C",
+          "text": "Sahte onay belgesi çıkarıp 'Kargo ücretsiz gönderiliyor' deyip belgeyi göstererek muhatabı ikna et.",
+          "forwardingLine": "Belgeyi gösterdiğinde gözleri kısılıyor ama kontrol etmeden teslim ediyor. Arkanı dönerken içeriden bir tıkırtı duyuyorsun. Hızla uzaklaşıyorsun; dar ve kalabalık çıkış koridoruna adım atarken nabzın hızlanmış durumda."
+        },
+        {
+          "id": "D",
+          "text": "Bana bir saat süre ver; alternatif bir çözüm bulup geri dönüp kargoyu teslim edeceğim.",
+          "forwardingLine": "Süre talebin karşısında Yük Sorumlusu sadece omuz silkerek uzaklaşıyor. Depodan eli boş ama planlı şekilde çıkıyorsun. Kalabalık koridora girdiğinde yeni bir çözüm için aklın hızla çalışıyor."
+        }
+      ]
+    }
+  ]
+} 

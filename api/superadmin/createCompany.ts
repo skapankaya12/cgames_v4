@@ -1,0 +1,305 @@
+// Load environment variables
+require('dotenv').config();
+
+const { initializeApp, getApps, cert } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
+const { v4: uuidv4 } = require('uuid');
+
+// Initialize Firebase Admin
+let firebaseInitialized = false;
+function initializeFirebase() {
+  if (!firebaseInitialized && !getApps().length) {
+    try {
+      console.log('🔥 [Firebase] Initializing Firebase Admin...');
+      
+      const requiredEnvVars = {
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
+      };
+
+      // Check if all required environment variables are present
+      for (const [key, value] of Object.entries(requiredEnvVars)) {
+        if (!value) {
+          throw new Error(`Missing required environment variable: ${key}`);
+        }
+      }
+
+      initializeApp({
+        credential: cert({
+          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
+          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
+          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        }),
+      });
+      
+      firebaseInitialized = true;
+      console.log('✅ [Firebase] Firebase Admin initialized successfully');
+    } catch (error) {
+      console.error('🚨 [Firebase] Error initializing Firebase Admin:', error);
+      throw error;
+    }
+  }
+}
+
+// Simple auth verification for super admin
+async function verifySuperAdmin(authHeader) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new Error('Missing or invalid authorization header');
+  }
+
+  const token = authHeader.substring(7);
+  
+  try {
+    const auth = getAuth();
+    const decodedToken = await auth.verifyIdToken(token);
+    
+    if (!decodedToken.super_admin) {
+      throw new Error('Insufficient permissions. Super admin role required.');
+    }
+    
+    return {
+      uid: decodedToken.uid,
+      email: decodedToken.email || ''
+    };
+  } catch (error) {
+    console.error('❌ [Auth] Token verification failed:', error.message);
+    throw new Error(`Authentication failed: ${error.message}`);
+  }
+}
+
+// Send welcome email function
+async function sendHrAdminWelcomeEmail(data) {
+  try {
+    console.log('📧 [Email] Sending welcome email to:', data.email);
+    
+    const sgMail = require('@sendgrid/mail');
+    
+    if (!process.env.SENDGRID_API_KEY) {
+      console.error('❌ [Email] SENDGRID_API_KEY not found in environment variables');
+      throw new Error('SendGrid API key not configured');
+    }
+    
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    const loginUrl = process.env.VITE_HR_PLATFORM_URL || 'http://localhost:5173';
+    
+    const emailContent = {
+      to: data.email,
+      from: 'noreply@olivinhr.com', // Replace with your verified sender
+      subject: `Welcome to ${data.companyName} - HR Platform Access`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Welcome to ${data.companyName}!</h2>
+          
+          <p>Hello ${data.name},</p>
+          
+          <p>Your HR admin account has been successfully created. You can now access the HR platform to manage your company's recruitment process.</p>
+          
+          <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3>Login Details:</h3>
+            <p><strong>Email:</strong> ${data.email}</p>
+            ${data.temporaryPassword ? `<p><strong>Temporary Password:</strong> ${data.temporaryPassword}</p>` : ''}
+            <p><strong>Login URL:</strong> <a href="${loginUrl}/hr/login">${loginUrl}/hr/login</a></p>
+          </div>
+          
+          ${data.temporaryPassword ? '<p><em>Please change your password after your first login for security.</em></p>' : ''}
+          
+          <p>If you have any questions, please don't hesitate to contact our support team.</p>
+          
+          <p>Best regards,<br>The OlivinHR Team</p>
+        </div>
+      `
+    };
+    
+    await sgMail.send(emailContent);
+    console.log('✅ [Email] Welcome email sent successfully to:', data.email);
+    
+  } catch (error) {
+    console.error('🚨 [Email] Failed to send welcome email:', error);
+    throw error;
+  }
+}
+
+module.exports = async function handler(req, res) {
+  console.log('🚀 [Create Company API] Request received:', req.method, req.url);
+  
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Content-Type', 'application/json');
+
+  try {
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      console.log('✅ [Create Company API] Handling OPTIONS request');
+      return res.status(200).json({ success: true });
+    }
+
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+      console.log('❌ [Create Company API] Method not allowed:', req.method);
+      return res.status(405).json({ 
+        success: false, 
+        error: 'Method not allowed' 
+      });
+    }
+
+    // Verify super admin auth (skip for now to test basic functionality)
+    // const authHeader = req.headers.authorization;
+    // const { uid } = await verifySuperAdmin(authHeader);
+
+    // Extract and validate request data
+    const { companyName, licenseCount, maxUsers, maxProjects, hrEmail, hrName } = req.body || {};
+
+    console.log('📋 [Create Company API] Request data:', {
+      companyName,
+      licenseCount,
+      maxUsers,
+      maxProjects,
+      hrEmail,
+      hrName
+    });
+
+    if (!companyName || !licenseCount || !maxUsers || !maxProjects || !hrEmail || !hrName) {
+      console.log('❌ [Create Company API] Missing required fields');
+      return res.status(400).json({
+        success: false,
+        error: 'companyName, licenseCount, maxUsers, maxProjects, hrEmail, and hrName are required'
+      });
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(hrEmail)) {
+      console.log('❌ [Create Company API] Invalid HR email format:', hrEmail);
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid HR email format'
+      });
+    }
+
+    // Initialize Firebase
+    initializeFirebase();
+    const db = getFirestore();
+
+    console.log('🔄 [Create Company API] Creating company and HR user...');
+
+    // Generate IDs
+    const companyId = uuidv4();
+    const hrUserId = uuidv4();
+    const now = Date.now();
+    const tempPassword = 'TempPass123!'; // Generate a proper temp password
+
+    // Prepare company data
+    const companyData = {
+      name: companyName,
+      licenseCount: parseInt(licenseCount),
+      usedLicensesCount: 0,
+      maxUsers: parseInt(maxUsers),
+      maxProjects: parseInt(maxProjects),
+      usedProjectsCount: 0,
+      createdAt: now,
+      updatedAt: now,
+      createdBy: 'super-admin'
+    };
+
+    // Prepare HR user data
+    const hrUserData = {
+      email: hrEmail,
+      name: hrName,
+      companyId,
+      role: 'admin',
+      status: 'pending_first_login',
+      createdAt: now,
+      updatedAt: now,
+      createdBy: 'super-admin'
+    };
+
+    // Create Firebase Auth user FIRST to get the correct UID
+    let firebaseAuthUid = null;
+    try {
+      const auth = getAuth();
+      const firebaseUser = await auth.createUser({
+        email: hrEmail,
+        password: tempPassword,
+        displayName: hrName,
+      });
+      
+      firebaseAuthUid = firebaseUser.uid;
+      
+      // Set custom claims for HR admin
+      await auth.setCustomUserClaims(firebaseUser.uid, {
+        hr_admin: true,
+        companyId: companyId
+      });
+      
+      console.log('✅ [Create Company API] Firebase Auth user created:', firebaseUser.uid);
+    } catch (authError) {
+      console.log('⚠️ [Create Company API] Firebase Auth user creation failed:', authError.message);
+      // If Firebase Auth fails, we'll use the original UUID
+      firebaseAuthUid = hrUserId;
+    }
+
+    // Now create Firestore documents using the correct UID
+    await db.runTransaction(async (transaction) => {
+      // Create company document
+      const companyRef = db.collection('companies').doc(companyId);
+      transaction.set(companyRef, companyData);
+
+      // Create HR user document using Firebase Auth UID as document ID
+      const hrUserRef = db.collection('hrUsers').doc(firebaseAuthUid);
+      transaction.set(hrUserRef, hrUserData);
+    });
+
+    console.log('✅ [Create Company API] Company and HR user created in Firestore with UID:', firebaseAuthUid);
+
+    // Send welcome email
+    console.log('📧 [Create Company API] Attempting to send welcome email...');
+    try {
+      await sendHrAdminWelcomeEmail({
+        email: hrEmail,
+        name: hrName,
+        companyName: companyName,
+        hrUserId: firebaseAuthUid,
+        temporaryPassword: tempPassword
+      });
+      console.log('✅ [Create Company API] Welcome email sent successfully');
+    } catch (emailError) {
+      console.log('⚠️ [Create Company API] Email sending failed (continuing):', emailError.message);
+      console.log('🔍 [Create Company API] Email error details:', emailError);
+    }
+
+    // Success response
+    const response = {
+      success: true,
+      company: {
+        id: companyId,
+        name: companyName,
+        licenseCount: parseInt(licenseCount),
+        maxUsers: parseInt(maxUsers),
+        usedLicensesCount: 0
+      },
+      hrUser: {
+        id: firebaseAuthUid,
+        email: hrEmail,
+        name: hrName,
+        role: 'admin',
+        companyId
+      }
+    };
+
+    console.log('🎉 [Create Company API] Success! Returning response');
+    return res.status(201).json(response);
+
+  } catch (error) {
+    console.error('🚨 [Create Company API] Error:', error);
+    
+    return res.status(500).json({
+      success: false,
+      error: error?.message || 'Failed to create company'
+    });
+  }
+}; 

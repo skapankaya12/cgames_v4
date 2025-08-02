@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, query, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -9,112 +9,172 @@ import '@cgames/ui-kit/styles/hr.css';
 import '@cgames/ui-kit/styles/navigation.css';
 import '@cgames/ui-kit/styles/candidates.css';
 
-
-interface Candidate {
+interface CandidateData {
   id: string;
-  projectId: string;
-  projectName: string;
-  name: string;
   email: string;
-  phone?: string;
-  position: string;
-  department: string;
-  status: 'invited' | 'in-progress' | 'completed' | 'hired' | 'rejected';
-  invitedAt: string;
-  completedAt?: string;
-  score?: number;
-  stage: 'application' | 'assessment' | 'interview' | 'offer' | 'hired' | 'rejected';
-  notes?: string;
-  source?: string;
-  gameType?: string;
+  status: 'Invited' | 'InProgress' | 'Completed';
+  dateInvited: string;
+  dateCompleted?: string;
+  inviteToken?: string;
+  totalScore?: number;
+  competencyBreakdown?: Record<string, number>;
+  lastOpenedAt?: string;
 }
 
 export default function Candidates() {
   const navigate = useNavigate();
   const auth = getAuth();
-  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [searchParams] = useSearchParams();
+  
+  const [candidates, setCandidates] = useState<CandidateData[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hrUser, setHrUser] = useState<any>(null);
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  
+  // Filter states
   const [selectedProject, setSelectedProject] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const [selectedStage, setSelectedStage] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'invitedAt' | 'score' | 'status'>('invitedAt');
+  const [sortBy, setSortBy] = useState<'email' | 'dateInvited' | 'totalScore' | 'status'>('dateInvited');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [showGameModal, setShowGameModal] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState<string>('');
 
-  // Mock candidate data - in a real app, this would come from Firestore
-  const generateMockCandidates = (projects: Project[]): Candidate[] => {
-    const mockCandidates: Candidate[] = [];
-    const firstNames = ['John', 'Sarah', 'Michael', 'Emma', 'David', 'Lisa', 'Robert', 'Jessica', 'William', 'Amanda'];
-    const lastNames = ['Smith', 'Johnson', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas'];
-    const stages = ['application', 'assessment', 'interview', 'offer', 'hired', 'rejected'] as const;
-    const statuses = ['invited', 'in-progress', 'completed', 'hired', 'rejected'] as const;
-    const sources = ['LinkedIn', 'Company Website', 'Referral', 'Job Board', 'University', 'Recruiter'];
+  // Load projects and HR user data
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        navigate('/hr/login');
+        return;
+      }
 
-    projects.forEach((project) => {
-      const candidateCount = Math.floor(Math.random() * 8) + 3; // 3-10 candidates per project
-      
-      for (let i = 0; i < candidateCount; i++) {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-        const stage = stages[Math.floor(Math.random() * stages.length)];
-        const invitedDaysAgo = Math.floor(Math.random() * 30) + 1;
-        const invitedAt = new Date(Date.now() - invitedDaysAgo * 24 * 60 * 60 * 1000).toISOString();
-        
-        mockCandidates.push({
-          id: `${project.id}-candidate-${i}`,
-          projectId: project.id,
-          projectName: project.name,
-          name: `${firstName} ${lastName}`,
-          email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@email.com`,
-          phone: `+1 (555) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-          position: project.roleInfo.position,
-          department: project.roleInfo.department,
-          status,
-          stage,
-          invitedAt,
-          completedAt: status === 'completed' ? new Date(Date.now() - Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toISOString() : undefined,
-          score: status === 'completed' ? Math.floor(Math.random() * 40) + 60 : undefined,
-          notes: Math.random() > 0.7 ? 'Strong technical background, good communication skills' : undefined,
-          source: sources[Math.floor(Math.random() * sources.length)],
-          gameType: Math.random() > 0.5 ? 'Leadership Scenario Game' : undefined
-        });
+      try {
+        const hrUserDoc = await getDoc(doc(db, 'hrUsers', user.uid));
+        if (hrUserDoc.exists()) {
+          const userData = hrUserDoc.data();
+          setHrUser(userData);
+          setCompanyId(userData.companyId);
+        } else {
+          console.error('HR user document not found');
+          navigate('/hr/login');
+        }
+      } catch (error) {
+        console.error('Error fetching HR user:', error);
+        navigate('/hr/login');
       }
     });
 
-    return mockCandidates;
-  };
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
+  // Load projects
+  useEffect(() => {
+    const loadProjects = async () => {
+      if (!companyId) return;
+      
+      try {
+        console.log('🔄 [Candidates] Loading projects for company:', companyId);
+        
+        const projectsQuery = query(collection(db, `companies/${companyId}/projects`));
+        const projectsSnapshot = await getDocs(projectsQuery);
+        
+        const projectsList = projectsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Project[];
+        
+        setProjects(projectsList);
+        console.log(`✅ [Candidates] Loaded ${projectsList.length} projects`);
+        
+        // If there's a projectId in URL params, select it
+        const projectIdFromUrl = searchParams.get('projectId');
+        if (projectIdFromUrl && projectsList.some(p => p.id === projectIdFromUrl)) {
+          setSelectedProject(projectIdFromUrl);
+        }
+        
+      } catch (err) {
+        console.error('❌ [Candidates] Error loading projects:', err);
+        setError('Failed to load projects');
+      }
+    };
+
+    loadProjects();
+  }, [companyId, searchParams]);
+
+  // Load candidates for selected project
+  useEffect(() => {
+    const loadCandidates = async () => {
+      if (!companyId || !hrUser?.id || selectedProject === 'all') {
+        setCandidates([]);
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        setError(null);
+        
+        console.log('🔄 [Candidates] Loading candidates for project:', selectedProject);
+        
+        // Use our new API endpoint
+        const response = await fetch(`/api/hr/getProjectCandidates?projectId=${selectedProject}&hrId=${hrUser.id}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP ${response.status}: Failed to load candidates`);
+        }
+        
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to load candidates');
+        }
+        
+        setCandidates(data.candidates || []);
+        console.log(`✅ [Candidates] Loaded ${data.candidates?.length || 0} candidates`);
+        
+      } catch (err: any) {
+        console.error('❌ [Candidates] Error loading candidates:', err);
+        setError(`Failed to load candidates: ${err.message}`);
+        setCandidates([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCandidates();
+  }, [companyId, hrUser?.id, selectedProject]);
+
+  // Filter and sort candidates
   const filteredAndSortedCandidates = candidates
     .filter(candidate => {
-      if (selectedProject !== 'all' && candidate.projectId !== selectedProject) return false;
-      if (selectedStatus !== 'all' && candidate.status !== selectedStatus) return false;
-      if (selectedStage !== 'all' && candidate.stage !== selectedStage) return false;
-      if (searchTerm && !candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
-          !candidate.email.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      // Status filter
+      if (selectedStatus !== 'all' && candidate.status.toLowerCase() !== selectedStatus.toLowerCase()) {
+        return false;
+      }
+      
+      // Search filter
+      if (searchTerm && !candidate.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+      
       return true;
     })
     .sort((a, b) => {
-      let aValue, bValue;
+      let aValue: any;
+      let bValue: any;
       
       switch (sortBy) {
-        case 'name':
-          aValue = a.name.toLowerCase();
-          bValue = b.name.toLowerCase();
+        case 'email':
+          aValue = a.email.toLowerCase();
+          bValue = b.email.toLowerCase();
           break;
-        case 'invitedAt':
-          aValue = new Date(a.invitedAt).getTime();
-          bValue = new Date(b.invitedAt).getTime();
+        case 'dateInvited':
+          aValue = new Date(a.dateInvited).getTime();
+          bValue = new Date(b.dateInvited).getTime();
           break;
-        case 'score':
-          aValue = a.score || 0;
-          bValue = b.score || 0;
+        case 'totalScore':
+          aValue = a.totalScore || 0;
+          bValue = b.totalScore || 0;
           break;
         case 'status':
           aValue = a.status;
@@ -124,386 +184,287 @@ export default function Candidates() {
           return 0;
       }
       
-      if (sortOrder === 'asc') {
-        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-      } else {
-        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-      }
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
     });
 
-
-
-  const handleChangeGame = (candidateId: string) => {
-    setSelectedCandidate(candidateId);
-    setShowGameModal(true);
+  // Status counts
+  const statusCounts = {
+    all: candidates.length,
+    invited: candidates.filter(c => c.status === 'Invited').length,
+    inProgress: candidates.filter(c => c.status === 'InProgress').length,
+    completed: candidates.filter(c => c.status === 'Completed').length,
   };
 
-  const handleResendInvite = async (candidateId: string) => {
-    // Implementation for resending invite
-    console.log('Resending invite for:', candidateId);
+  const handleSort = (field: typeof sortBy) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
   };
 
-  const handleViewResults = (candidateId: string) => {
-    // Implementation for viewing results
-    console.log('Viewing results for:', candidateId);
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case 'Invited': return 'status-invited';
+      case 'InProgress': return 'status-in-progress';  
+      case 'Completed': return 'status-completed';
+      default: return 'status-default';
+    }
   };
 
-  const handleUpdateGame = (game: string) => {
-    // Implementation for updating game
-    console.log('Updating game for candidate:', selectedCandidate, 'to:', game);
-    setShowGameModal(false);
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        navigate('/hr/login');
-        return;
-      }
-      
-      try {
-        const hrDocRef = doc(db, 'hrUsers', user.uid);
-        const hrDocSnap = await getDoc(hrDocRef);
-        
-        if (!hrDocSnap.exists()) {
-          navigate('/hr/login');
-          return;
-        }
-        
-        const hrData = hrDocSnap.data();
-        setHrUser(hrData);
-        const userCompanyId = hrData.companyId as string;
-
-        // Load projects
-        const q = query(collection(db, `companies/${userCompanyId}/projects`));
-        const snapshot = await getDocs(q);
-        const projectsList: Project[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Project, 'id'>),
-        }));
-        
-        setProjects(projectsList);
-        setCandidates(generateMockCandidates(projectsList));
-      } catch (err: any) {
-        setError(`Failed to load candidates: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth, navigate]);
-
-  if (loading) {
-    return (
-      <>
-        <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
-          hrUser={hrUser} 
-        />
-        <div className="hr-dashboard-loading" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
-          <div className="loading-spinner-large"></div>
-          <p>Loading candidates...</p>
-        </div>
-      </>
+  const getSortIcon = (field: string) => {
+    if (sortBy !== field) {
+      return (
+        <svg className="sort-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      );
+    }
+    
+    return sortOrder === 'asc' ? (
+      <svg className="sort-icon active" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L10 4.414 6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+      </svg>
+    ) : (
+      <svg className="sort-icon active" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L10 15.586l3.293-3.293a1 1 0 011.414 0z" clipRule="evenodd" />
+      </svg>
     );
-  }
+  };
 
-  if (error) {
+  if (loading && selectedProject === 'all') {
     return (
-      <>
+      <div className="hr-dashboard">
         <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
-          hrUser={hrUser} 
+          collapsed={isNavCollapsed} 
+          onToggle={setIsNavCollapsed}
+          userRole={hrUser?.role || 'employee'}
         />
-        <div className="hr-dashboard-error" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
-          <div className="error-icon">
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
+        <div className="hr-content">
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Loading candidates...</p>
           </div>
-          <h2>Unable to load candidates</h2>
-          <p>{error}</p>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="hr-dashboard">
       <Navigation 
-        isCollapsed={isNavCollapsed} 
-        setIsCollapsed={setIsNavCollapsed} 
-        hrUser={hrUser} 
+        collapsed={isNavCollapsed} 
+        onToggle={setIsNavCollapsed}
+        userRole={hrUser?.role || 'employee'}
       />
-      
-      <div className="hr-dashboard" style={{ marginLeft: isNavCollapsed ? '72px' : '280px', transition: 'margin-left 0.3s ease' }}>
-        {/* Header */}
-        <header className="dashboard-header">
-          <div className="header-content">
-            <div className="header-left">
-              <div className="header-info">
-                <h1>Candidate Pipeline</h1>
-                <p>Manage and track all candidates across your recruitment projects</p>
+      <div className="hr-content">
+        <div className="candidates-page">
+          {/* Header */}
+          <div className="page-header">
+            <div className="header-content">
+              <h1>Candidate Management</h1>
+              <p>View and manage candidates across all your assessment projects</p>
+            </div>
+          </div>
+          
+          {/* Filters */}
+          <div className="filters-section">
+            <div className="filters-card">
+              <div className="filters-row">
+                {/* Project Filter */}
+                <div className="filter-group">
+                  <label htmlFor="project-filter">Project</label>
+                  <select
+                    id="project-filter"
+                    value={selectedProject}
+                    onChange={(e) => setSelectedProject(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="all">All Projects</option>
+                    {projects.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Status Filter */}
+                <div className="filter-group">
+                  <label htmlFor="status-filter">Status</label>
+                  <select
+                    id="status-filter"
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="all">All Status ({statusCounts.all})</option>
+                    <option value="invited">Invited ({statusCounts.invited})</option>
+                    <option value="inprogress">In Progress ({statusCounts.inProgress})</option>
+                    <option value="completed">Completed ({statusCounts.completed})</option>
+                  </select>
+                </div>
+
+                {/* Search */}
+                <div className="filter-group">
+                  <label htmlFor="search">Search</label>
+                  <div className="search-input-wrapper">
+                    <svg className="search-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                    </svg>
+                    <input
+                      id="search"
+                      type="text"
+                      placeholder="Search by email..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="search-input"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </header>
 
-        <div className="dashboard-content">
-          {/* Quick Stats */}
-          <div className="stats-grid candidate-stats">
-            <div className="stat-card">
-              <div className="stat-content">
-                <div className="stat-number">{candidates.length}</div>
-                <div className="stat-label">Total Candidates</div>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-content">
-                <div className="stat-number">{candidates.filter(c => c.status === 'in-progress').length}</div>
-                <div className="stat-label">In Progress</div>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-content">
-                <div className="stat-number">{candidates.filter(c => c.status === 'completed').length}</div>
-                <div className="stat-label">Completed</div>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-content">
-                <div className="stat-number">{candidates.filter(c => c.status === 'hired').length}</div>
-                <div className="stat-label">Hired</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Filters and Search */}
-          <div className="candidates-controls">
-            <div className="search-section">
-              <div className="search-input">
-                <svg viewBox="0 0 20 20" fill="currentColor" className="search-icon">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search candidates by name or email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="filters-section">
-              <select 
-                value={selectedProject} 
-                onChange={(e) => setSelectedProject(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Projects</option>
-                {projects.map(project => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-
-              <select 
-                value={selectedStatus} 
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Status</option>
-                <option value="invited">Invited</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="hired">Hired</option>
-                <option value="rejected">Rejected</option>
-              </select>
-
-              <select 
-                value={selectedStage} 
-                onChange={(e) => setSelectedStage(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Stages</option>
-                <option value="application">Application</option>
-                <option value="assessment">Assessment</option>
-                <option value="interview">Interview</option>
-                <option value="offer">Offer</option>
-                <option value="hired">Hired</option>
-                <option value="rejected">Rejected</option>
-              </select>
-
-              <select 
-                value={`${sortBy}-${sortOrder}`} 
-                onChange={(e) => {
-                  const [field, order] = e.target.value.split('-');
-                  setSortBy(field as any);
-                  setSortOrder(order as any);
-                }}
-                className="filter-select"
-              >
-                <option value="invitedAt-desc">Newest First</option>
-                <option value="invitedAt-asc">Oldest First</option>
-                <option value="name-asc">Name A-Z</option>
-                <option value="name-desc">Name Z-A</option>
-                <option value="score-desc">Highest Score</option>
-                <option value="score-asc">Lowest Score</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Candidates Table */}
+          {/* Results */}
           <div className="candidates-section">
             <div className="section-card">
-              <div className="candidates-table">
-                <div className="table-header">
-                  <div className="table-cell candidate">Candidate</div>
-                  <div className="table-cell status">Status</div>
-                  <div className="table-cell game">Game</div>
-                  <div className="table-cell date">Date Invited</div>
-                  <div className="table-cell date">Date Completed</div>
-                  <div className="table-cell actions">Actions</div>
-                </div>
-
-                <div className="table-body">
-                  {filteredAndSortedCandidates.map((candidate) => (
-                    <div key={candidate.id} className="table-row">
-                      <div className="table-cell candidate">
-                        <div className="candidate-info">
-                          <div className="candidate-avatar">
-                            {candidate.name.split(' ').map(n => n[0]).join('')}
-                          </div>
-                          <div className="candidate-details">
-                            <span className="candidate-name">{candidate.name}</span>
-                            <span className="candidate-id">ID: {candidate.id?.substring(0, 8) || 'N/A'}</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="table-cell status">
-                        <span 
-                          className={`status-badge ${candidate.status}`}
-                        >
-                          {candidate.status === 'invited' && '📧 Pending'}
-                          {candidate.status === 'in-progress' && '🎮 In Progress'}
-                          {candidate.status === 'completed' && '✅ Completed'}
-                          {candidate.status === 'hired' && '✅ Hired'}
-                          {candidate.status === 'rejected' && '❌ Rejected'}
-                        </span>
-                      </div>
-
-                      <div className="table-cell game">
-                        <span className="game-tag">{candidate.gameType || 'Leadership Scenario Game'}</span>
-                      </div>
-
-                      <div className="table-cell date">
-                        {candidate.invitedAt ? new Date(candidate.invitedAt).toLocaleDateString() : '—'}
-                      </div>
-
-                      <div className="table-cell date">
-                        {candidate.status === 'completed' ? new Date(candidate.completedAt || '').toLocaleDateString() : '—'}
-                      </div>
-
-                      <div className="table-cell actions">
-                        {candidate.status === 'invited' && (
-                          <div className="action-buttons">
-                            <button 
-                              className="btn btn-secondary btn-sm"
-                              onClick={() => handleResendInvite(candidate.id)}
-                            >
-                              Resend
-                            </button>
-                            <button 
-                              className="btn btn-outline btn-sm"
-                              onClick={() => handleChangeGame(candidate.id)}
-                            >
-                              Change Game
-                            </button>
-                          </div>
-                        )}
-                        {candidate.status === 'completed' && (
-                          <button 
-                            className="btn btn-primary btn-sm"
-                            onClick={() => handleViewResults(candidate.id)}
-                          >
-                            View Results
-                          </button>
-                        )}
-                        {candidate.status === 'in-progress' && (
-                          <span className="status-text">In Progress...</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {filteredAndSortedCandidates.length === 0 && (
+              {selectedProject === 'all' ? (
                 <div className="empty-state">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="empty-icon">
-                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                  </svg>
-                  <h3>No candidates found</h3>
-                  <p>Try adjusting your filters or search criteria</p>
+                  <div className="empty-icon">📂</div>
+                  <h3>Select a Project</h3>
+                  <p>Choose a project from the dropdown above to view its candidates.</p>
+                </div>
+              ) : loading ? (
+                <div className="loading-state">
+                  <div className="loading-spinner"></div>
+                  <p>Loading candidates...</p>
+                </div>
+              ) : error ? (
+                <div className="error-state">
+                  <div className="error-icon">⚠️</div>
+                  <h3>Error Loading Candidates</h3>
+                  <p>{error}</p>
+                  <button 
+                    onClick={() => window.location.reload()}
+                    className="button primary"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : filteredAndSortedCandidates.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">👥</div>
+                  <h3>No Candidates Found</h3>
+                  <p>
+                    {searchTerm 
+                      ? `No candidates match your search "${searchTerm}"`
+                      : selectedStatus !== 'all'
+                      ? `No candidates with "${selectedStatus}" status`
+                      : 'No candidates have been invited to this project yet.'
+                    }
+                  </p>
+                </div>
+              ) : (
+                <div className="table-container">
+                  <table className="candidates-table">
+                    <thead>
+                      <tr>
+                        <th 
+                          className="sortable" 
+                          onClick={() => handleSort('email')}
+                        >
+                          Email
+                          {getSortIcon('email')}
+                        </th>
+                        <th 
+                          className="sortable" 
+                          onClick={() => handleSort('status')}
+                        >
+                          Status
+                          {getSortIcon('status')}
+                        </th>
+                        <th 
+                          className="sortable" 
+                          onClick={() => handleSort('dateInvited')}
+                        >
+                          Date Invited
+                          {getSortIcon('dateInvited')}
+                        </th>
+                        <th>Date Completed</th>
+                        <th 
+                          className="sortable" 
+                          onClick={() => handleSort('totalScore')}
+                        >
+                          Score
+                          {getSortIcon('totalScore')}
+                        </th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAndSortedCandidates.map((candidate) => (
+                        <tr key={candidate.id}>
+                          <td>
+                            <div className="candidate-info">
+                              <span className="email">{candidate.email}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <span className={`status-badge ${getStatusBadgeClass(candidate.status)}`}>
+                              {candidate.status}
+                            </span>
+                          </td>
+                          <td>
+                            {new Date(candidate.dateInvited).toLocaleDateString()}
+                          </td>
+                          <td>
+                            {candidate.dateCompleted 
+                              ? new Date(candidate.dateCompleted).toLocaleDateString()
+                              : '—'
+                            }
+                          </td>
+                          <td>
+                            {candidate.totalScore !== undefined 
+                              ? `${candidate.totalScore}/100`
+                              : '—'
+                            }
+                          </td>
+                          <td>
+                            <div className="action-buttons">
+                              {candidate.status === 'Completed' && (
+                                <button
+                                  className="action-button view"
+                                  onClick={() => {
+                                    // Navigate to dedicated results page
+                                    navigate(`/hr/candidates/${candidate.id}/results`, { 
+                                      state: { candidate } 
+                                    });
+                                  }}
+                                  title="View Results"
+                                >
+                                  <svg viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                  </svg>
+                                  View Results
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Game Selection Modal */}
-      {showGameModal && (
-        <div className="modal-overlay" onClick={() => setShowGameModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Change Assessment Game</h3>
-              <button 
-                className="modal-close"
-                onClick={() => setShowGameModal(false)}
-              >
-                ×
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>Select a new game for this candidate:</p>
-              <div className="game-selection">
-                {['Leadership Scenario Game', 'Team Building Simulation', 'Crisis Management Scenarios', 
-                  'Strategic Planning Exercise', 'Negotiation Simulation', 'Communication Challenges'].map(game => (
-                  <label key={game} className="game-option">
-                    <input 
-                      type="radio" 
-                      name="selectedGame" 
-                      value={game}
-                      onChange={() => {}}
-                    />
-                    <span className="game-title">{game}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button 
-                className="btn btn-secondary"
-                onClick={() => setShowGameModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className="btn btn-primary"
-                onClick={() => handleUpdateGame('Leadership Scenario Game')}
-              >
-                Update Game
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 } 

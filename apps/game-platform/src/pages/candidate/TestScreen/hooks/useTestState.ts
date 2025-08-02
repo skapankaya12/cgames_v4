@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import type InteractionTracker from '@cgames/services/InteractionTracker';
+import { getQuestionTitles } from '../../../../utils/questionsUtils';
 
 interface TestState {
   currentQuestion: number;
@@ -8,25 +9,7 @@ interface TestState {
   isComplete: boolean;
 }
 
-// Array of question titles
-const questionTitles = [
-  "Yük Sorumlusu ile İlk Karşılaşma",
-  "Çıkış Koridoru",
-  "Rakip Firma Teklifi",
-  "Devriye Gemisi Engeli",
-  "Navigasyon Kararı",
-  "Meteor Tehdidi",
-  "Kimlik Doğrulama",
-  "Korsan Saldırısı",
-  "Terminal İlk İletişim",
-  "Gecikme Alarmı",
-  "Kargo Sarsıntısı",
-  "Teslimat Alanı Boş",
-  "Motor Alarmı",
-  "Kargo İncelemesi",
-  "Navigasyon Kaybı",
-  "Alıcı Bilgisi Eksik"
-];
+
 
 export function useTestState(
   questions: any[],
@@ -215,7 +198,7 @@ export function useTestState(
     narrationText,
     currentQuestion,
     progress,
-    questionTitles,
+    questionTitles: getQuestionTitles(),
     handleAnswer,
     handlePrevious,
     setError

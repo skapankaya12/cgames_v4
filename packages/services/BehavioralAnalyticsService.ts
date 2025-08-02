@@ -432,7 +432,8 @@ export class BehavioralAnalyticsService {
   async generateAIRecommendations(
     scores: DimensionScore[], 
     sessionId: string,
-    userInfo?: { firstName: string; lastName: string }
+    userInfo?: { firstName: string; lastName: string },
+    language: string = 'tr'
   ): Promise<PersonalizedRecommendations> {
     try {
       console.log('=== BEHAVIORAL ANALYTICS: STARTING AI RECOMMENDATION GENERATION ===');
@@ -473,7 +474,8 @@ export class BehavioralAnalyticsService {
         scores, 
         sessionId, 
         userInfo,
-        cvData || undefined // Pass CV data if available
+        cvData || undefined, // Pass CV data if available
+        language // Pass language parameter
       );
       
       console.log('✅ BehavioralAnalytics: OpenAI recommendations generated successfully!');

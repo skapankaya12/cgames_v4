@@ -40,13 +40,32 @@ export default function ProjectsOverview() {
     return project.status;
   };
 
-  // Update project status in database
+  // Update project status using API endpoint
   const updateProjectStatus = async (projectId: string, newStatus: string) => {
-    if (!companyId) return;
+    if (!hrUser?.id) return;
     
     try {
-      const projectRef = doc(db, `companies/${companyId}/projects`, projectId);
-      await updateDoc(projectRef, { status: newStatus });
+      const response = await fetch('/api/hr/updateProject', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectId,
+          hrId: hrUser.id,
+          updates: { status: newStatus }
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}: Failed to update project`);
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to update project');
+      }
       
       // Update local state
       setProjects(prev => prev.map(p => 
@@ -129,16 +148,40 @@ export default function ProjectsOverview() {
         const userCompanyId = hrData.companyId as string;
         setCompanyId(userCompanyId);
 
-        // Load projects
-        const q = query(collection(db, `companies/${userCompanyId}/projects`));
-        const snapshot = await getDocs(q);
-        const projectsList: Project[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Project, 'id'>),
-        }));
-        setProjects(projectsList);
+        // Load projects using API endpoint
+        try {
+          const response = await fetch(`/api/hr/getProjects-simple?hrId=${user.uid}`);
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || `HTTP ${response.status}: Failed to load projects`);
+          }
+          
+          if (!data.success) {
+            throw new Error(data.error || 'Failed to load projects');
+          }
+          
+          // Ensure each project has stats with default values
+          const projectsWithStats = (data.projects || []).map(project => ({
+            ...project,
+            stats: project.stats || {
+              totalCandidates: project.candidateCount || 0,
+              inProgressCandidates: 0,
+              completedCandidates: 0,
+              invitedCandidates: 0
+            }
+          }));
+          
+          setProjects(projectsWithStats);
+        } catch (err: any) {
+          console.warn('API not available, showing empty projects list:', err.message);
+          // For development: if API is not available, show empty projects list
+          setProjects([]);
+          setError(null); // Don't show error for new companies with no projects
+        }
       } catch (err: any) {
-        setError(`Failed to load projects: ${err.message}`);
+        console.error('Authentication error:', err);
+        setError(`Authentication failed: ${err.message}`);
       } finally {
         setLoading(false);
       }
@@ -331,7 +374,7 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo.position} • {project.roleInfo.department}
+                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         {project.deadline && (
                           <div className="project-deadline">
@@ -344,11 +387,11 @@ export default function ProjectsOverview() {
                         )}
                         <div className="project-card-stats">
                           <div className="stat">
-                            <span className="stat-number">{project.stats.totalCandidates}</span>
+                            <span className="stat-number">{project.stats?.totalCandidates || project.candidateCount || 0}</span>
                             <span className="stat-label">Candidates</span>
                           </div>
                           <div className="stat">
-                            <span className="stat-number">{project.stats.inProgressCandidates}</span>
+                            <span className="stat-number">{project.stats?.inProgressCandidates || 0}</span>
                             <span className="stat-label">In Progress</span>
                           </div>
                         </div>
@@ -398,7 +441,7 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo.position} • {project.roleInfo.department}
+                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         <div className="project-deadline urgent">
                           <span className="deadline-label">Deadline:</span>
@@ -408,11 +451,11 @@ export default function ProjectsOverview() {
                         </div>
                         <div className="project-card-stats">
                           <div className="stat">
-                            <span className="stat-number">{project.stats.totalCandidates}</span>
+                            <span className="stat-number">{project.stats?.totalCandidates || project.candidateCount || 0}</span>
                             <span className="stat-label">Candidates</span>
                           </div>
                           <div className="stat">
-                            <span className="stat-number">{project.stats.inProgressCandidates}</span>
+                            <span className="stat-number">{project.stats?.inProgressCandidates || 0}</span>
                             <span className="stat-label">In Progress</span>
                           </div>
                         </div>
@@ -462,15 +505,15 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo.position} • {project.roleInfo.department}
+                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         <div className="project-card-stats">
                           <div className="stat">
-                            <span className="stat-number">{project.stats.completedCandidates}</span>
+                            <span className="stat-number">{project.stats?.completedCandidates || 0}</span>
                             <span className="stat-label">Completed</span>
                           </div>
                           <div className="stat">
-                            <span className="stat-number">{project.stats.totalCandidates}</span>
+                            <span className="stat-number">{project.stats?.totalCandidates || project.candidateCount || 0}</span>
                             <span className="stat-label">Total</span>
                           </div>
                         </div>

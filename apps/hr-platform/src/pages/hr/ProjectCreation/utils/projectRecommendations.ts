@@ -2,7 +2,7 @@ import type { ProjectCreationForm } from '@cgames/types';
 
 export function generateRecommendations(data: ProjectCreationForm) {
   // Simple recommendation logic - can be enhanced with AI later
-  const suggestedGames = ['Leadership Scenario Game'];
+  const suggestedGames = ['Space Mission'];
   const focusAreas = [];
   let assessmentDuration = 30;
 
@@ -72,23 +72,6 @@ function generateCustomQuestions(data: ProjectCreationForm): string[] {
 }
 
 export function getRecommendedAssessmentGames(roleTitle: string, keySkills: string[]): string[] {
-  const games = ['Leadership Scenario Game']; // Always include base game
-  
-  if (roleTitle === 'director' || roleTitle === 'principal') {
-    games.push('Strategic Planning Exercise', 'Crisis Management Scenarios');
-  }
-  
-  if (keySkills.some(skill => skill.toLowerCase().includes('communication'))) {
-    games.push('Communication Challenges');
-  }
-  
-  if (keySkills.some(skill => skill.toLowerCase().includes('negotiation'))) {
-    games.push('Negotiation Simulation');
-  }
-  
-  if (keySkills.some(skill => skill.toLowerCase().includes('team'))) {
-    games.push('Team Building Simulation');
-  }
-  
-  return [...new Set(games)]; // Remove duplicates
+  // Currently only Space Mission is available
+  return ['Space Mission'];
 } 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Icons, AIAssistantChat } from '@cgames/ui-kit';
 import { DashboardOverview } from './components/DashboardOverview';
 import { ScoreDisplay } from './components/ScoreDisplay';
@@ -22,6 +23,7 @@ type ViewType = 'dashboard' | 'yetkinlikler' | 'davranış-analizi' | 'öneriler
 
 export const SharedResultsScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
 
   // Data management
   const {
@@ -247,15 +249,15 @@ export const SharedResultsScreen: React.FC = () => {
                 disabled={isSubmitting}
               >
                 <Icons.Send size={16} />
-                {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
+                {isSubmitting ? t('status.sending') : t('buttons.sendResults')}
               </button>
               <button 
                 className="action-button secondary" 
                 onClick={handleRestart}
-                title="Yeni test başlat"
+                title={t('buttons.newTest')}
               >
                 <Icons.RotateCcw size={16} />
-                Yeni Test
+                {t('buttons.newTest')}
               </button>
             </div>
           </div>

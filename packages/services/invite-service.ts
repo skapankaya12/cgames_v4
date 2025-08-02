@@ -28,11 +28,14 @@ export class InviteService {
       let selectedGame = data.selectedGame;
       if (data.projectId && !selectedGame) {
         try {
-          const projectDoc = await db.collection('companies').doc('default').collection('projects').doc(data.projectId).get();
+          // Use the specific company ID from your project
+          const companyId = 'bbe2f275-8bd3-4761-a056-f61570f38a0c';
+          const projectDoc = await db.collection('companies').doc(companyId).collection('projects').doc(data.projectId).get();
           if (projectDoc.exists) {
             const projectData = projectDoc.data();
-            // Get the first preferred game or default to first suggested game
-            selectedGame = projectData?.customization?.gamePreferences?.[0] || 
+            // Priority: assessmentType > gamePreferences > suggestedGames > default
+            selectedGame = projectData?.assessmentType || 
+                         projectData?.customization?.gamePreferences?.[0] || 
                          projectData?.recommendations?.suggestedGames?.[0] || 
                          'Leadership Scenario Game';
           }
@@ -55,7 +58,7 @@ export class InviteService {
         projectId: data.projectId || '',
         roleTag: data.roleTag || 'candidate',
         selectedGame: selectedGame || 'Leadership Scenario Game',
-        companyId: 'default', // This should come from the auth context
+        companyId: 'bbe2f275-8bd3-4761-a056-f61570f38a0c',
       };
 
       // Save to Firestore
@@ -88,8 +91,15 @@ export class InviteService {
       const inviteData = inviteDoc.data();
       const invite = { id: inviteDoc.id, ...inviteData };
       
-      if (inviteData?.status !== 'pending') {
-        throw new Error('Invite token has already been used or expired');
+      // Check if token has expired (7 days)
+      const expiresAt = inviteData?.expiresAt;
+      if (expiresAt && Date.now() > expiresAt) {
+        throw new Error('Invite token has expired');
+      }
+      
+      // Only prevent access if the assessment has been completed AND submitted
+      if (inviteData?.status === 'completed') {
+        throw new Error('Assessment has already been completed and submitted');
       }
       
       return invite;
@@ -106,9 +116,10 @@ export class InviteService {
  * This is safe to use in client-side code
  */
 export class InviteServiceClient {
-  private static readonly API_BASE_URL = process.env.NODE_ENV === 'production' 
-    ? 'https://app.olivinhr.com'
-    : 'http://localhost:3001';
+  private static readonly API_BASE_URL = (typeof window !== 'undefined' && (window as any).import?.meta?.env?.VITE_API_BASE_URL) ||
+    (process.env.NODE_ENV === 'production' 
+      ? 'https://app.olivinhr.com'
+      : 'http://localhost:3001');
 
   /**
    * Create a new invite
@@ -130,7 +141,7 @@ export class InviteServiceClient {
       const token = await user.getIdToken();
       console.log('🔑 [InviteServiceClient] Got Firebase token for user:', user.uid);
 
-      const response = await fetch(`${this.API_BASE_URL}/api/invites`, {
+      const response = await fetch(`${this.API_BASE_URL}/api/working-invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

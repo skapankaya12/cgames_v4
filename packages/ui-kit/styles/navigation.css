@@ -1,4 +1,10 @@
 /* Navigation Sidebar Styles */
+:root {
+  /* Navigation widths - Ensure consistency across components */
+  --nav-width-expanded: 280px;
+  --nav-width-collapsed: 72px;
+}
+
 .hr-navigation {
   position: fixed;
   top: 0;
@@ -65,12 +71,57 @@
   color: #708238;
 }
 
+/* Floating collapse button for collapsed state - Modern flat design */
+.floating-collapse-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1002;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #708238;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #F1EFE8;
+  box-shadow: none;
+}
+
+.floating-collapse-btn:hover {
+  background: #5d6b2e;
+  transform: none;
+  box-shadow: none;
+}
+
+.floating-collapse-btn:active {
+  background: #4a5625;
+  transform: scale(0.95);
+}
+
+.floating-collapse-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: none;
+}
+
+.floating-collapse-btn:hover svg {
+  transform: none;
+}
+
 .hr-navigation.expanded {
-  width: 280px;
+  width: var(--nav-width-expanded);
 }
 
 .hr-navigation.collapsed {
-  width: 72px;
+  width: var(--nav-width-collapsed);
+  background: transparent;
+  backdrop-filter: none;
+  border-right: none;
+  box-shadow: none;
 }
 
 /* Navigation Header */
@@ -145,6 +196,33 @@
 .collapse-btn:hover {
   background: rgba(0, 0, 0, 0.1);
   color: #333;
+}
+
+/* Collapsed navigation header */
+.nav-header-collapsed {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  border-bottom: 1px solid rgba(112, 130, 56, 0.2);
+}
+
+.logo-icon-collapsed {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #708238 0%, #B8C0A8 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F1EFE8;
+  flex-shrink: 0;
+}
+
+.logo-icon-collapsed svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Navigation Items */
@@ -304,10 +382,18 @@
     display: flex;
   }
   
+  .floating-collapse-btn {
+    display: none;
+  }
+  
   .hr-navigation {
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1001;
+    background: rgba(47, 47, 47, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(112, 130, 56, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
   
   .hr-navigation.mobile-open {
@@ -350,12 +436,24 @@
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
+  .floating-collapse-btn {
+    display: none;
+  }
+  
   .hr-navigation.expanded {
     width: 72px;
+    background: rgba(47, 47, 47, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(112, 130, 56, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
 
   .hr-navigation.collapsed {
     width: 72px;
+    background: transparent;
+    backdrop-filter: none;
+    border-right: none;
+    box-shadow: none;
   }
   
   .logo-text {
@@ -388,10 +486,18 @@
 @media (min-width: 768px) {
   .hr-navigation.expanded {
     width: 280px;
+    background: rgba(47, 47, 47, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(112, 130, 56, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
 
   .hr-navigation.collapsed {
     width: 72px;
+    background: transparent;
+    backdrop-filter: none;
+    border-right: none;
+    box-shadow: none;
   }
   
   .hr-navigation.collapsed .logo-text {

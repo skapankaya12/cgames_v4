@@ -1,0 +1,436 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "You're in a dim warehouse corridor. The Cargo Officer looks at you coldly and says:\n\"You need to pay 8,000 Zenix for me to release the cargo.\"\nHow do you overcome this obstacle before starting your mission?\nWhat do you do?",
+      "forwardingLine": "After leaving the warehouse, you head towards the narrow and crowded exit corridor.",
+      "options": [
+        {
+          "id": "A",
+          "text": "I immediately place the money on the table without question; let's take the cargo right away without waiting for any objection.",
+          "forwardingLine": "You paid the 8,000 Zenix without hesitation. The Cargo Officer nods and hands you a heavy box. Your wallet is lighter but the mission has begun. As soon as you exit the warehouse, you head towards a crowded exit corridor."
+        },
+        {
+          "id": "B",
+          "text": "I'll send the 8,000 Zenix immediately after delivery is complete; take the cargo right away.",
+          "forwardingLine": "Your negotiation offer creates a moment of silence. The Cargo Officer nods, saying 'Don't leave a trail,' and hands over the cargo. With responsibility on your back, you head towards the exit; there's doubt behind every step."
+        },
+        {
+          "id": "C",
+          "text": "I show a fake approval document saying 'Cargo is being sent free of charge' and convince the officer by showing the document.",
+          "forwardingLine": "When you show the document, his eyes narrow but he hands it over without checking. You hear a clicking sound from inside as you turn your back. You quickly move away; your pulse is racing as you step into the narrow and crowded exit corridor."
+        },
+        {
+          "id": "D",
+          "text": "Give me an hour; I'll find an alternative solution and come back to collect the cargo.",
+          "forwardingLine": "In response to your time request, the Cargo Officer just shrugs and walks away. You exit the warehouse empty-handed but with a plan. As you enter the crowded corridor, your mind is working fast for a new solution."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "You're leaving the warehouse. Under the flickering fluorescent lights, there's a crowd of people.\nThe exit corridor is blocked. There's a risk of delay.\nWhich do you choose?",
+      "forwardingLine": "After cutting through the crowd, you approach the door of the glass-walled meeting room.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Immediately reach for your wallet, pay the special passage fee, skip the crowd.",
+          "forwardingLine": "You hand a few Zenix to the security guard. He opens the turnstile without making eye contact. As you leave the crowd behind, the doubt inside you grows along with the money from your pocket. You head towards the door of the glass-walled meeting room."
+        },
+        {
+          "id": "B",
+          "text": "Enter the smuggler's secret tunnel, move under the crowd.",
+          "forwardingLine": "You slip through a narrow door. A damp, dark route that no one knows about. Anxiety shows on your face as the door closes behind you. Light flickers at the end of the tunnel; now you're at the meeting room door."
+        },
+        {
+          "id": "C",
+          "text": "Wait for the crowd to disperse; use the night exit.",
+          "forwardingLine": "You step aside, watching the crowd. Minutes pass, the corridor slowly empties. Your footsteps echo in the silence. After waiting, you reach the door of the glass-walled meeting room."
+        },
+        {
+          "id": "D",
+          "text": "Quickly readjust the engine, make the exit when the system works.",
+          "forwardingLine": "You retreat to a corner and tinker with the engine in your bag. You activate your energy-enhanced shoes and silently cut through the crowd. Technology works: When you reach the meeting room door, the system is still warm."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "You're in a holographic room. The sparkling energy core is in front of you.\nA rival company reaches out via radio:\n\"Give us the cargo, we'll pay double.\"\nWhat do you do?",
+      "forwardingLine": "After listening to the offer, you head towards the Patrol Ship announcement coming from the speakers.",
+      "options": [
+        {
+          "id": "A",
+          "text": "I immediately accept the offer without any negotiation and give the energy core to the rivals right away.",
+          "forwardingLine": "You receive a signal like a handshake and hand over the energy core. There's an emptiness inside you, but double payment in your pocket. As you leave the room, an announcement rises from the speakers: A patrol ship is approaching."
+        },
+        {
+          "id": "B",
+          "text": "Let's both profit equally from this business: I propose a partnership by sharing 50% of the profit.",
+          "forwardingLine": "There's a brief silence on the communication channel. 'Interesting offer,' says the other party. Although there's no definite agreement, they keep the connection open. Just then, the sound of an engine echoes from outside: The patrol ship is calling you."
+        },
+        {
+          "id": "C",
+          "text": "I can't answer immediately, I need time, trying to buy time by postponing.",
+          "forwardingLine": "The other party is impatient but doesn't reject you immediately. You're buying time but they might be watching you. As you leave the room, you startle at the echoing voice in your ears: The patrol ship has detected you."
+        },
+        {
+          "id": "D",
+          "text": "I absolutely refuse this offer and continue directly to my destination without disrupting the mission.",
+          "forwardingLine": "You make your decision clearly: 'No.' There's a moment of silence on the other end of the line, then the connection is cut. You head towards the door with inner peace. At that moment, the command echoing from the external speakers is clear: The patrol ship is coming."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "A shadow appears in the sky. A harsh voice echoes from the radio:\n\"Stop! Routine inspection.\"\nThey're stopping your ship.\nWhat do you do?",
+      "forwardingLine": "After escaping the trap, you move to the navigation screen in the cockpit.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Prepare the documents and pay +500 Zenix bribe; speed up the passage immediately.",
+          "forwardingLine": "When you show the documents and transfer the credit, there's a sigh. The commander approves your passage but it's unclear if it's recorded in the system. As you head to the navigation screen, a data leak alarm sounds in the background."
+        },
+        {
+          "id": "B",
+          "text": "Invite the commander to dinner, secure permission by winning his favor.",
+          "forwardingLine": "The tone on the radio softens, 'Maybe next time,' he says, allowing you passage. Your communication skills worked but you lost time. The route reappears on the navigation screen."
+        },
+        {
+          "id": "C",
+          "text": "Hide the cargo secretly, allow the search; then proceed comfortably.",
+          "forwardingLine": "The search begins but you cleverly hid the cargo. The tension is high but passage is secured. When you get to the cockpit, the system is still glowing; but you're on duty."
+        },
+        {
+          "id": "D",
+          "text": "Start the engines, escape directly as soon as an opportunity arises.",
+          "forwardingLine": "You suddenly accelerated, the patrol ship raised its voice but couldn't follow. The escape was successful, but energy levels are dropping. It's time to check again on the navigation screen."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "You're sitting in the dark cockpit. The navigation screen is broken.\nThe map suggests one route but your instincts tell you another way.\nWhich path do you choose?",
+      "forwardingLine": "Right after setting the route, you focus on the meteor threat appearing in the sky.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Full trust in the navigation system; follow the standard route without any hesitation.",
+          "forwardingLine": "The system takes you on the usual path, calm but predictable route. Your eyes catch the meteor warnings. Danger is approaching."
+        },
+        {
+          "id": "B",
+          "text": "Put the map aside, listen to your instincts and drive towards the shortcut route.",
+          "forwardingLine": "You take a sharp turn. You've drawn a risky but fast route. The stars are approaching. A meteor activity begins in the distance."
+        },
+        {
+          "id": "C",
+          "text": "Gather the team immediately, determine the route according to the majority decision.",
+          "forwardingLine": "'The majority said A,' you say, giving direction. The decision is democratic but is it satisfying for you? The meteor threat starts issuing warnings."
+        },
+        {
+          "id": "D",
+          "text": "Stop for an hour, make observations; then choose the safest route.",
+          "forwardingLine": "You lost time but collected data. Based on observations, you redraw the route. At the cost of delay, you're preparing for the meteor danger."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "A giant fireball behind the glass. Alarm bells are ringing.\nHigh possibility of collision. Cargo is at risk.\nWhat do you do?",
+      "forwardingLine": "After leaving the meteor zone behind, you head towards the identity control signal coming from the radio.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Immediately disconnect the antenna, transfer all energy to the hull armor; minimize the impact of the approaching fireball.",
+          "forwardingLine": "You experienced data loss but the ship remained intact. The identity control signal is activating."
+        },
+        {
+          "id": "B",
+          "text": "Pull the shield generators to maximum, strengthen defense and maneuver by rapidly heating the engine.",
+          "forwardingLine": "The shield protected you, but engine performance dropped. The call 'Verify your identity' from the radio startles you."
+        },
+        {
+          "id": "C",
+          "text": "Immediately call the engineer, design and implement an extraordinary defense module; deflect the meteor's direction.",
+          "forwardingLine": "Someone from the team takes control, you get through the meteors with a creative but risky solution. A new signal appears: Identity query."
+        },
+        {
+          "id": "D",
+          "text": "Take no action; keep the route fixed and continue on your way without panicking, directly accept the damage.",
+          "forwardingLine": "The shock was big but luck was on your side. The command from the radio this time leaves no room for chance: Verify your identity."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "A weak signal comes from the radio:\n\"Verify your identity.\"\nThe Federation satellite is questioning you.\nHow do you respond?",
+      "forwardingLine": "After handling the identity verification, you focus on the pirate ships appearing on the horizon.",
+      "options": [
+        {
+          "id": "A",
+          "text": "I immediately send all technical identity data and prove my identity.",
+          "forwardingLine": "The automation responds quickly, the system recognizes you. Pirate ships begin to appear ahead."
+        },
+        {
+          "id": "B",
+          "text": "I start a convincing story explaining that this mission protects the balance of the universe.",
+          "forwardingLine": "You create an emotional connection, the operator is impressed. But there was a delay. Pirates are falling on your screen."
+        },
+        {
+          "id": "C",
+          "text": "I try to get my identity approved by speaking diplomatically and convincing the other party.",
+          "forwardingLine": "'I understand you but...' voices are heard. Communication was established, but pirates had already entered your radar."
+        },
+        {
+          "id": "D",
+          "text": "I try to get through the identity check by passing through the environment silently without saying anything.",
+          "forwardingLine": "You passed unregistered, the system didn't question you, but a red warning appeared on your screen: Threat detected."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Suddenly the radars went silent. Your ship shook.\n\"Give us the cargo or we'll shoot you!\" pirates are shouting from the radio.\nWhat do you do?",
+      "forwardingLine": "After leaving the pirate threat behind, you head towards the green-lit terminal screen.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Put 2,000 Zenix on the table, secure passage immediately.",
+          "forwardingLine": "It touched your wallet but saved your life. The terminal operator's screen greets you."
+        },
+        {
+          "id": "B",
+          "text": "Show your crew as if they were hostages, deceive the pirates, escape when you get the chance.",
+          "forwardingLine": "You played the game, the bluff worked but your crew's trust was shaken. Eyes are on you when you reach the terminal."
+        },
+        {
+          "id": "C",
+          "text": "Put on the Federation badge, bluff saying 'we are official personnel' and move away.",
+          "forwardingLine": "When the Federation name was mentioned, they hesitated. A tense but transitional moment. Now the screen is cold: Terminal ready."
+        },
+        {
+          "id": "D",
+          "text": "Fire the cannons, engage in active combat and intimidate the pirates.",
+          "forwardingLine": "You took damage but won. The terminal greets you with weak signals. The mission continues."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "A few minutes before arrival. A message comes from the terminal system:\n\"What is the purpose of your delivery?\"\nYou will determine the first impression.\nHow do you answer?",
+      "forwardingLine": "After entering your message, you focus on the delay alarm echoing in the corridor.",
+      "options": [
+        {
+          "id": "A",
+          "text": "This delivery is entirely for economic benefit; we want to provide maximum return on your investment.",
+          "forwardingLine": "The terminal gives approval with a brief pause. The 'delay' alarm starts blinking; you head to the control room."
+        },
+        {
+          "id": "B",
+          "text": "Our goal is to maximize the quality of life of humanity with the energy core.",
+          "forwardingLine": "Your emotional explanation finds an echo in the terminal, the system recognizes you. But time passes: Alarm lights are on in the control room."
+        },
+        {
+          "id": "C",
+          "text": "This delivery is mandatory and the only option; you have no other choice.",
+          "forwardingLine": "Your harsh attitude is processed by the system, but the emergency protocol is activated. Red warnings appear in the control room."
+        },
+        {
+          "id": "D",
+          "text": "We don't need details; we're busy making deliveries complete and on time.",
+          "forwardingLine": "A cold acceptance, a mechanical progression. But the system detects the delay. The alarms in the control room are waiting for you."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "There was a system failure at the terminal. Delivery approval has been postponed.\nTime is running out. You need to complete the delivery.\nWhat do you do?",
+      "forwardingLine": "As the alarm quiets, you feel the sudden shock from the cargo compartment.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Make an emergency assistance offer to speed up the process by providing support and resources to the team.",
+          "forwardingLine": "You're organizing the team, the alarm is slowly going out. But the feeling of shock suddenly begins. You move to the cargo section."
+        },
+        {
+          "id": "B",
+          "text": "My time is limited, no intervention needed; continue without disrupting the current plan.",
+          "forwardingLine": "Direct intervention works but the system marks you as a threat. You move to the cargo area with a sudden shock."
+        },
+        {
+          "id": "C",
+          "text": "Ask for 10 minutes to examine the system in depth; I will solve the problems in this time.",
+          "forwardingLine": "Technical details are under control. The alarm goes out, but the loss of time causes a shock. You need to check the cargo."
+        },
+        {
+          "id": "D",
+          "text": "Convince the terminal team and introduce emergency priority; we will overcome the delay this way.",
+          "forwardingLine": "Your persuasive speech gives you priority. The alarm stopped, but the vibration in the cargo system is starting. You're there for control."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "There was a sudden shock on the ship. Sounds from the cargo compartment are dangerous.\nIf the cargo is damaged, the delivery may fail.\nHow do you intervene?",
+      "forwardingLine": "After overcoming the shock, you reach the seemingly empty delivery area.",
+      "options": [
+        {
+          "id": "A",
+          "text": "I immediately switch to manual control and securely fix the cargo.",
+          "forwardingLine": "You intervene with muscle strength. Stabilization is achieved. You move towards the terminal; the standby screen has already opened."
+        },
+        {
+          "id": "B",
+          "text": "I close the cargo compartment and take it under protection; I don't take the extra risk.",
+          "forwardingLine": "The quick decision saved you, the cargo seems protected. The countdown started on the terminal screen: 2 minutes."
+        },
+        {
+          "id": "C",
+          "text": "I call the engineer and have him perform technical intervention; have the necessary repair done remotely.",
+          "forwardingLine": "The technical team intervenes from outside. There is slight damage but control is achieved. You move to the standby terminal."
+        },
+        {
+          "id": "D",
+          "text": "I continue on my route; I take no additional action.",
+          "forwardingLine": "You took the risk, it's unknown if the cargo was damaged. But you continue without wasting time. The standby screen greets you."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "You arrived at the terminal but the area is empty. There's no one to receive.\n\"Waiting time: 2 min\" is written on the system.\nHow do you act?",
+      "forwardingLine": "While waiting, you focus on the steaming cockpit and screaming engine alarms.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Stay here and wait briefly, watch for the recipient to come, keep the delivery ready.",
+          "forwardingLine": "Minutes pass, the screen starts moving. The sound in your engines is rising. Overheating alarm is on. You move to the cockpit."
+        },
+        {
+          "id": "B",
+          "text": "Force open the locked door, enter and personally carry out the delivery.",
+          "forwardingLine": "You force the door, the system recognizes you. Delivery complete but engines are reacting. Transition to cockpit is essential."
+        },
+        {
+          "id": "C",
+          "text": "Call senior management immediately and request clear delivery instructions and additional information.",
+          "forwardingLine": "Connection established, approval received. Just then, an engine temperature warning appears on the cockpit screen. You take action."
+        },
+        {
+          "id": "D",
+          "text": "Leave the cargo where it is and leave immediately, accept the risk without taking any additional action.",
+          "forwardingLine": "You leave at the terminal without hesitation and leave. But the system recognized you. The overheating sensor is locking the cockpit."
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "The engines give warning before landing.\nAs captain, the decision is yours.\nControlled landing or aggressive solution?",
+      "forwardingLine": "After getting the emergency situation under control, you face the 'Stop, cargo inspection' announcement from the radio.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Slow down all systems, perform a controlled landing while maintaining control.",
+          "forwardingLine": "Slowing down works, engines are cooling. The communication line opens: You receive a new call."
+        },
+        {
+          "id": "B",
+          "text": "Switch to emergency landing mode immediately; maintain maximum speed until the last moment.",
+          "forwardingLine": "The system is reset with a hard maneuver. It was risky but it worked. A new command echoes on the communication channel."
+        },
+        {
+          "id": "C",
+          "text": "Trust the engineer and leave the landing plan to him; activate technical decisions.",
+          "forwardingLine": "You delegated control. The system became stable. A new call appears on the screen: The control ship is waiting for you."
+        },
+        {
+          "id": "D",
+          "text": "Turn the system off completely, go into free fall; ignore all other warnings.",
+          "forwardingLine": "Chaos but it works. Landing completed. Just then, the control call from the radio finds you."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "A new call comes from the radio:\n\n\"Stop. We need to inspect the cargo.\"\n\nIntervention is taking place seconds before landing.\n\nWhat do you do?",
+      "forwardingLine": "\nAfter the cargo inspection is left behind, the navigation lines suddenly disappear.\n",
+      "options": [
+        {
+          "id": "A",
+          "text": "Report the situation, immediately synchronize all systems and ensure coordination with the control ship.",
+          "forwardingLine": "The system is with you. Control achieved. But your old navigation record has been deleted. Now you're looking for coordinates."
+        },
+        {
+          "id": "B",
+          "text": "Start the power transmission simulation; move forward on a straight path without hesitation.",
+          "forwardingLine": "The signal scrambler worked, you escaped. But your navigation record has been deleted. Screen is blank. You need to find direction."
+        },
+        {
+          "id": "C",
+          "text": "Send Federation identity immediately, continue without changing route by showing your authority.",
+          "forwardingLine": "Identity recognized, passage approved. But there is data loss. The navigation screen shows a white void."
+        },
+        {
+          "id": "D",
+          "text": "Share only the current location, delete the current navigation and switch to a new route immediately.",
+          "forwardingLine": "You gave your location but the route was encrypted. Your navigation system remained without coordinates. You must determine a new direction."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "The screen went dark. Coordinates deleted.\n\nDestination is not visible.\n\nHow is the new route determined?",
+      "forwardingLine": "\nWhile determining the new route, you notice the warning 'Recipient information: ?' on the data screen.\n",
+      "options": [
+        {
+          "id": "A",
+          "text": "I enter manual coordinates and choose a reliable route from old records.",
+          "forwardingLine": "Trusting your memory, you entered the system manually. Route created. You are approaching the final delivery point."
+        },
+        {
+          "id": "B",
+          "text": "I immediately send instructions to artificial intelligence to create a new route.",
+          "forwardingLine": "A new route has been created but artificial intelligence warns: Recipient information is missing. The terminal is waiting for you."
+        },
+        {
+          "id": "C",
+          "text": "I reach the terminal and learn the current location by making a direct signal request there.",
+          "forwardingLine": "Signal received with terminal data. But who will receive it? The final delivery screen opens with a question: Who is the recipient?"
+        },
+        {
+          "id": "D",
+          "text": "I draw the route by estimation and determine the route; I take risks and continue directly.",
+          "forwardingLine": "You drew a path in your head and fired the engine. Finally you reach the terminal but the screen still asks: Recipient?"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "You reached the delivery point.\n\nBut the system only says:\n\"Recipient: ?\"\n\nWho will you deliver to?",
+      "forwardingLine": "\nCargo delivered. Mission completed.\n",
+      "options": [
+        {
+          "id": "A",
+          "text": "Report to the control system immediately; deliver freight to the first authorized person who comes.",
+          "forwardingLine": "Delivery completed. But the identity ambiguity makes you think. The mission is ending, but there's a question in mind."
+        },
+        {
+          "id": "B",
+          "text": "Wait until the company representative comes; have their authorization document checked.",
+          "forwardingLine": "Time passes, finally the right person appears. Delivery complete. Your mission record is being uploaded to the system."
+        },
+        {
+          "id": "C",
+          "text": "I sent the delivery code; confirm who responded, then deliver.",
+          "forwardingLine": "The code finds a response, the system approves. But who's inside is unknown. Your mission file is closed."
+        },
+        {
+          "id": "D",
+          "text": "Leave the terminal immediately; cancel the delivery.",
+          "forwardingLine": "You canceled the mission. The system noted this. With the cargo left behind, you move away into infinite space."
+        }
+      ]
+    }
+  ]
+} 

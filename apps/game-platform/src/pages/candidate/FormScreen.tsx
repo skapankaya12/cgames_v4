@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
 import { Icons } from '@cgames/ui-kit';
 import '@cgames/ui-kit/styles/FormScreen.css';
@@ -14,6 +15,7 @@ type FormStep = 'welcome' | 'rules' | 'form';
 
 const FormScreen = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('ui');
   const [currentStep, setCurrentStep] = useState<FormStep>('welcome');
   const [user, setUser] = useState<User>({ firstName: '', lastName: '', company: '' });
   const [error, setError] = useState<string | null>(null);
@@ -34,14 +36,14 @@ const FormScreen = () => {
 
     // Validate file type
     if (file.type !== 'application/pdf') {
-      setFileError('Lütfen sadece PDF dosyası seçin.');
+      setFileError(t('form.errors.pdfOnly', 'Lütfen sadece PDF dosyası seçin.'));
       setSelectedFile(null);
       return;
     }
 
     // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      setFileError('Dosya boyutu 10MB\'dan küçük olmalıdır.');
+      setFileError(t('form.errors.fileSize', 'Dosya boyutu 10MB\'dan küçük olmalıdır.'));
       setSelectedFile(null);
       return;
     }
@@ -61,7 +63,7 @@ const FormScreen = () => {
     } catch (error) {
       console.error('❌ CV text extraction failed:', error);
       // Don't block the form submission if CV extraction fails
-      setFileError('CV analizi başarısız oldu, ancak dosya yine de yüklenecek.');
+      setFileError(t('form.errors.cvAnalysisFailed', 'CV analizi başarısız oldu, ancak dosya yine de yüklenecek.'));
     } finally {
       setIsProcessingCV(false);
     }
@@ -128,11 +130,11 @@ const FormScreen = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user.firstName.trim() || !user.lastName.trim() || !user.company.trim()) {
-      setError('Lütfen tüm alanları doldurunuz.');
+      setError(t('form.errors.allFields', 'Lütfen tüm alanları doldurunuz.'));
       return;
     }
     if (!consentChecked) {
-      setError('Teste başlamak için onay vermeniz gerekmektedir.');
+      setError(t('form.errors.consentRequired', 'Teste başlamak için onay vermeniz gerekmektedir.'));
       return;
     }
 
@@ -141,7 +143,7 @@ const FormScreen = () => {
       setError(null);
       const uploadSuccess = await uploadPDFToGoogleSheets(selectedFile, user);
       if (!uploadSuccess) {
-        setError('PDF yükleme başarısız oldu. Devam etmek istiyor musunuz?');
+        setError(t('form.errors.pdfUploadFailed', 'PDF yükleme başarısız oldu. Devam etmek istiyor musunuz?'));
         // Allow user to continue even if PDF upload fails
       }
     }
@@ -172,7 +174,7 @@ const FormScreen = () => {
   const renderWelcomeStep = () => (
     <div className="step-content welcome-step">
       <div className="step-header">
-        <h2 className="step-title">Hoş geldin!</h2>
+        <h2 className="step-title">{t('form.welcomeStep.title')}</h2>
         <div className="step-indicator">
           <span className="step-number">1</span>
           <span className="step-total">/ 3</span>
@@ -181,19 +183,19 @@ const FormScreen = () => {
       
       <div className="mission-content">
         
-        <h3 className="mission-title">Göreve Atandın: Galaksiler Arası Teslimat Kaptanısın</h3>
+        <h3 className="mission-title">{t('form.welcomeStep.missionTitle')}</h3>
         <div className="mission-description">
-          <p>Bu kritik enerji çekirdeği, galaksi ittifakının enerji dengesini koruyacak ve evrenin geleceğini belirleyecek. Görevin: çekirdeği Nova Terminali'ne tam zamanında, eksiksiz ve doğru alıcıya ulaştırmak.</p>
-          <p>Yolculuk yaklaşık 8-10 dakika sürecek. Verdiğin her karar; liderlik tarzını, karakterini ve reflekslerini test edecek ve seni yeni bir senaryoya yönlendirecek.</p>
+          <p>{t('form.welcomeStep.missionDescription')}</p>
+          <p>{t('form.welcomeStep.journeyDuration')}</p>
         </div>
         
         <div className="mission-highlight">
-          <strong>Bu bir test değil!</strong> Her tercih kaptanlık tarzının yansımasıdır. Hazırsan, kaptan koltuğuna geç ve maceranı başlat.
+          {t('form.welcomeStep.missionHighlight')}
         </div>
       </div>
 
       <button onClick={handleNext} className="next-button">
-        Devam Et
+        {t('buttons.continue', 'Devam Et')}
         <span className="button-arrow">→</span>
       </button>
     </div>
@@ -202,7 +204,7 @@ const FormScreen = () => {
   const renderRulesStep = () => (
     <div className="step-content rules-step">
       <div className="step-header">
-        <h2 className="step-title">Kurallar & Talimatlar</h2>
+        <h2 className="step-title">{t('form.rulesStep.title')}</h2>
         <div className="step-indicator">
           <span className="step-number">2</span>
           <span className="step-total">/ 3</span>
@@ -215,8 +217,8 @@ const FormScreen = () => {
             <Icons.Target size={48} color="#667eea" />
           </div>
           <div className="rule-text">
-            <strong>Her sahnede yalnızca bir seçim yapacaksın</strong>
-            <p>Dikkatli düşün ve en iyi seni yansıtan seçimi yap</p>
+            <strong>{t('form.rulesStep.rule1.title')}</strong>
+            <p>{t('form.rulesStep.rule1.description')}</p>
           </div>
         </div>
         
@@ -225,8 +227,8 @@ const FormScreen = () => {
             <Icons.Refresh size={48} color="#10b981" />
           </div>
           <div className="rule-text">
-            <strong>Cevabını değiştirebilirsin</strong>
-            <p>"Geri" butonuna basarak önceki seçimini gözden geçirebilirsin</p>
+            <strong>{t('form.rulesStep.rule2.title')}</strong>
+            <p>{t('form.rulesStep.rule2.description')}</p>
           </div>
         </div>
         
@@ -235,19 +237,19 @@ const FormScreen = () => {
             <Icons.Check size={48} color="#f59e0b" />
           </div>
           <div className="rule-text">
-            <strong>Doğru ya da yanlış cevap yok</strong>
-            <p>Sistem senin yetkinliklerini ve davranış reflekslerini analiz eder</p>
+            <strong>{t('form.rulesStep.rule3.title')}</strong>
+            <p>{t('form.rulesStep.rule3.description')}</p>
           </div>
         </div>
         
         <div className="privacy-notice">
           
-          <p>Verdiğin cevaplar analiz için kaydedilecek ve gizli tutulacaktır.</p>
+          <p>{t('form.rulesStep.privacyNotice')}</p>
         </div>
       </div>
 
       <button onClick={handleNext} className="next-button">
-        Anladım, Devam Et
+        {t('buttons.understood', 'Anladım, Devam Et')}
         <span className="button-arrow">→</span>
       </button>
     </div>
@@ -256,7 +258,7 @@ const FormScreen = () => {
   const renderFormStep = () => (
     <div className="step-content form-step">
       <div className="step-header">
-        <h2 className="step-title">Bilgilerini Gir</h2>
+        <h2 className="step-title">{t('form.formStep.title')}</h2>
         <div className="step-indicator">
           <span className="step-number">3</span>
           <span className="step-total">/ 3</span>
@@ -265,44 +267,44 @@ const FormScreen = () => {
       
       <form onSubmit={handleSubmit} className="user-form">
         <div className="form-group">
-          <label htmlFor="firstName" className="form-label">İsim</label>
+          <label htmlFor="firstName" className="form-label">{t('form.formStep.firstName')}</label>
           <input
             id="firstName"
             type="text"
             value={user.firstName}
             onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-            placeholder="İsminizi girin"
+            placeholder={t('form.formStep.firstName')}
             required
           />
         </div>
         
         <div className="form-group">
-          <label htmlFor="lastName" className="form-label">Soyisim</label>
+          <label htmlFor="lastName" className="form-label">{t('form.formStep.lastName')}</label>
           <input
             id="lastName"
             type="text"
             value={user.lastName}
             onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-            placeholder="Soyisminizi girin"
+            placeholder={t('form.formStep.lastName')}
             required
           />
         </div>
         
         <div className="form-group">
-          <label htmlFor="company" className="form-label">Şirket</label>
+          <label htmlFor="company" className="form-label">{t('form.formStep.company')}</label>
           <input
             id="company"
             type="text"
             value={user.company}
             onChange={(e) => setUser({ ...user, company: e.target.value })}
-            placeholder="Şirketinizi girin"
+            placeholder={t('form.formStep.company')}
             required
           />
         </div>
 
         <div className="form-group pdf-upload-group">
           <label htmlFor="pdfUpload" className="form-label">
-            CV/Özgeçmiş (PDF) - İsteğe Bağlı
+            {t('form.formStep.uploadCV')}
           </label>
           <div className="pdf-upload-container">
             <input
@@ -334,7 +336,7 @@ const FormScreen = () => {
               ) : (
                 <div className="upload-placeholder">
                   <span className="upload-icon">📁</span>
-                  <span>PDF dosyası seçin (Maksimum 10MB)</span>
+                  <span>{t('form.formStep.selectFile')}</span>
                 </div>
               )}
             </div>
@@ -343,7 +345,7 @@ const FormScreen = () => {
                 <div className="progress-bar">
                   <div className="progress-fill"></div>
                 </div>
-                <span>CV analiz ediliyor...</span>
+                <span>{t('form.formStep.processingCV')}</span>
               </div>
             )}
             {isUploading && (
@@ -351,13 +353,13 @@ const FormScreen = () => {
                 <div className="progress-bar">
                   <div className="progress-fill"></div>
                 </div>
-                <span>Yükleniyor...</span>
+                <span>{t('form.formStep.uploading')}</span>
               </div>
             )}
           </div>
           {fileError && <div className="file-error">{fileError}</div>}
           <div className="pdf-help-text">
-            CV'niz analiz için güvenli şekilde saklanacak ve sadece test sonuçlarınızla birlikte kullanılacaktır.
+            {t('form.formStep.cvSecurity')}
           </div>
         </div>
         
@@ -374,7 +376,7 @@ const FormScreen = () => {
             />
             <label htmlFor="consent" className="consent-label">
               <span className="checkbox-custom"></span>
-              <span className="consent-text">Onaylıyorum</span>
+              <span className="consent-text">{t('form.formStep.consent')}</span>
             </label>
           </div>
         </div>
@@ -384,7 +386,7 @@ const FormScreen = () => {
           className="start-button"
           disabled={!user.firstName.trim() || !user.lastName.trim() || !user.company.trim() || !consentChecked || isUploading || isProcessingCV}
         >
-          {isProcessingCV ? 'CV Analiz Ediliyor...' : isUploading ? 'Yükleniyor...' : 'Yolculuğa Başla'}
+          {isProcessingCV ? t('form.formStep.processingCV') : isUploading ? t('form.formStep.uploading') : t('buttons.startJourney', 'Yolculuğa Başla')}
         </button>
       </form>
     </div>
@@ -402,7 +404,7 @@ const FormScreen = () => {
                 onClick={handleBack}
                 className="back-button"
               >
-                ← Geri
+                ← {t('buttons.back', 'Geri')}
               </button>
               
               {currentStep === 'welcome' && renderWelcomeStep()}
@@ -414,7 +416,7 @@ const FormScreen = () => {
       </div>
 
       <div className="game-footer">
-        <p className="footer-text">OlivinHR 2025. All rights reserved</p>
+        <p className="footer-text">{t('app.copyright', 'OlivinHR 2025. All rights reserved')}</p>
       </div>
     </div>
   );

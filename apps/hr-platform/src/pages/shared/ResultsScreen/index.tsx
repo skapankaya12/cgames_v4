@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Icons, UserGuidePanel, AIAssistantChat } from '@cgames/ui-kit';
 import { FilterTabs } from './components/FilterTabs';
 import { ScoreDisplay } from './components/ScoreDisplay';
@@ -18,6 +19,7 @@ import '@cgames/ui-kit/styles/ResultsScreen.css';
 
 export const SharedResultsScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
 
   // Data management
   const {
@@ -206,11 +208,11 @@ export const SharedResultsScreen: React.FC = () => {
           <div className="action-buttons">
             <button className="primary-button" onClick={handleManualSubmit} disabled={isSubmitting}>
               <Icons.Send size={16} />
-              {isSubmitting ? 'Gönderiliyor...' : 'Sonuçları Gönder'}
+              {isSubmitting ? t('status.sending') : t('buttons.sendResults')}
             </button>
             <button className="secondary-button" onClick={handleRestart}>
               <Icons.RotateCcw size={16} />
-              Yeni Test
+              {t('buttons.newTest')}
             </button>
           </div>
         </div>

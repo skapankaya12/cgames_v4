@@ -1,0 +1,268 @@
+const { initializeApp, getApps, cert } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
+
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Initialize Firebase Admin
+function initializeFirebaseAdmin() {
+  if (getApps().length === 0) {
+    console.log('🔥 [Get Candidate Results API] Initializing Firebase Admin...');
+    
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+    if (!privateKey) {
+      throw new Error('FIREBASE_PRIVATE_KEY environment variable is required');
+    }
+
+    const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
+
+    initializeApp({
+      credential: cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: formattedPrivateKey,
+      }),
+    });
+    
+    console.log('✅ [Get Candidate Results API] Firebase Admin initialized successfully');
+  }
+  
+  return getFirestore();
+}
+
+module.exports = async function handler(req, res) {
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('🔄 [Get Candidate Results API] Handling OPTIONS request');
+    return res.status(200).json({ message: 'OK' });
+  }
+
+  // Set CORS headers
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+
+  if (req.method !== 'GET') {
+    return res.status(405).json({ 
+      success: false, 
+      error: 'Method not allowed' 
+    });
+  }
+
+  console.log('📊 [Get Candidate Results API] Request received: GET /api/hr/getCandidateResults');
+
+  try {
+    const db = initializeFirebaseAdmin();
+    
+    // Extract parameters
+    const { candidateEmail, companyId, projectId, hrId } = req.query;
+
+    console.log('📊 [Get Candidate Results API] Processing request:');
+    console.log('  - Project ID:', projectId);
+    console.log('  - HR User ID:', hrId);
+    console.log('  - Candidate Email:', candidateEmail);
+
+    // Support both new format (candidateEmail, companyId) and legacy format (projectId, hrId)
+    if (candidateEmail && companyId) {
+      console.log('🔄 [Get Candidate Results API] Using new format: candidateEmail + companyId');
+      
+      // Find the candidate results by email
+      const resultsQuery = await db.collection('candidateResults')
+        .where('candidateEmail', '==', candidateEmail)
+        .get();
+
+      if (resultsQuery.empty) {
+        console.log('❌ [Get Candidate Results API] No results found for candidate:', candidateEmail);
+        return res.status(404).json({
+          success: false,
+          error: 'No results found for this candidate'
+        });
+      }
+
+      // Get the most recent result (sort in memory to avoid index requirement)
+      const sortedDocs = resultsQuery.docs.sort((a, b) => 
+        new Date(b.data().submittedAt) - new Date(a.data().submittedAt)
+      );
+      const resultDoc = sortedDocs[0];
+      const resultData = resultDoc.data();
+      
+      console.log('✅ [Get Candidate Results API] Found results for candidate:', candidateEmail);
+      
+      // Return the single result
+      return res.status(200).json({
+        success: true,
+        result: {
+          id: resultDoc.id,
+          ...resultData
+        }
+      });
+    }
+
+    // Legacy format support (projectId, hrId)
+    if (!projectId) {
+      console.log('❌ [Get Candidate Results API] Missing required parameters');
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required parameters: projectId (legacy) or candidateEmail + companyId (new)'
+      });
+    }
+
+    // Step 1: Verify HR user permissions
+    console.log('🔍 [Get Candidate Results API] Step 1: Verifying HR user permissions...');
+    
+    let hrUser = null;
+    if (hrId && hrId !== 'test-user') {
+      try {
+        const hrUserDoc = await db.collection('users').doc(hrId).get();
+        if (hrUserDoc.exists) {
+          hrUser = hrUserDoc.data();
+          console.log('✅ [Get Candidate Results API] HR user verified - Role:', hrUser.role, 'Company:', hrUser.companyId);
+        } else {
+          console.log('⚠️ [Get Candidate Results API] HR user not found in users collection, continuing with project verification');
+        }
+      } catch (error) {
+        console.log('⚠️ [Get Candidate Results API] Error verifying HR user, continuing with project verification:', error.message);
+      }
+    }
+
+    // Step 2: Verify project access (if we have HR user info)
+    if (hrUser) {
+      console.log('🔄 [Get Candidate Results API] Step 2: Verifying project access...');
+      
+      const projectDoc = await db.collection('projects').doc(projectId).get();
+      if (projectDoc.exists) {
+        const project = projectDoc.data();
+        if (project.companyId !== hrUser.companyId) {
+          console.log('❌ [Get Candidate Results API] Project access denied');
+          return res.status(403).json({
+            success: false,
+            error: 'Access denied to this project'
+          });
+        }
+        console.log('✅ [Get Candidate Results API] Project access verified:', project.name);
+      }
+    }
+
+    // Step 3: Get all candidate results for the project from candidateResults collection
+    console.log('🔍 [Get Candidate Results API] Step 2: Fetching candidate results...');
+    
+    // Use simple query to avoid composite index requirement
+    const resultsQuery = await db.collection('candidateResults')
+      .where('projectId', '==', projectId)
+      .get();
+
+    const results = [];
+    
+    for (const doc of resultsQuery.docs) {
+      const resultData = doc.data();
+      
+      // Get additional invite information if needed
+      let inviteData = null;
+      if (resultData.inviteId) {
+        const inviteDoc = await db.collection('invites').doc(resultData.inviteId).get();
+        if (inviteDoc.exists) {
+          inviteData = inviteDoc.data();
+        }
+      }
+
+      // Format result for HR dashboard
+      const formattedResult = {
+        id: doc.id,
+        candidateEmail: resultData.candidateEmail,
+        candidateData: inviteData ? {
+          roleTag: inviteData.roleTag,
+          sentBy: inviteData.sentBy,
+          sentAt: inviteData.createdAt
+        } : null,
+        
+        // Game information
+        gameId: resultData.gameId,
+        gameName: resultData.gameName,
+        
+        // Performance metrics
+        scorePercentage: resultData.scorePercentage || 0,
+        rawScore: resultData.rawScore || 0,
+        totalQuestions: resultData.totalQuestions || 0,
+        competencyScores: resultData.competencyScores || {},
+        maxCompetencyScores: resultData.maxCompetencyScores || {},
+        performance: resultData.performance || {},
+        
+        // Timing information
+        completedAt: resultData.completedAt,
+        submittedAt: resultData.submittedAt,
+        timeSpent: resultData.results?.timeSpent || resultData.results?.completionTime || null,
+        
+        // Status
+        status: resultData.status,
+        reviewStatus: resultData.reviewStatus || 'pending',
+        
+        // Full results data for detailed analysis
+        results: resultData.results,
+        
+        // Metadata
+        metadata: {
+          language: resultData.metadata?.language || 'en',
+          country: resultData.metadata?.country || null,
+          gameVersion: resultData.metadata?.gameVersion || '1.0.0',
+          apiVersion: resultData.metadata?.apiVersion || '1.0.0'
+        }
+      };
+
+      results.push(formattedResult);
+    }
+
+    // Sort results by submittedAt in memory (to avoid needing composite index)
+    results.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+    console.log('✅ [Get Candidate Results API] Found', results.length, 'candidate results');
+
+    // Step 4: Get summary statistics
+    const statistics = {
+      totalCandidates: results.length,
+      completedAssessments: results.filter(r => r.status === 'completed').length,
+      averageScore: results.length > 0 ? 
+        Math.round(results.reduce((sum, r) => sum + r.scorePercentage, 0) / results.length) : 0,
+      performanceDistribution: {
+        excellent: results.filter(r => r.performance?.overall === 'excellent').length,
+        good: results.filter(r => r.performance?.overall === 'good').length,
+        fair: results.filter(r => r.performance?.overall === 'fair').length,
+        needs_improvement: results.filter(r => r.performance?.overall === 'needs_improvement').length
+      },
+      gameBreakdown: results.reduce((acc, r) => {
+        acc[r.gameId] = (acc[r.gameId] || 0) + 1;
+        return acc;
+      }, {})
+    };
+
+    console.log('📊 [Get Candidate Results API] Statistics:', JSON.stringify(statistics, null, 2));
+
+    // Step 5: Return results
+    const response = {
+      success: true,
+      data: {
+        project: {
+          id: projectId,
+          name: 'Project' // We can enhance this later by fetching actual project name
+        },
+        results: results,
+        statistics: statistics,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    return res.status(200).json(response);
+
+  } catch (error) {
+    console.error('❌ [Get Candidate Results API] Error:', error);
+    
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to fetch candidate results'
+    });
+  }
+}; 

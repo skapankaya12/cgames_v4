@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from '@cgames/ui-kit';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import type { CompetencyScore } from '../types/results';
@@ -31,41 +32,42 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
   feedbackSubmitSuccess,
   isLoadingRecommendations
 }) => {
+  const { t } = useTranslation('ui');
   const navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
-      label: 'Genel Bakış',
+      label: t('results.navigation.overview.label'),
       icon: 'Analytics',
-      description: 'Özetin görünümü ve anahtar metrikler',
+      description: t('results.navigation.overview.description'),
       isReady: true
     },
     {
       id: 'yetkinlikler',
-      label: 'Yetkinlikler',
+      label: t('results.navigation.competencies.label'),
       icon: 'BarChart3',
-      description: `${scores.length} yetkinlik alanı analizi`,
+      description: t('results.navigation.competencies.description', { count: scores.length }),
       badge: scores.length.toString(),
       isReady: scores.length > 0
     },
     {
       id: 'davranış-analizi',
-      label: 'Davranış Analizi',
+      label: t('results.navigation.behaviorAnalysis.label'),
       icon: 'Brain',
-      description: 'Davranış patternleri ve zaman analizi',
+      description: t('results.navigation.behaviorAnalysis.description'),
       isReady: !!interactionAnalytics
     },
     {
       id: 'öneriler',
-      label: 'AI Öneriler',
+      label: t('results.navigation.recommendations.label'),
       icon: 'AI',
-      description: 'Adaya özel değerlendirme ve öneriler',
+      description: t('results.navigation.recommendations.description'),
       isReady: !isLoadingRecommendations
     },
     {
       id: 'feedback',
-      label: 'Geri Bildirim',
+      label: t('results.navigation.feedback.label'),
       icon: 'Message',
-      description: 'Demo için geri bildirim gönderin',
+      description: t('results.navigation.feedback.description'),
       isReady: true
     }
   ];
@@ -91,7 +93,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
         </div>
         <div className="nav-brand-text">
           <h2>Olivin HR</h2>
-          <p>Sonuçlar</p>
+          <p>{t('results.navigation.overview.label')}</p>
         </div>
       </div>
 
@@ -134,7 +136,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
       <div className="nav-footer">
         <div className="nav-footer-item">
           <Icons.Lightbulb size={50} />
-          <span>Yardım butonlarından ayrıntılı bilgi alabilirsiniz.</span>
+          <span>{t('help.helpButtonDescription')}</span>
         </div>
       </div>
     </div>

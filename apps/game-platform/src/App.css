@@ -416,3 +416,15 @@ body {
     max-width: 280px;
   }
 }
+
+/* Language Selector Styles */
+.language-selector-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.landing-page {
+  position: relative;
+}

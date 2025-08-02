@@ -103,10 +103,24 @@ export const formatTime = (milliseconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   
-  if (minutes > 0) {
-    return `${minutes}dk ${remainingSeconds}sn`;
+  // Get current language from i18n if available
+  const currentLanguage = (typeof window !== 'undefined' && window.i18next) 
+    ? window.i18next.language 
+    : 'en';
+  
+  if (currentLanguage === 'tr') {
+    // Turkish format
+    if (minutes > 0) {
+      return `${minutes}dk ${remainingSeconds}sn`;
+    }
+    return `${remainingSeconds}sn`;
   }
-  return `${remainingSeconds}sn`;
+  
+  // English format
+  if (minutes > 0) {
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  return `${remainingSeconds}s`;
 };
 
 export const getSliderPosition = (value: number): string => {

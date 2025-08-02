@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from './SvgIcons';
 import './styles/UserGuidePanel.css';
 
-
 interface UserGuidePanelProps {
-  currentFilter: string;
+  currentFilter?: string;
   isCollapsed?: boolean;
   onToggle?: () => void;
-  onCollapseChange?: (isCollapsed: boolean) => void;
+  onCollapseChange?: (collapsed: boolean) => void;
 }
 
 const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollapsed: externalIsCollapsed, onToggle, onCollapseChange }) => {
+  const { t } = useTranslation('ui');
   const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
 
@@ -32,31 +33,29 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.Book size={20} color="#ffffff" />
-          <span>Genel Bakış</span>
+          <span>{t('help.dashboardOverview.title')}</span>
         </div>
       ),
       content: (
         <div>
-          <h4>Sonuç Ekranı Rehberi</h4>
-          <p>Bu ekranda aday değerlendirme sonuçlarınızı görüntüleyebilir ve analiz edebilirsiniz.</p>
+          <h4>{t('help.dashboardOverview.title')}</h4>
+          <p>{t('help.dashboardOverview.description')}</p>
           
           <div className="guide-section">
             <h5 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Icons.Target size={16} color="#10b981" />
-              <span>Ana Özellikler</span>
+              <span>{t('results.navigation.overview.label')}</span>
             </h5>
             <ul>
-              <li>AI destekli aday değerlendirme raporları</li>
-              <li>Yetkinlik bazlı skorlama sistemi</li>
-              <li>Davranışsal analiz ve öngörüler</li>
-              <li>Kişiselleştirilmiş mülakat önerileri</li>
-              <li>PDF olarak dışa aktarma</li>
+              {(t('help.dashboardOverview.tips', { returnObjects: true }) as string[]).map((tip, index) => (
+                <li key={index}>{tip}</li>
+              ))}
             </ul>
           </div>
 
           <div className="guide-section">
-            <h5>🧭 Navigasyon</h5>
-            <p>Üst kısımdaki kartları kullanarak farklı analiz türleri arasında geçiş yapabilirsiniz.</p>
+            <h5>🧭 {t('navigation.dashboard')}</h5>
+            <p>{t('help.dashboardOverview.description')}</p>
           </div>
         </div>
       )
@@ -65,26 +64,26 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.AI size={20} color="#ffffff" />
-          <span>AI Değerlendirme</span>
+          <span>{t('help.aiAssessment.title')}</span>
         </div>
       ),
       content: (
         <div>
-          <h4>Yapay Zeka Analizi</h4>
-          <p>AI destekli değerlendirme sistemi, aday performansını kapsamlı şekilde analiz eder.</p>
+          <h4>{t('help.aiAssessment.title')}</h4>
+          <p>{t('help.aiAssessment.description')}</p>
           
           <div className="guide-section">
-            <h5>Nasıl Çalışır?</h5>
+            <h5>{t('help.aiAssessment.howItWorks.title')}</h5>
             <ul>
-              <li>Yetkinlik test sonuçları otomatik analiz edilir</li>
-              <li>CV verileri ile test sonuçları karşılaştırılır</li>
-              <li>Pozisyon gereksinimleri ile uyum değerlendirilir</li>
-              <li>Gelişim alanları ve öneriler sunulur</li>
+              <li>{t('help.aiAssessment.howItWorks.step1')}</li>
+              <li>{t('help.aiAssessment.howItWorks.step2')}</li>
+              <li>{t('help.aiAssessment.howItWorks.step3')}</li>
+              <li>{t('help.aiAssessment.howItWorks.step4')}</li>
             </ul>
           </div>
 
           <div className="guide-tip">
-            <strong>💡 İpucu:</strong> AI asistan ile etkileşime geçerek daha detaylı bilgi alabilirsiniz.
+            <strong>💡 {t('help.aiAssessment.tip.title')}:</strong> {t('help.aiAssessment.tip.description')}
           </div>
         </div>
       )
@@ -93,34 +92,34 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.Analytics size={20} color="#ffffff" />
-          <span>Yetkinlikler</span>
+          <span>{t('help.competencies.title')}</span>
         </div>
       ),
       content: (
         <div>
-          <h4>Yetkinlik Değerlendirmesi</h4>
-          <p>Her yetkinlik alanında detaylı performans analizi yapılır.</p>
+          <h4>{t('help.competencies.title')}</h4>
+          <p>{t('help.competencies.description')}</p>
           
           <div className="guide-section">
             <h5 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Icons.Target size={16} color="#10b981" />
-              <span>Yetkinlik Kategorileri</span>
+              <span>{t('help.competencies.categories.title')}</span>
             </h5>
             <ul>
-              <li><strong>Liderlik:</strong> Ekip yönetimi ve karar alma</li>
-              <li><strong>İletişim:</strong> Sözlü ve yazılı iletişim becerileri</li>
-              <li><strong>Problem Çözme:</strong> Analitik düşünce ve yaratıcılık</li>
-              <li><strong>Takım Çalışması:</strong> İş birliği ve uyum</li>
-              <li><strong>Stres Yönetimi:</strong> Baskı altında performans</li>
+              <li><strong>{t('help.competencies.categories.leadership')}:</strong> {t('help.competencies.categories.leadershipDescription')}</li>
+              <li><strong>{t('help.competencies.categories.communication')}:</strong> {t('help.competencies.categories.communicationDescription')}</li>
+              <li><strong>{t('help.competencies.categories.problemSolving')}:</strong> {t('help.competencies.categories.problemSolvingDescription')}</li>
+              <li><strong>{t('help.competencies.categories.teamwork')}:</strong> {t('help.competencies.categories.teamworkDescription')}</li>
+              <li><strong>{t('help.competencies.categories.stressManagement')}:</strong> {t('help.competencies.categories.stressManagementDescription')}</li>
             </ul>
           </div>
 
           <div className="guide-section">
-            <h5>📈 Skor Yorumlama</h5>
+            <h5>{t('help.competencies.scoring.title')}</h5>
             <ul>
-              <li><strong>Yüksek (80%+):</strong> Güçlü yetkinlik alanı</li>
-              <li><strong>Orta (50-80%):</strong> Gelişim potansiyeli var</li>
-              <li><strong>Düşük (50%-altı):</strong> Gelişim odaklı alan</li>
+              <li><strong>{t('help.competencies.scoring.high')}:</strong> {t('help.competencies.scoring.highDescription')}</li>
+              <li><strong>{t('help.competencies.scoring.medium')}:</strong> {t('help.competencies.scoring.mediumDescription')}</li>
+              <li><strong>{t('help.competencies.scoring.low')}:</strong> {t('help.competencies.scoring.lowDescription')}</li>
             </ul>
           </div>
         </div>
@@ -130,48 +129,48 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.Brain size={20} color="#ffffff" />
-          <span>Davranış Analizi</span>
+          <span>{t('help.behaviorAnalysis.title')}</span>
         </div>
       ),
       content: (
         <div>
-          <h4>Davranışsal Değerlendirme</h4>
-          <p>Adayın davranış patternleri ve iş yerindeki potansiyel performansı analiz edilir.</p>
+          <h4>{t('help.behaviorAnalysis.title')}</h4>
+          <p>{t('help.behaviorAnalysis.description')}</p>
           
           <div className="guide-section">
             <h5 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Icons.Target size={16} color="#10b981" />
-              <span>Önemli Göstergeler</span>
+              <span>{t('help.behaviorAnalysis.indicators.title')}</span>
             </h5>
             <ul>
-              <li><strong>Karar Verme Hızı:</strong> Kritik durumlar için önemli</li>
-              <li><strong>Risk Alma Eğilimi:</strong> İnovasyon potansiyeli</li>
-              <li><strong>Uyum Kabiliyeti:</strong> Değişen şartlara adaptasyon</li>
-              <li><strong>Motivasyon Kaynakları:</strong> Uzun vadeli başarı faktörleri</li>
+              <li><strong>{t('help.behaviorAnalysis.indicators.decisionMaking')}:</strong> {t('help.behaviorAnalysis.indicators.decisionMakingDescription')}</li>
+              <li><strong>{t('help.behaviorAnalysis.indicators.riskTaking')}:</strong> {t('help.behaviorAnalysis.indicators.riskTakingDescription')}</li>
+              <li><strong>{t('help.behaviorAnalysis.indicators.adaptability')}:</strong> {t('help.behaviorAnalysis.indicators.adaptabilityDescription')}</li>
+              <li><strong>{t('help.behaviorAnalysis.indicators.motivation')}:</strong> {t('help.behaviorAnalysis.indicators.motivationDescription')}</li>
             </ul>
           </div>
         </div>
       )
     },
     feedback: {
-      title: "💬 Geri Bildirim",
+      title: t('help.feedback.title'),
       content: (
         <div>
-          <h4>Test Deneyimi Değerlendirmesi</h4>
-          <p>Test deneyiminizi değerlendirin ve sistemin geliştirilmesine katkıda bulunun.</p>
+          <h4>{t('help.feedback.testExperience.title')}</h4>
+          <p>{t('help.feedback.testExperience.description')}</p>
           
           <div className="guide-section">
-            <h5>⭐ Değerlendirme Kriterleri</h5>
+            <h5>⭐ {t('help.feedback.evaluationCriteria.title')}</h5>
             <ul>
-              <li><strong>Doğruluk:</strong> Sonuçların gerçekçiliği</li>
-              <li><strong>Deneyim:</strong> Test alma deneyimi</li>
-              <li><strong>Adalet:</strong> Objektif değerlendirme</li>
-              <li><strong>Fayda:</strong> Sonuçların kullanışlılığı</li>
+              <li><strong>{t('help.feedback.evaluationCriteria.accuracy')}:</strong> {t('help.feedback.evaluationCriteria.accuracyDescription')}</li>
+              <li><strong>{t('help.feedback.evaluationCriteria.experience')}:</strong> {t('help.feedback.evaluationCriteria.experienceDescription')}</li>
+              <li><strong>{t('help.feedback.evaluationCriteria.fairness')}:</strong> {t('help.feedback.evaluationCriteria.fairnessDescription')}</li>
+              <li><strong>{t('help.feedback.evaluationCriteria.utility')}:</strong> {t('help.feedback.evaluationCriteria.utilityDescription')}</li>
             </ul>
           </div>
 
           <div className="guide-tip">
-            <strong>📝 Not:</strong> Geri bildirimleriniz sistemin geliştirilmesi için çok değerli.
+            <strong>📝 {t('help.feedback.note.title')}:</strong> {t('help.feedback.note.description')}
           </div>
         </div>
       )
@@ -194,22 +193,22 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
   };
 
   const navigationTabs = [
-    { key: 'overview', icon: <Icons.Book size={16} />, label: 'Genel Bakış' },
-    { key: 'ai', icon: <Icons.AI size={16} />, label: 'AI Değerlendirme' },
-    { key: 'competencies', icon: <Icons.Analytics size={16} />, label: 'Yetkinlikler' },
-    { key: 'behavior', icon: <Icons.Brain size={16} />, label: 'Davranış Analizi' },
+    { key: 'overview', icon: <Icons.Book size={16} />, label: t('help.dashboardOverview.title') },
+    { key: 'ai', icon: <Icons.AI size={16} />, label: t('help.aiAssessment.title') },
+    { key: 'competencies', icon: <Icons.Analytics size={16} />, label: t('help.competencies.title') },
+    { key: 'behavior', icon: <Icons.Brain size={16} />, label: t('help.behaviorAnalysis.title') },
   ];
 
   return (
     <div className={`user-guide-panel ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="guide-header">
         <div className="guide-title">
-          {!isCollapsed && <span>📚 Kullanım Rehberi</span>}
+          {!isCollapsed && <span>{t('help.guideTitle')}</span>}
         </div>
         <button
           className="collapse-button"
           onClick={handleCollapseToggle}
-          title={isCollapsed ? "Rehberi Genişlet" : "Rehberi Daralt"}
+          title={isCollapsed ? t('help.expandGuide') : t('help.collapseGuide')}
         >
           {isCollapsed ? <Icons.Book size={20} /> : <Icons.Collapse size={20} />}
         </button>
@@ -232,7 +231,7 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
 
           <div className="guide-content">
             <div className="current-context">
-              <span className="context-indicator">📍 Şu anda görüntülenen:</span>
+              <span className="context-indicator">{t('help.currentContext.indicator')}:</span>
               <span className="context-value">{getContentByFilter().title}</span>
             </div>
             
@@ -243,11 +242,11 @@ const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ currentFilter, isCollap
 
           <div className="guide-footer">
             <div className="quick-tips">
-              <h5>⚡ Hızlı İpuçları</h5>
+              <h5>⚡ {t('help.quickTips.title')}</h5>
               <ul>
-                <li>Kartlara tıklayarak geçiş yapın</li>
-                <li>AI asistan ile sohbet edin</li>
-                <li>Sonuçları PDF olarak indirin</li>
+                <li>{t('help.quickTips.clickCards')}</li>
+                <li>{t('help.quickTips.chatWithAI')}</li>
+                <li>{t('help.quickTips.downloadResults')}</li>
               </ul>
             </div>
           </div>

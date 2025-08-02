@@ -34,3 +34,4 @@ dist-ssr
 .turbo
 *.env.local.backup
 *.env.local.backup
+.vercel

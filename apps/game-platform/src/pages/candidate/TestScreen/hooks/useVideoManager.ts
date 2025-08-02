@@ -15,7 +15,7 @@ export function useVideoManager(testState: TestState, currentQuestion: any) {
   // Load and play video when question changes
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
+    if (video && currentQuestion && currentQuestion.id) {
       setVideoLoaded(false);
       setVideoError(false);
       setIsVideoPlaying(false);
@@ -36,11 +36,20 @@ export function useVideoManager(testState: TestState, currentQuestion: any) {
           videoFileName = `${questionId}.Soru.mp4`;
         }
         
+        // Safety check - don't proceed if we don't have a valid filename
+        if (!videoFileName) {
+          console.error('No video filename found for question ID:', questionId);
+          setVideoError(true);
+          return;
+        }
+        
         const videoSrc = testState.isComplete 
           ? `${import.meta.env.BASE_URL}scenes/welcomescreen.mp4`
           : `${import.meta.env.BASE_URL}scenes/${videoFileName}`;
         
-        console.log('Loading video from:', videoSrc);
+        console.log('Loading video from:', videoSrc, 'for question ID:', questionId);
+        console.log('Current question object:', currentQuestion);
+        console.log('Question text preview:', currentQuestion.text?.substring(0, 100));
         
         // Enable sound for all videos
         video.muted = false;
@@ -81,7 +90,7 @@ export function useVideoManager(testState: TestState, currentQuestion: any) {
         setVideoError(true);
       }
     }
-  }, [testState.currentQuestion, testState.isComplete, currentQuestion]);
+  }, [testState.currentQuestion, testState.isComplete, currentQuestion?.id, currentQuestion?.text]);
 
   // Cleanup video when component unmounts
   useEffect(() => {

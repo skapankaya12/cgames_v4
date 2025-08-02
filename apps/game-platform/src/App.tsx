@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Header } from '@cgames/ui-kit';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import IdentityScreen from './pages/candidate/IdentityScreen';
 import FormScreen from './pages/candidate/FormScreen';
 import TestScreen from './pages/candidate/TestScreen';
@@ -9,21 +10,30 @@ import ResultsScreen from './pages/candidate/ResultsScreen';
 import IdentityScreen2 from './pages/candidate/Game2/IdentityScreen2';
 import TestScreen2 from './pages/candidate/Game2/TestScreen2';
 import ResultsScreen2 from './pages/candidate/Game2/ResultsScreen2';
+import ThankYouScreen from './pages/candidate/ThankYouScreen';
+import LanguageSelector from './components/LanguageSelector';
+import { getGameById } from './config/games';
+import { SafeGameFlowProvider } from './contexts/GameFlowContext';
 import './App.css';
 
 // Placeholder Landing Page Component
 function LandingPage() {
+  const { t } = useTranslation('common');
+  
   return (
     <div className="landing-page">
+      <div className="language-selector-container">
+        <LanguageSelector />
+      </div>
       <div className="landing-content">
-        <h1>OlivinHR</h1>
-        <p>Gamified Soft Skills Assesment I DEMO VERSION</p>
+        <h1>{t('app.title')}</h1>
+        <p>{t('app.subtitle')}</p>
         <div className="landing-buttons">
           <a href="/candidate" className="landing-button">
-            Start Assessment
+            {t('landing.startAssessment')}
           </a>
           <a href="/candidate/game2" className="landing-button secondary">
-            Game 2 Assessment I Soon
+            {t('landing.game2Assessment')}
           </a>
         </div>
       </div>
@@ -33,6 +43,7 @@ function LandingPage() {
 
 // Invite validation component
 function InviteHandler() {
+  const { t } = useTranslation('common');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -42,7 +53,7 @@ function InviteHandler() {
     const token = searchParams.get('token');
 
     if (!token) {
-      setError('No invitation token provided');
+      setError(t('validation.noTokenProvided'));
       setLoading(false);
       return;
     }
@@ -53,19 +64,25 @@ function InviteHandler() {
         // Store invite data in sessionStorage for use throughout the assessment
         sessionStorage.setItem('currentInvite', JSON.stringify(inviteData));
         
-        // Route to appropriate game based on selected game
-        const selectedGame = inviteData.selectedGame || 'Leadership Scenario Game';
-        routeToGame(selectedGame, inviteData);
+        // Route to appropriate game based on game ID
+        const gameId = inviteData.selectedGame || searchParams.get('gameId') || 'leadership-scenario';
+        routeToGameById(gameId, inviteData);
       })
       .catch((err) => {
         console.error('Token validation failed:', err);
-        setError('Invalid or expired invitation link');
+        setError(t('validation.invalidInvitation'));
         setLoading(false);
       });
   }, [searchParams, navigate]);
 
   const validateInviteToken = async (token: string) => {
-    const response = await fetch(`/api/invites/validate?token=${token}`, {
+    // Use the main API server for token validation
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
+      (process.env.NODE_ENV === 'production' 
+        ? 'https://app.olivinhr.com' 
+        : 'http://localhost:3001');
+      
+    const response = await fetch(`${apiBaseUrl}/api/validate-invite?token=${token}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -73,38 +90,40 @@ function InviteHandler() {
     });
 
     if (!response.ok) {
-      throw new Error('Token validation failed');
+      throw new Error(t('validation.tokenValidationFailed'));
     }
 
     const data = await response.json();
     return data.invite;
   };
 
-  const routeToGame = (selectedGame: string, inviteData: any) => {
+  const routeToGameById = (gameId: string, inviteData: any) => {
     // Update invite status to 'started'
     updateInviteStatus(inviteData.token, 'started');
     
-    // Route based on selected game
-    switch (selectedGame) {
-      case 'Leadership Scenario Game':
-        navigate('/candidate', { state: { inviteData } });
-        break;
-      case 'Team Building Simulation':
-      case 'Crisis Management Scenarios':
-      case 'Strategic Planning Exercise':
-      case 'Negotiation Simulation':
-      case 'Communication Challenges':
-        navigate('/candidate/game2', { state: { inviteData } });
-        break;
-      default:
-        navigate('/candidate', { state: { inviteData } });
+    // Use game configuration to determine the correct route
+    const game = getGameById(gameId);
+    
+    if (game) {
+      console.log('🎮 [InviteHandler] Routing to game:', game.displayName, 'at route:', game.route);
+      navigate(game.route, { state: { inviteData } });
+    } else {
+      console.warn('🎮 [InviteHandler] Unknown game ID:', gameId, '- routing to default game');
+      navigate('/candidate', { state: { inviteData } });
     }
+    
     setLoading(false);
   };
 
   const updateInviteStatus = async (token: string, status: string) => {
     try {
-      await fetch('/api/invites/update-status', {
+      // Use the main API server for status updates
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
+        (process.env.NODE_ENV === 'production' 
+          ? 'https://app.olivinhr.com' 
+          : 'http://localhost:3001');
+        
+      await fetch(`${apiBaseUrl}/api/update-invite-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +139,7 @@ function InviteHandler() {
     return (
       <div className="invite-loading">
         <div className="loading-spinner-large"></div>
-        <p>Validating your invitation...</p>
+        <p>{t('invite.validatingInvitation')}</p>
       </div>
     );
   }
@@ -128,9 +147,9 @@ function InviteHandler() {
   if (error) {
     return (
       <div className="invite-error">
-        <h2>Invalid Invitation</h2>
+        <h2>{t('invite.invalidInvitation')}</h2>
         <p>{error}</p>
-        <p>Please check your invitation link or contact the sender.</p>
+        <p>{t('validation.checkInvitationLink')}</p>
       </div>
     );
   }
@@ -173,39 +192,7 @@ function AppContent() {
   );
 }
 
-// Thank You Screen Component
-function ThankYouScreen() {
-  const location = useLocation();
-  const inviteData = location.state?.inviteData || JSON.parse(sessionStorage.getItem('currentInvite') || '{}');
 
-  return (
-    <div className="thank-you-screen">
-      <div className="thank-you-content">
-        <div className="success-icon">
-          <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="25" cy="25" r="25" fill="#10B981"/>
-            <path d="M16 25L22 31L34 19" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        <h1>Assessment Complete!</h1>
-        <p>Thank you for completing the {inviteData.selectedGame || 'Leadership Assessment'}.</p>
-        <p>Your responses have been submitted successfully and the hiring team will review your results.</p>
-        <div className="next-steps">
-          <p><strong>What happens next?</strong></p>
-          <ul>
-            <li>The hiring team will review your assessment results</li>
-            <li>You'll be contacted within 3-5 business days</li>
-            <li>If you have any questions, feel free to reach out to the hiring team</li>
-          </ul>
-        </div>
-        <div className="contact-info">
-          <p>Role: <strong>{inviteData.roleTag}</strong></p>
-          {inviteData.projectId && <p>Reference ID: <strong>{inviteData.projectId}</strong></p>}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function App() {
   return (
@@ -215,7 +202,9 @@ function App() {
         v7_relativeSplatPath: true
       }}
     >
-      <AppContent />
+      <SafeGameFlowProvider>
+        <AppContent />
+      </SafeGameFlowProvider>
     </Router>
   );
 }

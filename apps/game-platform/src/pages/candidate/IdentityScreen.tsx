@@ -1,12 +1,28 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useGameFlow } from '../../contexts/GameFlowContext';
+import LanguageSelector from '../../components/LanguageSelector';
 import '@cgames/ui-kit/styles/IdentityScreen.css';
 
 const IdentityScreen = () => {
-  const navigate = useNavigate();
+  const { t, i18n } = useTranslation('common');
+  const { 
+    goToNextStep, 
+    detectedCountry, 
+    selectedLanguage
+  } = useGameFlow();
+  
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Auto-detect and set language based on country (silent, non-breaking)
+  useEffect(() => {
+    if (detectedCountry && selectedLanguage && i18n.language !== selectedLanguage) {
+      console.log('🌍 [IdentityScreen] Auto-setting language based on country:', detectedCountry, '→', selectedLanguage);
+      i18n.changeLanguage(selectedLanguage);
+    }
+  }, [detectedCountry, selectedLanguage, i18n]);
 
   const handleVideoLoad = () => {
     setVideoLoaded(true);
@@ -24,7 +40,13 @@ const IdentityScreen = () => {
   };
 
   const handleStartGame = () => {
-    navigate('/candidate/form');
+    // Use GameFlow context for navigation, but fallback to original behavior
+    if (goToNextStep) {
+      goToNextStep();
+    } else {
+      // Fallback to original navigation
+      window.location.href = '/candidate/form';
+    }
   };
 
   return (
@@ -51,31 +73,34 @@ const IdentityScreen = () => {
       
       {videoError && (
         <div className="video-error">
-          <p>Video yüklenemedi</p>
+          <p>{t('validation.videoLoadFailed')}</p>
           <button 
             onClick={() => window.location.reload()}
             className="retry-button"
           >
-            Yeniden Dene
+            {t('buttons.retry')}
           </button>
         </div>
       )}
 
       <div className="hero-section">
+        <div className="language-selector-container">
+          <LanguageSelector />
+        </div>
         <div className="hero-content">
           <div className="start-game-container">
             <button
               onClick={handleStartGame}
               className="start-game-button"
             >
-              Oyuna Başla
+              {t('buttons.startGame')}
             </button>
           </div>
         </div>
       </div>
 
       <div className="game-footer">
-        <p className="footer-text">OlivinHR 2025. All rights reserved</p>
+        <p className="footer-text">{t('app.copyright')}</p>
       </div>
     </div>
   );

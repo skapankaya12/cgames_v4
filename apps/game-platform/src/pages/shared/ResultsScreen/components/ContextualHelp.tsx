@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from '@cgames/ui-kit';
 
 interface ContextualHelpProps {
@@ -20,65 +21,42 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
   context,
   onClose
 }) => {
+  const { t } = useTranslation('ui');
+  
   const getHelpContent = (context: string): HelpContent => {
     const helpContentMap: Record<string, HelpContent> = {
       'dashboard-overview': {
-        title: 'Genel Analiz Sayfası',
-        description: 'Bu sayfa, bilişsel oyun değerlendirmenizin genel bir özetini sunar. Tüm önemli metrikleri tek bakışta görebilirsiniz.',
-        tips: [
-          'Genel performans skorunuz, tüm yetkinlik alanlarının ortalamasıdır',
-          'En güçlü yetkinlik ve gelişim alanı kartları, odaklanmanız gereken noktaları gösterir',
-          'Hızlı erişim kartlarını kullanarak detaylı analizlere geçebilirsiniz',
-          'AI öngörüler kartında kişiselleştirilmiş önerilerinizin özeti bulunur'
-        ],
-        relatedActions: [
-          { label: 'Yetkinlik detaylarını gör', action: 'view-competencies' },
-          { label: 'AI önerilerini incele', action: 'view-recommendations' }
-        ]
+        title: t('help.dashboardOverview.title'),
+        description: t('help.dashboardOverview.description'),
+        tips: t('help.dashboardOverview.tips', { returnObjects: true }) as string[],
+        relatedActions: t('help.dashboardOverview.relatedActions', { returnObjects: true }) as {label: string; action: string}[]
       },
       'competencies': {
-        title: 'Yetkinlikler Sayfası',
-        description: 'Bu sayfada tüm yetkinlik alanlarınızın detaylı analizini görebilirsiniz.',
-        tips: [
-          'Her kart bir yetkinlik alanını temsil eder',
-          'Yüzdelik skorlar, o alandaki performansınızı gösterir',
-          'Renk kodları: Yeşil (mükemmel), Sarı (iyi), Turuncu (orta), Kırmızı (gelişim gerekli)',
-          'AI asistanınızından ayrıntılı öneriler alabilirsiniz'
-        ]
+        title: t('help.competencies.title'),
+        description: t('help.competencies.description'),
+        tips: t('help.competencies.tips', { returnObjects: true }) as string[]
       },
       'behavior-analysis': {
-        title: 'Davranış Analizi',
-        description: 'Oyun sırasındaki davranış patternlerinizi ve etkileşim verilerinizi gösterir.',
-        tips: [
-          'Zaman analizi, oyunları tamamlama sürenizi gösterir',
-          'Etkileşim verileri, oyun stratejileriniz hakkında bilgi verir',
-          'Bu veriler, bilişsel süreçlerinizi anlamaya yardımcı olur'
-        ]
+        title: t('help.behaviorAnalysis.title'),
+        description: t('help.behaviorAnalysis.description'),
+        tips: t('help.behaviorAnalysis.tips', { returnObjects: true }) as string[]
       },
       'recommendations': {
-        title: 'AI Öneriler',
-        description: 'Yapay zeka tarafından oluşturulan kişiselleştirilmiş gelişim önerileriniz.',
-        tips: [
-          'Öneriler, performansınız, davranış verileriniz ve CV bilgilerinize dayanarak oluşturulur',
-          'Yetkinlik ve CV uyumunu ayrıntılı inceleyebilir, aday için mülakat önerilerini görebilirsiniz',
-          'AI asistanınızdan ayrıntılı öneriler alabilirsiniz'
-        ]
+        title: t('help.recommendations.title'),
+        description: t('help.recommendations.description'),
+        tips: t('help.recommendations.tips', { returnObjects: true }) as string[]
       },
       'feedback': {
-        title: 'Geri Bildirim',
-        description: 'Test deneyiminiz hakkında görüşlerinizi paylaşabileceğiniz sayfa.',
-        tips: [
-          'Puanlama sistemini kullanarak deneyiminizi değerlendirin',
-          'Yazılı geri bildirimleriniz ürünümüzü geliştirmemize yardımcı olur',
-          'Tüm geri bildirimler tarafımıza ulaşılır ve değerlendirilir'
-        ]
+        title: t('help.feedback.title'),
+        description: t('help.feedback.description'),
+        tips: t('help.feedback.tips', { returnObjects: true }) as string[]
       }
     };
 
     return helpContentMap[context] || {
-      title: 'Yardım',
-      description: 'Bu bölüm hakkında yardım bilgisi mevcut değil.',
-      tips: ['Daha fazla bilgi için lütfen destek ekibiyle iletişime geçin.']
+      title: t('help.helpButtonTitle'),
+      description: t('help.helpButtonDescription'),
+      tips: [t('help.helpButtonDescription')]
     };
   };
 
@@ -105,7 +83,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
           <div className="help-tips">
             <h4>
               <Icons.Lightbulb size={16} color="#f59e0b" />
-              İpuçları
+              {t('help.ipuclari')}
             </h4>
             <ul>
               {helpContent.tips.map((tip, index) => (
@@ -118,7 +96,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
             <div className="help-actions">
               <h4>
                 <Icons.Target size={16} color="#f59e0b" />
-                İlgili İşlemler
+                {t('help.ilgiliIslemler')}
               </h4>
               <div className="help-action-buttons">
                 {helpContent.relatedActions.map((action, index) => (
@@ -143,10 +121,10 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({
         <div className="help-footer">
           <div className="help-footer-info">
             <Icons.Warning size={16} color="#6b7280" />
-            <span>Bu yardım panelini istediğiniz zaman açabilirsiniz</span>
+            <span>{t('help.helpButtonDescription')}</span>
           </div>
           <button className="help-got-it" onClick={onClose}>
-            Anladım
+            {t('buttons.close', { ns: 'common' })}
           </button>
         </div>
       </div>

@@ -366,6 +366,29 @@ export const CalendarIcon: React.FC<IconProps> = ({ size = 24, color = 'currentC
   </svg>
 );
 
+export const MenuIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <line x1="4" y1="6" x2="20" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="4" y1="12" x2="20" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="4" y1="18" x2="20" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const XIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <line x1="18" y1="6" x2="6" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="6" y1="6" x2="18" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const HelpCircleIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className = '', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <circle cx="12" cy="17" r="1" fill={color}/>
+  </svg>
+);
+
 // Export all icons as a convenient object
 export const Icons = {
   AI: AIIcon,
@@ -412,4 +435,7 @@ export const Icons = {
   BookOpen: BookOpenIcon,
   Users: UsersIcon,
   Calendar: CalendarIcon,
+  Menu: MenuIcon,
+  X: XIcon,
+  HelpCircle: HelpCircleIcon,
 }; 

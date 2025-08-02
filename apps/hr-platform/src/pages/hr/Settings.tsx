@@ -52,7 +52,7 @@ export default function Settings() {
           setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
         />
-        <div className="hr-dashboard-loading" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
+        <div className={`hr-dashboard-loading ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
           <div className="loading-spinner-large"></div>
           <p>Loading settings...</p>
         </div>
@@ -68,7 +68,7 @@ export default function Settings() {
           setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
         />
-        <div className="hr-dashboard-error" style={{ marginLeft: isNavCollapsed ? '72px' : '280px' }}>
+        <div className={`hr-dashboard-error ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
           <div className="error-icon">
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -89,7 +89,7 @@ export default function Settings() {
         hrUser={hrUser} 
       />
       
-      <div className="hr-dashboard" style={{ marginLeft: isNavCollapsed ? '72px' : '280px', transition: 'margin-left 0.3s ease' }}>
+      <div className={`hr-dashboard ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
         {/* Header */}
         <header className="dashboard-header">
           <div className="header-content">
@@ -103,7 +103,8 @@ export default function Settings() {
         </header>
 
         <div className="dashboard-content">
-          <div className="settings-grid">
+          <div className="dashboard-content-wrapper">
+            <div className="settings-grid">
             {/* Company Information */}
             <div className="settings-card">
               <div className="card-header">
@@ -338,6 +339,7 @@ export default function Settings() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );

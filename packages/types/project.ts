@@ -27,6 +27,7 @@ export interface Project {
     cultureValues: string[];
     challenges: string[];
     gamePreferences: string[];
+    assessmentType?: string; // NEW: Assessment type selection
   };
 
   // Generated recommendations
@@ -73,6 +74,7 @@ export interface ProjectCreationForm {
   cultureValues: string[];
   challenges: string[];
   gamePreferences: string[];
+  assessmentType?: string; // NEW: Assessment type selection
 }
 
 // Import the existing Candidate type

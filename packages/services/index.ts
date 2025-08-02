@@ -1,12 +1,19 @@
-// Barrel exports for services
-export { ConversationalAIService } from './ConversationalAIService';
-export type { ConversationMessage, ConversationContext } from './ConversationalAIService';
-export type { CVData } from './CVTextExtractionService';
+// Frontend-safe service exports
+// Note: auth-utils-server is server-side only (CommonJS) and should not be imported in frontend
+
+export { CVAnalysisService } from './CVAnalysisService';
 export { CVTextExtractionService } from './CVTextExtractionService';
 export { BehavioralAnalyticsService } from './BehavioralAnalyticsService';
+export { ConversationalAIService } from './ConversationalAIService';
 export { default as InteractionTracker } from './InteractionTracker';
-export type { SessionAnalytics } from './InteractionTracker';
-// Only export the client service to avoid bundling Firebase Admin in client code
-export { InviteServiceClient } from './invite-service';
+
+// Client-side services
+export { InviteServiceClient, InviteService } from './invite-service';
 export { SendGridService } from './sendgrid-service';
-export { authenticateRequest, hasPermission, verifyAuthToken } from './auth-utils-server'; 
+
+// Type exports
+export type { SessionAnalytics } from './InteractionTracker';
+export type { CVData } from './CVTextExtractionService';
+export type { ConversationMessage, ConversationContext } from './ConversationalAIService';
+
+// Server-side services should be imported directly in API routes 

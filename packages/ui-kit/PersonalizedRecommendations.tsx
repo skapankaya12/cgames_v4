@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { PersonalizedRecommendations, RecommendationItem, DimensionScore } from '@cgames/types/Recommendations';
 import type { CVData } from '@cgames/types/CVTypes';
 import { CVTextExtractionService } from '@cgames/services/CVTextExtractionService';
@@ -20,6 +21,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
   competencyScores = [],
   onShowHelp
 }: PersonalizedRecommendationsProps) => {
+  const { t } = useTranslation('ui');
   // CV Analysis state
   const [cvData, setCvData] = React.useState<CVData | null>(null);
 
@@ -75,12 +77,12 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.AI size={24} color="#667eea" />
-          <span>AI Destekli Aday Değerlendirme Raporu</span>
+          <span>{t('results.personalizedRecommendations.title')}</span>
         </h3>
         <div className="recommendations-loading">
           <div className="loading-spinner"></div>
-          <p>AI ile aday değerlendirme raporu hazırlanıyor...</p>
-          <small>Yetkinlik skorları analiz ediliyor...</small>
+          <p>{t('results.personalizedRecommendations.loadingMessage')}</p>
+          <small>{t('results.personalizedRecommendations.loadingSubMessage')}</small>
         </div>
       </div>
     );
@@ -92,10 +94,10 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.AI size={24} color="#667eea" />
-          <span>AI Destekli Aday Değerlendirme Raporu</span>
+          <span>{t('results.personalizedRecommendations.title')}</span>
         </h3>
         <div className="recommendations-error">
-          <p>AI değerlendirme raporu yüklenirken bir hata oluştu: {error}</p>
+          <p>{t('results.personalizedRecommendations.errorMessage')} {error}</p>
           <p>Genel değerlendirme gösteriliyor.</p>
         </div>
       </div>
@@ -108,11 +110,11 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
       <div className="recommendations-section">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Icons.AI size={24} color="#667eea" />
-          <span>AI Destekli Aday Değerlendirme Raporu</span>
+          <span>{t('results.personalizedRecommendations.title')}</span>
         </h3>
         <div className="recommendations-empty">
-          <p>Henüz AI destekli aday değerlendirme raporu bulunmuyor.</p>
-          <p>Rapor oluşturmak için yukarıdaki butona tıklayın.</p>
+          <p>{t('results.personalizedRecommendations.noDataMessage')}</p>
+          <p>{t('results.personalizedRecommendations.noDataSubMessage')}</p>
         </div>
       </div>
     );
@@ -120,7 +122,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
 
   return (
     <div className="recommendations-section" style={{
-      background: 'linear-gradient(135deg,rgb(229, 230, 234) 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg,rgb(187, 174, 51) 0%,rgb(111, 93, 18) 100%)',
       padding: '40px',
       borderRadius: '24px',
       boxShadow: '0 20px 60px rgba(102, 126, 234, 0.15)',
@@ -161,7 +163,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
               fontWeight: '600',
               textShadow: '0 2px 4px rgba(130, 29, 29, 0.1)'
             }}>
-              AI Destekli Değerlendirme
+              {t('results.personalizedRecommendations.aiSupportedAssessment')}
             </span>
           </div>
           {onShowHelp && (
@@ -190,20 +192,20 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           fontWeight: '700',
           margin: '0 0 8px 0',
           textAlign: 'center',
-          textShadow: '0 2px 8px rgba(44, 18, 18, 0.2)',
+          textShadow: '0 2px 8px rgba(224, 29, 29, 0.2)',
           letterSpacing: '-0.5px'
         }}>
-          Aday Profil Analizi
+          {t('results.personalizedRecommendations.candidateProfileAnalysis')}
         </h3>
         <p style={{
-          color: 'rgba(246, 241, 241, 0.9)',
+          color: 'rgba(255, 255, 255, 0.95)', // Changed to white for better visibility
           fontSize: '16px',
           margin: '0',
           textAlign: 'center',
           fontWeight: '400',
-          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' // Added stronger text shadow
         }}>
-          
+          {t('results.personalizedRecommendations.aiBasedComprehensiveAssessment')}
         </p>
       </div>
 
@@ -583,11 +585,11 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
           <div style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
             <Icons.Document size={24} color="#cbd5e1" />
           </div>
-          <p style={{ margin: '0', color: '#cbd5e1', fontSize: '0.9rem' }}>
-            Bu analiz sadece yetkinlik testi verilerine dayanmaktadır.
+          <p style={{ margin: '0', color: '#ffffff', fontSize: '0.9rem', fontWeight: '500' }}>
+            {t('results.personalizedRecommendations.noCVAnalysisMessage')}
           </p>
-          <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.8rem' }}>
-            CV yüklemediğiniz için detaylı CV analizi mevcut değil.
+          <p style={{ margin: '4px 0 0 0', color: '#e2e8f0', fontSize: '0.8rem' }}>
+            {t('results.personalizedRecommendations.noCVDetailMessage')}
           </p>
         </div>
       )}
@@ -641,7 +643,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                       fontWeight: '700',
                       letterSpacing: '-0.3px'
                     }}>
-                      Yapay Zeka Analiz Raporu
+                      {t('results.personalizedRecommendations.aiAnalysisReport')}
                     </h4>
                   </div>
                   <p style={{
@@ -651,7 +653,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                     fontWeight: '500',
                     letterSpacing: '0.2px'
                   }}>
-                    AI tabanlı kapsamlı aday değerlendirme ve öneriler
+                    {t('results.personalizedRecommendations.aiBasedComprehensiveAssessment')}
                   </p>
                 </div>
 
@@ -678,7 +680,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                       letterSpacing: '0.5px',
                       boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
                     }}>
-                      Yetkinlik ve CV Uyum Değerlendirmesi
+                      {t('results.personalizedRecommendations.competencyAndCVAlignment')}
                     </div>
                     <p style={{ 
                       color: '#1e293b', 
@@ -719,7 +721,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                     letterSpacing: '0.5px',
                     boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
                   }}>
-                    Mülakat Rehberi ve Öneriler
+                    {t('results.personalizedRecommendations.interviewGuideAndRecommendations')}
                   </div>
 
                   <p style={{ 
@@ -781,7 +783,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 margin: '0',
                 fontWeight: '700'
               }}>
-                AI ile Oluşturuldu
+                {t('results.personalizedRecommendations.generatedWithAI')}
               </p>
               <p style={{ 
                 color: '#64748b', 
@@ -813,7 +815,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 margin: '0',
                 fontWeight: '700'
               }}>
-                Analiz Verisi
+                {t('results.personalizedRecommendations.analysisData')}
               </p>
               <p style={{ 
                 color: '#64748b', 
@@ -821,7 +823,7 @@ const PersonalizedRecommendationsComponent: React.FC<PersonalizedRecommendations
                 margin: '0',
                 fontWeight: '500'
               }}>
-                {recommendations.dataUsed?.join(', ') || 'Yetkinlik skorları ve CV analizi'}
+                {recommendations.dataUsed?.join(', ') || t('results.personalizedRecommendations.noCVAnalysisMessage')}
               </p>
             </div>
           </div>

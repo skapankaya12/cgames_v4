@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from '@cgames/ui-kit';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import { formatTime } from '../utils/insights';
@@ -12,6 +13,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
   interactionAnalytics,
   onShowHelp 
 }) => {
+  const { t } = useTranslation('ui');
   if (!interactionAnalytics) {
     return (
       <div className="analytics-section" style={{ backgroundColor: 'white' }}>
@@ -23,12 +25,12 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             marginBottom: '24px'
           }}>
             <Icons.Brain size={24} color="#667eea" />
-            <span>Davranış Analizi</span>
+            <span>{t('results.behaviorAnalysis.title')}</span>
           </h3>
           <button 
             className="help-button"
             onClick={() => onShowHelp('behavior-analysis')}
-            title="Bu sayfayı anlamak için yardım alın"
+            title={t('help.helpButtonTitle')}
           >
             <Icons.Lightbulb size={20} />
           </button>
@@ -38,10 +40,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
           <div className="no-data-icon">
             <Icons.AlertCircle size={48} color="#6b7280" />
           </div>
-          <h4>Davranış Verileri Bulunamadı</h4>
+          <h4>{t('results.behaviorAnalysis.noDataTitle')}</h4>
           <p>
-            Bu testte detaylı davranış analizi verisi toplanmamış. 
-            Yeni testlerde daha kapsamlı analiz için test süresince etkileşim verileri kaydedilecektir.
+            {t('results.behaviorAnalysis.noDataDescription')}
           </p>
         </div>
       </div>
@@ -66,12 +67,12 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
           marginBottom: '24px'
         }}>
           <Icons.Brain size={24} color="#667eea" />
-          <span>Davranış Analizi</span>
+          <span>{t('results.behaviorAnalysis.title')}</span>
         </h3>
         <button 
           className="help-button"
           onClick={() => onShowHelp('behavior-analysis')}
-          title="Bu sayfayı anlamak için yardım alın"
+          title={t('help.helpButtonTitle')}
         >
           <Icons.Lightbulb size={20} />
         </button>
@@ -85,9 +86,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
               <Icons.Clock size={24} color="#3b82f6" />
             </div>
             <div className="stat-content">
-              <h4>Toplam Süre</h4>
+              <h4>{t('results.behaviorAnalysis.totalTime')}</h4>
               <p className="stat-value">{formatTime(interactionAnalytics.totalTime || 0)}</p>
-              <p className="stat-subtitle">Test tamamlama süresi</p>
+              <p className="stat-subtitle">{t('results.behaviorAnalysis.totalTimeSubtitle')}</p>
             </div>
           </div>
 
@@ -96,9 +97,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
               <Icons.Timer size={24} color="#10b981" />
             </div>
             <div className="stat-content">
-              <h4>Ortalama Soru Süresi</h4>
+              <h4>{t('results.behaviorAnalysis.avgQuestionTime')}</h4>
               <p className="stat-value">{formatTime(avgTimePerQuestion)}</p>
-              <p className="stat-subtitle">Soru başına ortalama</p>
+              <p className="stat-subtitle">{t('results.behaviorAnalysis.avgQuestionTimeSubtitle')}</p>
             </div>
           </div>
 
@@ -107,9 +108,9 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
               <Icons.Refresh size={24} color="#f59e0b" />
             </div>
             <div className="stat-content">
-              <h4>İşaretlenen Cevaplar</h4>
+              <h4>{t('results.behaviorAnalysis.changedAnswers')}</h4>
               <p className="stat-value">{changedAnswersCount}</p>
-              <p className="stat-subtitle">16'dan fazla ise aday cevaplarını değiştirmiştir</p>
+              <p className="stat-subtitle">{t('results.behaviorAnalysis.changedAnswersSubtitle')}</p>
             </div>
           </div>
         </div>
@@ -118,7 +119,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
       {/* Question Times Chart */}
       {interactionAnalytics.questionTimes && interactionAnalytics.questionTimes.length > 0 && (
         <div className="analytics-chart-section">
-          <h4>Soru Bazlı Süre Analizi</h4>
+          <h4>{t('results.behaviorAnalysis.questionTimeAnalysis')}</h4>
           <div className="question-times-chart">
             {interactionAnalytics.questionTimes.map((time, index) => {
               const maxTime = Math.max(...interactionAnalytics.questionTimes!);
@@ -141,15 +142,15 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
           <div className="chart-legend">
             <div className="legend-item">
               <div className="legend-color fast"></div>
-              <span>Hızlı cevap (&lt; {formatTime(avgTimePerQuestion * 0.5)})</span>
+              <span>{t('results.behaviorAnalysis.fastResponse')} (&lt; {formatTime(avgTimePerQuestion * 0.5)})</span>
             </div>
             <div className="legend-item">
               <div className="legend-color normal"></div>
-              <span>Normal tempo</span>
+              <span>{t('results.behaviorAnalysis.normalTempo')}</span>
             </div>
             <div className="legend-item">
               <div className="legend-color slow"></div>
-              <span>Yavaş cevap (&gt; {formatTime(avgTimePerQuestion * 1.5)})</span>
+              <span>{t('results.behaviorAnalysis.slowResponse')} (&gt; {formatTime(avgTimePerQuestion * 1.5)})</span>
             </div>
           </div>
         </div>
@@ -158,7 +159,7 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
       {/* Behavior Patterns */}
       {interactionAnalytics.behaviorPatterns && Object.keys(interactionAnalytics.behaviorPatterns).length > 0 && (
         <div className="behavior-patterns-section">
-          <h4>Davranış Patternleri</h4>
+          <h4>{t('results.behaviorAnalysis.behaviorPatterns')}</h4>
           <div className="behavior-patterns-grid">
             {Object.entries(interactionAnalytics.behaviorPatterns).map(([pattern, data]) => (
               <div key={pattern} className="behavior-pattern-card">

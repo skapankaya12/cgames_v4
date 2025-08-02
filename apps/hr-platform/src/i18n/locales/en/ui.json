@@ -1,0 +1,418 @@
+{
+  "form": {
+    "welcomeStep": {
+      "title": "Welcome!",
+      "stepIndicator": "{{current}} / {{total}}",
+      "missionTitle": "Mission Assignment: You Are an Intergalactic Delivery Captain",
+      "missionDescription": "This critical energy core will maintain the energy balance of the galactic alliance and determine the future of the universe. Your mission: deliver the core to Nova Terminal on time, complete and to the correct recipient.",
+      "journeyDuration": "The journey will take approximately 8-10 minutes. Every decision you make will test your leadership style, character, and reflexes, leading you to new scenarios.",
+      "missionHighlight": "This is not a test! Every choice reflects your captaincy style. If you're ready, take the captain's seat and start your adventure."
+    },
+    "rulesStep": {
+      "title": "Rules & Instructions",
+      "rule1": {
+        "title": "You will make only one choice in each scene",
+        "description": "Think carefully and make the choice that best reflects you"
+      },
+      "rule2": {
+        "title": "You can change your answer",
+        "description": "You can review your previous choice by pressing the 'Back' button"
+      },
+      "rule3": {
+        "title": "There are no right or wrong answers",
+        "description": "The system analyzes your competencies and behavioral reflexes"
+      },
+      "privacyNotice": "Your answers will be recorded for analysis and kept confidential."
+    },
+    "formStep": {
+      "title": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "company": "Company",
+      "uploadCV": "Upload CV (Optional)",
+      "uploadCVDescription": "Upload your CV for personalized recommendations",
+      "selectFile": "Select PDF file (Maximum 10MB)",
+      "fileSelected": "File Selected",
+      "cvSecurity": "Your CV will be securely stored for analysis and used only with your test results.",
+      "consent": "I agree",
+      "processingCV": "Analyzing CV...",
+      "uploading": "Uploading..."
+    },
+    "errors": {
+      "pdfOnly": "Please select PDF files only.",
+      "fileSize": "File size must be smaller than 10MB.",
+      "cvAnalysisFailed": "CV analysis failed, but the file will still be uploaded.",
+      "allFields": "Please fill in all fields.",
+      "consentRequired": "You must give consent to start the test.",
+      "pdfUploadFailed": "PDF upload failed. Do you want to continue?"
+    }
+  },
+  "test": {
+    "progressTitles": [
+      "First Encounter with Cargo Officer",
+      "Exit Corridor", 
+      "Rival Company Offer",
+      "Patrol Ship Obstacle",
+      "Navigation Decision",
+      "Meteor Threat",
+      "Identity Verification",
+      "Pirate Attack",
+      "Terminal First Contact",
+      "Delay Alarm",
+      "Cargo Shake",
+      "Empty Delivery Area",
+      "Engine Alarm",
+      "Cargo Inspection",
+      "Navigation Loss",
+      "Missing Recipient Information"
+    ],
+    "completion": {
+      "title": "🎉 Congratulations, Captain!",
+      "subtitle": "You have successfully completed the delivery mission.",
+      "resultsProcessing": "Your results are being prepared..."
+    },
+    "forwarding": {
+      "lastQuestion": "Cargo delivered. Mission completed."
+    }
+  },
+  "results": {
+    "navigation": {
+      "overview": {
+        "label": "Overview",
+        "description": "Summary view and key metrics"
+      },
+      "competencies": {
+        "label": "Competencies",
+        "description": "{{count}} competency area analysis",
+        "title": "Competency Scores"
+      },
+      "behaviorAnalysis": {
+        "label": "Behavior Analysis", 
+        "description": "Behavior patterns and time analysis",
+        "title": "Behavior Analysis",
+        "totalTime": "Total Time",
+        "totalTimeSubtitle": "Test completion time",
+        "avgQuestionTime": "Average Question Time",
+        "avgQuestionTimeSubtitle": "Average per question",
+        "changedAnswers": "Changed Answers",
+        "changedAnswersSubtitle": "Number of revised responses",
+        "testStrategy": "Test Strategy",
+        "testStrategySubtitle": "Approach analysis"
+      },
+      "recommendations": {
+        "label": "AI Recommendations",
+        "description": "Candidate-specific evaluation and recommendations"
+      },
+      "feedback": {
+        "label": "Feedback",
+        "description": "Send feedback for demo"
+      }
+    },
+    "dashboard": {
+      "welcome": "Welcome, {{name}}!",
+      "completedOn": "The assessment was completed on {{date}}. Below you can see your overall performance and detailed analyses.",
+      "overallPerformance": "Overall Performance",
+      "overallPerformanceDescription": "Your general competency level across all areas",
+      "strongestCompetency": "Strongest Competency", 
+      "developmentArea": "Development Area",
+      "quickAccess": "Quick Access",
+      "aiInsights": "AI Insights",
+      "aiInsightsDescription": "Personalized recommendations and strategic insights",
+      "viewDetails": "View Details",
+      "generateInsights": "Generate Insights",
+      "aiAnalysisSummary": "According to AI analysis, you have {{strengthsCount}} strong areas and {{developmentCount}} development areas identified.",
+      "recommendationsReady": "Your personalized recommendations are ready! Click for detailed information.",
+      "noRecommendations": "AI recommendations have not been generated."
+    },
+    "competencyDescriptions": {
+      "Karar Verme": "Decision Making involves evaluating available information, comparing alternatives, and making effective decisions in uncertain situations. It includes risk assessment and outcome-focused thinking skills.",
+      "İnisiyatif": "Initiative is the ability to proactively identify opportunities, take action, and assume responsibility. It includes entrepreneurial spirit and leadership skills.",
+      "Uyum Sağlama": "Adaptability is the ability to quickly adapt to changing conditions, show flexibility, and work effectively in uncertain situations. It includes change management and agility skills.", 
+      "İletişim": "Communication is the ability to express ideas clearly and effectively, listen actively, empathize, and interact successfully with different audiences. It covers both verbal and written communication skills.",
+      "Stratejik Düşünce": "Strategic Thinking is the ability to plan long-term, see the big picture, and develop solutions by analyzing complex problems. It includes foresight and creating strategies for organizational goals.",
+      "Zaman Yönetimi": "Time Management is the ability to effectively plan, prioritize, and use time. It includes improving efficiency and deadline management skills.",
+      "Risk Liderliği": "Risk Leadership is the ability to lead in uncertain situations, manage risks, and guide the team. It includes crisis management and decision-making skills.",
+      "Risk Zekası": "Risk Intelligence is the ability to recognize, evaluate, and take appropriate measures against potential risks in advance. It includes risk analysis and foresight skills.",
+      "Liderlik": "Leadership is the ability to guide teams, motivate people, create vision and influence others towards common goals. It includes decision-making, delegation and team management skills.",
+      "Problem Çözme": "Problem Solving is the ability to analyze complex situations, develop alternative solutions and implement the most suitable approach. It covers analytical thinking and creative solution generation skills.",
+      "İnovasyon": "Innovation is the ability to think creatively, develop new ideas, improve existing processes and produce original solutions. It covers developing different perspectives and risk-taking skills.",
+      "Duygusal Zeka": "Emotional Intelligence is the ability to understand and manage one's own emotions, recognize others' emotions and empathize. It includes effectiveness in social relationships and emotional self-awareness skills."
+    },
+    "performanceLevels": {
+      "excellent": "Excellent",
+      "good": "Good", 
+      "average": "Average",
+      "needsDevelopment": "Needs Development"
+    },
+    "feedback": {
+      "title": "Test Experience Feedback",
+      "description": "Help us improve by evaluating your test experience.",
+      "ratings": {
+        "accuracy": "Result Accuracy (1-10)",
+        "gameExperience": "Test Experience (1-10)",
+        "fairness": "Fairness (1-10)",
+        "usefulness": "Usefulness (1-10)",
+        "recommendation": "Recommendation (1-10)",
+        "purchaseLikelihood": "Purchase Likelihood (1-10)",
+        "valueForMoney": "Value for Money (1-10) (7 Euro/320 tl per game)",
+        "technicalPerformance": "Technical Performance (1-10)"
+      },
+      "evaluationCriteria": "Evaluation Criteria",
+      "additionalComments": "Additional Comments:",
+      "placeholder": "Please share your feedback to help us improve the product..",
+      "submitButton": "Send Feedback",
+      "submitting": "Sending...",
+      "success": "Thank you! Your feedback has been received.",
+      "error": "An error occurred while sending feedback. Please try again."
+    },
+    "aiAssistant": {
+      "title": "AI HR Assistant",
+      "subtitle": "Ask Questions About {{name}}",
+      "welcomeMessage": "Hello! I'm ready to answer your questions about {{candidateName}}. I can help with interview questions, email drafts, development recommendations, or position suitability.",
+      "placeholder": "Ask about {{candidateName}}... (e.g., \"suggest interview questions\" or \"prepare email draft\")",
+      "minimize": "Minimize",
+      "exampleQuestions": "Example Questions:",
+      "quickActions": {
+        "interview_questions": "Interview Questions",
+        "email_draft": "Email Draft", 
+        "development_plan": "Development Plan"
+      },
+      "errorMessage": "Sorry, an error occurred while generating the response. Please try again.",
+      "loading": "AI is analyzing..."
+    },
+    "competencies": {
+      "title": "Competency Scores",
+      "noDataTitle": "No data available yet",
+      "noDataDescription": "Your scores will be displayed here after the game is completed.",
+      "bestPerformance": "Best Performance",
+      "developmentArea": "Development Area", 
+      "averagePerformance": "Average Performance",
+      "competencyAreas": "competency areas",
+      "points": "points",
+      "help": "Help"
+    },
+    "behaviorAnalysis": {
+      "title": "Behavior Analysis",
+      "noDataTitle": "Behavior Data Not Found",
+      "noDataDescription": "Detailed behavioral analysis data was not collected in this test. In new tests, interaction data will be recorded during the test for more comprehensive analysis.",
+      "totalTime": "Total Time", 
+      "totalTimeSubtitle": "Test completion time",
+      "avgQuestionTime": "Average Question Time",
+      "avgQuestionTimeSubtitle": "Average per question",
+      "changedAnswers": "Changed Answers",
+      "changedAnswersSubtitle": "If more than 16, candidate changed their answers",
+      "questionTimeAnalysis": "Question-Based Time Analysis",
+      "behaviorPatterns": "Behavior Patterns",
+      "fastResponse": "Fast response",
+      "normalTempo": "Normal tempo", 
+      "slowResponse": "Slow response"
+    },
+    "personalizedRecommendations": {
+      "title": "AI-Powered Candidate Assessment Report",
+      "loadingMessage": "AI candidate assessment report is being prepared...",
+      "loadingSubMessage": "Competency scores are being analyzed...",
+      "errorMessage": "An error occurred while loading the AI assessment report:",
+      "noDataMessage": "No AI-powered candidate assessment report available yet.",
+      "noDataSubMessage": "Click the button above to generate a report.",
+      "aiSupportedAssessment": "AI-Powered Assessment",
+      "candidateProfileAnalysis": "Candidate Profile Analysis",
+      "experienceProfile": "Experience Profile",
+      "yearsProfessionalExperience": "Years Professional Experience",
+      "skillPortfolio": "Skill Portfolio",
+      "technical": "Technical",
+      "leadership": "Leadership",
+      "softSkills": "Soft Skills",
+      "hrAssessment": "HR Assessment",
+      "overallAssessment": "Overall Assessment",
+      "outstandingStrengths": "Outstanding Strengths",
+      "lastPosition": "Last Position:",
+      "location": "Location:",
+      "education": "Education:",
+      "aiAnalysisReport": "Artificial Intelligence Analysis Report",
+      "aiBasedComprehensiveAssessment": "AI-based comprehensive candidate assessment and recommendations",
+      "competencyAndCVAlignment": "Competency and CV Alignment Assessment",
+      "interviewGuideAndRecommendations": "Interview Guide and Recommendations",
+      "generatedWithAI": "Generated with AI",
+      "analysisData": "Analysis Data",
+      "noCVAnalysisMessage": "This analysis is based only on competency test data.",
+      "noCVDetailMessage": "Detailed CV analysis is not available because you did not upload a CV.",
+      "seniorExecutive": "Senior Executive",
+      "middleManager": "Middle Manager",
+      "seniorSpecialist": "Senior Specialist",
+      "specialist": "Specialist",
+      "entryLevel": "Entry Level"
+    }
+  },
+  "help": {
+    "dashboardOverview": {
+      "title": "General Analysis Page",
+      "description": "This page provides an overview of your cognitive game assessment. You can see all important metrics at a glance.",
+      "tips": [
+        "Your overall performance score is the average of all competency areas",
+        "The strongest competency and development area cards show the points you should focus on",
+        "You can use quick access cards to switch to detailed analyses",
+        "The AI insights card contains a summary of your personalized recommendations"
+      ],
+      "relatedActions": [
+        {
+          "label": "View competency details",
+          "action": "view-competencies"
+        },
+        {
+          "label": "Review AI recommendations", 
+          "action": "view-recommendations"
+        }
+      ]
+    },
+    "competencies": {
+      "title": "Competencies Page",
+      "description": "On this page you can see detailed analysis of all your competency areas.",
+      "tips": [
+        "Each card represents a competency area",
+        "Percentage scores show your performance in that area",
+        "Color codes: Green (excellent), Yellow (good), Orange (average), Red (needs development)",
+        "You can get detailed recommendations from your AI assistant"
+      ],
+      "categories": {
+        "title": "Competency Categories",
+        "leadership": "Leadership",
+        "leadershipDescription": "Team management and decision making",
+        "communication": "Communication",
+        "communicationDescription": "Verbal and written communication skills",
+        "problemSolving": "Problem Solving",
+        "problemSolvingDescription": "Analytical thinking and creativity",
+        "teamwork": "Teamwork",
+        "teamworkDescription": "Collaboration and harmony",
+        "stressManagement": "Stress Management",
+        "stressManagementDescription": "Performance under pressure"
+      },
+      "scoring": {
+        "title": "📈 Score Interpretation",
+        "high": "High (80%+)",
+        "highDescription": "Strong competency area",
+        "medium": "Medium (50-80%)",
+        "mediumDescription": "Development potential available",
+        "low": "Low (Below 50%)",
+        "lowDescription": "Development-focused area"
+      }
+    },
+    "behaviorAnalysis": {
+      "title": "Behavior Analysis",
+      "description": "Shows your behavior patterns and interaction data during the game.",
+      "tips": [
+        "Time analysis shows your game completion time",
+        "Interaction data provides information about your game strategies",
+        "This data helps understand your cognitive processes"
+      ],
+      "indicators": {
+        "title": "Important Indicators",
+        "decisionMaking": "Decision Making Speed",
+        "decisionMakingDescription": "Important for critical situations",
+        "riskTaking": "Risk Taking Tendency",
+        "riskTakingDescription": "Innovation potential",
+        "adaptability": "Adaptation Ability",
+        "adaptabilityDescription": "Adaptation to changing conditions",
+        "motivation": "Motivation Sources",
+        "motivationDescription": "Long-term success factors"
+      }
+    },
+    "recommendations": {
+      "title": "AI Recommendations",
+      "description": "Personalized development recommendations generated by artificial intelligence.",
+      "tips": [
+        "Recommendations are generated based on your performance, behavioral data, and CV information",
+        "You can examine competency and CV alignment in detail, and see interview recommendations for candidates",
+        "You can get detailed recommendations from your AI assistant"
+      ]
+    },
+    "feedback": {
+      "title": "Feedback",
+      "description": "Page where you can share your views about your test experience.",
+      "tips": [
+        "Evaluate your experience using the rating system",
+        "Your written feedback helps us improve our product",
+        "All feedback reaches us and is evaluated"
+      ],
+      "testExperience": {
+        "title": "Test Experience Evaluation",
+        "description": "Evaluate your test experience and contribute to system improvement."
+      },
+      "evaluationCriteria": {
+        "title": "Evaluation Criteria",
+        "accuracy": "Accuracy",
+        "accuracyDescription": "Realism of results",
+        "experience": "Experience",
+        "experienceDescription": "Test taking experience",
+        "fairness": "Fairness",
+        "fairnessDescription": "Objective evaluation",
+        "utility": "Utility",
+        "utilityDescription": "Usefulness of results"
+      },
+      "note": {
+        "title": "Note",
+        "description": "Your feedback is very valuable for system development."
+      }
+    },
+    "aiAssessment": {
+      "title": "AI Assessment",
+      "description": "AI-powered evaluation system comprehensively analyzes candidate performance.",
+      "howItWorks": {
+        "title": "How It Works?",
+        "step1": "Competency test results are automatically analyzed",
+        "step2": "CV data is compared with test results",
+        "step3": "Compatibility with position requirements is evaluated",
+        "step4": "Development areas and recommendations are provided"
+      },
+      "tip": {
+        "title": "Tip",
+        "description": "You can get more detailed information by interacting with the AI assistant."
+      }
+    },
+    "guideTitle": "📚 User Guide",
+    "expandGuide": "Expand Guide",
+    "collapseGuide": "Collapse Guide",
+    "currentContext": {
+      "indicator": "📍 Currently viewing"
+    },
+    "quickTips": {
+      "title": "Quick Tips",
+      "clickCards": "Click on cards to navigate",
+      "chatWithAI": "Chat with your AI assistant",
+      "downloadResults": "Download results as PDF"
+    },
+    "ipuclari": "Tips",
+    "ilgiliIslemler": "Related Actions",
+    "helpButtonTitle": "Get help to understand this page",
+    "helpButtonDescription": "You can get detailed information from help buttons."
+  },
+  "demo": {
+    "game2": {
+      "title": "🚀 Game 2 - Coming Soon",
+      "demoMessage": "This is a demo page",
+      "description": "Game 2 test questions are currently being prepared. You can currently only see how the structure will work.",
+      "featuresPreview": "Features coming soon:",
+      "features": [
+        "🌌 New galactic scenarios",
+        "🎯 Different leadership challenges", 
+        "📊 Advanced analysis system",
+        "🔄 Comparative results",
+        "⚡ Dynamic question structure"
+      ],
+      "navigation": "You can click the 'Demo Results' button to see demo results.",
+      "comingSoon": "Coming Soon",
+      "secondMission": "Your second galactic mission will be ready soon.",
+      "newChallenges": "New scenarios, different decisions and even more challenging leadership tests await you.",
+      "sameStructure": "This game will also have the same structure: identity entry, test questions and results.",
+      "upcoming": "Coming Soon:",
+      "newScenarios": "• New galactic scenarios",
+      "differentChallenges": "• Different leadership challenges",
+      "advancedAnalysis": "• Advanced analysis system", 
+      "comparativeResults": "• Comparative results",
+      "demoResults": "Demo Results",
+      "backToGame1": "Go to Game 1",
+      "restartDemo": "Restart Demo",
+      "demoResultsMessage": "When Game 2 is ready, it will be available with the same structure but new questions and scenarios.",
+      "tryGame1": "For now, you can experience Game 1 or revisit this demo page."
+    }
+  }
+} 

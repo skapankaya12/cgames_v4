@@ -1,23 +1,6 @@
 import React from 'react';
-
-const questionTitles = [
-  "Yük Sorumlusu ile İlk Karşılaşma",
-  "Çıkış Koridoru",
-  "Rakip Firma Teklifi",
-  "Devriye Gemisi Engeli",
-  "Navigasyon Kararı",
-  "Meteor Tehdidi",
-  "Kimlik Doğrulama",
-  "Korsan Saldırısı",
-  "Terminal İlk İletişim",
-  "Gecikme Alarmı",
-  "Kargo Sarsıntısı",
-  "Teslimat Alanı Boş",
-  "Motor Alarmı",
-  "Kargo İncelemesi",
-  "Navigasyon Kaybı",
-  "Alıcı Bilgisi Eksik"
-];
+import { useTranslation } from 'react-i18next';
+import { getQuestionTitles } from '../../../../utils/questionsUtils';
 
 interface TestProgressProps {
   progress: number;
@@ -34,6 +17,8 @@ export const TestProgress: React.FC<TestProgressProps> = ({
   isTransitioning,
   onPrevious
 }) => {
+  const { t } = useTranslation('common');
+  const questionTitles = getQuestionTitles();
   return (
     <div className="progress-hud">
       <div className="progress-container">
@@ -45,10 +30,10 @@ export const TestProgress: React.FC<TestProgressProps> = ({
           onClick={onPrevious}
           disabled={currentQuestion === 0 || isTransitioning}
         >
-          Geri
+          {t('buttons.back')}
         </button>
         <div className="question-counter">
-          Soru {currentQuestion + 1} / {totalQuestions} - {questionTitles[currentQuestion]}
+          Question {currentQuestion + 1} / {totalQuestions} - {questionTitles[currentQuestion]}
         </div>
       </div>
     </div>

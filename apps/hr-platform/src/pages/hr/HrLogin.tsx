@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function HrLogin() {
   const [email, setEmail] = useState('');
@@ -9,6 +11,16 @@ export default function HrLogin() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user && user.role === 'hr_user' && user.companyId) {
+      navigate('/hr');
+    } else if (user && user.role === 'super_admin') {
+      navigate('/admin/create-company');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,9 +28,39 @@ export default function HrLogin() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/hr');
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Check if user exists in hrUsers collection
+      const hrUserRef = doc(db, 'hrUsers', result.user.uid);
+      const hrUserDoc = await getDoc(hrUserRef);
+      
+      if (!hrUserDoc.exists()) {
+        setError('Access denied. This login is for HR users only.');
+        await auth.signOut();
+        return;
+      }
+
+      const hrUserData = hrUserDoc.data();
+      
+      if (!hrUserData.companyId) {
+        setError('Your account is not associated with a company. Please contact support.');
+        await auth.signOut();
+        return;
+      }
+
+      // Check if this is first login with temporary password
+      if (hrUserData.status === 'pending_first_login') {
+        console.log('⚠️ [HrLogin] First login detected - user should change password');
+        // You might want to show a message or redirect to password change
+        // For now, we'll let them continue with a console warning
+      }
+
+      console.log('✅ [HrLogin] HR user authenticated:', hrUserData.role);
+      
+      // AuthContext will handle the redirect via useEffect above
+      
     } catch (err: any) {
+      console.error('❌ [HrLogin] Login failed:', err);
       setError('Invalid credentials. Please check your email and password.');
     } finally {
       setLoading(false);
@@ -115,8 +157,8 @@ export default function HrLogin() {
 
           <div className="hr-auth-footer">
             <p className="auth-link-text">
-              Don't have an account? 
-              <a href="/hr/register" className="auth-link">Create Account</a>
+              Need access? 
+              <a href="/hr/register" className="auth-link">Contact your admin</a>
             </p>
           </div>
         </div>

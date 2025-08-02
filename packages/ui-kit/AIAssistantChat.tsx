@@ -3,6 +3,7 @@ import { ConversationalAIService } from '@cgames/services';
 import type { ConversationMessage, ConversationContext } from '@cgames/services';
 import type { DimensionScore } from '@cgames/types/Recommendations';
 import type { CVData } from '@cgames/services';
+import { useTranslation } from 'react-i18next';
 import './styles/AIAssistantChat.css';
 
 interface AIAssistantChatProps {
@@ -18,6 +19,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
   cvData,
   sessionId
 }) => {
+  const { t, i18n } = useTranslation('ui');
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -46,11 +48,11 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
     const welcomeMessage: ConversationMessage = {
       id: 'welcome',
       role: 'assistant',
-      content: `Merhaba! ${candidateName || 'Bu aday'} hakkında sorularınızı yanıtlamaya hazırım. Mülakat soruları, email taslakları, gelişim önerileri veya pozisyon uygunluğu gibi konularda yardımcı olabilirim.`,
+      content: t('results.aiAssistant.welcomeMessage', { candidateName: candidateName || 'Bu aday' }),
       timestamp: new Date().toISOString()
     };
     setMessages([welcomeMessage]);
-  }, [candidateName]);
+  }, [candidateName, t]);
 
   const handleSendMessage = async () => {
     if (!currentMessage.trim() || isLoading) return;
@@ -71,7 +73,8 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
       const response = await aiService.generateResponse(
         userMessage.content,
         context,
-        messages
+        messages,
+        i18n.language
       );
 
       const assistantMessage: ConversationMessage = {
@@ -86,7 +89,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
       const errorMessage: ConversationMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Üzgünüm, yanıt üretilirken bir hata oluştu. Lütfen tekrar deneyin.',
+        content: t('results.aiAssistant.errorMessage'),
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -118,7 +121,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
           onClick={() => setIsMinimized(false)}
         >
           <span>💬</span>
-          <span>AI Asistan</span>
+          <span>{t('results.aiAssistant.title')}</span>
           {messages.length > 1 && (
             <span className="message-count">{messages.length - 1}</span>
           )}
@@ -133,15 +136,15 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
         <div className="chat-title">
           <span className="chat-icon">💬</span>
           <div>
-            <h3>AI İK Asistanı</h3>
-            <p>{candidateName || 'Aday'} Hakkında Soru Sorun</p>
+            <h3>{t('results.aiAssistant.title')}</h3>
+            <p>{t('results.aiAssistant.subtitle', { name: candidateName || 'Aday' })}</p>
           </div>
         </div>
         <div className="chat-controls">
           <button 
             className="minimize-btn"
             onClick={() => setIsMinimized(true)}
-            title="Küçült"
+            title={t('results.aiAssistant.minimize')}
           >
             ➖
           </button>
@@ -193,7 +196,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 
       {messages.length === 1 && (
         <div className="suggested-questions">
-          <h4>Örnek Sorular:</h4>
+          <h4>{t('results.aiAssistant.exampleQuestions')}</h4>
           <div className="suggestions-grid">
             {suggestedQuestions.slice(0, 4).map((question, index) => (
               <button
@@ -215,7 +218,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={`${candidateName || 'Bu aday'} hakkında soru sorun... (örn: "mülakat soruları öner" veya "email taslağı hazırla")`}
+            placeholder={t('results.aiAssistant.placeholder', { candidateName: candidateName || 'Bu aday' })}
             rows={2}
             disabled={isLoading}
           />
@@ -237,7 +240,10 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
               {key === 'mülakat_soruları' && '❓'}
               {key === 'email_taslağı' && '📧'}
               {key === 'gelişim_planı' && '📈'}
-              {value.split(' ').slice(0, 3).join(' ')}...
+              {key === 'mülakat_soruları' && t('results.aiAssistant.quickActions.interview_questions')}
+              {key === 'email_taslağı' && t('results.aiAssistant.quickActions.email_draft')}
+              {key === 'gelişim_planı' && t('results.aiAssistant.quickActions.development_plan')}
+              {key !== 'mülakat_soruları' && key !== 'email_taslağı' && key !== 'gelişim_planı' && value.split(' ').slice(0, 3).join(' ')}...
             </button>
           ))}
         </div>

@@ -7,13 +7,17 @@
   "env": {
     "NODE_VERSION": "18.x",
     "NODE_ENV": "production",
-    "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com"
+    "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+    "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com",
+    "VITE_API_BASE_URL": "https://app.olivinhr.com"
   },
   "build": {
     "env": {
       "NODE_ENV": "production",
       "NODE_VERSION": "18.x",
-      "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com"
+      "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+      "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com",
+      "VITE_API_BASE_URL": "https://app.olivinhr.com"
     }
   },
   "rewrites": [

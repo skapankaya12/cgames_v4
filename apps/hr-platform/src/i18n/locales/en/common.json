@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "OlivinHR",
+    "subtitle": "Gamified Soft Skills Assessment | DEMO VERSION",
+    "copyright": "OlivinHR 2025. All rights reserved",
+    "cognitiveGames": "Cognitive Games. All rights reserved"
+  },
+  "navigation": {
+    "dashboard": "Overview",
+    "competencies": "Competencies", 
+    "behaviorAnalysis": "Behavior Analysis",
+    "recommendations": "AI Recommendations",
+    "feedback": "Feedback",
+    "help": "Help"
+  },
+  "landing": {
+    "title": "OlivinHR",
+    "subtitle": "Gamified Soft Skills Assessment | DEMO VERSION",
+    "startAssessment": "Start Assessment",
+    "game2Assessment": "Game 2 Assessment | Coming Soon"
+  },
+  "buttons": {
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "start": "Start",
+    "submit": "Submit",
+    "restart": "Restart",
+    "startJourney": "Start Journey",
+    "startGame": "Start Game",
+    "understood": "Understood, Continue",
+    "retry": "Retry",
+    "close": "Close",
+    "help": "Help",
+    "generateRecommendations": "Generate AI Recommendations",
+    "sendResults": "Send Results",
+    "newTest": "New Test"
+  },
+  "status": {
+    "loading": "Loading...",
+    "uploading": "Uploading...",
+    "processing": "Processing...",
+    "analyzing": "Analyzing CV...",
+    "sending": "Sending...",
+    "validating": "Validating your invitation...",
+    "ready": "Ready",
+    "completed": "Completed",
+    "submitted": "Submitted",
+    "pending": "Pending",
+    "error": "Error",
+    "success": "Success"
+  },
+  "validation": {
+    "pleaseSelectPdfOnly": "Please select PDF files only.",
+    "fileSizeTooLarge": "File size must be smaller than 10MB.",
+    "cvAnalysisFailed": "CV analysis failed, but the file will still be uploaded.",
+    "invalidInvitation": "Invalid or expired invitation link",
+    "tokenValidationFailed": "Token validation failed",
+    "noTokenProvided": "No invitation token provided",
+    "checkInvitationLink": "Please check your invitation link or contact the sender.",
+    "videoLoadFailed": "Video could not be loaded"
+  },
+  "invite": {
+    "validatingInvitation": "Validating your invitation...",
+    "invalidInvitation": "Invalid Invitation"
+  },
+  "thankYou": {
+    "title": "Assessment Complete!",
+    "subtitle": "Thank you for completing the {{gameName}}.",
+    "success": "Your responses have been submitted successfully and the hiring team will review your results.",
+    "whatNext": "What happens next?",
+    "steps": {
+      "review": "The hiring team will review your assessment results",
+      "contact": "You'll be contacted within 3-5 business days", 
+      "questions": "If you have any questions, feel free to reach out to the hiring team"
+    },
+    "role": "Role:",
+    "referenceId": "Reference ID:"
+  },
+  "errors": {
+    "dataLoadingError": "Data Loading Error",
+    "noDataFound": "No data found yet",
+    "gameCompletedScores": "Your scores will be displayed here after the game is completed.",
+    "behaviorDataNotFound": "Behavior Data Not Found",
+    "behaviorDataDescription": "Detailed behavior analysis data was not collected in this test. In new tests, interaction data will be recorded during the test for more comprehensive analysis.",
+    "limitedData": "Limited data",
+    "returnToHome": "Return to Home"
+  },
+  "time": {
+    "minutes": "{{count}} min",
+    "seconds": "{{count}} sec",
+    "minutesSeconds": "{{minutes}}m {{seconds}}s"
+  },
+  "loading": {
+    "resultsLoading": "Results Loading...",
+    "dataProcessing": "Your data is being processed, please wait.",
+    "savingResults": "Saving results..."
+  }
+} 

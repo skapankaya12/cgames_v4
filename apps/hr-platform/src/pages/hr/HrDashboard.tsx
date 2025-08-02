@@ -68,10 +68,31 @@ const ResultsModal = ({ candidate, onClose }: { candidate: any, onClose: () => v
     return (
       <div className="modal-overlay">
         <div className="modal-content">
+          <div className="modal-header">
+            <h3>Assessment Results</h3>
+            <button onClick={onClose} className="close-button">×</button>
+          </div>
           <div className="error-state">
-            <h3>Error Loading Results</h3>
+            <div className="error-icon">⚠️</div>
             <p>{error}</p>
-            <button onClick={onClose} className="button-secondary">Close</button>
+            <button onClick={onClose} className="button secondary">Close</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!results) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>Assessment Results</h3>
+            <button onClick={onClose} className="close-button">×</button>
+          </div>
+          <div className="no-results">
+            <p>No assessment results found for this candidate.</p>
+            <button onClick={onClose} className="button secondary">Close</button>
           </div>
         </div>
       </div>
@@ -80,74 +101,45 @@ const ResultsModal = ({ candidate, onClose }: { candidate: any, onClose: () => v
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content large">
+      <div className="modal-content">
         <div className="modal-header">
-          <h2>Assessment Results - {candidate.email}</h2>
+          <h3>Assessment Results - {candidate.email}</h3>
           <button onClick={onClose} className="close-button">×</button>
         </div>
-        
         <div className="modal-body">
-          {results && (
-            <div className="results-overview">
-              <div className="results-summary">
-                <div className="summary-card">
-                  <h3>Overall Score</h3>
-                  <div className="score-display">
-                    <span className="score">{results.results.totalScore}</span>
-                    <span className="max-score">/ {results.results.maxScore}</span>
-                    <span className="percentage">
-                      ({Math.round((results.results.totalScore / results.results.maxScore) * 100)}%)
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="summary-card">
-                  <h3>Assessment Details</h3>
-                  <p><strong>Game:</strong> {results.selectedGame}</p>
-                  <p><strong>Submitted:</strong> {new Date(results.submittedAt).toLocaleString()}</p>
-                  <p><strong>Role:</strong> {results.invite?.roleTag || 'General Assessment'}</p>
-                </div>
+          <div className="results-content">
+            <div className="score-section">
+              <h4>Overall Score</h4>
+              <div className="score-display">
+                <span className="score-value">{results.totalScore || 'N/A'}</span>
+                <span className="score-label">/ 100</span>
               </div>
-
-              <div className="competency-breakdown">
-                <h3>Competency Breakdown</h3>
-                <div className="competency-grid">
-                  {results.results.competencyScores.map((comp: any, index: number) => (
-                    <div key={index} className="competency-item">
-                      <div className="competency-header">
-                        <span className="competency-name">{comp.competency}</span>
-                        <span className="competency-score">{comp.score}/{comp.maxScore}</span>
-                      </div>
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: `${comp.percentage}%` }}
-                        ></div>
-                      </div>
-                      <span className="competency-percentage">{comp.percentage}%</span>
+            </div>
+            
+            {results.competencyBreakdown && (
+              <div className="competency-section">
+                <h4>Competency Breakdown</h4>
+                <div className="competency-list">
+                  {Object.entries(results.competencyBreakdown).map(([competency, score]: [string, any]) => (
+                    <div key={competency} className="competency-item">
+                      <span className="competency-name">{competency}</span>
+                      <span className="competency-score">{score}</span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {results.candidateInfo && (
-                <div className="candidate-info">
-                  <h3>Candidate Information</h3>
-                  <div className="info-grid">
-                    <p><strong>Name:</strong> {results.candidateInfo.firstName} {results.candidateInfo.lastName}</p>
-                    <p><strong>Email:</strong> {results.candidateInfo.email}</p>
-                    {results.candidateInfo.company && (
-                      <p><strong>Company:</strong> {results.candidateInfo.company}</p>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+            )}
+            
+            {results.completionTime && (
+              <div className="timing-section">
+                <h4>Completion Time</h4>
+                <p>{Math.round(results.completionTime / 60000)} minutes</p>
+              </div>
+            )}
+          </div>
         </div>
-        
         <div className="modal-footer">
-          <button onClick={onClose} className="button-primary">Close</button>
+          <button onClick={onClose} className="button primary">Close</button>
         </div>
       </div>
     </div>
@@ -173,41 +165,90 @@ export default function HrDashboard() {
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [hrUser, setHrUser] = useState<any>(null);
 
+  // NEW: License limit state
+  const [licenseLimits, setLicenseLimits] = useState<{
+    licenseCount: number;
+    usedLicensesCount: number;
+    availableLicenses: number;
+    canSendInvite: boolean;
+    loading: boolean;
+  }>({
+    licenseCount: 0,
+    usedLicensesCount: 0,
+    availableLicenses: 0,
+    canSendInvite: true,
+    loading: true
+  });
+
   const navigate = useNavigate();
   const auth = getAuth();
+
+  // NEW: Fetch license limits using API endpoint
+  useEffect(() => {
+    const fetchLicenseLimits = async () => {
+      if (!hrUser?.id) return;
+      
+      try {
+        console.log('🔄 [HrDashboard] Fetching license limits via API...');
+        
+        const response = await fetch(`/api/hr/getLicenseInfo?hrId=${hrUser.id}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP ${response.status}: Failed to fetch license info`);
+        }
+        
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to fetch license info');
+        }
+        
+        const { licenseInfo } = data;
+        setLicenseLimits({
+          licenseCount: licenseInfo.licenseCount,
+          usedLicensesCount: licenseInfo.usedLicensesCount,
+          availableLicenses: licenseInfo.availableLicenses,
+          canSendInvite: licenseInfo.canSendInvite,
+          loading: false
+        });
+        
+        console.log(`📊 [HrDashboard] License limits - Total: ${licenseInfo.licenseCount}, Used: ${licenseInfo.usedLicensesCount}, Available: ${licenseInfo.availableLicenses}`);
+        
+        // Show warnings if any
+        if (data.warnings && data.warnings.length > 0) {
+          console.warn('⚠️ [HrDashboard] License warnings:', data.warnings);
+        }
+        
+      } catch (err: any) {
+        console.error('❌ [HrDashboard] Error fetching license limits:', err);
+        setLicenseLimits(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchLicenseLimits();
+  }, [hrUser?.id]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        navigate('/hr/login');
+        navigate('/hr');
         return;
       }
-      try {
-        const hrDocRef = doc(db, 'hrUsers', user.uid);
-        const hrDocSnap = await getDoc(hrDocRef);
-        
-        if (!hrDocSnap.exists()) {
-          await signOut(auth);
-          navigate('/hr/login');
-          return;
-        }
-        
-        const hrData = hrDocSnap.data();
-        setHrUser(hrData);
-        const userCompanyId = hrData.companyId as string;
-        setCompanyId(userCompanyId);
 
-        const q = query(collection(db, `companies/${userCompanyId}/candidates`));
-        const snapshot = await getDocs(q);
-        const list: Candidate[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Candidate, 'id'>),
-        }));
-        setCandidates(list);
-      } catch (err: any) {
-        setError(`Failed to load candidates: ${err.message}`);
-      } finally {
-        setLoading(false);
+      try {
+        const userRef = doc(db, 'hrUsers', user.uid);
+        const userDoc = await getDoc(userRef);
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setHrUser(userData);
+          setCompanyId(userData.companyId);
+        } else {
+          console.error('HR user document not found');
+          navigate('/hr');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        navigate('/hr');
       }
     });
 
@@ -216,6 +257,13 @@ export default function HrDashboard() {
 
   const handleInvite = async () => {
     console.log('🚀 [HrDashboard] handleInvite called for:', newEmail);
+    
+    // NEW: Check license limits before sending invite
+    if (!licenseLimits.canSendInvite) {
+      setInviteError('License limit reached. No available invites remaining.');
+      return;
+    }
+
     setInviteError(null);
     setInviteLoading(true);
     
@@ -246,6 +294,14 @@ export default function HrDashboard() {
         },
       ]);
       
+      // NEW: Update license limits after successful invite
+      setLicenseLimits(prev => ({
+        ...prev,
+        usedLicensesCount: prev.usedLicensesCount + 1,
+        availableLicenses: prev.availableLicenses - 1,
+        canSendInvite: prev.availableLicenses - 1 > 0
+      }));
+      
       setNewEmail('');
       
       // Show success message
@@ -253,7 +309,27 @@ export default function HrDashboard() {
       
     } catch (err: any) {
       console.error('🚨 [HrDashboard] Invite failed:', err);
-      setInviteError(`Failed to send invite: ${err.message}`);
+      
+      // NEW: Handle license limit errors specifically
+      if (err.message && err.message.includes('License limit reached')) {
+        setInviteError('License limit reached. No available invites remaining.');
+        // Refresh license limits
+        if (companyId) {
+          const companyDoc = await getDoc(doc(db, 'companies', companyId));
+          const companyData = companyDoc.data();
+          if (companyData) {
+            setLicenseLimits({
+              licenseCount: companyData.licenseCount || 0,
+              usedLicensesCount: companyData.usedLicensesCount || 0,
+              availableLicenses: (companyData.licenseCount || 0) - (companyData.usedLicensesCount || 0),
+              canSendInvite: ((companyData.licenseCount || 0) - (companyData.usedLicensesCount || 0)) > 0,
+              loading: false
+            });
+          }
+        }
+      } else {
+        setInviteError(`Failed to send invite: ${err.message}`);
+      }
     } finally {
       setInviteLoading(false);
     }
@@ -269,6 +345,35 @@ export default function HrDashboard() {
     setShowResultsModal(false);
   };
 
+  useEffect(() => {
+    const loadCandidates = async () => {
+      if (!companyId) return;
+      
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const candidatesCollection = collection(db, `companies/${companyId}/candidates`);
+        const candidatesSnapshot = await getDocs(candidatesCollection);
+        
+        const candidatesList: Candidate[] = candidatesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Candidate));
+        
+        setCandidates(candidatesList);
+      } catch (err: any) {
+        console.error('Error loading candidates:', err);
+        setError('Failed to load candidates');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCandidates();
+  }, [companyId]);
+
+  // Filter candidates based on selected filter
   const filteredCandidates = candidates.filter(candidate => {
     if (selectedFilter === 'all') return true;
     if (selectedFilter === 'invited') return candidate.status === 'Invited';
@@ -277,137 +382,65 @@ export default function HrDashboard() {
     return true;
   });
 
-  const getStatusCounts = () => {
-    return {
-      total: candidates.length,
-      invited: candidates.filter(c => c.status === 'Invited').length,
-      completed: candidates.filter(c => c.status === 'Completed').length,
-      inProgress: candidates.filter(c => c.status === 'InProgress').length,
-    };
+  // Status counts for filter tabs
+  const statusCounts = {
+    total: candidates.length,
+    invited: candidates.filter(c => c.status === 'Invited').length,
+    inProgress: candidates.filter(c => c.status === 'InProgress').length,
+    completed: candidates.filter(c => c.status === 'Completed').length,
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Completed': return 'status-completed';
-      case 'Invited': return 'status-invited';
-      case 'InProgress': return 'status-progress';
-      default: return 'status-default';
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigate('/hr');
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
   if (loading) {
     return (
-      <div className="hr-dashboard-loading">
-        <div className="loading-spinner-large"></div>
-        <p>Loading your dashboard...</p>
+      <div className="hr-dashboard">
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="hr-dashboard-error">
-        <div className="error-icon">
-          <svg viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
+      <div className="hr-dashboard">
+        <div className="error-state">
+          <h2>Error Loading Dashboard</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()} className="button primary">
+            Try Again
+          </button>
         </div>
-        <h2>Something went wrong</h2>
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()} className="retry-button">
-          Try Again
-        </button>
       </div>
     );
   }
 
-  const statusCounts = getStatusCounts();
-
   return (
     <div className="hr-dashboard">
-      {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="dashboard-logo">
-              <div className="logo-icon">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-                </svg>
+      <div className="hr-content">
+        {/* Header */}
+        <div className="dashboard-header">
+          <div className="header-content">
+            <div className="header-left">
+              <h1>HR Dashboard</h1>
+              <p>Manage your recruitment assessments and candidates</p>
+            </div>
+            <div className="header-right">
+              <div className="user-info">
+                <span className="user-name">{hrUser?.email}</span>
+                <button onClick={handleSignOut} className="sign-out-button">
+                  Sign Out
+                </button>
               </div>
-              <span className="logo-text">OlivinHR</span>
-            </div>
-            <div className="header-info">
-              <h1>Welcome back, {hrUser?.fullName || 'HR Manager'}</h1>
-              <p>{hrUser?.companyName || 'Your Company'}</p>
-            </div>
-          </div>
-          <div className="header-actions">
-            <button 
-              onClick={async () => {
-                await signOut(auth);
-                navigate('/hr/login');
-              }}
-              className="logout-button"
-            >
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-              </svg>
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="dashboard-content">
-        {/* Stats Cards */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon total">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-              </svg>
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{statusCounts.total}</div>
-              <div className="stat-label">Total Candidates</div>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon invited">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{statusCounts.invited}</div>
-              <div className="stat-label">Invitations Sent</div>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon progress">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{statusCounts.inProgress}</div>
-              <div className="stat-label">In Progress</div>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon completed">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{statusCounts.completed}</div>
-              <div className="stat-label">Completed</div>
             </div>
           </div>
         </div>
@@ -418,6 +451,50 @@ export default function HrDashboard() {
             <div className="card-header">
               <h2>Invite New Candidate</h2>
               <p>Send assessment invitations to potential candidates</p>
+              
+              {/* NEW: License limits display */}
+              <div className="license-info" style={{ 
+                marginTop: '1rem', 
+                padding: '0.75rem 1rem', 
+                borderRadius: '8px',
+                backgroundColor: licenseLimits.canSendInvite ? '#f0f9ff' : '#fef2f2',
+                border: licenseLimits.canSendInvite ? '1px solid #0ea5e9' : '1px solid #ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                {licenseLimits.loading ? (
+                  <>
+                    <div className="loading-spinner-small"></div>
+                    <span>Checking license availability...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor" 
+                      style={{ 
+                        width: '20px', 
+                        height: '20px',
+                        color: licenseLimits.canSendInvite ? '#0ea5e9' : '#ef4444'
+                      }}
+                    >
+                      {licenseLimits.canSendInvite ? (
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      ) : (
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      )}
+                    </svg>
+                    <span style={{ 
+                      color: licenseLimits.canSendInvite ? '#0f172a' : '#dc2626',
+                      fontWeight: '500'
+                    }}>
+                      {licenseLimits.availableLicenses} remaining invites 
+                      ({licenseLimits.usedLicensesCount}/{licenseLimits.licenseCount} used)
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
             <div className="invite-form">
               <div className="input-group">
@@ -433,17 +510,25 @@ export default function HrDashboard() {
                     placeholder="Enter candidate's email address"
                     className="invite-input"
                     required
+                    disabled={!licenseLimits.canSendInvite} // NEW: Disable when no licenses available
                   />
                 </div>
                 <button 
                   onClick={handleInvite} 
-                  disabled={inviteLoading || !newEmail.trim()}
-                  className={`invite-button ${inviteLoading ? 'loading' : ''}`}
+                  disabled={inviteLoading || !newEmail.trim() || !licenseLimits.canSendInvite} // NEW: Disable when no licenses
+                  className={`invite-button ${inviteLoading ? 'loading' : ''} ${!licenseLimits.canSendInvite ? 'disabled' : ''}`}
                 >
                   {inviteLoading ? (
                     <>
                       <div className="loading-spinner-small"></div>
                       Sending...
+                    </>
+                  ) : !licenseLimits.canSendInvite ? (
+                    <>
+                      <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      No Invites Left
                     </>
                   ) : (
                     <>
@@ -503,30 +588,25 @@ export default function HrDashboard() {
               </div>
             </div>
 
-            {filteredCandidates.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon">
-                  <svg viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
+            <div className="table-container">
+              {filteredCandidates.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">📋</div>
+                  <h3>No candidates found</h3>
+                  <p>
+                    {selectedFilter === 'all' 
+                      ? 'Start by inviting candidates to your assessment.'
+                      : `No candidates with "${selectedFilter}" status.`
+                    }
+                  </p>
                 </div>
-                <h3>No candidates found</h3>
-                <p>
-                  {selectedFilter === 'all' 
-                    ? 'Start by inviting your first candidate above.'
-                    : `No candidates with "${selectedFilter}" status.`
-                  }
-                </p>
-              </div>
-            ) : (
-              <div className="table-container">
+              ) : (
                 <table className="candidates-table">
                   <thead>
                     <tr>
-                      <th>Candidate</th>
+                      <th>Email</th>
                       <th>Status</th>
                       <th>Date Invited</th>
-                      <th>Date Completed</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -534,47 +614,31 @@ export default function HrDashboard() {
                     {filteredCandidates.map((candidate) => (
                       <tr key={candidate.id}>
                         <td>
-                          <div className="candidate-cell">
-                            <div className="candidate-avatar">
-                              {candidate.email.charAt(0).toUpperCase()}
-                            </div>
-                            <div className="candidate-info">
-                              <div className="candidate-email">{candidate.email}</div>
-                              <div className="candidate-id">ID: {candidate.id.slice(0, 8)}</div>
-                            </div>
+                          <div className="candidate-email">
+                            <span className="email">{candidate.email}</span>
                           </div>
                         </td>
                         <td>
-                          <span className={`status-badge ${getStatusColor(candidate.status)}`}>
+                          <span className={`status-badge ${candidate.status.toLowerCase().replace(' ', '-')}`}>
                             {candidate.status}
                           </span>
                         </td>
-                        <td>{new Date(candidate.dateInvited).toLocaleDateString()}</td>
                         <td>
-                          {candidate.dateCompleted
-                            ? new Date(candidate.dateCompleted).toLocaleDateString()
-                            : '—'}
+                          {new Date(candidate.dateInvited).toLocaleDateString()}
                         </td>
                         <td>
                           <div className="action-buttons">
-                            {candidate.status === 'Completed' ? (
-                              <button 
-                                className="action-button primary"
+                            {candidate.status === 'Completed' && (
+                              <button
                                 onClick={() => handleViewResults(candidate)}
+                                className="action-button view"
+                                title="View Results"
                               >
                                 <svg viewBox="0 0 20 20" fill="currentColor">
                                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                   <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                                 </svg>
                                 View Results
-                              </button>
-                            ) : (
-                              <button className="action-button disabled" disabled>
-                                <svg viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
-                                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                                </svg>
-                                Pending
                               </button>
                             )}
                           </div>
@@ -583,19 +647,19 @@ export default function HrDashboard() {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Results Modal */}
-      {showResultsModal && selectedCandidate && (
-        <ResultsModal
-          candidate={selectedCandidate}
-          onClose={closeResultsModal}
-        />
-      )}
+        {/* Results Modal */}
+        {showResultsModal && selectedCandidate && (
+          <ResultsModal 
+            candidate={selectedCandidate} 
+            onClose={closeResultsModal} 
+          />
+        )}
+      </div>
     </div>
   );
 } 

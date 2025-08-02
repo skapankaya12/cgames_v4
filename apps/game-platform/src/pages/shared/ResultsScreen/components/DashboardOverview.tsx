@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from '@cgames/ui-kit';
 import type { CompetencyScore } from '../types/results';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
@@ -32,6 +33,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onViewChange,
   onShowHelp
 }) => {
+  const { t } = useTranslation('ui');
   // Calculate key metrics
   const averageScore = scores.length > 0 
     ? Math.round(scores.reduce((sum, score) => sum + getScorePercentage(score.score, score.maxScore), 0) / scores.length)
@@ -62,10 +64,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   // Get performance level
   const getPerformanceLevel = (score: number) => {
-    if (score >= 80) return { label: 'Mükemmel', color: '#10b981', icon: 'Trophy' };
-    if (score >= 60) return { label: 'İyi', color: '#708238', icon: 'Analytics' };
-    if (score >= 40) return { label: 'Orta', color: '#f59e0b', icon: 'Target' };
-    return { label: 'Gelişim Gerekli', color: '#ef4444', icon: 'AlertCircle' };
+    if (score >= 80) return { label: t('results.performanceLevels.excellent'), color: '#10b981', icon: 'Trophy' };
+    if (score >= 60) return { label: t('results.performanceLevels.good'), color: '#708238', icon: 'Analytics' };
+    if (score >= 40) return { label: t('results.performanceLevels.average'), color: '#f59e0b', icon: 'Target' };
+    return { label: t('results.performanceLevels.needsDevelopment'), color: '#ef4444', icon: 'AlertCircle' };
   };
 
   const performanceLevel = getPerformanceLevel(averageScore);
@@ -74,7 +76,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   // Get AI recommendations summary
   const getAIRecommendationsSummary = () => {
     if (isLoadingRecommendations) {
-      return "AI analiziniz devam ediyor...";
+      return t('results.aiAssistant.loading');
     }
     
     if (personalizedRecommendations) {
@@ -89,11 +91,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         const keyPoints = [];
         
         if (strengths && strengths.length > 0) {
-          keyPoints.push(`Güçlü yönleriniz: ${strengths[0]}`);
+          keyPoints.push(`${t('results.dashboard.strongestCompetency')}: ${strengths[0]}`);
         }
         
         if (developmentAreas && developmentAreas.length > 0) {
-          keyPoints.push(`Gelişim alanı: ${developmentAreas[0]}`);
+          keyPoints.push(`${t('results.dashboard.developmentArea')}: ${developmentAreas[0]}`);
         }
         
         return keyPoints.length > 0 ? `${firstSentence} ${keyPoints.join('. ')}.` : firstSentence;
@@ -101,13 +103,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       
       // Fallback summary
       if (strengths && developmentAreas) {
-        return `AI analizinize göre ${strengths.length} güçlü yönünüz ve ${developmentAreas.length} gelişim alanınız belirlendi.`;
+        return t('results.dashboard.aiAnalysisSummary', { 
+          strengthsCount: strengths.length, 
+          developmentCount: developmentAreas.length 
+        });
       }
       
-      return "Kişiselleştirilmiş önerileriniz hazır! Ayrıntılı bilgi almak için tıklayınız.";
+      return t('results.dashboard.recommendationsReady');
     }
     
-    return "AI öneriler oluşturulmadı.";
+    return t('results.dashboard.noRecommendations');
   };
 
   // Get formatted test completion date
@@ -129,19 +134,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       <div className="dashboard-welcome">
         <div className="welcome-content">
           <h2>
-            Hoş geldiniz, {user?.firstName}!
+            {t('results.dashboard.welcome', { name: user?.firstName })}
           </h2>
           <p>
-            Değerlendirme {getTestCompletionDate()} tarihinde tamamlandı. Aşağıda genel performansınızı ve detaylı analizleri görebilirsiniz.
+            {t('results.dashboard.completedOn', { date: getTestCompletionDate() })}
           </p>
         </div>
         <button 
           className="help-button"
           onClick={() => onShowHelp('dashboard-overview')}
-          title="Bu sayfayı anlamak için yardım alın"
+          title={t('help.helpButtonTitle')}
         >
           <Icons.Lightbulb size={16} />
-          <span>Yardım</span>
+          <span>{t('help.ipuclari')}</span>
         </button>
       </div>
 
@@ -152,7 +157,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="card-header">
             <div className="card-title">
               <PerformanceIcon size={24} color={performanceLevel.color} />
-              <span>Genel Performans</span>
+              <span>{t('results.dashboard.overallPerformance')}</span>
             </div>
           </div>
           <div className="performance-score-vertical">
@@ -189,8 +194,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </div>
             </div>
             <div className="score-info-vertical">
-              <h3 className="score-title-vertical">Ortalama Yetkinlik Skoru</h3>
-              <p className="score-subtitle-vertical">{scores.length} yetkinlik alanı analiz edildi</p>
+              <h3 className="score-title-vertical">{t('results.dashboard.overallPerformanceDescription')}</h3>
+              <p className="score-subtitle-vertical">{scores.length} {t('results.competencies.competencyAreas')} {t('results.navigation.competencies.description', { count: scores.length })}</p>
             </div>
           </div>
         </div>
@@ -199,7 +204,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="bento-card competency-highlight">
           <div className="card-header card-header-left">
             <Icons.Trophy size={20} color="#10b981" />
-            <span>En Güçlü Yetkinlik</span>
+            <span>{t('results.dashboard.strongestCompetency')}</span>
           </div>
           <div className="competency-content">
             {topCompetency ? (
@@ -218,7 +223,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
               </>
             ) : (
-              <p>Veri yok</p>
+              <p>{t('results.competencies.noDataTitle')}</p>
             )}
           </div>
         </div>
@@ -227,7 +232,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="bento-card improvement-area">
           <div className="card-header card-header-left">
             <Icons.Target size={20} color="#f59e0b" />
-            <span>Gelişim Alanı</span>
+            <span>{t('results.dashboard.developmentArea')}</span>
           </div>
           <div className="competency-content">
             {improvementArea ? (
@@ -246,7 +251,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
               </>
             ) : (
-              <p>Veri yok</p>
+              <p>{t('results.competencies.noDataTitle')}</p>
             )}
           </div>
         </div>
@@ -255,20 +260,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="bento-card time-analytics">
           <div className="card-header card-header-left">
             <Icons.Clock size={20} color="#667eea" />
-            <span>Zaman Analizi</span>
+            <span>{t('results.behaviorAnalysis.title')}</span>
           </div>
           <div className="time-content">
             <div className="time-stat">
               <span className="time-value">
                 {formatTime(totalTime)}
               </span>
-              <span className="time-label">Toplam Süre</span>
+              <span className="time-label">{t('results.behaviorAnalysis.totalTime')}</span>
             </div>
             <div className="time-stat">
               <span className="time-value">
                 {formatTime(avgTimePerQuestion)}
               </span>
-              <span className="time-label">Ortalama Soru Süresi</span>
+              <span className="time-label">{t('results.behaviorAnalysis.avgQuestionTime')}</span>
             </div>
           </div>
         </div>
@@ -277,13 +282,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="bento-card ai-insights">
           <div className="card-header">
             <Icons.AI size={20} color="#8b5cf6" />
-            <span>AI Öngörüler</span>
+            <span>{t('results.dashboard.aiInsights')}</span>
           </div>
           <div className="insights-content">
             {isLoadingRecommendations ? (
               <div className="loading-state">
                 <div className="loading-spinner-small"></div>
-                <p>AI analiz ediyor...</p>
+                <p>{t('results.aiAssistant.loading')}</p>
               </div>
             ) : personalizedRecommendations ? (
               <div className="insight-preview">
@@ -293,12 +298,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     className="view-details-btn"
                     onClick={() => onViewChange('öneriler')}
                   >
-                    Tüm Önerileri Görüntüle
+                    {t('results.dashboard.viewDetails')}
                   </button>
                 </div>
               </div>
             ) : (
-              <p>AI öneriler hazırlanıyor...</p>
+              <p>{t('results.dashboard.generateInsights')}</p>
             )}
           </div>
         </div>

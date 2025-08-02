@@ -173,11 +173,14 @@ async function createInvite(data: {
     let selectedGame = data.selectedGame;
     if (data.projectId && !selectedGame) {
       try {
-        const projectDoc = await db.collection('companies').doc('default').collection('projects').doc(data.projectId).get();
+        // Use the specific company ID from your project
+        const companyId = 'bbe2f275-8bd3-4761-a056-f61570f38a0c';
+        const projectDoc = await db.collection('companies').doc(companyId).collection('projects').doc(data.projectId).get();
         if (projectDoc.exists) {
           const projectData = projectDoc.data();
-          // Get the first preferred game or default to first suggested game
-          selectedGame = projectData?.customization?.gamePreferences?.[0] || 
+          // Priority: assessmentType > gamePreferences > suggestedGames > default
+          selectedGame = projectData?.assessmentType || 
+                       projectData?.customization?.gamePreferences?.[0] || 
                        projectData?.recommendations?.suggestedGames?.[0] || 
                        'Leadership Scenario Game';
         }
@@ -187,9 +190,9 @@ async function createInvite(data: {
       }
     }
     
-    // Generate UUID-like ID
+    // Generate simple ID and token (avoid uuid dependency issues)
     const inviteId = 'invite_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-    const token = Math.random().toString(36).substr(2, 32); // Simple token generation
+    const token = Math.random().toString(36).substr(2, 32);
     
     const invite = {
       id: inviteId,
@@ -201,7 +204,7 @@ async function createInvite(data: {
       projectId: data.projectId || '',
       roleTag: data.roleTag || 'candidate',
       selectedGame: selectedGame || 'Leadership Scenario Game',
-      companyId: 'default',
+      companyId: 'bbe2f275-8bd3-4761-a056-f61570f38a0c',
     };
 
     console.log('💾 [CreateInvite] Saving invite to Firestore:', inviteId);

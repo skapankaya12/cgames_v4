@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Icons } from '@cgames/ui-kit';
 import type { FeedbackRatings } from '../types/results';
 
@@ -27,30 +28,32 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   getSliderPosition,
   onShowHelp
 }) => {
+  const { t } = useTranslation('ui');
+
   const ratingLabels: { [K in keyof FeedbackRatings]: string } = {
-    accuracy: 'Sonuçların Doğruluğu (1-10)',
-    gameExperience: 'Test Deneyimi (1-10)',
-    fairness: 'Adalet (1-10)',
-    usefulness: 'Faydalılık (1-10)',
-    recommendation: 'Tavsiye Etme (1-10)',
-    purchaseLikelihood: 'Satın Alma Olasılığı (1-10)',
-    valueForMoney: 'Fiyat Performans (1-10) (Oyun başına 7 Euro/320 tl)',
-    technicalPerformance: 'Teknik Performans (1-10)'
+    accuracy: t('results.feedback.ratings.accuracy'),
+    gameExperience: t('results.feedback.ratings.gameExperience'),
+    fairness: t('results.feedback.ratings.fairness'),
+    usefulness: t('results.feedback.ratings.usefulness'),
+    recommendation: t('results.feedback.ratings.recommendation'),
+    purchaseLikelihood: t('results.feedback.ratings.purchaseLikelihood'),
+    valueForMoney: t('results.feedback.ratings.valueForMoney'),
+    technicalPerformance: t('results.feedback.ratings.technicalPerformance')
   };
 
   return (
     <div className="feedback-form-section">
       <div className="section-header-with-help">
         <div>
-          <h3>Test Deneyimi Geri Bildirimi</h3>
+          <h3>{t('results.feedback.title')}</h3>
           <p className="feedback-description">
-            Test deneyiminizi değerlendirerek gelişim sürecimize katkıda bulunun.
+            {t('results.feedback.description')}
           </p>
         </div>
         <button 
           className="help-button"
           onClick={() => onShowHelp('feedback')}
-          title="Bu sayfayı anlamak için yardım alın"
+          title={t('buttons.help', { ns: 'common' })}
         >
           <Icons.Brain size={20} />
         </button>
@@ -60,7 +63,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         {/* Rating Sliders */}
         <div className="rating-sections">
           <div className="rating-section">
-            <h4>Değerlendirme Kriterleri</h4>
+            <h4>{t('results.feedback.evaluationCriteria')}</h4>
             
             {Object.entries(ratingLabels).map(([ratingType, label]) => (
               <div key={ratingType} className="rating-item">
@@ -87,12 +90,12 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
         {/* Text Feedback */}
         <div className="feedback-text-section">
-          <label htmlFor="feedback-text">Ek Yorumlarınız:</label>
+          <label htmlFor="feedback-text">{t('results.feedback.additionalComments')}</label>
           <textarea
             id="feedback-text"
             value={feedbackText}
             onChange={(e) => onFeedbackTextChange(e.target.value)}
-            placeholder="Ürünü daha iyi hale getirmek için lütfen geri bildirimlerinizi paylaşın.."
+            placeholder={t('results.feedback.placeholder')}
             rows={4}
             disabled={isFeedbackSubmitting}
           />
@@ -104,7 +107,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
           onClick={onSubmit}
           disabled={isFeedbackSubmitting}
         >
-          {isFeedbackSubmitting ? 'Gönderiliyor...' : 'Geri Bildirim Gönder'}
+          {isFeedbackSubmitting ? t('results.feedback.submitting') : t('results.feedback.submitButton')}
         </button>
 
         {/* Status Messages */}
@@ -117,7 +120,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         {feedbackSubmitSuccess && (
           <div className="feedback-success">
             <Icons.Check size={20} color="#059669" />
-            Geri bildiriminiz başarıyla gönderildi! Teşekkür ederiz.
+            {t('results.feedback.success')}
           </div>
         )}
       </div>

@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "OlivinHR",
+    "subtitle": "Gamified Soft Skills Assessment | DEMO VERSION",
+    "copyright": "OlivinHR 2025. All rights reserved",
+    "cognitiveGames": "Cognitive Games. All rights reserved"
+  },
+  "navigation": {
+    "dashboard": "Genel Bakış",
+    "competencies": "Yetkinlikler", 
+    "behaviorAnalysis": "Davranış Analizi",
+    "recommendations": "AI Öneriler",
+    "feedback": "Geri Bildirim",
+    "help": "Yardım"
+  },
+  "landing": {
+    "title": "OlivinHR",
+    "subtitle": "Gamified Soft Skills Assessment | DEMO VERSION",
+    "startAssessment": "Değerlendirmeye Başla",
+    "game2Assessment": "Game 2 Assessment | Yakında"
+  },
+  "buttons": {
+    "continue": "Devam Et",
+    "back": "Geri",
+    "next": "İleri",
+    "start": "Başla",
+    "submit": "Gönder",
+    "restart": "Yeniden Başla",
+    "startJourney": "Yolculuğa Başla",
+    "startGame": "Oyuna Başla",
+    "understood": "Anladım, Devam Et",
+    "retry": "Yeniden Dene",
+    "close": "Kapat",
+    "help": "Yardım",
+    "generateRecommendations": "AI Önerileri Oluştur",
+    "sendResults": "Sonuçları Gönder",
+    "newTest": "Yeni Test"
+  },
+  "status": {
+    "loading": "Yükleniyor...",
+    "uploading": "Yükleniyor...",
+    "processing": "İşleniyor...",
+    "analyzing": "CV Analiz Ediliyor...",
+    "sending": "Gönderiliyor...",
+    "validating": "Davetiyeniz doğrulanıyor...",
+    "ready": "Hazır",
+    "completed": "Tamamlandı",
+    "submitted": "Gönderildi",
+    "pending": "Beklemede",
+    "error": "Hata",
+    "success": "Başarılı"
+  },
+  "validation": {
+    "pleaseSelectPdfOnly": "Lütfen sadece PDF dosyası seçin.",
+    "fileSizeTooLarge": "Dosya boyutu 10MB'dan küçük olmalıdır.",
+    "cvAnalysisFailed": "CV analizi başarısız oldu, ancak dosya yine de yüklenecek.",
+    "invalidInvitation": "Geçersiz veya süresi dolmuş davet bağlantısı",
+    "tokenValidationFailed": "Token doğrulama başarısız",
+    "noTokenProvided": "Davet token'ı sağlanmadı",
+    "checkInvitationLink": "Lütfen davet bağlantınızı kontrol edin veya gönderen ile iletişime geçin.",
+    "videoLoadFailed": "Video yüklenemedi"
+  },
+  "invite": {
+    "validatingInvitation": "Davetiyeniz doğrulanıyor...",
+    "invalidInvitation": "Geçersiz Davet"
+  },
+  "thankYou": {
+    "title": "Değerlendirme Tamamlandı!",
+    "subtitle": "{{gameName}} tamamladığınız için teşekkür ederiz.",
+    "success": "Yanıtlarınız başarıyla gönderildi ve işe alım ekibi sonuçlarınızı inceleyecek.",
+    "whatNext": "Bundan sonra ne olacak?",
+    "steps": {
+      "review": "İşe alım ekibi değerlendirme sonuçlarınızı inceleyecek",
+      "contact": "3-5 iş günü içinde sizinle iletişime geçilecek", 
+      "questions": "Sorularınız varsa, işe alım ekibiyle iletişime geçmekten çekinmeyin"
+    },
+    "role": "Rol:",
+    "referenceId": "Referans ID:"
+  },
+  "errors": {
+    "dataLoadingError": "Veri Yükleme Hatası",
+    "noDataFound": "Henüz veri bulunmuyor",
+    "gameCompletedScores": "Oyun tamamlandıktan sonra skorlarınız burada görüntülenecek.",
+    "behaviorDataNotFound": "Davranış Verileri Bulunamadı",
+    "behaviorDataDescription": "Bu testte detaylı davranış analizi verisi toplanmamış. Yeni testlerde daha kapsamlı analiz için test süresince etkileşim verileri kaydedilecektir.",
+    "limitedData": "Sınırlı veri",
+    "returnToHome": "Ana Sayfaya Dön"
+  },
+  "time": {
+    "minutes": "{{count}} dk",
+    "seconds": "{{count}} sn",
+    "minutesSeconds": "{{minutes}}d {{seconds}}s"
+  },
+  "loading": {
+    "resultsLoading": "Sonuçlar Yükleniyor...",
+    "dataProcessing": "Verileriniz işleniyor, lütfen bekleyin.",
+    "savingResults": "Sonuçlar kaydediliyor..."
+  }
+} 
