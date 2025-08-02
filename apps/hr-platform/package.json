@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "build:hr": "tsc && vite build",
+    "build": "vite build",
+    "build:hr": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "npm exec tsc -- --noEmit",
