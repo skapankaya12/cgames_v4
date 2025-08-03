@@ -6,8 +6,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "build": "npx tsc -p ./tsconfig.json",
-    "type-check": "npx tsc --noEmit -p ./tsconfig.json",
+    "build": "npm run build:services --prefix ../..",
+    "type-check": "npm run type-check:services --prefix ../..",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "clean": "rm -rf dist"
   },
