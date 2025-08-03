@@ -8,6 +8,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "strict": true,
+    "composite": true,
     "noEmit": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
