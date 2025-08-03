@@ -96,7 +96,6 @@ const TestScreen = () => {
         videoRef={videoRef}
         videoLoaded={videoLoaded}
         videoError={videoError}
-        isVideoPlaying={isVideoPlaying}
         handleVideoLoad={handleVideoLoad}
         handleVideoError={handleVideoError}
         handleVideoClick={handleVideoClick}

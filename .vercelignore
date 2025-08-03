@@ -1,0 +1,52 @@
+# Test files
+**/test-*
+**/*test*
+**/*.test.*
+**/*.spec.*
+
+# Debug and development files
+**/debug-*
+**/*debug*
+**/firebase-debug*
+
+# Backup files
+**/*.backup
+**/*.bak
+**/*backup*
+
+# Development scripts
+test-flow.*
+simple-api-*
+
+# Cache and temporary files
+**/.cache
+**/tmp
+**/temp
+
+# IDE and editor files
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+
+# Logs
+**/*.log
+**/logs
+
+# Documentation (keep main README)
+**/ARCHITECTURE_*
+**/DEPLOYMENT_*
+**/INVITE_FLOW_*
+**/PRODUCTION_*
+**/PROJECT_SYSTEM_*
+**/ROLE_*
+**/SECURE_*
+
+# Development configs
+**/.env.local.example
+**/tsconfig.json
+**/eslint.config.js
+
+# Git
+**/.git
+**/.gitignore 

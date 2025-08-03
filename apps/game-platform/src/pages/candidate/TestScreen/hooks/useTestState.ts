@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import type InteractionTracker from '@cgames/services/InteractionTracker';
+import type { TestState } from '@cgames/types';
 import { getQuestionTitles } from '../../../../utils/questionsUtils';
-
-interface TestState {
-  currentQuestion: number;
-  answers: { [key: number]: string };
-  isComplete: boolean;
-}
 
 
 

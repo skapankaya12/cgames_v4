@@ -37,15 +37,14 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: [
-        'firebase-admin',
-        'firebase-admin/app', 
-        'firebase-admin/firestore',
-        '@google-cloud/firestore',
-        'google-auth-library',
-        'jsonwebtoken',
-        'uuid'
-      ]
-    }
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+    target: 'esnext',
+    minify: 'esbuild'
   }
 })

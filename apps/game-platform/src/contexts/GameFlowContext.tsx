@@ -301,9 +301,10 @@ export function GameFlowProvider({ children }: { children: React.ReactNode }) {
       
       // Provide user-friendly error message
       let errorMessage = 'Failed to submit results. ';
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      const err = error as Error;
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
         errorMessage += 'Please check your internet connection.';
-      } else if (error.message.includes('500')) {
+      } else if (err.message.includes('500')) {
         errorMessage += 'Server error. Please try again later.';
       } else {
         errorMessage += 'Please try again.';

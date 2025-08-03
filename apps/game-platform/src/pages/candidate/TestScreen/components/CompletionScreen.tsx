@@ -6,7 +6,6 @@ interface CompletionScreenProps {
   videoRef: React.RefObject<HTMLVideoElement>;
   videoLoaded: boolean;
   videoError: boolean;
-  isVideoPlaying: boolean;
   handleVideoLoad: () => void;
   handleVideoError: () => void;
   handleVideoClick: () => void;
@@ -17,7 +16,6 @@ export const CompletionScreen = ({
   videoRef,
   videoLoaded,
   videoError,
-  isVideoPlaying,
   handleVideoLoad,
   handleVideoError,
   handleVideoClick,

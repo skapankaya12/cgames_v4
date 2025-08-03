@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { questions, competencies } from '../../../../data/questions';
+import { questions } from '../../../../data/questions';
 import type { SessionAnalytics } from '@cgames/services/InteractionTracker';
 import type { CompetencyScore, ResultsScreenUser, FilterType } from '../types/results';
 import type { PersonalizedRecommendations } from '@cgames/types/Recommendations';

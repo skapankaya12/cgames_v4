@@ -56,7 +56,8 @@ const ThankYouScreen: React.FC<ThankYouScreenProps> = () => {
       
     } catch (error) {
       console.error('❌ [ThankYou] Failed to submit results:', error);
-      setSubmitError(error.message || 'Failed to submit results');
+      const err = error as Error;
+      setSubmitError(err.message || 'Failed to submit results');
     } finally {
       setIsSubmitting(false);
     }
@@ -145,7 +146,7 @@ const ThankYouScreen: React.FC<ThankYouScreenProps> = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .thank-you-screen {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           min-height: 100vh;
