@@ -5,25 +5,17 @@
   "outputDirectory": "dist",
   "installCommand": "npm install --prefix=../..",
   "env": {
-    "NODE_VERSION": "18.x",
+    "NODE_VERSION": "22.x",
     "NODE_ENV": "production"
   },
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "NODE_VERSION": "18.x"
-    }
-  },
-  "functions": {
-    "api/**.ts": {
-      "runtime": "@vercel/node@2.15.0"
+      "NODE_VERSION": "22.x"
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
+
     {
       "source": "/(.*)",
       "destination": "/index.html"
