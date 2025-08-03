@@ -7,7 +7,7 @@
     "build": "echo 'No build needed for serverless functions'"
   },
   "dependencies": {
-    "@vercel/node": "^2.15.0",
+    "@vercel/node": "^3.2.17",
     "@sendgrid/mail": "^8.1.0",
     "firebase-admin": "^12.0.0",
     "uuid": "^10.0.0",
