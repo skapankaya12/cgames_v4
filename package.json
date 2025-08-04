@@ -19,7 +19,7 @@
     "clean": "turbo run clean",
     "dev:hr": "turbo run dev --filter=hr-platform",
     "dev:game": "turbo run dev --filter=game-platform",
-    "build:tsc": "npx tsc --project ./packages/types/tsconfig.json && npx tsc --project ./packages/services/tsconfig.json && npx tsc --project ./packages/ui-kit/tsconfig.json",
+    "build:tsc": "npx tsc --project $(pwd)/packages/types/tsconfig.json && npx tsc --project $(pwd)/packages/services/tsconfig.json && npx tsc --project $(pwd)/packages/ui-kit/tsconfig.json",
     "build:hr": "npm run build:tsc && turbo run build --filter=hr-platform",
     "build:game": "npm run build:tsc && turbo run build --filter=game-platform",
     "build:types": "npx tsc --project ./packages/types/tsconfig.json",
