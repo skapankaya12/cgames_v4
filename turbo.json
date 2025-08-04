@@ -16,8 +16,12 @@
     "VITE_API_BASE_URL"
   ],
   "tasks": {
+    "build:tsc": {
+      "outputs": ["packages/*/dist/**"],
+      "env": ["NODE_VERSION"]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build:tsc"],
       "outputs": ["dist/**", ".next/**"],
       "env": [
         "NODE_VERSION",
@@ -58,7 +62,7 @@
       ]
     },
     "apps/game-platform#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build:tsc"],
       "outputs": ["dist/**"],
       "env": [
         "NODE_VERSION",
@@ -103,7 +107,7 @@
       ]
     },
     "type-check": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build:tsc"],
       "env": ["NODE_VERSION"]
     },
     "clean": {

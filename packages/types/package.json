@@ -6,7 +6,6 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "build": "npm run build:types --prefix ../..",
     "type-check": "npm run type-check:types --prefix ../..",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "clean": "rm -rf dist"
