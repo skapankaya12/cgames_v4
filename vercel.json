@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm install --workspaces && npm run build:hr",
+  "buildCommand": "npm ci && npm run build:hr",
   "outputDirectory": "apps/hr-platform/dist",
   "installCommand": "npm install",
   "env": {

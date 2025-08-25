@@ -29,8 +29,7 @@
     "type-check:services": "npx tsc --noEmit --project ./packages/services/tsconfig.json",
     "type-check:ui-kit": "npx tsc --noEmit --project ./packages/ui-kit/tsconfig.json",
     "vercel-build": "npm run build:hr",
-    "vercel-install": "npm ci --only=production && npm ci --workspaces",
-    "postinstall": "npm install --workspaces",
+    "vercel-install": "npm ci",
     "ngrok": "ngrok http 5173",
     "dev:api": "tsx simple-api-server.mjs"
   },

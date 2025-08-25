@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm install --workspaces && npm run build:game",
+  "buildCommand": "npm ci && npm run build:game",
   "outputDirectory": "apps/game-platform/dist",
   "installCommand": "npm install",
   "framework": null,
