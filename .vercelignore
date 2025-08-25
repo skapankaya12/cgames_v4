@@ -1,12 +1,10 @@
 # Test files
-**/test-*
-**/*test*
+**/__tests__/**
 **/*.test.*
 **/*.spec.*
 
 # Debug and development files
-**/debug-*
-**/*debug*
+## Removed broad debug ignores to avoid excluding runtime utils
 # allow API firebase initializer
 !api/firebase-debug.ts
 
