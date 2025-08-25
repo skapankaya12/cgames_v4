@@ -1,45 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-// Load environment variables
-require('dotenv').config();
+import { initializeFirebase } from '../firebase-debug';
 
 // Initialize Firebase Admin
-let firebaseInitialized = false;
-function initializeFirebase() {
-  if (!firebaseInitialized && !getApps().length) {
-    try {
-      console.log('🔥 [Firebase] Initializing Firebase Admin...');
-      
-      const requiredEnvVars = {
-        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-        FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
-        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
-      };
-
-      // Check if all required environment variables are present
-      for (const [key, value] of Object.entries(requiredEnvVars)) {
-        if (!value) {
-          throw new Error(`Missing required environment variable: ${key}`);
-        }
-      }
-
-      initializeApp({
-        credential: cert({
-          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
-          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        }),
-      });
-      
-      firebaseInitialized = true;
-      console.log('✅ [Firebase] Firebase Admin initialized successfully');
-    } catch (error) {
-      console.error('🚨 [Firebase] Error initializing Firebase Admin:', error);
-      throw error;
-    }
-  }
-}
+// Use shared initializer
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Get Project Candidates API] Request received:', req.method, req.url);

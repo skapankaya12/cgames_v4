@@ -1,10 +1,9 @@
-// Load environment variables
-require('dotenv').config();
-
-const { initializeApp, getApps, cert } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
-const { getAuth } = require('firebase-admin/auth');
-const { v4: uuidv4 } = require('uuid');
+import 'dotenv/config';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
+import { v4 as uuidv4 } from 'uuid';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Initialize Firebase Admin
 let firebaseInitialized = false;
@@ -122,7 +121,7 @@ async function sendHrAdminWelcomeEmail(data) {
   }
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Create Company API] Request received:', req.method, req.url);
   
   // Set CORS headers
@@ -219,7 +218,7 @@ module.exports = async function handler(req, res) {
     };
 
     // Create Firebase Auth user FIRST to get the correct UID
-    let firebaseAuthUid = null;
+    let firebaseAuthUid: string = hrUserId;
     try {
       const auth = getAuth();
       const firebaseUser = await auth.createUser({
@@ -237,10 +236,9 @@ module.exports = async function handler(req, res) {
       });
       
       console.log('✅ [Create Company API] Firebase Auth user created:', firebaseUser.uid);
-    } catch (authError) {
+    } catch (authError: any) {
       console.log('⚠️ [Create Company API] Firebase Auth user creation failed:', authError.message);
-      // If Firebase Auth fails, we'll use the original UUID
-      firebaseAuthUid = hrUserId;
+      // Continue using generated hrUserId fallback
     }
 
     // Now create Firestore documents using the correct UID
@@ -267,7 +265,7 @@ module.exports = async function handler(req, res) {
         temporaryPassword: tempPassword
       });
       console.log('✅ [Create Company API] Welcome email sent successfully');
-    } catch (emailError) {
+    } catch (emailError: any) {
       console.log('⚠️ [Create Company API] Email sending failed (continuing):', emailError.message);
       console.log('🔍 [Create Company API] Email error details:', emailError);
     }
@@ -302,4 +300,4 @@ module.exports = async function handler(req, res) {
       error: error?.message || 'Failed to create company'
     });
   }
-}; 
+}
