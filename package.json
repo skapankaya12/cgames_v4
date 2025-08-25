@@ -19,7 +19,7 @@
     "clean": "turbo run clean",
     "dev:hr": "turbo run dev --filter=hr-platform",
     "dev:game": "turbo run dev --filter=game-platform",
-    "build:tsc": "pwd && ls -la && npx tsc --project packages/types/tsconfig.json && npx tsc --project packages/services/tsconfig.json && npx tsc --project packages/ui-kit/tsconfig.json",
+    "build:tsc": "pwd && ls -la && ls -la packages/ && npx tsc --project packages/types/tsconfig.json && npx tsc --project packages/services/tsconfig.json && npx tsc --project packages/ui-kit/tsconfig.json",
     "build:hr": "npm run build:tsc && turbo run build --filter=hr-platform",
     "build:game": "npm run build:tsc && turbo run build --filter=game-platform",
     "build:types": "npx tsc --project packages/types/tsconfig.json",
@@ -29,7 +29,8 @@
     "type-check:services": "npx tsc --noEmit --project ./packages/services/tsconfig.json",
     "type-check:ui-kit": "npx tsc --noEmit --project ./packages/ui-kit/tsconfig.json",
     "vercel-build": "npm run build:hr",
-    "vercel-install": "npm ci --only=production",
+    "vercel-install": "npm ci --only=production && npm ci --workspaces",
+    "postinstall": "npm install --workspaces",
     "ngrok": "ngrok http 5173",
     "dev:api": "tsx simple-api-server.mjs"
   },
