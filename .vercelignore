@@ -49,3 +49,6 @@ simple-api-*
 # Git
 **/.git
 **/.gitignore 
+
+# Re-include necessary files that may match test globs by name
+!/packages/types/TestState.ts
