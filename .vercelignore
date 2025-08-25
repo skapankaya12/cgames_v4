@@ -44,7 +44,6 @@ simple-api-*
 
 # Development configs
 **/.env.local.example
-**/tsconfig.json
 **/eslint.config.js
 
 # Git
