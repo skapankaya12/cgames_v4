@@ -22,11 +22,18 @@ function initializeFirebase() {
         }
       }
 
+      // Type assertion since we've validated all values exist above
+      const validatedEnvVars = requiredEnvVars as {
+        FIREBASE_PROJECT_ID: string;
+        FIREBASE_CLIENT_EMAIL: string;
+        FIREBASE_PRIVATE_KEY: string;
+      };
+
       initializeApp({
         credential: cert({
-          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
-          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          projectId: validatedEnvVars.FIREBASE_PROJECT_ID,
+          clientEmail: validatedEnvVars.FIREBASE_CLIENT_EMAIL,
+          privateKey: validatedEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         }),
       });
       
