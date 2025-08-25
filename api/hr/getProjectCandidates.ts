@@ -59,7 +59,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
     
-    const hrUser = { id: hrDoc.id, ...hrDoc.data() };
+    interface HrUser { id: string; role: 'admin' | 'employee' | string; companyId: string; email?: string }
+    const hrUser = { id: hrDoc.id, ...(hrDoc.data() as Partial<HrUser>) } as HrUser;
     const requiredRoles = ['admin', 'employee'];
     
     if (!requiredRoles.includes(hrUser.role)) {

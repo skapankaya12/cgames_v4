@@ -7,7 +7,8 @@
 # Debug and development files
 **/debug-*
 **/*debug*
-**/firebase-debug*
+# allow API firebase initializer
+!api/firebase-debug.ts
 
 # Backup files
 **/*.backup

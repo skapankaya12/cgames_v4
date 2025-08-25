@@ -116,7 +116,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const currentProjectData = { id: projectDoc.id, ...projectDoc.data() };
+    type ProjectDocData = { id: string; name?: string; roleInfo?: any; customization?: any };
+    const currentProjectData = { id: projectDoc.id, ...(projectDoc.data() as Partial<ProjectDocData>) } as ProjectDocData;
 
     console.log(`✅ [Update Project API] Project found: ${currentProjectData.name}`);
 
