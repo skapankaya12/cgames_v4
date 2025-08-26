@@ -1,3 +1,4 @@
-module.exports = require('../validate-invite.js');
+const handler = require('../validate-invite.js');
+module.exports = (req, res) => handler(req, res);
 
 
