@@ -63,10 +63,24 @@ function initializeFirebase() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Create Project API] Request received:', req.method, req.url);
   
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Set CORS headers - allow your frontend domains
+  const allowedOrigins = [
+    'https://app.olivinhr.com',
+    'https://cgames-v4-hr-platform.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ];
+  
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
+  }
+  
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Content-Type', 'application/json');
 
   try {
