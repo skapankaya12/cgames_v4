@@ -1,7 +1,7 @@
-const { VercelRequest, VercelResponse } = require('@vercel/node');
-const { initializeApp, getApps, cert } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
-const { v4: uuidv4 } = require('uuid');
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { v4 as uuidv4 } from 'uuid';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Initialize Firebase Admin
 let firebaseInitialized = false;
@@ -60,7 +60,7 @@ function initializeFirebase() {
   }
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Create Project API] Request received:', req.method, req.url);
   
   // Set CORS headers
@@ -212,7 +212,7 @@ module.exports = async function handler(req, res) {
       }
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('🚨 [Create Project API] Error:', error);
     
     return res.status(500).json({
@@ -220,4 +220,4 @@ module.exports = async function handler(req, res) {
       error: error?.message || 'Failed to create project'
     });
   }
-}; 
+}
