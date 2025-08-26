@@ -67,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const allowedOrigins = [
     'https://app.olivinhr.com',
     'https://cgames-v4-hr-platform.vercel.app',
+    'https://cgames-v4-api.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'
   ];
