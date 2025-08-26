@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "name": "cgames-v4-api",
+  "installCommand": "npm install",
+  "buildCommand": "echo 'No build needed for API'",
+  "framework": null,
+  "env": {
+    "NODE_ENV": "production",
+    "NODE_VERSION": "22.x"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production",
+      "NODE_VERSION": "22.x"
+    }
+  },
+  "functions": {
+    "*.ts": { "runtime": "@vercel/node@3.0.0" },
+    "*.js": { "runtime": "@vercel/node@3.0.0" },
+    "**/*.ts": { "runtime": "@vercel/node@3.0.0" },
+    "**/*.js": { "runtime": "@vercel/node@3.0.0" }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/$1" }
+  ]
+}
+
+
