@@ -63,24 +63,29 @@ function initializeFirebase() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Create Project API] Request received:', req.method, req.url);
   
-  // Set robust CORS headers for cross-origin requests from HR app to API domain
+  // Set CORS headers - same origin calls from app.olivinhr.com should work without CORS
+  // But handle cross-origin for development and any edge cases
   const allowedOrigins = new Set([
     'https://app.olivinhr.com',
     'https://game.olivinhr.com',
-    'https://api.olivinhr.com',
     'https://cgames-v4-hr-platform.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'
   ]);
 
   const origin = (req.headers.origin as string) || '';
-  const allowOrigin = origin && allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
-
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  
+  // For same-origin requests, no CORS headers needed
+  // For cross-origin requests, validate origin
+  if (origin) {
+    const allowOrigin = allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
+    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Vary', 'Origin');
+  }
+  
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Max-Age', '86400');
   res.setHeader('Content-Type', 'application/json');
 
