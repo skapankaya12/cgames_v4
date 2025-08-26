@@ -353,7 +353,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('🎉 [Create Company API] Success! Returning response');
     return res.status(201).json(response);
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('🚨 [Create Company API] Error:', error);
     
     return res.status(500).json({
