@@ -134,8 +134,9 @@ export function useProjectCreation(companyId: string | null, navigate: (path: st
 
       console.log('🔄 [ProjectCreation] Creating project with assessment type:', formData.assessmentType);
 
-      // Use our simple working API endpoint
-      const response = await fetch('/api/hr/createProject-simple', {
+      // Use API base URL to avoid SPA rewrite conflicts in production
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+      const response = await fetch(`${apiBaseUrl}/api/hr/createProject-simple`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +168,14 @@ export function useProjectCreation(companyId: string | null, navigate: (path: st
         }),
       });
 
-      const result = await response.json();
+      // Guard against empty or non-JSON responses (e.g., 405 HTML)
+      const text = await response.text();
+      let result: any;
+      try {
+        result = text ? JSON.parse(text) : { success: response.ok };
+      } catch (e) {
+        result = { success: false, error: `Unexpected response: ${text?.slice(0, 200)}` };
+      }
 
       if (!response.ok) {
         throw new Error(result.error || `HTTP ${response.status}: Failed to create project`);
