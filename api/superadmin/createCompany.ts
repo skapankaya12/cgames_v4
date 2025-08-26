@@ -277,6 +277,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Send welcome email
     console.log('📧 [Create Company API] Attempting to send welcome email...');
+    let emailSent = false;
     try {
       await sendHrAdminWelcomeEmail({
         email: hrEmail,
@@ -286,9 +287,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         temporaryPassword: tempPassword
       });
       console.log('✅ [Create Company API] Welcome email sent successfully');
+      emailSent = true;
     } catch (emailError: any) {
       console.log('⚠️ [Create Company API] Email sending failed (continuing):', emailError.message);
       console.log('🔍 [Create Company API] Email error details:', emailError);
+      
+      // Log more specific error information
+      if (emailError.response) {
+        console.log('🔍 [Create Company API] SendGrid response body:', emailError.response.body);
+        console.log('🔍 [Create Company API] SendGrid response status:', emailError.response.status);
+      }
+      
+      // Check environment variables
+      console.log('🔍 [Create Company API] SENDGRID_API_KEY exists:', !!process.env.SENDGRID_API_KEY);
+      console.log('🔍 [Create Company API] VITE_HR_PLATFORM_URL:', process.env.VITE_HR_PLATFORM_URL);
     }
 
     // Success response
@@ -307,7 +319,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         name: hrName,
         role: 'admin',
         companyId
-      }
+      },
+      emailSent: emailSent
     };
 
     console.log('🎉 [Create Company API] Success! Returning response');
