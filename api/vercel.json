@@ -13,14 +13,9 @@
     }
   },
   "functions": {
-    "*.ts": { "runtime": "@vercel/node@3.0.0" },
-    "*.js": { "runtime": "@vercel/node@3.0.0" },
-    "**/*.ts": { "runtime": "@vercel/node@3.0.0" },
-    "**/*.js": { "runtime": "@vercel/node@3.0.0" }
-  },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/$1" }
-  ]
+    "api/**.ts": { "runtime": "@vercel/node@3.0.0" },
+    "api/**.js": { "runtime": "@vercel/node@3.0.0" }
+  }
 }
 
 
