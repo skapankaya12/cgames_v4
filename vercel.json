@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm ci && npm run build:hr",
+  "buildCommand": "npm run build:hr",
   "outputDirectory": "apps/hr-platform/dist",
-  "installCommand": "npm install",
   "env": {
     "NODE_ENV": "production",
     "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",

@@ -63,32 +63,33 @@ function initializeFirebase() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Create Project API] Request received:', req.method, req.url);
   
-  // Set CORS headers - allow your frontend domains
-  const allowedOrigins = [
+  // Set robust CORS headers for cross-origin requests from HR app to API domain
+  const allowedOrigins = new Set([
     'https://app.olivinhr.com',
+    'https://game.olivinhr.com',
+    'https://api.olivinhr.com',
     'https://cgames-v4-hr-platform.vercel.app',
-    'https://cgames-v4-api.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'
-  ];
-  
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
-  }
-  
+  ]);
+
+  const origin = (req.headers.origin as string) || '';
+  const allowOrigin = origin && allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
+
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
   res.setHeader('Content-Type', 'application/json');
 
   try {
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
       console.log('✅ [Create Project API] Handling OPTIONS request');
-      return res.status(200).json({ success: true });
+      // No body for preflight; 204 avoids some proxies complaining
+      return res.status(204).end();
     }
 
     // Only allow POST requests
