@@ -14,7 +14,8 @@ function initializeFirebase() {
       const requiredEnvVars = {
         FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
         FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
-        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
+        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+        FIREBASE_PRIVATE_KEY_B64: process.env.FIREBASE_PRIVATE_KEY_B64
       };
 
       // Check if all required environment variables are present
@@ -24,11 +25,27 @@ function initializeFirebase() {
         }
       }
 
+      // Normalize private key (supports single-line with \n, actual newlines, and optional base64 variant)
+      let privateKey = requiredEnvVars.FIREBASE_PRIVATE_KEY || '';
+      if (requiredEnvVars.FIREBASE_PRIVATE_KEY_B64 && !privateKey) {
+        try {
+          privateKey = Buffer.from(requiredEnvVars.FIREBASE_PRIVATE_KEY_B64, 'base64').toString('utf8');
+        } catch (e) {
+          console.warn('⚠️ [Firebase] Failed to decode FIREBASE_PRIVATE_KEY_B64');
+        }
+      }
+      if (!privateKey) throw new Error('FIREBASE_PRIVATE_KEY is not set');
+      // Strip wrapping quotes if present and convert escaped newlines
+      privateKey = privateKey.replace(/^"|"$/g, '').replace(/\\n/g, '\n').replace(/\n/g, '\n');
+      privateKey = privateKey.replace(/\n/g, '\n').replace(/\r/g, '\r');
+      // Finally convert to real newlines
+      privateKey = privateKey.replace(/\\n/g, '\n').replace(/\r\n/g, '\n').replace(/\n/g, '\n');
+
       initializeApp({
         credential: cert({
           projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
           clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+          privateKey
         }),
       });
       
