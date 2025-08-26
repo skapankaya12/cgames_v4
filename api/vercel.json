@@ -13,8 +13,8 @@
     }
   },
   "functions": {
-    "**/*.ts": { "runtime": "nodejs20.x" },
-    "**/*.js": { "runtime": "nodejs20.x" }
+    "**/*.ts": { "runtime": "@vercel/node@20.x" },
+    "**/*.js": { "runtime": "@vercel/node@20.x" }
   },
   "headers": [
     {
