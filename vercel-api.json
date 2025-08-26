@@ -5,13 +5,11 @@
   "buildCommand": "echo 'No build needed for API'",
   "framework": null,
   "env": {
-    "NODE_ENV": "production",
-    "NODE_VERSION": "22.x"
+    "NODE_ENV": "production"
   },
   "build": {
     "env": {
-      "NODE_ENV": "production",
-      "NODE_VERSION": "22.x"
+      "NODE_ENV": "production"
     }
   },
   "functions": {
