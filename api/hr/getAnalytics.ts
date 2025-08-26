@@ -106,10 +106,23 @@ interface AnalyticsData {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log('🚀 [Get Analytics API] Request received:', req.method, req.url);
   
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Set CORS headers for cross-origin requests from app.olivinhr.com
+  const allowedOrigins = new Set([
+    'https://app.olivinhr.com',
+    'https://game.olivinhr.com',
+    'https://cgames-v4-hr-platform.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ]);
+
+  const origin = (req.headers.origin as string) || '';
+  const allowOrigin = allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Content-Type', 'application/json');
 
   try {

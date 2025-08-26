@@ -26,7 +26,8 @@ const ResultsModal = ({ candidate, onClose }: { candidate: any, onClose: () => v
         setLoading(true);
         setError(null);
         
-        const response = await fetch(`/api/get-results?candidateEmail=${encodeURIComponent(candidate.email)}`);
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+        const response = await fetch(`${apiBaseUrl}/api/get-results?candidateEmail=${encodeURIComponent(candidate.email)}`);
         
         if (!response.ok) {
           throw new Error(`Failed to fetch results: ${response.status}`);
@@ -191,7 +192,8 @@ export default function HrDashboard() {
       try {
         console.log('🔄 [HrDashboard] Fetching license limits via API...');
         
-        const response = await fetch(`/api/hr/getLicenseInfo?hrId=${hrUser.id}`);
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+        const response = await fetch(`${apiBaseUrl}/api/hr/getLicenseInfo?hrId=${hrUser.id}`);
         const data = await response.json();
         
         if (!response.ok) {

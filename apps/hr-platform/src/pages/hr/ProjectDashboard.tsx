@@ -179,7 +179,8 @@ export default function ProjectDashboard() {
         }
 
         // Load project data using API endpoint
-        const response = await fetch(`/api/hr/getProject-simple?projectId=${projectId}&hrId=${user.uid}`);
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+        const response = await fetch(`${apiBaseUrl}/api/hr/getProject-simple?projectId=${projectId}&hrId=${user.uid}`);
         const data = await response.json();
         
         if (!response.ok) {

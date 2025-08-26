@@ -118,7 +118,8 @@ export default function Candidates() {
         console.log('🔄 [Candidates] Loading candidates for project:', selectedProject);
         
         // Use our new API endpoint
-        const response = await fetch(`/api/hr/getProjectCandidates?projectId=${selectedProject}&hrId=${hrUser.id}`);
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+        const response = await fetch(`${apiBaseUrl}/api/hr/getProjectCandidates?projectId=${selectedProject}&hrId=${hrUser.id}`);
         const data = await response.json();
         
         if (!response.ok) {

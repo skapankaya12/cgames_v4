@@ -148,7 +148,8 @@ export default function Analytics() {
 
         // Load analytics data using API endpoint
         try {
-          const response = await fetch(`/api/hr/getAnalytics?hrId=${user.uid}`);
+          const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+          const response = await fetch(`${apiBaseUrl}/api/hr/getAnalytics?hrId=${user.uid}`);
           const data = await response.json();
           
           if (!response.ok) {

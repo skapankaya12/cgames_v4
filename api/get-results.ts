@@ -21,6 +21,32 @@ export default async function handler(
   console.log('   Method:', req.method);
   console.log('   Query:', req.query);
 
+  // Set CORS headers for cross-origin requests from app.olivinhr.com
+  const allowedOrigins = new Set([
+    'https://app.olivinhr.com',
+    'https://game.olivinhr.com',
+    'https://cgames-v4-hr-platform.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ]);
+
+  const origin = (req.headers.origin as string) || '';
+  const allowOrigin = allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Content-Type', 'application/json');
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    console.log('✅ [Get Results API] Handling OPTIONS request');
+    res.status(204).end();
+    return;
+  }
+
   // Only allow GET requests
   if (req.method !== 'GET') {
     console.log('❌ [HR API] Method not allowed:', req.method);

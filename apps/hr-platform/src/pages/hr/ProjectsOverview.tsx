@@ -150,7 +150,8 @@ export default function ProjectsOverview() {
 
         // Load projects using API endpoint
         try {
-          const response = await fetch(`/api/hr/getProjects-simple?hrId=${user.uid}`);
+          const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+          const response = await fetch(`${apiBaseUrl}/api/hr/getProjects-simple?hrId=${user.uid}`);
           const data = await response.json();
           
           if (!response.ok) {
