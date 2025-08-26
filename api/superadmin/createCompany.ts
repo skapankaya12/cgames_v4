@@ -64,7 +64,7 @@ function initializeFirebase() {
 }
 
 // Simple auth verification for super admin
-async function verifySuperAdmin(authHeader) {
+async function verifySuperAdmin(authHeader: string | undefined) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new Error('Missing or invalid authorization header');
   }
@@ -83,22 +83,38 @@ async function verifySuperAdmin(authHeader) {
       uid: decodedToken.uid,
       email: decodedToken.email || ''
     };
-  } catch (error) {
-    console.error('❌ [Auth] Token verification failed:', error.message);
-    throw new Error(`Authentication failed: ${error.message}`);
+  } catch (error: any) {
+    console.error('❌ [Auth] Token verification failed:', error?.message);
+    throw new Error(`Authentication failed: ${error?.message}`);
   }
 }
 
 // Send welcome email function
-async function sendHrAdminWelcomeEmail(data) {
+async function sendHrAdminWelcomeEmail(data: {
+  email: string;
+  name: string;
+  companyName: string;
+  hrUserId: string;
+  temporaryPassword: string;
+}) {
   try {
     console.log('📧 [Email] Sending welcome email to:', data.email);
     
     const sgMail = require('@sendgrid/mail');
     
+    console.log('🔍 [Email] Environment check:');
+    console.log('  - SENDGRID_API_KEY exists:', !!process.env.SENDGRID_API_KEY);
+    console.log('  - SENDGRID_API_KEY prefix:', process.env.SENDGRID_API_KEY?.substring(0, 3) || 'none');
+    console.log('  - VITE_HR_PLATFORM_URL:', process.env.VITE_HR_PLATFORM_URL);
+    
     if (!process.env.SENDGRID_API_KEY) {
       console.error('❌ [Email] SENDGRID_API_KEY not found in environment variables');
       throw new Error('SendGrid API key not configured');
+    }
+    
+    if (!process.env.SENDGRID_API_KEY.startsWith('SG.')) {
+      console.error('❌ [Email] Invalid SENDGRID_API_KEY format - should start with SG.');
+      throw new Error('Invalid SendGrid API key format');
     }
     
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -133,12 +149,29 @@ async function sendHrAdminWelcomeEmail(data) {
       `
     };
     
-    await sgMail.send(emailContent);
+    console.log('📤 [Email] Attempting to send email with content:', {
+      to: emailContent.to,
+      from: emailContent.from,
+      subject: emailContent.subject
+    });
+    
+    const result = await sgMail.send(emailContent);
+    console.log('✅ [Email] SendGrid response:', result);
     console.log('✅ [Email] Welcome email sent successfully to:', data.email);
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('🚨 [Email] Failed to send welcome email:', error);
-    throw error;
+    
+    if (error.response) {
+      console.error('🚨 [Email] SendGrid error response:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        body: error.response.body
+      });
+    }
+    
+    // Don't throw error, just log it so company creation continues
+    console.log('⚠️ [Email] Continuing with company creation despite email failure');
   }
 }
 
@@ -278,6 +311,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Send welcome email
     console.log('📧 [Create Company API] Attempting to send welcome email...');
     let emailSent = false;
+    let emailError = null;
+    
     try {
       await sendHrAdminWelcomeEmail({
         email: hrEmail,
@@ -288,19 +323,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
       console.log('✅ [Create Company API] Welcome email sent successfully');
       emailSent = true;
-    } catch (emailError: any) {
-      console.log('⚠️ [Create Company API] Email sending failed (continuing):', emailError.message);
-      console.log('🔍 [Create Company API] Email error details:', emailError);
-      
-      // Log more specific error information
-      if (emailError.response) {
-        console.log('🔍 [Create Company API] SendGrid response body:', emailError.response.body);
-        console.log('🔍 [Create Company API] SendGrid response status:', emailError.response.status);
-      }
-      
-      // Check environment variables
-      console.log('🔍 [Create Company API] SENDGRID_API_KEY exists:', !!process.env.SENDGRID_API_KEY);
-      console.log('🔍 [Create Company API] VITE_HR_PLATFORM_URL:', process.env.VITE_HR_PLATFORM_URL);
+    } catch (error: any) {
+      console.log('⚠️ [Create Company API] Email sending failed:', error?.message);
+      emailError = error?.message || 'Unknown email error';
+      emailSent = false;
     }
 
     // Success response
@@ -320,7 +346,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         role: 'admin',
         companyId
       },
-      emailSent: emailSent
+      emailSent: emailSent,
+      emailError: emailError
     };
 
     console.log('🎉 [Create Company API] Success! Returning response');
