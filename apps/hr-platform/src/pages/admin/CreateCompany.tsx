@@ -146,7 +146,9 @@ const CreateCompany: React.FC = () => {
         throw new Error('Authentication token not available');
       }
 
-      const response = await fetch('/api/superadmin/createCompany', {
+      // Always hit the main API domain to avoid SPA rewrite conflicts
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+      const response = await fetch(`${apiBaseUrl}/api/superadmin/createCompany`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +157,14 @@ const CreateCompany: React.FC = () => {
         body: JSON.stringify(requestData)
       });
 
-      const result: CreateCompanyResponse = await response.json();
+      // Some platforms may return empty body on 405/500; guard parsing
+      let result: CreateCompanyResponse;
+      const text = await response.text();
+      try {
+        result = text ? JSON.parse(text) : ({ success: response.ok } as CreateCompanyResponse);
+      } catch {
+        result = { success: false, error: `Unexpected response: ${text?.slice(0, 200)}` };
+      }
 
       if (!response.ok) {
         throw new Error(result.error || `HTTP ${response.status}: Failed to create company`);

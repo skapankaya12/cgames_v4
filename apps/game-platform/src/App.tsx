@@ -15,6 +15,7 @@ import LanguageSelector from './components/LanguageSelector';
 import { getGameById } from './config/games';
 import { SafeGameFlowProvider } from './contexts/GameFlowContext';
 import './App.css';
+import AccessRequired from './pages/AccessRequired';
 
 // Placeholder Landing Page Component
 function LandingPage() {
@@ -175,13 +176,13 @@ function AppContent() {
         <Route path="/" element={hasToken ? <InviteHandler /> : <LandingPage />} />
         
         {/* Candidate routes */}
-        <Route path="/candidate" element={<IdentityScreen />} />
-        <Route path="/candidate/form" element={<FormScreen />} />
-        <Route path="/candidate/test" element={<TestScreen />} />
-        <Route path="/candidate/test/:questionNumber" element={<TestScreen />} />
-        <Route path="/candidate/ending" element={<EndingScreen />} />
-        <Route path="/candidate/results" element={<ResultsScreen />} />
-        <Route path="/candidate/game2" element={<IdentityScreen2 />} />
+        <Route path="/candidate" element={hasToken ? <IdentityScreen /> : <AccessRequired />} />
+        <Route path="/candidate/form" element={hasToken ? <FormScreen /> : <AccessRequired />} />
+        <Route path="/candidate/test" element={hasToken ? <TestScreen /> : <AccessRequired />} />
+        <Route path="/candidate/test/:questionNumber" element={hasToken ? <TestScreen /> : <AccessRequired />} />
+        <Route path="/candidate/ending" element={hasToken ? <EndingScreen /> : <AccessRequired />} />
+        <Route path="/candidate/results" element={hasToken ? <ResultsScreen /> : <AccessRequired />} />
+        <Route path="/candidate/game2" element={hasToken ? <IdentityScreen2 /> : <AccessRequired />} />
         <Route path="/candidate/game2/test" element={<TestScreen2 />} />
         <Route path="/candidate/game2/results" element={<ResultsScreen2 />} />
         
