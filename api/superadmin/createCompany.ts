@@ -18,11 +18,16 @@ function initializeFirebase() {
         FIREBASE_PRIVATE_KEY_B64: process.env.FIREBASE_PRIVATE_KEY_B64
       };
 
-      // Check if all required environment variables are present
-      for (const [key, value] of Object.entries(requiredEnvVars)) {
-        if (!value) {
-          throw new Error(`Missing required environment variable: ${key}`);
-        }
+      // Check if essential environment variables are present
+      if (!requiredEnvVars.FIREBASE_PROJECT_ID) {
+        throw new Error('Missing required environment variable: FIREBASE_PROJECT_ID');
+      }
+      if (!requiredEnvVars.FIREBASE_CLIENT_EMAIL) {
+        throw new Error('Missing required environment variable: FIREBASE_CLIENT_EMAIL');
+      }
+      // Either FIREBASE_PRIVATE_KEY or FIREBASE_PRIVATE_KEY_B64 must be present
+      if (!requiredEnvVars.FIREBASE_PRIVATE_KEY && !requiredEnvVars.FIREBASE_PRIVATE_KEY_B64) {
+        throw new Error('Missing required environment variable: FIREBASE_PRIVATE_KEY or FIREBASE_PRIVATE_KEY_B64');
       }
 
       // Normalize private key (supports single-line with \n, actual newlines, and optional base64 variant)
