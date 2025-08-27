@@ -15,18 +15,29 @@ function initializeFirebaseAdmin() {
   if (getApps().length === 0) {
     console.log('🔥 [Submit Results API] Initializing Firebase Admin...');
     
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-    if (!privateKey) {
-      throw new Error('FIREBASE_PRIVATE_KEY environment variable is required');
+    const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+    const FIREBASE_CLIENT_EMAIL = process.env.FIREBASE_CLIENT_EMAIL;
+    // Support either plain key or base64-encoded key
+    let firebasePrivateKey = process.env.FIREBASE_PRIVATE_KEY;
+    const firebasePrivateKeyB64 = process.env.FIREBASE_PRIVATE_KEY_B64 || process.env.FIREBASE_PRIVATE_KEY_BASE64;
+
+    if (!firebasePrivateKey && firebasePrivateKeyB64) {
+      try {
+        firebasePrivateKey = Buffer.from(firebasePrivateKeyB64, 'base64').toString('utf-8');
+      } catch (e) {
+        throw new Error('Failed to decode FIREBASE_PRIVATE_KEY_B64. Ensure it is valid base64.');
+      }
     }
 
-    const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
+    if (!FIREBASE_PROJECT_ID) throw new Error('Missing required environment variable: FIREBASE_PROJECT_ID');
+    if (!FIREBASE_CLIENT_EMAIL) throw new Error('Missing required environment variable: FIREBASE_CLIENT_EMAIL');
+    if (!firebasePrivateKey) throw new Error('Missing required environment variable: FIREBASE_PRIVATE_KEY');
 
     initializeApp({
       credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: formattedPrivateKey,
+        projectId: FIREBASE_PROJECT_ID,
+        clientEmail: FIREBASE_CLIENT_EMAIL,
+        privateKey: firebasePrivateKey.replace(/\\n/g, '\n'),
       }),
     });
     
@@ -129,36 +140,33 @@ function calculateCompetencyScores(results) {
 module.exports = async function handler(req, res) {
   console.log('📊 [Submit Results API] Request received:', req.method, req.url);
   
+  // Set CORS headers early so all responses match the caller's origin
+  const origin = req.headers.origin || '';
+  const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Content-Type', 'application/json');
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    console.log('✅ [Submit Results API] Handling OPTIONS request');
+    return res.status(204).end();
+  }
+
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    console.log('❌ [Submit Results API] Method not allowed:', req.method);
+    return res.status(405).json({ 
+      success: false, 
+      error: 'Method not allowed' 
+    });
+  }
+
   try {
-    // Set CORS headers for api.olivinhr.com domain
-    const origin = req.headers.origin || '';
-    console.log('🔍 [Submit Results API] Origin:', origin);
-    
-    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
-    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Max-Age', '86400');
-    res.setHeader('Vary', 'Origin');
-    res.setHeader('Content-Type', 'application/json');
-
-    // Handle preflight OPTIONS request
-    if (req.method === 'OPTIONS') {
-      console.log('✅ [Submit Results API] Handling OPTIONS request');
-      return res.status(204).end();
-    }
-
-    // Only allow POST requests
-    if (req.method !== 'POST') {
-      console.log('❌ [Submit Results API] Method not allowed:', req.method);
-      return res.status(405).json({ 
-        success: false, 
-        error: 'Method not allowed' 
-      });
-    }
-
-  console.log('📊 [Submit Results API] Request received: POST /api/candidate/submitResult');
 
   try {
     const db = initializeFirebaseAdmin();
@@ -312,13 +320,6 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error('🚨 [Submit Results API] Error:', error);
-    
-    // Make sure we set CORS headers even on error
-    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Content-Type', 'application/json');
     
     return res.status(500).json({
       success: false,
