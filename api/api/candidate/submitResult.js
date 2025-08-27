@@ -10,6 +10,18 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
+// Helper function to get assessment display name
+function getAssessmentDisplayName(assessmentType) {
+  const displayNames = {
+    'calisan-bagliligi': 'Çalışan Bağlılığı Değerlendirmesi',
+    'takim-degerlendirme': 'Takım Değerlendirme Anketi',
+    'yonetici-degerlendirme': 'Yönetici Değerlendirme Anketi',
+    'space-mission': 'Space Mission',
+    'leadership-scenario': 'Leadership Scenario'
+  };
+  return displayNames[assessmentType] || 'Assessment';
+}
+
 // Initialize Firebase Admin
 function initializeFirebaseAdmin() {
   if (getApps().length === 0) {
@@ -47,7 +59,186 @@ function initializeFirebaseAdmin() {
   return getFirestore();
 }
 
-// Calculate competency scores using the same logic as the HR platform
+// Calculate scores based on assessment type
+function calculateAssessmentScores(results, assessmentType) {
+  console.log('🧮 [Submit Results API] Calculating scores for assessment type:', assessmentType);
+  
+  // Handle new assessment types
+  if (assessmentType === 'calisan-bagliligi') {
+    return calculateEngagementScores(results);
+  } else if (assessmentType === 'takim-degerlendirme') {
+    return calculateTeamScores(results);
+  } else if (assessmentType === 'yonetici-degerlendirme') {
+    return calculateManagerScores(results);
+  } else {
+    // Default to space mission competency scoring
+    return calculateCompetencyScores(results);
+  }
+}
+
+// Calculate engagement assessment scores
+function calculateEngagementScores(results) {
+  const scores = {
+    emotional: { total: 0, count: 0 },
+    continuance: { total: 0, count: 0 },
+    normative: { total: 0, count: 0 }
+  };
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const qId = parseInt(questionId);
+    const score = parseInt(answerId); // 1-5 Likert scale
+    
+    if (score >= 1 && score <= 5) {
+      totalScore += score;
+      totalQuestions++;
+      
+      // Map questions to dimensions (simplified mapping)
+      if (qId >= 1 && qId <= 9) {
+        scores.emotional.total += score;
+        scores.emotional.count++;
+      } else if (qId >= 10 && qId <= 15) {
+        scores.continuance.total += score;
+        scores.continuance.count++;
+      } else if (qId >= 16 && qId <= 22) {
+        scores.normative.total += score;
+        scores.normative.count++;
+      }
+    }
+  });
+
+  // Calculate averages
+  const finalScores = {};
+  Object.entries(scores).forEach(([dimId, dimData]) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 5) * 100)
+    };
+  });
+
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 5) * 100);
+
+  return {
+    competencyScores: finalScores,
+    overallScore: totalScore,
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Calculate team assessment scores
+function calculateTeamScores(results) {
+  const dimensions = ['communication', 'shared_goals', 'support_collaboration', 'trust_transparency', 'motivation'];
+  const scores = {};
+  
+  dimensions.forEach(dim => {
+    scores[dim] = { total: 0, count: 0 };
+  });
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const qId = parseInt(questionId);
+    const score = parseInt(answerId);
+    
+    if (score >= 1 && score <= 5) {
+      totalScore += score;
+      totalQuestions++;
+      
+      // Map questions to dimensions (5 questions per dimension)
+      const dimIndex = Math.floor((qId - 1) / 5);
+      if (dimIndex >= 0 && dimIndex < dimensions.length) {
+        const dimension = dimensions[dimIndex];
+        scores[dimension].total += score;
+        scores[dimension].count++;
+      }
+    }
+  });
+
+  // Calculate averages
+  const finalScores = {};
+  Object.entries(scores).forEach(([dimId, dimData]) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 5) * 100)
+    };
+  });
+
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 5) * 100);
+
+  return {
+    competencyScores: finalScores,
+    overallScore: totalScore,
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Calculate manager assessment scores
+function calculateManagerScores(results) {
+  const dimensions = ['communication', 'feedback_culture', 'team_development', 'fairness', 'motivation_leadership'];
+  const scores = {};
+  
+  dimensions.forEach(dim => {
+    scores[dim] = { total: 0, count: 0 };
+  });
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const qId = parseInt(questionId);
+    const score = parseInt(answerId);
+    
+    if (score >= 1 && score <= 5) {
+      totalScore += score;
+      totalQuestions++;
+      
+      // Map questions to dimensions (5 questions per dimension)
+      const dimIndex = Math.floor((qId - 1) / 5);
+      if (dimIndex >= 0 && dimIndex < dimensions.length) {
+        const dimension = dimensions[dimIndex];
+        scores[dimension].total += score;
+        scores[dimension].count++;
+      }
+    }
+  });
+
+  // Calculate averages
+  const finalScores = {};
+  Object.entries(scores).forEach(([dimId, dimData]) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 5) * 100)
+    };
+  });
+
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 5) * 100);
+
+  return {
+    competencyScores: finalScores,
+    overallScore: totalScore,
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Calculate competency scores for Space Mission (existing logic)
 function calculateCompetencyScores(results) {
   // This should ideally import from a shared questions file, but for now we'll use a comprehensive set
   // In production, this should load from the same source as the frontend
@@ -173,34 +364,47 @@ module.exports = async function handler(req, res) {
     const {
       token,
       candidateEmail,
+      candidateInfo,
       projectId,
       gameId,
+      assessmentType,
+      assessmentName,
+      answers,
+      scores,
       results,
       completedAt,
+      completionTime,
+      totalQuestions,
+      completedQuestions,
       metadata = {}
     } = req.body;
 
-    // Validate required fields
-    if (!token || !candidateEmail || !results) {
+    // Validate required fields - support both old and new formats
+    const hasResults = results || answers;
+    const candidateEmailValue = candidateEmail || candidateInfo?.email;
+    
+    if (!token || !candidateEmailValue || !hasResults) {
       console.log('❌ [Submit Results API] Missing required fields');
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: token, candidateEmail, results'
+        error: 'Missing required fields: token, candidateEmail/candidateInfo.email, results/answers'
       });
     }
 
     console.log('📊 [Submit Results API] Processing results submission:');
     console.log('  - Token:', token.substring(0, 8) + '...');
-    console.log('  - Candidate:', candidateEmail);
+    console.log('  - Candidate:', candidateEmailValue);
+    console.log('  - Assessment Type:', assessmentType);
+    console.log('  - Assessment Name:', assessmentName);
     console.log('  - Project ID:', projectId);
     console.log('  - Game ID:', gameId);
-    console.log('  - Results keys:', Object.keys(results));
+    console.log('  - Results keys:', Object.keys(hasResults));
 
     // 1. First, verify the invite exists and get invite data
     console.log('🔍 [Submit Results API] Step 1: Verifying invite...');
     const invitesQuery = await db.collection('invites')
       .where('token', '==', token)
-      .where('candidateEmail', '==', candidateEmail)
+      .where('candidateEmail', '==', candidateEmailValue)
       .limit(1)
       .get();
 
@@ -220,17 +424,29 @@ module.exports = async function handler(req, res) {
     console.log('  - Project ID:', inviteData.projectId);
     console.log('  - Status:', inviteData.status);
 
-    // 2. Calculate competency scores
-    console.log('🧮 [Submit Results API] Step 2: Calculating competency scores...');
-    const {
-      competencyScores,
-      maxCompetencyScores,
-      overallScore,
-      totalQuestions,
-      scorePercentage
-    } = calculateCompetencyScores(results);
+    // 2. Calculate assessment scores
+    console.log('🧮 [Submit Results API] Step 2: Calculating assessment scores...');
+    
+    // Determine assessment type from invite data or request
+    const finalAssessmentType = assessmentType || inviteData.assessmentType || inviteData.selectedGame || 'space-mission';
+    
+    // Use provided scores if available, otherwise calculate
+    let calculatedScores;
+    if (scores && Object.keys(scores).length > 0) {
+      console.log('  - Using provided scores from frontend');
+      calculatedScores = {
+        competencyScores: scores,
+        overallScore: totalQuestions ? (Object.values(scores).reduce((sum, score) => sum + (score.score || 0), 0)) : 0,
+        totalQuestions: totalQuestions || completedQuestions || 0,
+        scorePercentage: Object.values(scores).reduce((sum, score) => sum + (score.percentage || 0), 0) / Object.keys(scores).length || 0
+      };
+    } else {
+      console.log('  - Calculating scores on backend');
+      const resultsData = results || { answers };
+      calculatedScores = calculateAssessmentScores(resultsData, finalAssessmentType);
+    }
 
-    console.log('  - Overall Score:', overallScore, '/', totalQuestions, `(${scorePercentage}%)`);
+    console.log('  - Overall Score:', calculatedScores.overallScore, '/', calculatedScores.totalQuestions, `(${calculatedScores.scorePercentage}%)`);
 
     // 3. Create comprehensive result document for candidateResults collection
     const resultId = `result_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -242,28 +458,33 @@ module.exports = async function handler(req, res) {
       inviteId: inviteDoc.id,
       
       // Candidate Info
-      candidateEmail: candidateEmail,
+      candidateEmail: candidateEmailValue,
+      candidateInfo: candidateInfo || { email: candidateEmailValue },
       projectId: inviteData.projectId,
       
-      // Game Info
-      gameId: gameId || inviteData.selectedGame || 'space-mission',
-      gameName: gameId === 'space-mission' ? 'Space Mission' : 'Leadership Scenario',
+      // Assessment Info
+      assessmentType: finalAssessmentType,
+      assessmentName: assessmentName || getAssessmentDisplayName(finalAssessmentType),
+      gameId: gameId || inviteData.selectedGame || finalAssessmentType,
+      gameName: assessmentName || getAssessmentDisplayName(finalAssessmentType),
       
       // Results
-      results: results,
-      rawScore: overallScore,
-      scorePercentage: scorePercentage,
-      totalQuestions: totalQuestions,
-      competencyScores: competencyScores,
-      maxCompetencyScores: maxCompetencyScores,
+      results: results || { answers },
+      answers: answers || results?.answers || {},
+      rawScore: calculatedScores.overallScore,
+      scorePercentage: Math.round(calculatedScores.scorePercentage),
+      totalQuestions: calculatedScores.totalQuestions,
+      completedQuestions: completedQuestions || calculatedScores.totalQuestions,
+      competencyScores: calculatedScores.competencyScores,
+      maxCompetencyScores: calculatedScores.maxCompetencyScores || {},
       
       // Performance Analysis
       performance: {
-        overall: scorePercentage >= 80 ? 'excellent' : scorePercentage >= 60 ? 'good' : scorePercentage >= 40 ? 'fair' : 'needs_improvement',
+        overall: calculatedScores.scorePercentage >= 80 ? 'excellent' : calculatedScores.scorePercentage >= 60 ? 'good' : calculatedScores.scorePercentage >= 40 ? 'fair' : 'needs_improvement',
         strengths: [], // Can be enhanced later
         improvements: [], // Can be enhanced later
-        timeSpent: results.timeSpent || results.completionTime || null,
-        completionRate: totalQuestions > 0 ? 100 : 0
+        timeSpent: completionTime || results?.timeSpent || results?.completionTime || null,
+        completionRate: calculatedScores.totalQuestions > 0 ? Math.round((completedQuestions || calculatedScores.totalQuestions) / calculatedScores.totalQuestions * 100) : 0
       },
       
       // Metadata
@@ -296,8 +517,8 @@ module.exports = async function handler(req, res) {
       status: 'completed',
       completedAt: new Date().toISOString(),
       resultId: resultId,
-      scorePercentage: scorePercentage,
-      rawScore: overallScore
+      scorePercentage: calculatedScores.scorePercentage,
+      rawScore: calculatedScores.overallScore
     });
     
     console.log('✅ [Submit Results API] Invite status updated to completed');
@@ -308,11 +529,11 @@ module.exports = async function handler(req, res) {
       message: 'Results submitted successfully',
       resultId: resultId,
       completedAt: resultDocument.completedAt,
-      scorePercentage: scorePercentage,
+      scorePercentage: calculatedScores.scorePercentage,
       performance: resultDocument.performance.overall
     };
 
-    console.log('🎉 [Submit Results API] Success! Results submitted for:', candidateEmail);
+    console.log('🎉 [Submit Results API] Success! Results submitted for:', candidateEmailValue);
     
     return res.status(200).json(response);
 

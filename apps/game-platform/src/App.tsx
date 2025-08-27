@@ -17,6 +17,17 @@ import { SafeGameFlowProvider } from './contexts/GameFlowContext';
 import './App.css';
 import AccessRequired from './pages/AccessRequired';
 
+// New Assessment Components
+import EngagementIdentityScreen from './pages/candidate/EngagementAssessment/EngagementIdentityScreen';
+import EngagementTestScreen from './pages/candidate/EngagementAssessment/EngagementTestScreen';
+import EngagementResultsScreen from './pages/candidate/EngagementAssessment/EngagementResultsScreen';
+import TeamIdentityScreen from './pages/candidate/TeamAssessment/TeamIdentityScreen';
+import TeamTestScreen from './pages/candidate/TeamAssessment/TeamTestScreen';
+import TeamResultsScreen from './pages/candidate/TeamAssessment/TeamResultsScreen';
+import ManagerIdentityScreen from './pages/candidate/ManagerAssessment/ManagerIdentityScreen';
+import ManagerTestScreen from './pages/candidate/ManagerAssessment/ManagerTestScreen';
+import ManagerResultsScreen from './pages/candidate/ManagerAssessment/ManagerResultsScreen';
+
 // Placeholder Landing Page Component
 function LandingPage() {
   const { t } = useTranslation('common');
@@ -65,9 +76,9 @@ function InviteHandler() {
         // Store invite data in sessionStorage for use throughout the assessment
         sessionStorage.setItem('currentInvite', JSON.stringify(inviteData));
         
-        // Route to appropriate game based on game ID
-        const gameId = inviteData.selectedGame || searchParams.get('gameId') || 'leadership-scenario';
-        routeToGameById(gameId, inviteData);
+        // Route to appropriate game based on assessment type or game ID
+        const assessmentType = inviteData.assessmentType || inviteData.selectedGame || searchParams.get('gameId') || 'space-mission';
+        routeToGameById(assessmentType, inviteData);
       })
       .catch((err) => {
         console.error('Token validation failed:', err);
@@ -102,15 +113,21 @@ function InviteHandler() {
     // Update invite status to 'started'
     updateInviteStatus(inviteData.token, 'started');
     
+    // Normalize the game ID to handle various formats
+    const normalizedGameId = gameId?.toLowerCase().replace(/\s+/g, '-');
+    
     // Use game configuration to determine the correct route
-    const game = getGameById(gameId);
+    const game = getGameById(normalizedGameId);
     
     if (game) {
       console.log('🎮 [InviteHandler] Routing to game:', game.displayName, 'at route:', game.route);
-      navigate(game.route, { state: { inviteData } });
+      
+      // Add token to URL for new assessments
+      const routeWithToken = `${game.route}?token=${inviteData.token}`;
+      navigate(routeWithToken, { state: { inviteData } });
     } else {
       console.warn('🎮 [InviteHandler] Unknown game ID:', gameId, '- routing to default game');
-      navigate('/candidate', { state: { inviteData } });
+      navigate(`/candidate?token=${inviteData.token}`, { state: { inviteData } });
     }
     
     setLoading(false);
@@ -185,7 +202,11 @@ function AppContent() {
   const [searchParams] = useSearchParams();
   
   // Show header only on candidate identity screens
-  const showHeader = location.pathname === '/candidate' || location.pathname === '/candidate/game2';
+  const showHeader = location.pathname === '/candidate' || 
+                    location.pathname === '/candidate/game2' ||
+                    location.pathname === '/candidate/engagement' ||
+                    location.pathname === '/candidate/team' ||
+                    location.pathname === '/candidate/manager';
   
   // Check if this is a token-based access (for root route only)
   const hasToken = searchParams.get('token');
@@ -197,7 +218,7 @@ function AppContent() {
         {/* Token-based invite handler */}
         <Route path="/" element={hasToken ? <InviteHandler /> : <LandingPage />} />
         
-        {/* Protected candidate routes */}
+        {/* Protected candidate routes - Original Space Mission */}
         <Route path="/candidate" element={<ProtectedRoute><IdentityScreen /></ProtectedRoute>} />
         <Route path="/candidate/form" element={<ProtectedRoute><FormScreen /></ProtectedRoute>} />
         <Route path="/candidate/test" element={<ProtectedRoute><TestScreen /></ProtectedRoute>} />
@@ -207,6 +228,21 @@ function AppContent() {
         <Route path="/candidate/game2" element={<ProtectedRoute><IdentityScreen2 /></ProtectedRoute>} />
         <Route path="/candidate/game2/test" element={<ProtectedRoute><TestScreen2 /></ProtectedRoute>} />
         <Route path="/candidate/game2/results" element={<ProtectedRoute><ResultsScreen2 /></ProtectedRoute>} />
+        
+        {/* New Assessment Routes - Employee Engagement */}
+        <Route path="/candidate/engagement" element={<ProtectedRoute><EngagementIdentityScreen /></ProtectedRoute>} />
+        <Route path="/candidate/engagement/test" element={<ProtectedRoute><EngagementTestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/engagement/results" element={<ProtectedRoute><EngagementResultsScreen /></ProtectedRoute>} />
+        
+        {/* New Assessment Routes - Team Evaluation */}
+        <Route path="/candidate/team" element={<ProtectedRoute><TeamIdentityScreen /></ProtectedRoute>} />
+        <Route path="/candidate/team/test" element={<ProtectedRoute><TeamTestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/team/results" element={<ProtectedRoute><TeamResultsScreen /></ProtectedRoute>} />
+        
+        {/* New Assessment Routes - Manager Evaluation */}
+        <Route path="/candidate/manager" element={<ProtectedRoute><ManagerIdentityScreen /></ProtectedRoute>} />
+        <Route path="/candidate/manager/test" element={<ProtectedRoute><ManagerTestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/manager/results" element={<ProtectedRoute><ManagerResultsScreen /></ProtectedRoute>} />
         
         {/* Thank you screen */}
         <Route path="/thank-you" element={<ThankYouScreen />} />

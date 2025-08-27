@@ -1,0 +1,387 @@
+/* Team Results Screen Styles */
+.team-results-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header */
+.results-header {
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.assessment-badge {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.results-header h1 {
+  font-size: 2.25rem;
+  color: #6B8E23;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.candidate-info {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Overall Score Card */
+.overall-score-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.overall-score-card h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.score-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--score-color, #6B8E23) calc(var(--percentage, 0) * 1%),
+    #e9ecef calc(var(--percentage, 0) * 1%)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+
+.score-circle::before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: white;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.score-percentage {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--score-color, #6B8E23);
+  z-index: 2;
+  position: relative;
+}
+
+.score-level {
+  font-size: 0.9rem;
+  color: #666;
+  z-index: 2;
+  position: relative;
+  margin-top: -0.25rem;
+}
+
+.score-description {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Radar Chart Section */
+.radar-chart-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.radar-chart-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.radar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radar-chart {
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
+}
+
+.radar-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.radar-label {
+  font-weight: 600;
+  font-size: 11px;
+}
+
+/* Dimensions Section */
+.dimensions-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dimensions-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.dimensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.dimension-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border-left: 4px solid #6B8E23;
+}
+
+.dimension-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dimension-icon {
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.dimension-header h3 {
+  color: #333;
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+}
+
+.dimension-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.dimension-score {
+  margin-bottom: 1rem;
+}
+
+.score-bar-container {
+  background: #e9ecef;
+  border-radius: 8px;
+  height: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.score-bar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.8s ease;
+}
+
+.score-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.percentage {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.score-value {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* AI Assistant Section */
+.ai-assistant-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ai-assistant-section h2 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.ai-assistant-section p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Action Buttons */
+.results-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-button.primary {
+  background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
+}
+
+.action-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 142, 35, 0.4);
+}
+
+.action-button.secondary {
+  background: #f8f9fa;
+  color: #6B8E23;
+  border: 2px solid #6B8E23;
+}
+
+.action-button.secondary:hover {
+  background: #6B8E23;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(107, 142, 35, 0.2);
+  border-left-color: #6B8E23;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-container h2,
+.error-container h2 {
+  color: #6B8E23;
+  margin-bottom: 0.5rem;
+}
+
+.loading-container p,
+.error-container p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .team-results-screen {
+    padding: 1rem;
+  }
+  
+  .results-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .dimensions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .score-circle {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .score-circle::before {
+    width: 95px;
+    height: 95px;
+  }
+  
+  .score-percentage {
+    font-size: 1.5rem;
+  }
+  
+  .radar-chart {
+    height: 300px;
+  }
+  
+  .radar-label {
+    font-size: 10px;
+  }
+  
+  .results-actions {
+    flex-direction: column;
+  }
+  
+  .action-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .dimension-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,174 @@
+/* TypeForm-style design with olive green and cream colors */
+.shared-identity-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.identity-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+}
+
+.identity-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.assessment-badge {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.assessment-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6B8E23; /* Olive green */
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.assessment-description {
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.identity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+  color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #6B8E23; /* Olive green */
+  box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.form-group input.error,
+.form-group select.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.error-message {
+  font-size: 0.875rem;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.continue-button {
+  background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 100%); /* Olive to sage green */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
+}
+
+.continue-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 142, 35, 0.4);
+  background: linear-gradient(135deg, #556B2F 0%, #6B8E23 100%);
+}
+
+.continue-button:active {
+  transform: translateY(0);
+}
+
+.continue-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.2);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .shared-identity-screen {
+    padding: 1rem;
+  }
+  
+  .identity-container {
+    padding: 2rem;
+  }
+  
+  .assessment-title {
+    font-size: 1.75rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .identity-container {
+    padding: 1.5rem;
+  }
+  
+  .assessment-title {
+    font-size: 1.5rem;
+  }
+  
+  .assessment-description {
+    font-size: 1rem;
+  }
+}

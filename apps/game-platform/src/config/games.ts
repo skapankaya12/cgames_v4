@@ -50,6 +50,45 @@ export const GAMES: Record<string, GameConfig> = {
       { step: 'ending', route: '/candidate/ending', component: 'EndingScreen', description: 'Mission completion' },
       { step: 'results', route: '/candidate/results', component: 'ResultsScreen', description: 'Mission performance and feedback' }
     ]
+  },
+  'calisan-bagliligi': {
+    id: 'calisan-bagliligi',
+    displayName: 'Çalışan Bağlılığı Değerlendirmesi',
+    route: '/candidate/engagement',
+    description: 'Organizasyonel bağlılık ve çalışan motivasyonu değerlendirmesi',
+    estimatedDuration: '10-15 dakika',
+    competencies: ['Duygusal Bağlılık', 'Devam Bağlılığı', 'Normatif Bağlılık'],
+    flow: [
+      { step: 'identity', route: '/candidate/engagement', component: 'EngagementIdentityScreen', description: 'Katılımcı bilgileri ve değerlendirme tanıtımı' },
+      { step: 'test', route: '/candidate/engagement/test', component: 'EngagementTestScreen', description: 'Çalışan bağlılığı değerlendirme soruları' },
+      { step: 'results', route: '/candidate/engagement/results', component: 'EngagementResultsScreen', description: 'Bağlılık analizi ve sonuçlar' }
+    ]
+  },
+  'takim-degerlendirme': {
+    id: 'takim-degerlendirme',
+    displayName: 'Takım Değerlendirme Anketi',
+    route: '/candidate/team',
+    description: 'Takım etkinliği ve işbirliği düzeyi değerlendirmesi',
+    estimatedDuration: '8-12 dakika',
+    competencies: ['İletişim', 'Ortak Hedefler', 'Destek ve İşbirliği', 'Güven ve Şeffaflık', 'Motivasyon'],
+    flow: [
+      { step: 'identity', route: '/candidate/team', component: 'TeamIdentityScreen', description: 'Katılımcı bilgileri ve takım değerlendirme tanıtımı' },
+      { step: 'test', route: '/candidate/team/test', component: 'TeamTestScreen', description: 'Takım etkinliği değerlendirme soruları' },
+      { step: 'results', route: '/candidate/team/results', component: 'TeamResultsScreen', description: 'Takım analizi ve sonuçlar' }
+    ]
+  },
+  'yonetici-degerlendirme': {
+    id: 'yonetici-degerlendirme',
+    displayName: 'Yönetici Değerlendirme Anketi',
+    route: '/candidate/manager',
+    description: 'Yönetici etkinliği ve liderlik becerileri değerlendirmesi',
+    estimatedDuration: '8-12 dakika',
+    competencies: ['İletişim', 'Geri Bildirim Kültürü', 'Ekip Geliştirme', 'Adalet', 'Motivasyon ve Liderlik'],
+    flow: [
+      { step: 'identity', route: '/candidate/manager', component: 'ManagerIdentityScreen', description: 'Katılımcı bilgileri ve yönetici değerlendirme tanıtımı' },
+      { step: 'test', route: '/candidate/manager/test', component: 'ManagerTestScreen', description: 'Yönetici etkinliği değerlendirme soruları' },
+      { step: 'results', route: '/candidate/manager/results', component: 'ManagerResultsScreen', description: 'Yönetici analizi ve sonuçlar' }
+    ]
   }
 };
 
@@ -77,6 +116,18 @@ export function normalizeGameId(gameId: string): string {
     'Leadership Scenario': 'leadership-scenario',
     'leadership_scenario': 'leadership-scenario',
     'leadershipscenario': 'leadership-scenario',
+    'Çalışan Bağlılığı': 'calisan-bagliligi',
+    'calisan_bagliligi': 'calisan-bagliligi',
+    'calisanbagliligi': 'calisan-bagliligi',
+    'Employee Engagement': 'calisan-bagliligi',
+    'Takım Değerlendirme': 'takim-degerlendirme',
+    'takim_degerlendirme': 'takim-degerlendirme',
+    'takimdegerlendirme': 'takim-degerlendirme',
+    'Team Evaluation': 'takim-degerlendirme',
+    'Yönetici Değerlendirme': 'yonetici-degerlendirme',
+    'yonetici_degerlendirme': 'yonetici-degerlendirme',
+    'yoneticidegerlendirme': 'yonetici-degerlendirme',
+    'Manager Evaluation': 'yonetici-degerlendirme',
   };
   
   return normalizations[gameId] || gameId.toLowerCase().replace(/\s+/g, '-');

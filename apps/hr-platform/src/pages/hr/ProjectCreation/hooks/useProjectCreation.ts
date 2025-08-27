@@ -23,7 +23,7 @@ const initialFormData: ProjectCreationForm = {
   cultureValues: [],
   challenges: [],
   gamePreferences: [],
-  assessmentType: 'Space Mission' // NEW: Add assessment type field
+  assessmentType: 'Space Mission' // Default assessment type
 };
 
 export function useProjectCreation(companyId: string | null, navigate: (path: string) => void) {

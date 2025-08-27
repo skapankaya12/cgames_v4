@@ -55,9 +55,15 @@ async function createInvite(data) {
       const gameMapping = {
         'Space Mission': 'space-mission',
         'Leadership Scenario Game': 'leadership-scenario', 
-        'Team Building Simulation': 'team-building'
+        'Team Building Simulation': 'team-building',
+        'calisan-bagliligi': 'calisan-bagliligi',
+        'Çalışan Bağlılığı Değerlendirmesi': 'calisan-bagliligi',
+        'takim-degerlendirme': 'takim-degerlendirme',
+        'Takım Değerlendirme Anketi': 'takim-degerlendirme',
+        'yonetici-degerlendirme': 'yonetici-degerlendirme',
+        'Yönetici Değerlendirme Anketi': 'yonetici-degerlendirme'
       };
-      return gameMapping[gameName] || 'leadership-scenario';
+      return gameMapping[gameName] || 'space-mission';
     };
 
     // If projectId is provided, get the selected game from project

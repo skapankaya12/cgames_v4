@@ -23,9 +23,12 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
     'Communication Challenges'
   ];
 
-  // Available assessment types (currently only Space Mission is active)
+  // Available assessment types
   const assessmentTypes = [
-    { value: 'Space Mission', label: 'Space Mission Assessment', description: 'Interactive space mission scenario testing decision-making under pressure' }
+    { value: 'Space Mission', label: 'Space Mission Assessment', description: 'Interactive space mission scenario testing decision-making under pressure' },
+    { value: 'calisan-bagliligi', label: 'Çalışan Bağlılığı Değerlendirmesi', description: 'Organizasyonel bağlılık ve çalışan motivasyonu değerlendirmesi' },
+    { value: 'takim-degerlendirme', label: 'Takım Değerlendirme Anketi', description: 'Takım etkinliği ve işbirliği düzeyi değerlendirmesi' },
+    { value: 'yonetici-degerlendirme', label: 'Yönetici Değerlendirme Anketi', description: 'Yönetici etkinliği ve liderlik becerileri değerlendirmesi' }
   ];
 
   return (
