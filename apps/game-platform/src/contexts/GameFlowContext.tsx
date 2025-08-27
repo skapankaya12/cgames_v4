@@ -30,37 +30,61 @@ interface GameFlowContextType {
 
 const GameFlowContext = createContext<GameFlowContextType | undefined>(undefined);
 
-// IP-based country detection
-async function detectCountryFromIP(): Promise<string | null> {
+// Browser-based country detection (no external API calls)
+function detectCountryFromBrowser(): string | null {
   try {
-    console.log('🌍 [Country Detection] Detecting country from IP...');
+    console.log('🌍 [Country Detection] Detecting country from browser...');
     
-    // Try ipapi.co first (no API key required)
-    const response = await fetch('https://ipapi.co/json/', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    // Method 1: Browser language (most reliable)
+    const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+    const languageCountryCode = browserLanguage.split('-')[1]?.toUpperCase();
     
-    if (response.ok) {
-      const data = await response.json();
-      console.log('🌍 [Country Detection] ✅ Detected country:', data.country_code, data.country_name);
-      return data.country_code?.toUpperCase() || null;
+    if (languageCountryCode) {
+      console.log('🌍 [Country Detection] ✅ Using browser language country:', languageCountryCode, 'from', browserLanguage);
+      return languageCountryCode;
     }
     
-    // Fallback to ipinfo.io
-    const fallbackResponse = await fetch('https://ipinfo.io/json');
-    if (fallbackResponse.ok) {
-      const fallbackData = await fallbackResponse.json();
-      console.log('🌍 [Country Detection] ✅ Fallback detected country:', fallbackData.country);
-      return fallbackData.country?.toUpperCase() || null;
+    // Method 2: Timezone-based detection
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      console.log('🌍 [Country Detection] Detected timezone:', timezone);
+      
+      // Map common timezones to countries
+      const timezoneCountryMap: Record<string, string> = {
+        'Europe/Istanbul': 'TR',
+        'Asia/Istanbul': 'TR',
+        'Turkey': 'TR',
+        'Europe/London': 'GB',
+        'America/New_York': 'US',
+        'America/Los_Angeles': 'US',
+        'Europe/Berlin': 'DE',
+        'Europe/Paris': 'FR',
+        'Europe/Rome': 'IT',
+        'Europe/Madrid': 'ES',
+        'Asia/Tokyo': 'JP',
+        'Australia/Sydney': 'AU'
+      };
+      
+      for (const [tz, country] of Object.entries(timezoneCountryMap)) {
+        if (timezone.includes(tz) || timezone.includes(tz.split('/')[1])) {
+          console.log('🌍 [Country Detection] ✅ Detected country from timezone:', country);
+          return country;
+        }
+      }
+    } catch (tzError) {
+      console.warn('🌍 [Country Detection] Timezone detection failed:', tzError);
     }
     
-    console.warn('🌍 [Country Detection] ⚠️ Could not detect country, using default');
+    // Method 3: Check primary browser language for Turkish
+    if (browserLanguage.toLowerCase().startsWith('tr')) {
+      console.log('🌍 [Country Detection] ✅ Detected Turkish language, assuming Turkey');
+      return 'TR';
+    }
+    
+    console.log('🌍 [Country Detection] Using default (EN) - no country detected');
     return null;
   } catch (error) {
-    console.error('🌍 [Country Detection] ❌ Error detecting country:', error);
+    console.warn('🌍 [Country Detection] Country detection failed (non-critical):', error.message);
     return null;
   }
 }
@@ -122,49 +146,30 @@ export function GameFlowProvider({ children }: { children: React.ReactNode }) {
     }
   }, [location.pathname, location.state]);
 
-  // Auto-detect country and set language
+  // Auto-detect country and set language (synchronous, no external API calls)
   useEffect(() => {
-    let isMounted = true;
-    
-    // Add a timeout to prevent hanging
-    const timeoutId = setTimeout(() => {
-      if (isMounted) {
-        console.log('🌍 [GameFlow] Country detection timeout, using default language');
-        setSelectedLanguage('en');
+    try {
+      // Detect country using browser information only (no external calls)
+      const country = detectCountryFromBrowser();
+      setDetectedCountry(country);
+      
+      const language = getLanguageForCountry(country);
+      console.log('🌍 [GameFlow] Setting language based on country:', country, '→', language);
+      setSelectedLanguage(language);
+      
+      // Update i18n if available (non-breaking)
+      try {
+        if (window.i18n && window.i18n.changeLanguage) {
+          window.i18n.changeLanguage(language);
+        }
+      } catch (error) {
+        console.warn('🌍 [GameFlow] Could not update i18n language:', error);
       }
-    }, 5000); // 5 second timeout
-    
-    detectCountryFromIP()
-      .then(country => {
-        if (isMounted) {
-          clearTimeout(timeoutId);
-          setDetectedCountry(country);
-          const language = getLanguageForCountry(country);
-          console.log('🌍 [GameFlow] Setting language based on country:', country, '→', language);
-          setSelectedLanguage(language);
-          
-          // Update i18n if available (non-breaking)
-          try {
-            if (window.i18n && window.i18n.changeLanguage) {
-              window.i18n.changeLanguage(language);
-            }
-          } catch (error) {
-            console.warn('🌍 [GameFlow] Could not update i18n language:', error);
-          }
-        }
-      })
-      .catch(error => {
-        if (isMounted) {
-          clearTimeout(timeoutId);
-          console.warn('🌍 [GameFlow] Country detection failed:', error);
-          setSelectedLanguage('en'); // Fallback to English
-        }
-      });
-    
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
+    } catch (error) {
+      console.warn('🌍 [GameFlow] Country detection failed (non-critical):', error.message);
+      // Fallback to English
+      setSelectedLanguage('en');
+    }
   }, []);
 
   // Calculate game progress
