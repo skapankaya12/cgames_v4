@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { v4 as uuidv4 } from 'uuid';
-import { verifyHrUserRole } from '../../packages/services/auth-utils-server';
+import { verifyHrUserRole } from '../../../packages/services/auth-utils-server';
 
 // Initialize Firebase Admin
 let firebaseInitialized = false;
@@ -24,11 +24,16 @@ function initializeFirebase() {
         }
       }
 
+      // At this point, all values are guaranteed to be defined
+      const projectId = requiredEnvVars.FIREBASE_PROJECT_ID!;
+      const clientEmail = requiredEnvVars.FIREBASE_CLIENT_EMAIL!;
+      const privateKey = requiredEnvVars.FIREBASE_PRIVATE_KEY!;
+
       initializeApp({
         credential: cert({
-          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
-          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          projectId,
+          clientEmail,
+          privateKey: privateKey.replace(/\\n/g, '\n'),
         }),
       });
       

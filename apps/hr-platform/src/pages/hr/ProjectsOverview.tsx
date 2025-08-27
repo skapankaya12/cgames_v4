@@ -375,7 +375,7 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
+                          {project.roleInfo?.position || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         {project.deadline && (
                           <div className="project-deadline">
@@ -442,7 +442,7 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
+                          {project.roleInfo?.position || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         <div className="project-deadline urgent">
                           <span className="deadline-label">Deadline:</span>
@@ -506,7 +506,7 @@ export default function ProjectsOverview() {
                           </span>
                         </div>
                         <p className="project-card-description">
-                          {project.roleInfo?.position || project.roleTag || 'Position'} • {project.roleInfo?.department || 'Department'}
+                          {project.roleInfo?.position || 'Position'} • {project.roleInfo?.department || 'Department'}
                         </p>
                         <div className="project-card-stats">
                           <div className="stat">

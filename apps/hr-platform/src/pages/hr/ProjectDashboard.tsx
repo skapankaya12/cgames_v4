@@ -230,7 +230,7 @@ export default function ProjectDashboard() {
           const result = await InviteServiceClient.createInvite({
             email: email,
             projectId: projectId,
-            roleTag: project?.roleInfo?.position || project?.roleTag || 'Project Assessment'
+            roleTag: project?.roleInfo?.position || 'Project Assessment'
           });
 
           results.push({ email, success: true, result });
@@ -406,7 +406,7 @@ export default function ProjectDashboard() {
               <div className="project-title-section">
                 <h1 className="project-title">{project.name}</h1>
                 <div className="project-meta">
-                  <span className="position-tag">{project.roleInfo?.position || project.roleTag || 'Assessment'}</span>
+                  <span className="position-tag">{project.roleInfo?.position || 'Assessment'}</span>
                   <span className="department-tag">{project.roleInfo?.department || 'General'}</span>
                   <span className={`status-badge ${project.status === 'active' ? 'status-active' : 'status-inactive'}`}>
                     {project.status}
@@ -464,7 +464,7 @@ export default function ProjectDashboard() {
               <MultiEmailInvite
                 onInvite={handleMultiInvite}
                 isLoading={inviteLoading}
-                rolePosition={project.roleInfo?.position || project.roleTag || 'Assessment'}
+                rolePosition={project.roleInfo?.position || 'Assessment'}
               />
 
               {/* Collapsible Project Details */}
@@ -499,7 +499,7 @@ export default function ProjectDashboard() {
                       <div className="info-grid">
                         <div className="info-item">
                           <span className="label">Position</span>
-                          <span className="value">{project.roleInfo?.position || project.roleTag || 'Not specified'}</span>
+                          <span className="value">{project.roleInfo?.position || 'Not specified'}</span>
                         </div>
                         <div className="info-item">
                           <span className="label">Department</span>
