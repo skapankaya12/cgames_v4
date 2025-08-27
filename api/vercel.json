@@ -4,9 +4,15 @@
     "**/*.ts": { "runtime": "@vercel/node@3.0.0" },
     "**/*.js": { "runtime": "@vercel/node@3.0.0" }
   },
-  "headers": [
+  "rewrites": [
     {
       "source": "/api/(.*)",
+      "destination": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
