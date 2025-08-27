@@ -112,7 +112,8 @@ export default function ProjectDashboard() {
       }
 
       // Fetch candidate results from our API
-      const response = await fetch(`/api/hr/getCandidateResults?projectId=${projectId}&hrId=${currentUser.uid}`);
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+      const response = await fetch(`${apiBaseUrl}/api/hr/getCandidateResults?projectId=${projectId}&hrId=${currentUser.uid}`);
       
       if (!response.ok) {
         throw new Error(`Failed to load results: ${response.status}`);

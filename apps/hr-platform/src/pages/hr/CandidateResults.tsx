@@ -87,7 +87,8 @@ export default function CandidateResults() {
       console.log('📊 [CandidateResults] Loading results for:', candidateEmail, 'in project:', projectId);
 
       // Use our working API endpoint with correct parameters
-      const response = await fetch(`/api/hr/getCandidateResults?projectId=${projectId}&hrId=${auth.currentUser?.uid || 'test-user'}`);
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+      const response = await fetch(`${apiBaseUrl}/api/hr/getCandidateResults?projectId=${projectId}&hrId=${auth.currentUser?.uid || 'test-user'}`);
       
       if (!response.ok) {
         throw new Error(`Failed to load candidate results: ${response.status}`);
