@@ -2,12 +2,14 @@ const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 const { getAuth } = require('firebase-admin/auth');
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// CORS headers for cross-origin requests from app.olivinhr.com
+const allowedOrigins = [
+  'https://app.olivinhr.com',
+  'https://game.olivinhr.com',
+  'https://cgames-v4-hr-platform.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 
 // Initialize Firebase Admin
 function initializeFirebaseAdmin() {
@@ -36,27 +38,39 @@ function initializeFirebaseAdmin() {
 }
 
 module.exports = async function handler(req, res) {
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    console.log('🔄 [Get Candidate Results API] Handling OPTIONS request');
-    return res.status(200).json({ message: 'OK' });
-  }
-
-  // Set CORS headers
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
-
-  if (req.method !== 'GET') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Method not allowed' 
-    });
-  }
-
-  console.log('📊 [Get Candidate Results API] Request received: GET /api/hr/getCandidateResults');
-
+  console.log('🚀 [Get Candidate Results API] Request received:', req.method, req.url);
+  
   try {
+    // Set CORS headers for api.olivinhr.com domain
+    const origin = req.headers.origin || '';
+    console.log('🔍 [Get Candidate Results API] Origin:', origin);
+    
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
+    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Content-Type', 'application/json');
+
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      console.log('✅ [Get Candidate Results API] Handling OPTIONS request');
+      return res.status(204).end();
+    }
+
+    // Only allow GET requests
+    if (req.method !== 'GET') {
+      console.log('❌ [Get Candidate Results API] Method not allowed:', req.method);
+      return res.status(405).json({ 
+        success: false, 
+        error: 'Method not allowed' 
+      });
+    }
+
+    console.log('📊 [Get Candidate Results API] Processing request parameters...');
+
     const db = initializeFirebaseAdmin();
     
     // Extract parameters
@@ -258,11 +272,18 @@ module.exports = async function handler(req, res) {
     return res.status(200).json(response);
 
   } catch (error) {
-    console.error('❌ [Get Candidate Results API] Error:', error);
+    console.error('🚨 [Get Candidate Results API] Error:', error);
+    
+    // Make sure we set CORS headers even on error
+    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Content-Type', 'application/json');
     
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to fetch candidate results'
+      error: error?.message || 'Failed to fetch candidate results'
     });
   }
 }; 

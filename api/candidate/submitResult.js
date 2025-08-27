@@ -1,12 +1,14 @@
 const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// CORS headers for cross-origin requests from app.olivinhr.com
+const allowedOrigins = [
+  'https://app.olivinhr.com',
+  'https://game.olivinhr.com',
+  'https://cgames-v4-hr-platform.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 
 // Initialize Firebase Admin
 function initializeFirebaseAdmin() {
@@ -125,23 +127,36 @@ function calculateCompetencyScores(results) {
 }
 
 module.exports = async function handler(req, res) {
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    console.log('🔄 [Submit Results API] Handling OPTIONS request');
-    return res.status(200).json({ message: 'OK' });
-  }
+  console.log('📊 [Submit Results API] Request received:', req.method, req.url);
+  
+  try {
+    // Set CORS headers for api.olivinhr.com domain
+    const origin = req.headers.origin || '';
+    console.log('🔍 [Submit Results API] Origin:', origin);
+    
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
+    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Content-Type', 'application/json');
 
-  // Set CORS headers
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      console.log('✅ [Submit Results API] Handling OPTIONS request');
+      return res.status(204).end();
+    }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Method not allowed' 
-    });
-  }
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+      console.log('❌ [Submit Results API] Method not allowed:', req.method);
+      return res.status(405).json({ 
+        success: false, 
+        error: 'Method not allowed' 
+      });
+    }
 
   console.log('📊 [Submit Results API] Request received: POST /api/candidate/submitResult');
 
@@ -296,11 +311,18 @@ module.exports = async function handler(req, res) {
     return res.status(200).json(response);
 
   } catch (error) {
-    console.error('❌ [Submit Results API] Error:', error);
+    console.error('🚨 [Submit Results API] Error:', error);
+    
+    // Make sure we set CORS headers even on error
+    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Content-Type', 'application/json');
     
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to submit results'
+      error: error?.message || 'Failed to submit results'
     });
   }
 }; 
