@@ -106,8 +106,26 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
     setIsLoading(true);
     
-    // Save form data
-    sessionStorage.setItem(`${assessmentType}-identity`, JSON.stringify(formData));
+    console.log('💾 [SharedIdentityScreen] Saving identity data:');
+    console.log('  - Assessment Type:', assessmentType);
+    console.log('  - Form Data:', {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      department: formData.department,
+      position: formData.position,
+      experience: formData.experience,
+      workMode: formData.workMode
+    });
+    
+    // Save form data with both keys for compatibility
+    const storageKey1 = `${assessmentType}-identity`;
+    const storageKey2 = `${assessmentType}-candidate-data`;
+    
+    sessionStorage.setItem(storageKey1, JSON.stringify(formData));
+    sessionStorage.setItem(storageKey2, JSON.stringify(formData));
+    
+    console.log('  - Saved to keys:', [storageKey1, storageKey2]);
     
     // Call parent callback
     onContinue(formData);

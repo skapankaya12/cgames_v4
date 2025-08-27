@@ -18,12 +18,19 @@ const EngagementTestScreen = () => {
   const progress = ((currentQuestionIndex + 1) / engagementQuestions.length) * 100;
 
   useEffect(() => {
-    // Check if user has completed identity screen
-    const identityData = sessionStorage.getItem('engagement-candidate-data');
+    // Check if user has completed identity screen (try both keys)
+    let identityData = sessionStorage.getItem('engagement-candidate-data');
     if (!identityData) {
+      identityData = sessionStorage.getItem('calisan-bagliligi-candidate-data');
+    }
+    
+    if (!identityData) {
+      console.warn('🔍 [EngagementTest] No identity data found, redirecting to identity screen');
       navigate('/candidate/engagement');
       return;
     }
+
+    console.log('✅ [EngagementTest] Identity data found, proceeding with test');
 
     // Load saved answers if any
     const savedAnswers = sessionStorage.getItem('engagement-answers');
@@ -31,6 +38,7 @@ const EngagementTestScreen = () => {
       try {
         const parsed = JSON.parse(savedAnswers);
         setAnswers(parsed);
+        console.log('📝 [EngagementTest] Loaded saved answers:', Object.keys(parsed).length);
       } catch (error) {
         console.warn('Failed to parse saved answers:', error);
       }
@@ -68,17 +76,64 @@ const EngagementTestScreen = () => {
     setIsSubmitting(true);
     
     try {
-      const identityData = JSON.parse(sessionStorage.getItem('engagement-candidate-data') || '{}');
+      // Get data with detailed validation (try both keys)
+      let identityDataRaw = sessionStorage.getItem('engagement-candidate-data');
+      if (!identityDataRaw) {
+        identityDataRaw = sessionStorage.getItem('calisan-bagliligi-candidate-data');
+      }
       const token = searchParams.get('token');
+      
+      console.log('🔍 [EngagementTest] Raw data validation:');
+      console.log('  - Token from URL:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
+      console.log('  - Identity data raw:', identityDataRaw ? 'EXISTS' : 'NULL/MISSING');
+      console.log('  - Final answers count:', Object.keys(finalAnswers).length);
+      
+      // Validate token
+      if (!token) {
+        throw new Error('Missing token parameter in URL');
+      }
+      
+      // Validate and parse identity data
+      if (!identityDataRaw) {
+        throw new Error('Missing candidate identity data. Please go back and fill out your information.');
+      }
+      
+      let identityData;
+      try {
+        identityData = JSON.parse(identityDataRaw);
+      } catch (parseError) {
+        console.error('Failed to parse identity data:', parseError);
+        throw new Error('Invalid candidate data format. Please refresh and try again.');
+      }
+      
+      console.log('  - Parsed identity data:', {
+        hasFirstName: !!identityData.firstName,
+        hasLastName: !!identityData.lastName,
+        hasEmail: !!identityData.email,
+        email: identityData.email || 'MISSING',
+        hasDepartment: !!identityData.department,
+        hasPosition: !!identityData.position
+      });
+      
+      // Validate email
+      if (!identityData.email) {
+        throw new Error('Missing email in candidate data. Please go back and enter your email.');
+      }
+      
+      // Validate answers
+      if (Object.keys(finalAnswers).length === 0) {
+        throw new Error('No answers provided. Please answer at least one question.');
+      }
+      
       const completionTime = Date.now() - startTime;
       
       // Calculate scores
       const scores = calculateEngagementScores(finalAnswers);
       
-      // Prepare submission data
+      // Prepare submission data with explicit validation
       const submissionData = {
         token,
-        candidateEmail: identityData.email, // Add explicit candidateEmail for API compatibility
+        candidateEmail: identityData.email,
         candidateInfo: identityData,
         assessmentType: 'calisan-bagliligi',
         assessmentName: 'Çalışan Bağlılığı Değerlendirmesi',
@@ -90,13 +145,12 @@ const EngagementTestScreen = () => {
         completedQuestions: Object.keys(finalAnswers).length
       };
 
-      console.log('📊 [EngagementTest] Submitting assessment data:', {
-        token: token?.substring(0, 8) + '...',
-        candidateEmail: identityData.email,
-        assessmentType: 'calisan-bagliligi',
-        hasAnswers: Object.keys(finalAnswers).length > 0,
-        hasScores: Object.keys(scores).length > 0
-      });
+      console.log('📊 [EngagementTest] Final submission data validation:');
+      console.log('  - Token:', submissionData.token ? 'VALID' : 'INVALID');
+      console.log('  - CandidateEmail:', submissionData.candidateEmail || 'MISSING');
+      console.log('  - CandidateInfo.email:', submissionData.candidateInfo?.email || 'MISSING');
+      console.log('  - Answers count:', Object.keys(submissionData.answers).length);
+      console.log('  - Scores count:', Object.keys(submissionData.scores).length);
 
       // Submit to API
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
