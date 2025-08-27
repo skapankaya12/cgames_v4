@@ -4,12 +4,6 @@
     "**/*.ts": { "runtime": "@vercel/node@3.0.0" },
     "**/*.js": { "runtime": "@vercel/node@3.0.0" }
   },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
