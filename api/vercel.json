@@ -1,16 +1,5 @@
 {
   "version": 2,
-  "installCommand": "npm install",
-  "buildCommand": "echo 'API build complete'",
-  "framework": null,
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
   "functions": {
     "**/*.ts": { "runtime": "@vercel/node@3.2.0" },
     "**/*.js": { "runtime": "@vercel/node@3.2.0" }
