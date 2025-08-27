@@ -126,7 +126,7 @@ export default function ProjectDashboard() {
       }
 
       // Find the specific candidate's results
-      const candidateResult = data.results?.find((result: any) => 
+      const candidateResult = data.data?.results?.find((result: any) => 
         result.candidateEmail === candidate.email
       );
 

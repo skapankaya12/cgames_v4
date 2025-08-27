@@ -100,12 +100,12 @@ export default function CandidateResults() {
         throw new Error(data.error || 'Failed to load candidate results');
       }
 
-      if (!data.results || data.results.length === 0) {
+      if (!data.data?.results || data.data.results.length === 0) {
         throw new Error('No results found for this candidate');
       }
 
       // Find the specific candidate's results
-      const candidateResults = data.results.find((result: any) => 
+      const candidateResults = data.data.results.find((result: any) => 
         result.candidateEmail === candidateEmail
       );
 
@@ -323,7 +323,7 @@ export default function CandidateResults() {
                 </div>
                 <div className="detail-item">
                   <span className="label">Game:</span>
-                  <span className="value">{results.gameName || results.gameId}</span>
+                  <span className="value">{(results as any).gameName || results.gameId}</span>
                 </div>
               </div>
 
@@ -372,7 +372,7 @@ export default function CandidateResults() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .candidate-results-page {
           min-height: 100vh;
           background: #f8fafc;
