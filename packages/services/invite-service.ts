@@ -116,9 +116,9 @@ export class InviteService {
  * This is safe to use in client-side code
  */
 export class InviteServiceClient {
-  private static readonly API_BASE_URL = (typeof window !== 'undefined' && (window as any).import?.meta?.env?.VITE_API_BASE_URL) ||
+  private static readonly API_BASE_URL = (typeof window !== 'undefined' && import.meta.env?.VITE_API_BASE_URL) ||
     (process.env.NODE_ENV === 'production' 
-      ? 'https://app.olivinhr.com'
+      ? 'https://api.olivinhr.com'
       : 'http://localhost:3001');
 
   /**

@@ -5,11 +5,23 @@
   "buildCommand": "echo 'No build needed for API'",
   "framework": null,
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "FIREBASE_PROJECT_ID": "@firebase_project_id",
+    "FIREBASE_CLIENT_EMAIL": "@firebase_client_email", 
+    "FIREBASE_PRIVATE_KEY": "@firebase_private_key",
+    "SENDGRID_API_KEY": "@sendgrid_api_key",
+    "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+    "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
   },
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "production",
+      "FIREBASE_PROJECT_ID": "@firebase_project_id",
+      "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
+      "FIREBASE_PRIVATE_KEY": "@firebase_private_key", 
+      "SENDGRID_API_KEY": "@sendgrid_api_key",
+      "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+      "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
     }
   },
   "functions": {
@@ -27,7 +39,17 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://app.olivinhr.com" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" },
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Max-Age", "value": "86400" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://game.olivinhr.com" },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" },
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
