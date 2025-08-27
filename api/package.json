@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Serverless API functions for CGames",
   "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "echo 'No build needed for serverless functions'"
   },
