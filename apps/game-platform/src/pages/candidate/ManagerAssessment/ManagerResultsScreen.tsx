@@ -220,15 +220,15 @@ const ManagerResultsScreen = () => {
             <div className="insights-card strengths">
               <h3>🌟 Güçlü Yönler</h3>
               <ul>
-                {scores && managerDimensions
-                  .filter(dim => scores[dim.id as keyof ManagerScores]?.percentage >= 70)
+                {scores ? managerDimensions
+                  .filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) >= 70)
                   .map(dim => (
                     <li key={dim.id}>
-                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage}
+                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage ?? 0}
                     </li>
-                  ))
+                  )) : null
                 }
-                {(!scores || managerDimensions.filter(dim => scores[dim.id as keyof ManagerScores]?.percentage >= 70).length === 0) && (
+                {(!scores || managerDimensions.filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) >= 70).length === 0) && (
                   <li>Tüm alanlarda gelişim fırsatları mevcut</li>
                 )}
               </ul>
@@ -237,20 +237,20 @@ const ManagerResultsScreen = () => {
             <div className="insights-card development">
               <h3>📈 Gelişim Alanları</h3>
               <ul>
-                {scores && managerDimensions
-                  .filter(dim => scores[dim.id as keyof ManagerScores]?.percentage < 70)
+                {scores ? managerDimensions
+                  .filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) < 70)
                   .sort((a, b) => 
-                    (scores[a.id as keyof ManagerScores]?.percentage || 0) - 
-                    (scores[b.id as keyof ManagerScores]?.percentage || 0)
+                    (scores[a.id as keyof ManagerScores]?.percentage ?? 0) - 
+                    (scores[b.id as keyof ManagerScores]?.percentage ?? 0)
                   )
                   .slice(0, 3)
                   .map(dim => (
                     <li key={dim.id}>
-                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage}
+                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage ?? 0}
                     </li>
-                  ))
+                  )) : null
                 }
-                {(!scores || managerDimensions.filter(dim => scores[dim.id as keyof ManagerScores]?.percentage < 70).length === 0) && (
+                {(!scores || managerDimensions.filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) < 70).length === 0) && (
                   <li>Tüm alanlar mükemmel seviyede!</li>
                 )}
               </ul>
