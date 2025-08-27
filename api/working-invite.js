@@ -4,23 +4,29 @@ const { getFirestore } = require('firebase-admin/firestore');
 function initializeFirebase() {
   if (!getApps().length) {
     try {
-      const requiredEnvVars = {
-        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-        FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
-        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
-      };
+      const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+      const FIREBASE_CLIENT_EMAIL = process.env.FIREBASE_CLIENT_EMAIL;
+      // Support either plain key or base64-encoded key
+      let firebasePrivateKey = process.env.FIREBASE_PRIVATE_KEY;
+      const firebasePrivateKeyB64 = process.env.FIREBASE_PRIVATE_KEY_B64 || process.env.FIREBASE_PRIVATE_KEY_BASE64;
 
-      for (const [key, value] of Object.entries(requiredEnvVars)) {
-        if (!value) {
-          throw new Error(`Missing required environment variable: ${key}`);
+      if (!firebasePrivateKey && firebasePrivateKeyB64) {
+        try {
+          firebasePrivateKey = Buffer.from(firebasePrivateKeyB64, 'base64').toString('utf-8');
+        } catch (e) {
+          throw new Error('Failed to decode FIREBASE_PRIVATE_KEY_B64. Ensure it is valid base64.');
         }
       }
 
+      if (!FIREBASE_PROJECT_ID) throw new Error('Missing required environment variable: FIREBASE_PROJECT_ID');
+      if (!FIREBASE_CLIENT_EMAIL) throw new Error('Missing required environment variable: FIREBASE_CLIENT_EMAIL');
+      if (!firebasePrivateKey) throw new Error('Missing required environment variable: FIREBASE_PRIVATE_KEY');
+
       initializeApp({
         credential: cert({
-          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
-          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          projectId: FIREBASE_PROJECT_ID,
+          clientEmail: FIREBASE_CLIENT_EMAIL,
+          privateKey: firebasePrivateKey.replace(/\\n/g, '\n'),
         }),
       });
       
