@@ -59,30 +59,32 @@ function initializeFirebase() {
 module.exports = async function handler(req, res) {
   console.log('🚀 [Get Projects API] Request received:', req.method, req.url);
   
-  // Set CORS headers for cross-origin requests from app.olivinhr.com
-  const allowedOrigins = new Set([
-    'https://app.olivinhr.com',
-    'https://game.olivinhr.com',
-    'https://cgames-v4-hr-platform.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ]);
-
-  const origin = req.headers.origin || '';
-  const allowOrigin = allowedOrigins.has(origin) ? origin : 'https://app.olivinhr.com';
-  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Max-Age', '86400');
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Content-Type', 'application/json');
-
   try {
+    // Set CORS headers for api.olivinhr.com domain
+    const allowedOrigins = [
+      'https://app.olivinhr.com',
+      'https://game.olivinhr.com',
+      'https://cgames-v4-hr-platform.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ];
+
+    const origin = req.headers.origin || '';
+    console.log('🔍 [Get Projects API] Origin:', origin);
+    
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
+    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Content-Type', 'application/json');
+
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
       console.log('✅ [Get Projects API] Handling OPTIONS request');
-      return res.status(200).json({ success: true });
+      return res.status(204).end();
     }
 
     // Only allow GET requests
@@ -179,9 +181,16 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error('🚨 [Get Projects API] Error:', error);
     
+    // Make sure we set CORS headers even on error
+    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Content-Type', 'application/json');
+    
     return res.status(500).json({
       success: false,
       error: error?.message || 'Failed to fetch projects'
     });
   }
-}; 
+};
