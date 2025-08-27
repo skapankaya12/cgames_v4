@@ -158,6 +158,28 @@ function InviteHandler() {
   return null;
 }
 
+// Protected Route component that checks for valid session
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const [searchParams] = useSearchParams();
+  
+  // Check if we have a token in URL (for initial access)
+  const hasTokenInUrl = searchParams.get('token');
+  
+  // Check if we have valid session data (for continued access)
+  const hasValidSession = () => {
+    try {
+      const storedInvite = sessionStorage.getItem('currentInvite');
+      return storedInvite && JSON.parse(storedInvite)?.token;
+    } catch {
+      return false;
+    }
+  };
+  
+  const isAuthorized = hasTokenInUrl || hasValidSession();
+  
+  return isAuthorized ? <>{children}</> : <AccessRequired />;
+}
+
 function AppContent() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -165,7 +187,7 @@ function AppContent() {
   // Show header only on candidate identity screens
   const showHeader = location.pathname === '/candidate' || location.pathname === '/candidate/game2';
   
-  // Check if this is a token-based access
+  // Check if this is a token-based access (for root route only)
   const hasToken = searchParams.get('token');
 
   return (
@@ -175,16 +197,16 @@ function AppContent() {
         {/* Token-based invite handler */}
         <Route path="/" element={hasToken ? <InviteHandler /> : <LandingPage />} />
         
-        {/* Candidate routes */}
-        <Route path="/candidate" element={hasToken ? <IdentityScreen /> : <AccessRequired />} />
-        <Route path="/candidate/form" element={hasToken ? <FormScreen /> : <AccessRequired />} />
-        <Route path="/candidate/test" element={hasToken ? <TestScreen /> : <AccessRequired />} />
-        <Route path="/candidate/test/:questionNumber" element={hasToken ? <TestScreen /> : <AccessRequired />} />
-        <Route path="/candidate/ending" element={hasToken ? <EndingScreen /> : <AccessRequired />} />
-        <Route path="/candidate/results" element={hasToken ? <ResultsScreen /> : <AccessRequired />} />
-        <Route path="/candidate/game2" element={hasToken ? <IdentityScreen2 /> : <AccessRequired />} />
-        <Route path="/candidate/game2/test" element={<TestScreen2 />} />
-        <Route path="/candidate/game2/results" element={<ResultsScreen2 />} />
+        {/* Protected candidate routes */}
+        <Route path="/candidate" element={<ProtectedRoute><IdentityScreen /></ProtectedRoute>} />
+        <Route path="/candidate/form" element={<ProtectedRoute><FormScreen /></ProtectedRoute>} />
+        <Route path="/candidate/test" element={<ProtectedRoute><TestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/test/:questionNumber" element={<ProtectedRoute><TestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/ending" element={<ProtectedRoute><EndingScreen /></ProtectedRoute>} />
+        <Route path="/candidate/results" element={<ProtectedRoute><ResultsScreen /></ProtectedRoute>} />
+        <Route path="/candidate/game2" element={<ProtectedRoute><IdentityScreen2 /></ProtectedRoute>} />
+        <Route path="/candidate/game2/test" element={<ProtectedRoute><TestScreen2 /></ProtectedRoute>} />
+        <Route path="/candidate/game2/results" element={<ProtectedRoute><ResultsScreen2 /></ProtectedRoute>} />
         
         {/* Thank you screen */}
         <Route path="/thank-you" element={<ThankYouScreen />} />
