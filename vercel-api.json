@@ -33,6 +33,9 @@
     },
     "api/**/*.js": {
       "runtime": "@vercel/node@3.0.0"
+    },
+    "api/candidate/*.js": {
+      "runtime": "@vercel/node@3.0.0"
     }
   },
   "headers": [
@@ -58,6 +61,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/api/candidate/submitResult",
+      "dest": "/api/candidate/submitResult.js"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
