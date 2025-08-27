@@ -84,7 +84,7 @@ function detectCountryFromBrowser(): string | null {
     console.log('🌍 [Country Detection] Using default (EN) - no country detected');
     return null;
   } catch (error) {
-    console.warn('🌍 [Country Detection] Country detection failed (non-critical):', error.message);
+    console.warn('🌍 [Country Detection] Country detection failed (non-critical):', error instanceof Error ? error.message : String(error));
     return null;
   }
 }
@@ -166,7 +166,7 @@ export function GameFlowProvider({ children }: { children: React.ReactNode }) {
         console.warn('🌍 [GameFlow] Could not update i18n language:', error);
       }
     } catch (error) {
-      console.warn('🌍 [GameFlow] Country detection failed (non-critical):', error.message);
+      console.warn('🌍 [GameFlow] Country detection failed (non-critical):', error instanceof Error ? error.message : String(error));
       // Fallback to English
       setSelectedLanguage('en');
     }
