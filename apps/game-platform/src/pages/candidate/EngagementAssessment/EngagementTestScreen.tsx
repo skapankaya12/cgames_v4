@@ -78,6 +78,7 @@ const EngagementTestScreen = () => {
       // Prepare submission data
       const submissionData = {
         token,
+        candidateEmail: identityData.email, // Add explicit candidateEmail for API compatibility
         candidateInfo: identityData,
         assessmentType: 'calisan-bagliligi',
         assessmentName: 'Çalışan Bağlılığı Değerlendirmesi',
@@ -88,6 +89,14 @@ const EngagementTestScreen = () => {
         totalQuestions: engagementQuestions.length,
         completedQuestions: Object.keys(finalAnswers).length
       };
+
+      console.log('📊 [EngagementTest] Submitting assessment data:', {
+        token: token?.substring(0, 8) + '...',
+        candidateEmail: identityData.email,
+        assessmentType: 'calisan-bagliligi',
+        hasAnswers: Object.keys(finalAnswers).length > 0,
+        hasScores: Object.keys(scores).length > 0
+      });
 
       // Submit to API
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
@@ -100,11 +109,13 @@ const EngagementTestScreen = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit assessment');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('❌ [EngagementTest] API Error:', response.status, errorData);
+        throw new Error(`API Error ${response.status}: ${errorData.error || 'Failed to submit assessment'}`);
       }
 
       const result = await response.json();
-      console.log('Assessment submitted successfully:', result);
+      console.log('✅ [EngagementTest] Assessment submitted successfully:', result);
 
       // Clear session storage
       sessionStorage.removeItem('engagement-candidate-data');
