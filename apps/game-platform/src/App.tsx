@@ -80,7 +80,7 @@ function InviteHandler() {
     // Use the main API server for token validation
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
       (process.env.NODE_ENV === 'production' 
-        ? 'https://app.olivinhr.com' 
+        ? 'https://api.olivinhr.com' 
         : 'http://localhost:3001');
       
     const response = await fetch(`${apiBaseUrl}/api/validate-invite?token=${token}`, {
@@ -121,7 +121,7 @@ function InviteHandler() {
       // Use the main API server for status updates
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
         (process.env.NODE_ENV === 'production' 
-          ? 'https://app.olivinhr.com' 
+          ? 'https://api.olivinhr.com' 
           : 'http://localhost:3001');
         
       await fetch(`${apiBaseUrl}/api/update-invite-status`, {

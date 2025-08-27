@@ -245,7 +245,7 @@ export function GameFlowProvider({ children }: { children: React.ReactNode }) {
       
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
         (process.env.NODE_ENV === 'production' 
-          ? 'https://app.olivinhr.com' 
+          ? 'https://api.olivinhr.com' 
           : 'http://localhost:3001');
         
       const submitData = {

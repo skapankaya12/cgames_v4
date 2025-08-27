@@ -4,23 +4,29 @@ const { getFirestore } = require('firebase-admin/firestore');
 function initializeFirebase() {
   if (!getApps().length) {
     try {
-      const requiredEnvVars = {
-        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-        FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
-        FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
-      };
+      const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+      const FIREBASE_CLIENT_EMAIL = process.env.FIREBASE_CLIENT_EMAIL;
+      // Support either plain key or base64-encoded key
+      let firebasePrivateKey = process.env.FIREBASE_PRIVATE_KEY;
+      const firebasePrivateKeyB64 = process.env.FIREBASE_PRIVATE_KEY_B64 || process.env.FIREBASE_PRIVATE_KEY_BASE64;
 
-      for (const [key, value] of Object.entries(requiredEnvVars)) {
-        if (!value) {
-          throw new Error(`Missing required environment variable: ${key}`);
+      if (!firebasePrivateKey && firebasePrivateKeyB64) {
+        try {
+          firebasePrivateKey = Buffer.from(firebasePrivateKeyB64, 'base64').toString('utf-8');
+        } catch (e) {
+          throw new Error('Failed to decode FIREBASE_PRIVATE_KEY_B64. Ensure it is valid base64.');
         }
       }
 
+      if (!FIREBASE_PROJECT_ID) throw new Error('Missing required environment variable: FIREBASE_PROJECT_ID');
+      if (!FIREBASE_CLIENT_EMAIL) throw new Error('Missing required environment variable: FIREBASE_CLIENT_EMAIL');
+      if (!firebasePrivateKey) throw new Error('Missing required environment variable: FIREBASE_PRIVATE_KEY');
+
       initializeApp({
         credential: cert({
-          projectId: requiredEnvVars.FIREBASE_PROJECT_ID,
-          clientEmail: requiredEnvVars.FIREBASE_CLIENT_EMAIL,
-          privateKey: requiredEnvVars.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          projectId: FIREBASE_PROJECT_ID,
+          clientEmail: FIREBASE_CLIENT_EMAIL,
+          privateKey: firebasePrivateKey.replace(/\\n/g, '\n'),
         }),
       });
       
@@ -34,28 +40,26 @@ function initializeFirebase() {
 
 module.exports = async function handler(req, res) {
   console.log('🔄 [Update Invite Status API] Request received:', req.method, req.url);
-  
-  try {
-    // Set CORS headers for api.olivinhr.com domain
-    const allowedOrigins = [
-      'https://app.olivinhr.com',
-      'https://game.olivinhr.com',
-      'https://cgames-v4-hr-platform.vercel.app',
-      'http://localhost:5173',
-      'http://localhost:3000'
-    ];
 
-    const origin = req.headers.origin || '';
-    console.log('🔍 [Update Invite Status API] Origin:', origin);
-    
-    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
-    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Max-Age', '86400');
-    res.setHeader('Vary', 'Origin');
-    res.setHeader('Content-Type', 'application/json');
+  // Set CORS headers early so all responses (including errors) match the caller's origin
+  const allowedOrigins = [
+    'https://app.olivinhr.com',
+    'https://game.olivinhr.com',
+    'https://cgames-v4-hr-platform.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ];
+  const origin = req.headers.origin || '';
+  const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://app.olivinhr.com';
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Content-Type', 'application/json');
+
+  try {
 
     // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
@@ -148,13 +152,6 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error('🚨 [Update Invite Status API] Error:', error);
-    
-    // Make sure we set CORS headers even on error
-    res.setHeader('Access-Control-Allow-Origin', 'https://app.olivinhr.com');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Content-Type', 'application/json');
     
     return res.status(500).json({
       success: false,
