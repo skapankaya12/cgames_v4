@@ -221,14 +221,14 @@ const ManagerResultsScreen = () => {
               <h3>🌟 Güçlü Yönler</h3>
               <ul>
                 {managerDimensions
-                  .filter(dim => scores[dim.id as keyof ManagerScores]?.percentage >= 70)
+                  .filter(dim => scores && scores[dim.id as keyof ManagerScores]?.percentage >= 70)
                   .map(dim => (
                     <li key={dim.id}>
-                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage}
+                      <strong>{dim.name}</strong> - %{scores?.[dim.id as keyof ManagerScores]?.percentage}
                     </li>
                   ))
                 }
-                {managerDimensions.filter(dim => scores[dim.id as keyof ManagerScores]?.percentage >= 70).length === 0 && (
+                {managerDimensions.filter(dim => scores && scores[dim.id as keyof ManagerScores]?.percentage >= 70).length === 0 && (
                   <li>Tüm alanlarda gelişim fırsatları mevcut</li>
                 )}
               </ul>
@@ -238,19 +238,19 @@ const ManagerResultsScreen = () => {
               <h3>📈 Gelişim Alanları</h3>
               <ul>
                 {managerDimensions
-                  .filter(dim => scores[dim.id as keyof ManagerScores]?.percentage < 70)
+                  .filter(dim => scores && scores[dim.id as keyof ManagerScores]?.percentage < 70)
                   .sort((a, b) => 
-                    (scores[a.id as keyof ManagerScores]?.percentage || 0) - 
-                    (scores[b.id as keyof ManagerScores]?.percentage || 0)
+                    (scores?.[a.id as keyof ManagerScores]?.percentage || 0) - 
+                    (scores?.[b.id as keyof ManagerScores]?.percentage || 0)
                   )
                   .slice(0, 3)
                   .map(dim => (
                     <li key={dim.id}>
-                      <strong>{dim.name}</strong> - %{scores[dim.id as keyof ManagerScores]?.percentage}
+                      <strong>{dim.name}</strong> - %{scores?.[dim.id as keyof ManagerScores]?.percentage}
                     </li>
                   ))
                 }
-                {managerDimensions.filter(dim => scores[dim.id as keyof ManagerScores]?.percentage < 70).length === 0 && (
+                {managerDimensions.filter(dim => scores && scores[dim.id as keyof ManagerScores]?.percentage < 70).length === 0 && (
                   <li>Tüm alanlar mükemmel seviyede!</li>
                 )}
               </ul>
@@ -267,10 +267,11 @@ const ManagerResultsScreen = () => {
             scores={scores ? Object.entries(scores).filter(([key]) => key !== 'overall').map(([key, value]) => ({
               dimension: key,
               score: value.score,
-              percentage: value.percentage
+              maxScore: 5,
+              percentile: value.percentage
             })) : []}
             candidateName={candidateInfo ? `${candidateInfo.firstName} ${candidateInfo.lastName}` : 'Aday'}
-            cvData={null}
+            cvData={undefined}
             sessionId={`manager-${Date.now()}`}
           />
         </div>

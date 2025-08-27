@@ -176,10 +176,11 @@ const EngagementResultsScreen = () => {
             scores={scores ? Object.entries(scores).map(([key, value]) => ({
               dimension: key,
               score: value.score,
-              percentage: value.percentage
+              maxScore: 5,
+              percentile: value.percentage
             })) : []}
             candidateName={candidateInfo ? `${candidateInfo.firstName} ${candidateInfo.lastName}` : 'Aday'}
-            cvData={null}
+            cvData={undefined}
             sessionId={`engagement-${Date.now()}`}
           />
         </div>

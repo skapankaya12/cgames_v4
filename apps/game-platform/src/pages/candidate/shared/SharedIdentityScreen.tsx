@@ -11,7 +11,7 @@ interface SharedIdentityScreenProps {
 const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentType, onContinue }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation('common');
+  // const { t } = useTranslation('common');
   
   const [formData, setFormData] = useState({
     firstName: '',
