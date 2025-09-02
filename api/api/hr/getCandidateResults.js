@@ -211,6 +211,12 @@ module.exports = async function handler(req, res) {
         }
       }
 
+      // Debug: Log the raw result data
+      console.log('📊 [Get Candidate Results API] Processing result for:', resultData.candidateEmail);
+      console.log('  - Assessment Type:', resultData.assessmentType);
+      console.log('  - Game ID:', resultData.gameId);
+      console.log('  - Competency Scores keys:', Object.keys(resultData.competencyScores || {}));
+      
       // Format result for HR dashboard
       const formattedResult = {
         id: doc.id,
@@ -221,7 +227,9 @@ module.exports = async function handler(req, res) {
           sentAt: inviteData.createdAt
         } : null,
         
-        // Game information
+        // Assessment information - CRITICAL for proper dashboard display
+        assessmentType: resultData.assessmentType || 'space-mission',
+        assessmentName: resultData.assessmentName || resultData.gameName,
         gameId: resultData.gameId,
         gameName: resultData.gameName,
         
