@@ -191,6 +191,17 @@
   cursor: not-allowed;
 }
 
+.next-button {
+  background: #6B8E23;
+  color: white;
+  border: 1px solid #6B8E23;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #5a7a1f;
+  border-color: #5a7a1f;
+}
+
 .nav-spacer {
   flex: 1;
 }

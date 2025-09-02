@@ -57,14 +57,16 @@ const EngagementTestScreen = () => {
     // Save answers to session storage
     sessionStorage.setItem('engagement-answers', JSON.stringify(newAnswers));
     
-    // Auto-advance to next question after a short delay
-    setTimeout(() => {
-      if (currentQuestionIndex < engagementQuestions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      } else {
-        handleSubmitAssessment(newAnswers);
-      }
-    }, 1000); // Slightly longer delay for slider
+    // Don't auto-advance - let user use navigation buttons
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < engagementQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // Submit assessment if on last question
+      handleSubmitAssessment(answers);
+    }
   };
 
   const handlePrevious = () => {
@@ -123,9 +125,21 @@ const EngagementTestScreen = () => {
         hasPosition: !!identityData.position
       });
       
+      // Get candidate email from invite data (since we removed email from form)
+      let candidateEmail = identityData.email;
+      if (!candidateEmail) {
+        // Try to get email from invite validation
+        const currentInvite = sessionStorage.getItem('currentInvite');
+        if (currentInvite) {
+          const inviteData = JSON.parse(currentInvite);
+          candidateEmail = inviteData.candidateEmail;
+          console.log('📧 [EngagementTest] Using email from invite data:', candidateEmail);
+        }
+      }
+
       // Validate email
-      if (!identityData.email) {
-        throw new Error('Missing email in candidate data. Please go back and enter your email.');
+      if (!candidateEmail) {
+        throw new Error('Missing candidate email. Please contact support.');
       }
       
       // Validate answers
@@ -141,8 +155,11 @@ const EngagementTestScreen = () => {
       // Prepare submission data with explicit validation
       const submissionData = {
         token,
-        candidateEmail: identityData.email,
-        candidateInfo: identityData,
+        candidateEmail: candidateEmail, // Use email from invite data
+        candidateInfo: {
+          ...identityData,
+          email: candidateEmail // Ensure email is included in candidateInfo
+        },
         assessmentType: 'calisan-bagliligi',
         assessmentName: 'Çalışan Bağlılığı Değerlendirmesi',
         answers: finalAnswers,
@@ -257,19 +274,23 @@ const EngagementTestScreen = () => {
               onClick={handlePrevious}
               disabled={isSubmitting}
             >
-              ← Önceki
+              ← Geri
             </button>
           )}
           
           <div className="nav-spacer"></div>
           
           {answers[currentQuestion.id] && (
-            <div className="next-indicator">
+            <button 
+              className="nav-button next-button" 
+              onClick={handleNext}
+              disabled={isSubmitting}
+            >
               {currentQuestionIndex < engagementQuestions.length - 1 
-                ? 'Sonraki soru otomatik yüklenecek...' 
-                : 'Değerlendirme tamamlanıyor...'
+                ? 'İleri →' 
+                : 'Tamamla ✓'
               }
-            </div>
+            </button>
           )}
         </div>
       </div>

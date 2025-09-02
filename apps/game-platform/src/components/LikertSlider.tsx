@@ -17,13 +17,16 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
   rightLabel = "Kesinlikle Katılıyorum",
   showValue = true
 }) => {
-  const [currentValue, setCurrentValue] = useState(value || 5);
+  const [currentValue, setCurrentValue] = useState(value || 0); // Start at 0 (no selection)
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (value !== undefined) {
       setCurrentValue(value);
+    } else {
+      // Reset for new question
+      setCurrentValue(0);
     }
   }, [value]);
 
@@ -88,7 +91,7 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
     return labels[val] || '';
   };
 
-  const percentage = ((currentValue - 1) / 9) * 100;
+  const percentage = currentValue > 0 ? ((currentValue - 1) / 9) * 100 : 0;
 
   return (
     <div className="likert-slider-container">
@@ -103,10 +106,12 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
         onMouseDown={handleMouseDown}
       >
         <div className="slider-fill" style={{ width: `${percentage}%` }} />
-        <div 
-          className="slider-thumb" 
-          style={{ left: `${percentage}%` }}
-        />
+        {currentValue > 0 && (
+          <div 
+            className="slider-thumb" 
+            style={{ left: `${percentage}%` }}
+          />
+        )}
         
         {/* Scale markers */}
         <div className="scale-markers">
@@ -125,10 +130,16 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
 
       {showValue && (
         <div className="value-display">
-          <div className="current-value">
-            <span className="value-number">{currentValue}</span>
-            <span className="value-label">{getValueLabel(currentValue)}</span>
-          </div>
+          {currentValue > 0 ? (
+            <div className="current-value">
+              <span className="value-number">{currentValue}</span>
+              <span className="value-label">{getValueLabel(currentValue)}</span>
+            </div>
+          ) : (
+            <div className="no-selection">
+              <span className="no-selection-text">Lütfen bir değer seçiniz</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -283,6 +294,20 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
           font-weight: 500;
           text-align: center;
           max-width: 200px;
+        }
+
+        .no-selection {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .no-selection-text {
+          font-size: 1rem;
+          color: #999;
+          font-style: italic;
+          text-align: center;
         }
 
         @media (max-width: 768px) {

@@ -49,14 +49,16 @@ const TeamTestScreen = () => {
     // Save answers to session storage
     sessionStorage.setItem('team-answers', JSON.stringify(newAnswers));
     
-    // Auto-advance to next question after a short delay
-    setTimeout(() => {
-      if (currentQuestionIndex < teamQuestions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      } else {
-        handleSubmitAssessment(newAnswers);
-      }
-    }, 1000); // Slightly longer delay for slider
+    // Don't auto-advance - let user use navigation buttons
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < teamQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // Submit assessment if on last question
+      handleSubmitAssessment(answers);
+    }
   };
 
   const handlePrevious = () => {
@@ -77,6 +79,19 @@ const TeamTestScreen = () => {
         token = sessionStorage.getItem('takim-degerlendirme-token');
         console.log('🔍 [TeamTest] Token not in URL, using sessionStorage:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
       }
+
+      // Get candidate email from invite data (since we removed email from form)
+      let candidateEmail = identityData.email;
+      if (!candidateEmail) {
+        // Try to get email from invite validation
+        const currentInvite = sessionStorage.getItem('currentInvite');
+        if (currentInvite) {
+          const inviteData = JSON.parse(currentInvite);
+          candidateEmail = inviteData.candidateEmail;
+          console.log('📧 [TeamTest] Using email from invite data:', candidateEmail);
+        }
+      }
+
       const completionTime = Date.now() - startTime;
       
       // Calculate scores
@@ -85,8 +100,11 @@ const TeamTestScreen = () => {
       // Prepare submission data
       const submissionData = {
         token,
-        candidateEmail: identityData.email, // Add explicit candidateEmail for API compatibility
-        candidateInfo: identityData,
+        candidateEmail: candidateEmail, // Use email from invite data
+        candidateInfo: {
+          ...identityData,
+          email: candidateEmail // Ensure email is included in candidateInfo
+        },
         assessmentType: 'takim-degerlendirme',
         assessmentName: 'Takım Değerlendirme Anketi',
         answers: finalAnswers,
@@ -99,7 +117,7 @@ const TeamTestScreen = () => {
 
       console.log('📊 [TeamTest] Submitting assessment data:', {
         token: token?.substring(0, 8) + '...',
-        candidateEmail: identityData.email,
+        candidateEmail: candidateEmail,
         assessmentType: 'takim-degerlendirme',
         hasAnswers: Object.keys(finalAnswers).length > 0,
         hasScores: Object.keys(scores).length > 0
@@ -205,19 +223,23 @@ const TeamTestScreen = () => {
               onClick={handlePrevious}
               disabled={isSubmitting}
             >
-              ← Önceki
+              ← Geri
             </button>
           )}
           
           <div className="nav-spacer"></div>
           
           {answers[currentQuestion.id] && (
-            <div className="next-indicator">
+            <button 
+              className="nav-button next-button" 
+              onClick={handleNext}
+              disabled={isSubmitting}
+            >
               {currentQuestionIndex < teamQuestions.length - 1 
-                ? 'Sonraki soru otomatik yüklenecek...' 
-                : 'Değerlendirme tamamlanıyor...'
+                ? 'İleri →' 
+                : 'Tamamla ✓'
               }
-            </div>
+            </button>
           )}
         </div>
       </div>
