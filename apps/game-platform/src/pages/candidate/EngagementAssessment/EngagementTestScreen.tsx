@@ -81,10 +81,17 @@ const EngagementTestScreen = () => {
       if (!identityDataRaw) {
         identityDataRaw = sessionStorage.getItem('calisan-bagliligi-candidate-data');
       }
-      const token = searchParams.get('token');
+      let token = searchParams.get('token');
+      
+      // Fallback: get token from sessionStorage if not in URL
+      if (!token) {
+        token = sessionStorage.getItem('calisan-bagliligi-token');
+        console.log('🔍 [EngagementTest] Token not in URL, using sessionStorage:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
+      }
       
       console.log('🔍 [EngagementTest] Raw data validation:');
-      console.log('  - Token from URL:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
+      console.log('  - Token from URL:', searchParams.get('token') ? `${searchParams.get('token')!.substring(0, 8)}...` : 'NULL/MISSING');
+      console.log('  - Token from sessionStorage:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
       console.log('  - Identity data raw:', identityDataRaw ? 'EXISTS' : 'NULL/MISSING');
       console.log('  - Final answers count:', Object.keys(finalAnswers).length);
       

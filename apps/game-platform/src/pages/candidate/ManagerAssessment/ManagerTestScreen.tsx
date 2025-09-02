@@ -69,7 +69,13 @@ const ManagerTestScreen = () => {
     
     try {
       const identityData = JSON.parse(sessionStorage.getItem('manager-candidate-data') || '{}');
-      const token = searchParams.get('token');
+      let token = searchParams.get('token');
+      
+      // Fallback: get token from sessionStorage if not in URL
+      if (!token) {
+        token = sessionStorage.getItem('yonetici-degerlendirme-token');
+        console.log('🔍 [ManagerTest] Token not in URL, using sessionStorage:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
+      }
       const completionTime = Date.now() - startTime;
       
       // Calculate scores

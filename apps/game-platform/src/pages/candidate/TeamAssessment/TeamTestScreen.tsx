@@ -69,7 +69,13 @@ const TeamTestScreen = () => {
     
     try {
       const identityData = JSON.parse(sessionStorage.getItem('team-candidate-data') || '{}');
-      const token = searchParams.get('token');
+      let token = searchParams.get('token');
+      
+      // Fallback: get token from sessionStorage if not in URL
+      if (!token) {
+        token = sessionStorage.getItem('takim-degerlendirme-token');
+        console.log('🔍 [TeamTest] Token not in URL, using sessionStorage:', token ? `${token.substring(0, 8)}...` : 'NULL/MISSING');
+      }
       const completionTime = Date.now() - startTime;
       
       // Calculate scores

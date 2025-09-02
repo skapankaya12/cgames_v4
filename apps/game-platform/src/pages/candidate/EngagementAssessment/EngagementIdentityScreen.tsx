@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SharedIdentityScreen from '../shared/SharedIdentityScreen';
 
 const EngagementIdentityScreen = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleContinue = (identityData: any) => {
     // Store identity data for this assessment (use consistent key)
@@ -17,8 +18,12 @@ const EngagementIdentityScreen = () => {
       data: identityData
     });
     
-    // Navigate to the assessment test
-    navigate('/candidate/engagement/test');
+    // Get token and pass it through navigation
+    const token = searchParams.get('token');
+    const testUrl = token ? `/candidate/engagement/test?token=${token}` : '/candidate/engagement/test';
+    
+    console.log('🔄 [EngagementIdentity] Navigating to:', testUrl);
+    navigate(testUrl);
   };
 
   return (

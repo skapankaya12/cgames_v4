@@ -46,6 +46,10 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
       return;
     }
 
+    // Store token for later use in test screen
+    sessionStorage.setItem(`${assessmentType}-token`, token);
+    console.log('💾 [SharedIdentityScreen] Stored token for assessment:', assessmentType, token.substring(0, 8) + '...');
+
     // Load any saved form data
     const savedData = sessionStorage.getItem(`${assessmentType}-identity`);
     if (savedData) {
