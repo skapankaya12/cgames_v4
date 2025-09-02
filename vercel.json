@@ -18,25 +18,25 @@
   },
   "functions": {
     "api/*.ts": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/*.js": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/hr/*.ts": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/hr/*.js": {
-      "runtime": "nodejs22.x"  
+      "runtime": "@vercel/node@4.0.0"  
     },
     "api/candidate/*.js": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/invite/*.ts": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/superadmin/*.ts": {
-      "runtime": "nodejs22.x"
+      "runtime": "@vercel/node@4.0.0"
     }
   },
   "headers": [

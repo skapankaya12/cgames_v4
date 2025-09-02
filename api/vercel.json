@@ -1,8 +1,8 @@
 {
   "version": 2,
   "functions": {
-    "**/*.ts": { "runtime": "nodejs22.x" },
-    "**/*.js": { "runtime": "nodejs22.x" }
+    "**/*.ts": { "runtime": "@vercel/node@4.0.0" },
+    "**/*.js": { "runtime": "@vercel/node@4.0.0" }
   }
 }
 

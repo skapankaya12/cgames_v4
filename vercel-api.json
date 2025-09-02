@@ -26,16 +26,16 @@
   },
   "functions": {
     "simple-api-server.mjs": {
-      "runtime": "@vercel/node@3.0.0"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/**/*.ts": {
-      "runtime": "@vercel/node@3.0.0"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/**/*.js": {
-      "runtime": "@vercel/node@3.0.0"
+      "runtime": "@vercel/node@4.0.0"
     },
     "api/candidate/*.js": {
-      "runtime": "@vercel/node@3.0.0"
+      "runtime": "@vercel/node@4.0.0"
     }
   },
   "headers": [
