@@ -77,19 +77,19 @@ export const GAMES: Record<string, GameConfig> = {
       { step: 'results', route: '/candidate/team/results', component: 'TeamResultsScreen', description: 'Takım analizi ve sonuçlar' }
     ]
   },
-  'yonetici-degerlendirme': {
-    id: 'yonetici-degerlendirme',
-    displayName: 'Yönetici Değerlendirme Anketi',
-    route: '/candidate/manager',
-    description: 'Yönetici etkinliği ve liderlik becerileri değerlendirmesi',
-    estimatedDuration: '8-12 dakika',
-    competencies: ['İletişim', 'Geri Bildirim Kültürü', 'Ekip Geliştirme', 'Adalet', 'Motivasyon ve Liderlik'],
-    flow: [
-      { step: 'identity', route: '/candidate/manager', component: 'ManagerIdentityScreen', description: 'Katılımcı bilgileri ve yönetici değerlendirme tanıtımı' },
-      { step: 'test', route: '/candidate/manager/test', component: 'ManagerTestScreen', description: 'Yönetici etkinliği değerlendirme soruları' },
-      { step: 'results', route: '/candidate/manager/results', component: 'ManagerResultsScreen', description: 'Yönetici analizi ve sonuçlar' }
-    ]
-  }
+      'yonetici-degerlendirme': {
+      id: 'yonetici-degerlendirme',
+      displayName: 'Takım Değerlendirme Anketi',
+      route: '/candidate/manager',
+      description: 'Takım etkinliği ve işbirliği düzeyi değerlendirmesi',
+      estimatedDuration: '10-15 dakika',
+      competencies: ['Takım İletişimi', 'Ortak Hedefler ve Vizyon', 'Destek ve İş Birliği', 'Güven ve Şeffaflık', 'Takım Motivasyonu'],
+      flow: [
+        { step: 'identity', route: '/candidate/manager', component: 'ManagerIdentityScreen', description: 'Katılımcı bilgileri ve takım değerlendirme tanıtımı' },
+        { step: 'test', route: '/candidate/manager/test', component: 'ManagerTestScreen', description: 'Takım etkinliği değerlendirme soruları' },
+        { step: 'results', route: '/candidate/manager/results', component: 'ManagerResultsScreen', description: 'Takım analizi ve sonuçlar' }
+      ]
+    }
 };
 
 export const DEFAULT_GAME_ID = 'space-mission';

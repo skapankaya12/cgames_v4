@@ -25,7 +25,7 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
 
   // Available assessment types
   const assessmentTypes = [
-    { value: 'Space Mission', label: 'Space Mission Assessment', description: 'Interactive space mission scenario testing decision-making under pressure' },
+    { value: 'space-mission', label: 'Space Mission Assessment', description: 'Interactive space mission scenario testing decision-making under pressure' },
     { value: 'calisan-bagliligi', label: 'Çalışan Bağlılığı Değerlendirmesi', description: 'Organizasyonel bağlılık ve çalışan motivasyonu değerlendirmesi' },
     { value: 'takim-degerlendirme', label: 'Takım Değerlendirme Anketi', description: 'Takım etkinliği ve işbirliği düzeyi değerlendirmesi' },
     { value: 'yonetici-degerlendirme', label: 'Yönetici Değerlendirme Anketi', description: 'Yönetici etkinliği ve liderlik becerileri değerlendirmesi' }
@@ -41,7 +41,7 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
         <label htmlFor="assessmentType">Assessment Type *</label>
         <select
           id="assessmentType"
-          value={formData.assessmentType || 'Space Mission'}
+          value={formData.assessmentType || 'space-mission'}
           onChange={(e) => handleInputChange('assessmentType', e.target.value)}
           style={{
             width: '100%',
@@ -137,41 +137,7 @@ export const ProjectCreationStep2: React.FC<ProjectCreationStep2Props> = ({
         />
       </div>
 
-      <div className="form-group">
-        <label>Assessment Type</label>
-        <div className="assessment-selection">
-          {assessmentTypes.map((assessment) => (
-            <div key={assessment.value} className="assessment-option" style={{ 
-              border: '2px solid #e5e7eb', 
-              borderRadius: '8px', 
-              padding: '16px', 
-              marginBottom: '12px',
-              backgroundColor: formData.assessmentType === assessment.value ? '#f0f8ff' : 'white',
-              borderColor: formData.assessmentType === assessment.value ? '#4F46E5' : '#e5e7eb'
-            }}>
-              <label className="radio-label" style={{ cursor: 'pointer', display: 'block' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                  <input
-                    type="radio"
-                    name="assessmentType"
-                    value={assessment.value}
-                    checked={formData.assessmentType === assessment.value}
-                    onChange={(e) => handleInputChange('assessmentType', e.target.value)}
-                    style={{ marginRight: '12px' }}
-                  />
-                  <span style={{ fontWeight: '600', fontSize: '16px' }}>{assessment.label}</span>
-                </div>
-                <p style={{ margin: '0', color: '#6b7280', fontSize: '14px', paddingLeft: '24px' }}>
-                  {assessment.description}
-                </p>
-              </label>
-            </div>
-          ))}
-        </div>
-        <small style={{ color: '#6b7280', fontSize: '0.875rem', marginTop: '0.5rem', display: 'block' }}>
-          Currently, only Space Mission assessment is available. More assessment types coming soon.
-        </small>
-      </div>
+
     </div>
   );
 }; 

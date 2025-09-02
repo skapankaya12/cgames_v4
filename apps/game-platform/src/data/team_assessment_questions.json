@@ -1,0 +1,212 @@
+[
+  {
+    "id": "01-1",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Bir konuda emin olmadığımda, ekip arkadaşlarıma rahatlıkla danışabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "01-2",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Bazen paylaştığım bilgilerin dikkate alınmadığını fark ediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "01-3",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Toplantılarda fikirlerimi dile getirdiğimde gerçekten dinlenildiğimi hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "01-4",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Takım içinde konuşulanlar çoğu zaman net olmuyor ve belirsizlik yaratıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "01-5",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Yaptığım bir işi anlatırken, karşımdaki kişi söylediklerimi anlamak için çaba gösteriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "01-6",
+    "dimension": "Takım İletişimi",
+    "sub_dimension": "Takım İletişimi",
+    "question_text": "Önemli gelişmeleri genellikle herkesten sonra öğreniyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-1",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Bu dönemin hedeflerini net olarak biliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-2",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Kendi işimin ekip hedeflerine katkısını açıkça görebiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-3",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Bazen hangi hedefe çalıştığımız konusunda kafam karışıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "04-4",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Takım olarak aynı önceliklere odaklandığımızı hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-5",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Hedefler birbirinden kopuk ve uyumsuz geliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "04-6",
+    "dimension": "Ortak Hedefler ve Vizyon",
+    "sub_dimension": "Ortak Hedefler ve Vizyon",
+    "question_text": "Hedeflerin neden önemli olduğunu anlamakta zorlanıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "07-1",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "Zorlandığımda ekipten hızlı destek alabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-2",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "Yardım istediğimde bazen geri çevriliyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "07-3",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "Birlikte çalıştığımızda işler daha kolay ilerliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-4",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "İş yükü gerektiğinde adil şekilde paylaşıldığını düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-5",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "Takım içinde yardımlaşma isteğinin düşük olduğunu düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "07-6",
+    "dimension": "Destek ve İş Birliği",
+    "sub_dimension": "Destek ve İş Birliği",
+    "question_text": "Acil durumlarda bazı kişiler sorumluluk almakta isteksiz davranıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-1",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Alınan kararların nedenlerini ve arkasındaki düşünceyi açıkça öğrenebildiğimde kendimi daha dahil hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-2",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Yaptığım bir hatayı saklamadan paylaşabiliyorum çünkü tepkinin çözüm odaklı olacağını biliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-3",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Karar süreçlerinde bazı kişilerin bilerek dışarıda bırakıldığını hissettiğim anlar oluyor ve bu güvenimi zedeliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-4",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Bilgi paylaşımının eksik veya yüzeysel yapıldığı durumlarda ekip içinde şeffaflık olmadığını düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-5",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Ekip arkadaşlarıma güven duyuyorum çünkü verdikleri sözleri tutuyorlar ve ihtiyaç duyduğumda yanımda oluyorlar.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-6",
+    "dimension": "Güven ve Şeffaflık",
+    "sub_dimension": "Güven ve Şeffaflık",
+    "question_text": "Önemli kararların çoğu bize açıklanmadan alındığında kendimi dışarıda bırakılmış hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-1",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Takım ruhunun güçlü olması, zor dönemlerde bile işime istekle devam etmemi sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "13-2",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Son dönemde ekip enerjisinin düşük olması, günlük motivasyonumu olumsuz etkiliyor",
+    "orientation": "N"
+  },
+  {
+    "id": "13-3",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Yaptığım işin değer görmediğini hissettiğimde işe olan bağlılığım azalıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-4",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Zor zamanlarda ekipten gelen moral desteği, yeniden toparlanmamı kolaylaştırıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "13-5",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Başarılarımızın kutlanmadığı veya görmezden gelindiği durumlar, ekipte motivasyonu düşürüyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-6",
+    "dimension": "Takım Motivasyonu",
+    "sub_dimension": "Takım Motivasyonu",
+    "question_text": "Gösterdiğim çabanın ve elde ettiğim başarıların ekip tarafından fark edilmesi beni motive ediyor.",
+    "orientation": "P"
+  }
+]

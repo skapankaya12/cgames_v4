@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
-import { engagementQuestions, engagementDimensions, calculateEngagementScores } from '../../../data/engagement';
+import { engagementQuestions, calculateEngagementScores, likertOptions } from '../../../data/engagement';
 import './EngagementTestScreen.css';
 
 const EngagementTestScreen = () => {
@@ -225,15 +225,18 @@ const EngagementTestScreen = () => {
             {currentQuestionIndex + 1} / {engagementQuestions.length}
           </div>
           <div className="dimension-badge">
-            {engagementDimensions.find(d => d.id === currentQuestion.dimension)?.name}
+            {currentQuestion.dimension}
+          </div>
+          <div className="sub-dimension-badge">
+            {currentQuestion.sub_dimension}
           </div>
         </div>
         
         <div className="question-content">
-          <h2 className="question-text">{currentQuestion.text}</h2>
+          <h2 className="question-text">{currentQuestion.question_text}</h2>
           
           <div className="options-container">
-            {currentQuestion.options.map((option) => (
+            {likertOptions.map((option) => (
               <button
                 key={option.id}
                 className={`option-button ${answers[currentQuestion.id] === option.id ? 'selected' : ''}`}
@@ -241,6 +244,7 @@ const EngagementTestScreen = () => {
                 disabled={isSubmitting}
               >
                 <span className="option-text">{option.text}</span>
+                <span className="option-value">({option.value})</span>
                 <span className="option-indicator"></span>
               </button>
             ))}

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "01-1",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Yöneticime ulaşmam gerektiğinde uzun süre beklemek zorunda kaldığım oluyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "01-2",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Yöneticimle yaptığım görüşmelerde kendimi rahatça ifade edebiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "01-3",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Bazen yöneticimle iletişim kurmak için birkaç deneme yapmam gerekiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "01-4",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Yöneticime sorularımı yönelttiğimde açık ve net cevaplar alabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "01-5",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Yöneticimle iletişim kurarken kendimi çekingen hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "01-6",
+    "dimension": "İletişim ve Erişilebilirlik",
+    "sub_dimension": "İletişim ve Erişilebilirlik",
+    "question_text": "Acil durumlarda yöneticim hızlı bir şekilde geri dönüş yapar.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-1",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Yöneticim başarımı fark ettiğinde bunu bana söyler ve takdir eder.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-2",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Uzun süre geri bildirim almadığım zamanlar oluyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "04-3",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Geri bildirimler çoğu zaman net ve geliştirici oluyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "04-4",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Yöneticimden aldığım bazı geri bildirimler belirsiz ve uygulanması zor oluyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "04-5",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Yaptığım hatalar hakkında konuşmak yerine görmezden gelindiğini hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "04-6",
+    "dimension": "Geri Bildirim Kültürü",
+    "sub_dimension": "Geri Bildirim Kültürü",
+    "question_text": "Yöneticimle düzenli olarak olumlu ya da olumsuz geri bildirim paylaşımı yapabiliyoruz.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-1",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Yöneticim yeni beceriler kazanmam için fırsatlar yaratıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-2",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Eğitim veya gelişim taleplerim çoğu zaman erteleniyor ya da geri çevriliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "07-3",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Kariyer hedeflerim hakkında yöneticimle açıkça konuşabilirim.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-4",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Yöneticim ekibin gelişimine yatırım yapmıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "07-5",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Beni zorlayacak ama geliştirecek görevler almam konusunda yöneticimden destek görebiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "07-6",
+    "dimension": "Takım Gelişimi",
+    "sub_dimension": "Takım Gelişimi",
+    "question_text": "Gelişimim için gereken kaynakların sağlanmadığını düşündüğüm zamanlar oluyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-1",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Yöneticimin kararlarında tarafsız davrandığını gözlemliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-2",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Yöneticimin bazı kararlarının kişisel tercihlerinden etkilendiğini hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-3",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Yöneticimin görev dağılımında adil olduğunu düşünmüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "10-4",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Farklı fikirler sunulduğunda yöneticim bunları objektif bir şekilde değerlendiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-5",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Yöneticim karar süreçlerinde şeffaf davranır.",
+    "orientation": "P"
+  },
+  {
+    "id": "10-6",
+    "dimension": "Karar Alma ve Adalet",
+    "sub_dimension": "Karar Alma ve Adalet",
+    "question_text": "Benimle ilgili alınan kararlar bana açıklanmadan uygulanır.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-1",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Zor zamanlarda yöneticimin desteği motivasyonumu artırır.",
+    "orientation": "P"
+  },
+  {
+    "id": "13-2",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Yöneticim ekibimizi motive etmekte bazen yetersiz kalıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-3",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Yöneticim toplantılarda ekibin enerjisini tek başına yükseltebiliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "13-4",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Yöneticim ekibin başarılarını bazen görmezden geliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "13-5",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Yöneticimden aldığım ilham, işime olan bağlılığımı artırır.",
+    "orientation": "P"
+  },
+  {
+    "id": "13-6",
+    "dimension": "Motivasyon ve İlham Verme",
+    "sub_dimension": "Motivasyon ve İlham Verme",
+    "question_text": "Motivasyon eksikliğimi yöneticim fark etmez.",
+    "orientation": "N"
+  }
+]

@@ -1,0 +1,1577 @@
+[
+  {
+    "id": "1.1-Q1",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin uzun vadeli hedefleriyle kendi kariyer hedeflerim arasında anlamlı bir bağ kurabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q2",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Yaptığım işin şirketin büyük resmi içindeki yerini anlamakta zorlanıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.1-Q3",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin neden var olduğu ve neye hizmet ettiğini düşününce bu bana ilham veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q4",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin nereye gitmek istediğini anlayamadığım için zaman zaman yönsüz hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.1-Q5",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Yaptığım işin şirketin genel hedeflerine nasıl katkı sağladığını biliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q6",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin hedefleri bana uzak geliyor; bu yüzden işime tam anlamıyla bağlanamıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.1-Q7",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin neden var olduğu ve neyi başarmaya çalıştığı benim için net ve anlamlı.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q8",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Kurumsal vizyon bana fazla soyut geliyor ve günlük işimde bir karşılık bulamıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.1-Q9",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin politikalarını sosyal çevreme de açıklayabildiğim için mutluyum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q10",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin 10 yıl sonraki hedeflerinin bir parçası olmayı isterim.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q11",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketimizin gelecekteki hedefleri, kendi mesleki hedeflerimle uyumlu değil.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.1-Q12",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketimizin topluma sağladığı katkılarla gurur duyuyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q13",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirketin ileriye dönük hedefleri heyecanlanmamı sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q14",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Buradaki vizyon ve misyon, benim doğal bir parçam gibi hissettiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.1-Q15",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.1 Vizyon ve Amaç Uyumu",
+    "question_text": "Şirket bir yolculukta olsaydı, rotanın hep doğru yönde olduğunu hissederdim.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q1",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Bu şirkette kendimi çoğu zaman dışlanmış ya da yalnız hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.2-Q2",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "İş yerinde bulunduğum ortam beni ait hissettiren bir yapıya sahip.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q3",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Çalışma arkadaşlarımla kurduğum ilişkiler, bu kuruma olan bağımı güçlendiriyor",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q4",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Bu şirkette kendimi gerçekten bir ekibin parçası gibi hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q5",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Çalışma arkadaşlarım arasında kendime ait bir yerim olmadığını düşündüğüm zamanlar oluyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.2-Q6",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Ofiste ya da online ortamda ekip arkadaşlarımla doğal bir iletişim kurabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q7",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "İş yerinde olduğum hâlde çoğu zaman yalnız çalışıyor gibi hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.2-Q8",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Kurum kültürü içinde yer aldığımı ve kabul gördüğümü hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q9",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Şirketin kapsayıcılık politikasını beğeniyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q10",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Şirket ilk günümden itibaren beni kabul etti, hiç yabancılık hissetmedim.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q11",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Ekip arkadaşlarımın arasında kendim olabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q12",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Bu iş yerinde geçirdiğim zaman, kendi evimde hissettiğim kadar doğal geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q13",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Buradaki insanlar, iş arkadaşından çok birer yol arkadaşı gibi.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q14",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Şirketimle ilgili kararlar alındığında, kendimi bu sürecin bir parçası gibi hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.2-Q15",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.2 Aidiyet Hissi",
+    "question_text": "Bu iş yeri bir masa olsaydı, benim için her zaman yer ayrılmış olurdu.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q1",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Yaptığım katkıların fark edildiğini ve takdir edildiğini hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q2",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Görüşlerimin ve fikirlerimin önemsendiğini görmek beni motive ediyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q3",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Çoğu zaman şirkette görünmez biri gibi hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.3-Q4",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Görüşlerim toplantılarda dikkate alınıyor ve değer veriliyor",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q5",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Çalışmalarım nadiren takdir ediliyor ve bu da beni zamanla geri çekilmeye itiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.3-Q6",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Şirket içinde bana duyulan güven, kendimi daha değerli hissetmemi sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q7",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Başarılı olsam bile bu kurumda öne çıkmam kolay olmuyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.3-Q8",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Şirket içi ödüllendirmeleri oldukça motive edici buluyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q9",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Kıdem Ödülleri etkinliğinde kendimi de görmeyi çok isterim.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q10",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Yöneticim benim şirket içinde başarılarımı takdir ediyor, diğer departmanların da bunu bilmesini sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q11",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Başarılı bir projenin sonunda ekip arkadaşlarım tarafından da tebrikler alıyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q12",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Yaptığım iş için duyduğum çaba ve özveri takdir ediliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q13",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Çalışmalarımın şirket için değerli olduğunu hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.3-Q14",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Emeğim fark edildiğinde, şirketime katkı sağlama isteğim güçleniyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.3-Q15",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.3 Takdir Edilme ve Değer Görme",
+    "question_text": "Burada yaptığım işin “olmazsa olmaz” olduğuna inanmıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q1",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Yaptığım işten gerçekten keyif alıyorum, işe gitmek beni motive ediyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q2",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Gün içinde yaptığım işler çoğu zaman beni zihinsel olarak yoran, sıkıcı görevlerden oluşuyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q3",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşim sırasında zamanın nasıl geçtiğini fark etmeyecek kadar odaklanabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q4",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Yaptığım iş beni zihinsel olarak canlı tutuyor ve her gün yeni bir şeyler öğreniyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q5",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Gün içinde sıkıldığım ve saatleri saydığım zamanlar oldukça fazla.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q6",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşim bana sadece para kazandırıyor, onun dışında çok bir şey ifade etmiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q7",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşim sırasında akışa kapıldığım, zamanın nasıl geçtiğini anlamadığım anlar oluyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q8",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Çalıştığım ortamı seviyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q9",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İş tanımımın ilgi çekici ve geliştirici olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q10",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşimi en iyi şekilde yapmak için motivasyon bulmakta zorlanıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q11",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Rolümün güçlü yönlerimle uyumlu olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q12",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Kullanılan sistem ve araçlarla alakalı yeterli düzeyde eğitim aldığımı düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q13",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "Çalışmalarımın sonuçlarını görmek bana tatmin duygusu veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.4-Q14",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşim bana yaratıcılığımı kullanma fırsatı sunmuyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.4-Q15",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.4 İşten Haz Alma",
+    "question_text": "İşim, bana gün sonunda “iyi ki bugün çalıştım” dedirtiyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q1",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimin tutumu, bana gelişim alanı sunan bir liderlik tarzı gösteriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q2",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Karar alma süreçlerinde yöneticimin tutarsız ve adaletsiz davrandığını düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.5-Q3",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimle yaşadığım bir sorunu açıkça dile getirme konusunda rahat hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q4",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticim sadece iş sonuçlarına değil, benim gelişimime de önem veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q5",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Bir sorun yaşadığımda yöneticime rahatlıkla ulaşabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q6",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimin geri bildirimleri benim için yol gösterici oluyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q7",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimin tutumu nedeniyle çoğu zaman kendimi baskı altında hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q8",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticim, fikirlerimi dinleyerek bana değer verdiğini hissettiriyor",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q9",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticim ekip arkadaşlarıma da bana da özel hissettirmeyi başarabiliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q10",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Başarıya giden yolda yöneticimin vizyonunu sorguluyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.5-Q11",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimin performansımı açık ve net bir şekilde değerlendirdiğini düşünüyorum",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q12",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimden gelişimime faydalı geri bildirimler almakta zorlanıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "1.5-Q13",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticimin beni desteklediğini ve teşvik ettiğini düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q14",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yöneticim ekip arkadaşlarımla sosyal aktiviteler planlamamıza olanak sağlıyor, bu konuda planları bulunuyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "1.5-Q15",
+    "dimension": "Duygusal Bağlılık",
+    "sub_dimension": "1.5 Liderlikten Memnuniyet",
+    "question_text": "Yönetim kurulunun/şirket sahibinin doğru kararlar verdiğine inanıyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q1",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Bu işten ayrılmam, mevcut yaşam standardım üzerinde ciddi bir etki yaratır.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q2",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Aldığım ücret ve sunduğu maddi olanaklar, burada kalma nedenlerim arasında önemli bir yer tutuyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q3",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "İstediğim zaman işten ayrılabilecek kadar finansal olarak rahat hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q4",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Bu iş, finansal olarak sürdürülebilir bir yaşam kurmamı sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q5",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Ülkenin durumu göz önüne alındığında, burada ideal bir maaş aldığımı düşünmüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q6",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Ek bir işte çalışmayı hiç düşünmedim / düşünmüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q7",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Şirketin adil bir ücret yönetimi olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q8",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Şirketin verilen maaşlar anlamında çalışanlar ile empati yaptığını düşünmüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q9",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Son aldığımız zam oranı oldukça tatmin ediciydi.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q10",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Farklı şirketlerde benimle aynı pozisyonda çalışan kişilerin benden daha yüksek aldığını düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q11",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Ücretlendirme politikamız adil bir şekilde uygulanıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q12",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Performansım ile kazancım arasında güçlü bir bağlantı hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.1-Q13",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Çalıştığım sektörle kıyaslandığında maaşımın rekabetçi olmadığını düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q14",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Aldığım maaş, yaptığım işin karşılığını yansıtmıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.1-Q15",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.1 Finansal ve Maddi Bağlılık",
+    "question_text": "Maddi karşılığım, şirketime olan bağlılığımı destekliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q1",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Şirketin sunduğu yan haklar, burada kalma kararım üzerinde etkili oluyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q2",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Mevcut şirketin sunduğu imkanları başka bir yerde bulmak kolay olmaz.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q3",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Çalışma koşulları ve sosyal imkanlar açısından daha iyi alternatifler bulabileceğimi düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q4",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Şirketin iş-özel yaşam denge yönetimini doğru buluyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q5",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Şirketin köprü izin uygulamalarını verimli buluyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q6",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Çalışılan yemek kartı şirketinden memnun değilim.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q7",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Verilen yemek kartı ücretinin arttırılması gerektiğini düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q8",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Sosyal haklarım olmasa bu iş beni burada tutmazdı",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q9",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Şirketin sunduğu olanaklar rakip firmalara kıyasla zayıf kalıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q10",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Burada çalışmamı sağlayan en önemli nedenlerden biri, sağlanan esnek çalışma koşulları.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q11",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Günlerim işe gidip, çalışıp, geri dönmekle geçiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.2-Q12",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Yönetilebilir bir iş yüküm olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q13",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Çalışma koşullarım hayat kaliteme olumlu katkı sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q14",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Şirketin yıllık izin politikalarını  iyi bulmuyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.2-Q15",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.2 Yan Haklar ve Fırsatlar",
+    "question_text": "Çalışma imkanlarımız, sektörde ayırt edici bir avantaja sahip.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q1",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Şu an sahip olduğum niteliklerle daha iyi bir iş bulmam zor görünüyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q2",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Çevremde bana uygun alternatif fırsatlar olduğunu düşünmüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q3",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Şirketten ayrılsam ne yapacağım konusunda net bir planım yok.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q4",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Benim yetkinliklerime uygun, bu işten daha iyi fırsatlar bulmam kolay olmaz.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q5",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Bugün ayrılmak istesem kısa sürede başka bir işe girebileceğime güveniyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.3-Q6",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "İş piyasasında birçok seçeneğe kolayca ulaşabileceğimi düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.3-Q7",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Mevcut işim dışında beni heyecanlandıracak pek bir seçenek göremiyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q8",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Şu anki görevim dışında bana uygun fırsatlar olsa bile risk almak istemiyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q9",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Piyasada çok fazla seçenek olduğu için burada kalmak zorunda değilim.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.3-Q10",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Yarın aynı maaşla başka bir şirketten teklif alsam istifa ederdim.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.3-Q11",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Çalıştığım pozisyonun sunduğu imkanlar, başka yerlerde nadiren bulunur.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q12",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Şu anda başka bir şirkete geçme düşüncem yok.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q13",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Burada çalışmak, diğer iş seçeneklerine kıyasla risk almamı gerektirmiyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q14",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Mevcut işimi bırakmam için çok güçlü bir nedenin ortaya çıkması gerekir.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.3-Q15",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.3 Dış Alternatiflerin Azlığı",
+    "question_text": "Buradaki koşullar, dışarıdaki fırsatların cazip olmasını sağlıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.4-Q1",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Bu şirkette oturmuş bir düzenim olduğu için ayrılmak benim için zor bir karar olur.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q2",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Günlük işlerimi ezbere yapacak kadar alışmış olmak bana bir güven hissi veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q3",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Yeni bir işe başlamak yerine mevcut düzenimi korumak bana daha güvenli geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q4",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Uzun süre aynı işi yapmak, gelişimime katkı sağlamıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.4-Q5",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Alışkanlıklarım sayesinde daha verimli çalıştığımı hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q6",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Uzun süredir aynı işleri yapıyor olmak beni rahatlatıyor, çünkü neyle karşılaşacağımı biliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q7",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "İşimde gerçekten bir bağlılık mı hissediyorum, yoksa sadece düzen bozulmasın diye mi kalıyorum, bazen emin olamıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.4-Q8",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Yeni sorumluluklar üstlenmek yerine mevcut alışkanlıklarımı sürdürmek bana daha kolay geliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.4-Q9",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Şirketimin bana yarattığı rutinlerden memnunum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q10",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Çalışma alanım aslında konfor alanımın bir parçası.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q11",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "İş yerimdeki çalışma ortamı kendimi rahat hissettiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q12",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Günlük çalışma düzenim, bana huzur ve öngörülebilirlik sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q13",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "İş yerinde alıştığım düzen, değişmesini istemeyeceğim bir rahatlık sunuyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q14",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "İşteki düzenim, kendimi güvende hissetmemi sağlıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.4-Q15",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.4 Rutin ve Konfor Alanı",
+    "question_text": "Çalışma şeklim, hayatımdaki diğer alanlardan çok daha farklı şekilde ilerliyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q1",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Bu şirkette profesyonel olarak gelişim göstermem için yeterince fırsat olduğunu hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q2",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Yeni beceriler kazanmak için bana sunulan imkanlar oldukça sınırlı.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q3",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Burada kaldıkça kariyerimde ilerleyebileceğim bir yol olduğunu düşünemiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q4",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Şirketin eğitim sisteminden memnunum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q5",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Şirketin terfi süreci yönetiminden memnunum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q6",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Terfi yönetiminin daha şeffaf yönetilmesi gerektiğini düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q7",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Şirket gelişim alanlarımıza büyük yatırımlar yapıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q8",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Yöneticimle birebir geri bildirim toplantıları yapabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q9",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Yeteneklerimi daha fazla kullanabileceğim fırsatların verilmediği ve gelişimimin yavaşladığını düşünüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q10",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Bir sonraki pozisyona hazır olduğumu hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q11",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Yöneticim ayrılırsa onun pozisyonuna başvurmayı çok isterim.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q12",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Yöneticimin benimle ilgili bir gelişim planı mevcut. Bunun üzerine düzenli toplantılar yapıyoruz.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q13",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Eğitim ve gelişim süreçleri için işim dışında da yeterli düzeyde zamana sahip olabiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "2.5-Q14",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Şirketin eğitim/gelişim sürecindeki yan hak politikasını yeterli bulmuyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "2.5-Q15",
+    "dimension": "Devam Bağlılığı",
+    "sub_dimension": "2.5 Büyüme Fırsatlarına Erişim",
+    "question_text": "Şirketimde kariyerimi geliştirecek imkanlara erişebiliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q1",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketime karşı bir sorumluluğum olduğunu düşündüğüm için burada kalmayı doğru buluyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q2",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Bu şirket bana bir şey borçlu değil, dolayısıyla ben de ona bir sadakat borcu hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.1-Q3",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Burada kalmak, artık sadece bir alışkanlık ve yük gibi geliyor bana.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.1-Q4",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Bu kurumdan ayrılmak bana ‘nankörlük’ gibi hissettirebilir",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q5",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Burada kalmam gerektiğini, çünkü süreçlerde kritik rol oynadığımı düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q6",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketin bana yaptığı yatırımlar, bana sorumlu hissettiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q7",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirkette kötü giden ama benim iş tanımlarım dışında bir şey olsa, bu sürece de destek olmak isterim.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q8",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirkette yapılan her işi kendi işim olarak sahipleniyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q9",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Kendimi şirket kültürüne ait hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.1-Q10",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Benden sonra işlerin aksayacağı düşüncesi, ayrılma kararını almamı zorlaştırıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q11",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketin hedeflerine ulaşması, kişisel bir başarım gibi geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q12",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketimin başarısı için ekstra çaba göstermeyi görevim olarak görüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q13",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketimle ilgili olumlu bir gelişme, bana kişisel bir kazanım gibi hissettiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q14",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Bu şirketten ayrılmak, üzerime düşen görevleri yarım bırakmak gibi hissettirir.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.1-Q15",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.1 Şirkete Karşı Sorumluluk Duygusu",
+    "question_text": "Şirketin geleceği ile ilgili bir yükümlülük hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q1",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketin benimsediği değerlerin, kendi değer yargılarımla büyük ölçüde örtüştüğünü hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q2",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Alınan kararlar ve uygulanan politikalar, benim etik anlayışımla çoğu zaman çelişiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q3",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Burada çalışmak, inandığım şeylerle uyumlu bir ortamda olduğumu hissettiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q4",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketin benimsediği değerlerin büyük kısmı, kişisel inanç ve bakış açılarımla uyumlu.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q5",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Kendimi bu kurumun temsil ettiği değerlere ait hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q6",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketin kültürü ve iş yapış biçimi bana çok yabancı geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q7",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketin vizyon ve misyonunu bilmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q8",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketin dışarıya gösterdiği değer duruşunu destekliyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q9",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Son dönemde oldukça pozitif sosyal adımlar alındığını düşünüyourm.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q10",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Çalıştığım şirketin adını söylediğimde, insanlar benim orada çalışmama şaşırıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q11",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Şirketimin tavırları, bana gururla temsil edebileceğim bir yer izlenimi veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q12",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Çalıştığım kurumun yaklaşımı, kişisel yaşamda benimsediğim ilkelere yakın değil.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q13",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Burada çalışmak, değerlerimle çelişen bir durum yaratıyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.2-Q14",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "Kurumun sosyal sorumluluk projeleri, kişisel değerlerimi destekliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.2-Q15",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.2 Değer Uyumu",
+    "question_text": "İş yerindeki kültür, inandığım davranış standartlarını yansıtıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q1",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Takım arkadaşlarımın desteği ve güveni, burada kalma isteğimi artırıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q2",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekip içindeki bağlarım zayıf olduğu için ayrılma düşüncesi beni pek etkilemiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.3-Q3",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Bu ekipten ayrılmak, sadece iş değil insan ilişkileri açısından da kayıp olurdu benim için.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q4",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Takım arkadaşlarımın desteği, bu kurumda kalma isteğimi güçlendiriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q5",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekip içindeki ilişkilerimin daha güçlü olmasını isterdim.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.3-Q6",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Kimseye söylemeden izin aldığımda insanlar benim yokluğumu fark ediyor ve benimle iletişime geçiyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q7",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Çalışma arkadaşlarımı yalnızca çalışma arkadaşı olarak görüyorum, aramızda herhangi bir bağ olduğunu hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.3-Q8",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekibimdeki biri şirket içerisindeki bir konuda hata yaparsa, ne olursa olsun onu savunurum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q9",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Kendimi sorunsuz çalışan bir aracın parçası olarak hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q10",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekip olarak sosyal aktiviteler düzenliyor, iş dışında da görüşüyoruz.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q11",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekipteki diğer kişilerden yardım isterken çekiniyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.3-Q12",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekip üyeleriyle bir anlaşmazlık yaşadığımızda profesyonel şekilde çözebiliyoruz.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q13",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekip olarak yaptığımız bir işte risk almaktan ve hata yapmaktan oldukça çekiniyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.3-Q14",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekipteki herkes birbirini destekliyor ve bunu bir yarışmaya çevirmiyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.3-Q15",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.3 Takımına ve Çalışma Arkadaşlarına Karşı Bağlılık",
+    "question_text": "Ekibimdeki diğer kişilerin de bu işte çalışmak için doğru kişiler olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q1",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Bu şirket geçmişte bana fırsatlar sunduğu için burada kalmayı bir teşekkür biçimi olarak görüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q2",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Şirketin bana sağladığı imkanlara rağmen, ona karşı özel bir bağlılık hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.4-Q3",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Geçmişte aldığım destekleri düşününce bu kurumdan kolayca ayrılmak bana doğru gelmiyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q4",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Kuruma duyduğum minnet hissi olmasa, çoktan farklı bir işte olabilirdim",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q5",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Kurumsal hayatta da vefanın önemli olduğunu düşünüyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q6",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Şirketin bana kattıkları için burada kalmak zorunda değilim",
+    "orientation": "N"
+  },
+  {
+    "id": "3.4-Q7",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Teşekkürü hissetmek başka, şirkette kalmak başka; ikisi arasında bağ kurmuyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.4-Q8",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Bu şirket uzun süre burada kalmamı hak edecek bir yer.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q9",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Şirketim bana verdiği destekle sadakatimi kazanıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q10",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Şirketimden aldığım destek, karşılığında kalıcı bir bağlılık yaratıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q11",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Buradan aldığım destek, hikayenin bir sonraki sayfasında bulunmak için beni motive ediyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q12",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Geçmişte verilen eğitimler, şu anki bağlılık seviyemi etkilemiyor.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.4-Q13",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Kariyerime kattıkları için bu kuruma bağlılık hissetmek doğal geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q14",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Bana güvenildiğini hissettiğim için karşılığında şirkete sadık kalıyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.4-Q15",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.4 Teşekkürü Kalmakla Göstermek",
+    "question_text": "Sağlanan iş ortamı ve imkanlar, şirkete olan bağlılığımı artırıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q1",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Zaman içinde bu kuruma karşı bir bağlılık ve sadakat duygusu geliştirdiğimi hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q2",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Şirketin geleceğiyle kendimi pek bağlantılı hissetmiyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.5-Q3",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Bu kurumun başarıları ve değerleriyle gurur duyduğum için burada kalmak bana anlamlı geliyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q4",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Bu kurumun başarılarıyla gurur duyuyorum ve bir parçası olmaktan mutluluk hissediyorum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q5",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Zaman zaman bu kurumla arama mesafe koymak istiyor ve kendimi dışarıda hissediyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.5-Q6",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Yıllar geçse de bu kurumun bir parçası olmayı sürdürmek isterim.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q7",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Bazen şirketin genel duruşunu benimseyemediğim için uzaklaşma isteği yaşıyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.5-Q8",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Bu şirketin kültürü, hedefleri ve duruşu beni kurumsal anlamda kendine bağlı kılıyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q9",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Kendimi bu kurumla uzun vadede bağ kurabilecek biri olarak görmüyorum.",
+    "orientation": "N"
+  },
+  {
+    "id": "3.5-Q10",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Uzun yıllardır burada çalışan insanların hikayeleri bana ilham veriyor.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q11",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Bir arkadaşımın ya da ailemden birine bu şirkette çalışmayı kesinlikle tavsiye ederim.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q12",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Şirketimin itibarı benim için önemli değildir.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q13",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Zor zamanlarda şirketime destek olmayı görev bilirim.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q14",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Şirketimin iyi gününde de kötü gününde de yanında olurum.",
+    "orientation": "P"
+  },
+  {
+    "id": "3.5-Q15",
+    "dimension": "Normatif Bağlılık",
+    "sub_dimension": "3.5 Kurumsal Sadakat",
+    "question_text": "Şirketime olan bağlılığım, iş tekliflerine kolayca “evet” dememi engeller.",
+    "orientation": "P"
+  }
+]

@@ -1,5 +1,46 @@
 const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
+const fs = require('fs');
+const path = require('path');
+
+// Load engagement questions data
+let engagementQuestionsData = null;
+try {
+  const questionsPath = path.join(__dirname, '../../data/employee_engagement_questions.json');
+  if (fs.existsSync(questionsPath)) {
+    engagementQuestionsData = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
+  } else {
+    console.warn('⚠️ [Submit Results API] Engagement questions JSON not found, using fallback logic');
+  }
+} catch (error) {
+  console.warn('⚠️ [Submit Results API] Failed to load engagement questions:', error.message);
+}
+
+// Load team assessment questions data
+let teamQuestionsData = null;
+try {
+  const teamQuestionsPath = path.join(__dirname, '../../data/team_assessment_questions.json');
+  if (fs.existsSync(teamQuestionsPath)) {
+    teamQuestionsData = JSON.parse(fs.readFileSync(teamQuestionsPath, 'utf8'));
+  } else {
+    console.warn('⚠️ [Submit Results API] Team questions JSON not found, using fallback logic');
+  }
+} catch (error) {
+  console.warn('⚠️ [Submit Results API] Failed to load team questions:', error.message);
+}
+
+// Load manager assessment questions data
+let managerQuestionsData = null;
+try {
+  const managerQuestionsPath = path.join(__dirname, '../../data/manager_assessment_questions.json');
+  if (fs.existsSync(managerQuestionsPath)) {
+    managerQuestionsData = JSON.parse(fs.readFileSync(managerQuestionsPath, 'utf8'));
+  } else {
+    console.warn('⚠️ [Submit Results API] Manager questions JSON not found, using fallback logic');
+  }
+} catch (error) {
+  console.warn('⚠️ [Submit Results API] Failed to load manager questions:', error.message);
+}
 
 // CORS headers for cross-origin requests from app.olivinhr.com
 const allowedOrigins = [
@@ -76,37 +117,169 @@ function calculateAssessmentScores(results, assessmentType) {
   }
 }
 
-// Calculate engagement assessment scores
+// Calculate engagement assessment scores with new P/N logic
 function calculateEngagementScores(results) {
+  console.log('🧮 [Submit Results API] Calculating engagement scores with new P/N logic');
+  
+  if (!engagementQuestionsData) {
+    console.warn('⚠️ [Submit Results API] No engagement questions data, using fallback scoring');
+    return calculateEngagementScoresFallback(results);
+  }
+
+  const scores = {};
+  const dimensionMap = new Map();
+  
+  // Initialize dimensions and subdimensions from questions data
+  engagementQuestionsData.forEach(question => {
+    const dimension = question.dimension;
+    const subDimension = question.sub_dimension;
+    const dimId = dimension.toLowerCase().replace(/\s+/g, '_');
+    const subId = subDimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+    
+    if (!dimensionMap.has(dimId)) {
+      dimensionMap.set(dimId, {
+        name: dimension,
+        total: 0,
+        count: 0,
+        subdimensions: new Map()
+      });
+    }
+    
+    if (!dimensionMap.get(dimId).subdimensions.has(subId)) {
+      dimensionMap.get(dimId).subdimensions.set(subId, {
+        name: subDimension,
+        total: 0,
+        count: 0
+      });
+    }
+  });
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers with P/N logic
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const question = engagementQuestionsData.find(q => q.id === questionId);
+    if (question) {
+      const rawValue = parseInt(answerId); // 1-10 scale
+      
+      if (rawValue >= 1 && rawValue <= 10) {
+        let normalizedScore;
+        if (question.orientation === 'P') {
+          // Positive question: raw score stays the same
+          normalizedScore = rawValue;
+        } else {
+          // Negative question: reverse score (11 - raw)
+          normalizedScore = 11 - rawValue;
+        }
+        
+        totalScore += normalizedScore;
+        totalQuestions++;
+        
+        // Add to dimension and subdimension totals
+        const dimId = question.dimension.toLowerCase().replace(/\s+/g, '_');
+        const subId = question.sub_dimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+        
+        if (dimensionMap.has(dimId)) {
+          const dim = dimensionMap.get(dimId);
+          dim.total += normalizedScore;
+          dim.count += 1;
+          
+          if (dim.subdimensions.has(subId)) {
+            const sub = dim.subdimensions.get(subId);
+            sub.total += normalizedScore;
+            sub.count += 1;
+          }
+        }
+      }
+    }
+  });
+
+  // Calculate final scores
+  const finalScores = {};
+  
+  dimensionMap.forEach((dimData, dimId) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 10) * 100), // Scale to 10-point system
+      total: dimData.total,
+      count: dimData.count,
+      subdimensions: {}
+    };
+    
+    // Calculate subdimension averages
+    dimData.subdimensions.forEach((subData, subId) => {
+      const subAverage = subData.count > 0 ? (subData.total / subData.count) : 0;
+      finalScores[dimId].subdimensions[subId] = {
+        score: Math.round(subAverage * 100) / 100,
+        percentage: Math.round((subAverage / 10) * 100),
+        total: subData.total,
+        count: subData.count
+      };
+    });
+  });
+
+  // Calculate overall engagement score
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
+  
+  finalScores.overall = {
+    score: Math.round(overallAverage * 100) / 100,
+    percentage: Math.min(scorePercentage, 100)
+  };
+
+  console.log('✅ [Submit Results API] Engagement scores calculated:', {
+    totalQuestions,
+    overallScore: finalScores.overall.score,
+    dimensions: Object.keys(finalScores).filter(k => k !== 'overall')
+  });
+
+  return {
+    competencyScores: finalScores,
+    overallScore: Math.round(totalScore),
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Fallback scoring for when questions data is not available
+function calculateEngagementScoresFallback(results) {
+  console.log('🧮 [Submit Results API] Using fallback engagement scoring');
+  
   const scores = {
-    emotional: { total: 0, count: 0 },
-    continuance: { total: 0, count: 0 },
-    normative: { total: 0, count: 0 }
+    duygusal_bağlılık: { total: 0, count: 0 },
+    devam_bağlılığı: { total: 0, count: 0 },
+    normatif_bağlılık: { total: 0, count: 0 }
   };
 
   let totalScore = 0;
   let totalQuestions = 0;
 
-  // Process answers
+  // Process answers assuming 1-10 scale and simple dimension mapping
   const answersData = results.answers || results;
   Object.entries(answersData).forEach(([questionId, answerId]) => {
-    const qId = parseInt(questionId);
-    const score = parseInt(answerId); // 1-5 Likert scale
+    const rawValue = parseInt(answerId);
     
-    if (score >= 1 && score <= 5) {
-      totalScore += score;
+    if (rawValue >= 1 && rawValue <= 10) {
+      // Assume positive orientation for fallback
+      const normalizedScore = rawValue;
+      
+      totalScore += normalizedScore;
       totalQuestions++;
       
-      // Map questions to dimensions (simplified mapping)
-      if (qId >= 1 && qId <= 9) {
-        scores.emotional.total += score;
-        scores.emotional.count++;
-      } else if (qId >= 10 && qId <= 15) {
-        scores.continuance.total += score;
-        scores.continuance.count++;
-      } else if (qId >= 16 && qId <= 22) {
-        scores.normative.total += score;
-        scores.normative.count++;
+      // Simple dimension mapping based on question ID patterns
+      if (questionId.startsWith('1.')) {
+        scores.duygusal_bağlılık.total += normalizedScore;
+        scores.duygusal_bağlılık.count++;
+      } else if (questionId.startsWith('2.')) {
+        scores.devam_bağlılığı.total += normalizedScore;
+        scores.devam_bağlılığı.count++;
+      } else if (questionId.startsWith('3.')) {
+        scores.normatif_bağlılık.total += normalizedScore;
+        scores.normatif_bağlılık.count++;
       }
     }
   });
@@ -117,49 +290,192 @@ function calculateEngagementScores(results) {
     const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
     finalScores[dimId] = {
       score: Math.round(average * 100) / 100,
-      percentage: Math.round((average / 5) * 100)
+      percentage: Math.round((average / 10) * 100)
     };
   });
 
   const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
-  const scorePercentage = Math.round((overallAverage / 5) * 100);
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
 
   return {
     competencyScores: finalScores,
-    overallScore: totalScore,
+    overallScore: Math.round(totalScore),
     totalQuestions,
     scorePercentage: Math.min(scorePercentage, 100)
   };
 }
 
-// Calculate team assessment scores
+// Calculate team assessment scores with new P/N logic
 function calculateTeamScores(results) {
-  const dimensions = ['communication', 'shared_goals', 'support_collaboration', 'trust_transparency', 'motivation'];
-  const scores = {};
+  console.log('🧮 [Submit Results API] Calculating team scores with new P/N logic');
   
-  dimensions.forEach(dim => {
-    scores[dim] = { total: 0, count: 0 };
+  if (!teamQuestionsData) {
+    console.warn('⚠️ [Submit Results API] No team questions data, using fallback scoring');
+    return calculateTeamScoresFallback(results);
+  }
+
+  const scores = {};
+  const dimensionMap = new Map();
+  
+  // Initialize dimensions and subdimensions from questions data
+  teamQuestionsData.forEach(question => {
+    const dimension = question.dimension;
+    const subDimension = question.sub_dimension;
+    const dimId = dimension.toLowerCase().replace(/\s+/g, '_');
+    const subId = subDimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+    
+    if (!dimensionMap.has(dimId)) {
+      dimensionMap.set(dimId, {
+        name: dimension,
+        total: 0,
+        count: 0,
+        subdimensions: new Map()
+      });
+    }
+    
+    if (!dimensionMap.get(dimId).subdimensions.has(subId)) {
+      dimensionMap.get(dimId).subdimensions.set(subId, {
+        name: subDimension,
+        total: 0,
+        count: 0
+      });
+    }
   });
 
   let totalScore = 0;
   let totalQuestions = 0;
 
-  // Process answers
+  // Process answers with P/N logic
   const answersData = results.answers || results;
   Object.entries(answersData).forEach(([questionId, answerId]) => {
-    const qId = parseInt(questionId);
-    const score = parseInt(answerId);
+    const question = teamQuestionsData.find(q => q.id === questionId);
+    if (question) {
+      const rawValue = parseInt(answerId); // 1-10 scale
+      
+      if (rawValue >= 1 && rawValue <= 10) {
+        let normalizedScore;
+        if (question.orientation === 'P') {
+          // Positive question: raw score stays the same
+          normalizedScore = rawValue;
+        } else {
+          // Negative question: reverse score (11 - raw)
+          normalizedScore = 11 - rawValue;
+        }
+        
+        totalScore += normalizedScore;
+        totalQuestions++;
+        
+        // Add to dimension and subdimension totals
+        const dimId = question.dimension.toLowerCase().replace(/\s+/g, '_');
+        const subId = question.sub_dimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+        
+        if (dimensionMap.has(dimId)) {
+          const dim = dimensionMap.get(dimId);
+          dim.total += normalizedScore;
+          dim.count += 1;
+          
+          if (dim.subdimensions.has(subId)) {
+            const sub = dim.subdimensions.get(subId);
+            sub.total += normalizedScore;
+            sub.count += 1;
+          }
+        }
+      }
+    }
+  });
+
+  // Calculate final scores
+  const finalScores = {};
+  
+  dimensionMap.forEach((dimData, dimId) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
     
-    if (score >= 1 && score <= 5) {
-      totalScore += score;
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 10) * 100), // Scale to 10-point system
+      total: dimData.total,
+      count: dimData.count,
+      subdimensions: {}
+    };
+    
+    // Calculate subdimension averages
+    dimData.subdimensions.forEach((subData, subId) => {
+      const subAverage = subData.count > 0 ? (subData.total / subData.count) : 0;
+      finalScores[dimId].subdimensions[subId] = {
+        score: Math.round(subAverage * 100) / 100,
+        percentage: Math.round((subAverage / 10) * 100),
+        total: subData.total,
+        count: subData.count
+      };
+    });
+  });
+
+  // Calculate overall team effectiveness score
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
+  
+  finalScores.overall = {
+    score: Math.round(overallAverage * 100) / 100,
+    percentage: Math.min(scorePercentage, 100)
+  };
+
+  console.log('✅ [Submit Results API] Team scores calculated:', {
+    totalQuestions,
+    overallScore: finalScores.overall.score,
+    dimensions: Object.keys(finalScores).filter(k => k !== 'overall')
+  });
+
+  return {
+    competencyScores: finalScores,
+    overallScore: Math.round(totalScore),
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Fallback scoring for when questions data is not available
+function calculateTeamScoresFallback(results) {
+  console.log('🧮 [Submit Results API] Using fallback team scoring');
+  
+  const scores = {
+    takım_iletişimi: { total: 0, count: 0 },
+    ortak_hedefler_ve_vizyon: { total: 0, count: 0 },
+    destek_ve_iş_birliği: { total: 0, count: 0 },
+    güven_ve_şeffaflık: { total: 0, count: 0 },
+    takım_motivasyonu: { total: 0, count: 0 }
+  };
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers assuming 1-10 scale and simple dimension mapping
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const rawValue = parseInt(answerId);
+    
+    if (rawValue >= 1 && rawValue <= 10) {
+      // Assume positive orientation for fallback
+      const normalizedScore = rawValue;
+      
+      totalScore += normalizedScore;
       totalQuestions++;
       
-      // Map questions to dimensions (5 questions per dimension)
-      const dimIndex = Math.floor((qId - 1) / 5);
-      if (dimIndex >= 0 && dimIndex < dimensions.length) {
-        const dimension = dimensions[dimIndex];
-        scores[dimension].total += score;
-        scores[dimension].count++;
+      // Simple dimension mapping based on question ID patterns
+      if (questionId.startsWith('01-')) {
+        scores.takım_iletişimi.total += normalizedScore;
+        scores.takım_iletişimi.count++;
+      } else if (questionId.startsWith('04-')) {
+        scores.ortak_hedefler_ve_vizyon.total += normalizedScore;
+        scores.ortak_hedefler_ve_vizyon.count++;
+      } else if (questionId.startsWith('07-')) {
+        scores.destek_ve_iş_birliği.total += normalizedScore;
+        scores.destek_ve_iş_birliği.count++;
+      } else if (questionId.startsWith('10-')) {
+        scores.güven_ve_şeffaflık.total += normalizedScore;
+        scores.güven_ve_şeffaflık.count++;
+      } else if (questionId.startsWith('13-')) {
+        scores.takım_motivasyonu.total += normalizedScore;
+        scores.takım_motivasyonu.count++;
       }
     }
   });
@@ -170,25 +486,34 @@ function calculateTeamScores(results) {
     const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
     finalScores[dimId] = {
       score: Math.round(average * 100) / 100,
-      percentage: Math.round((average / 5) * 100)
+      percentage: Math.round((average / 10) * 100)
     };
   });
 
   const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
-  const scorePercentage = Math.round((overallAverage / 5) * 100);
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
 
   return {
     competencyScores: finalScores,
-    overallScore: totalScore,
+    overallScore: Math.round(totalScore),
     totalQuestions,
     scorePercentage: Math.min(scorePercentage, 100)
   };
 }
 
-// Calculate manager assessment scores
+// Calculate manager/team assessment scores with P/N scoring
 function calculateManagerScores(results) {
-  const dimensions = ['communication', 'feedback_culture', 'team_development', 'fairness', 'motivation_leadership'];
+  const dimensions = ['team_communication', 'shared_goals_vision', 'support_collaboration', 'trust_transparency', 'team_motivation'];
   const scores = {};
+  
+  // Question scoring map: P = Positive, N = Negative
+  const questionScoring = {
+    1: 'P', 2: 'N', 3: 'P', 4: 'N', 5: 'P', 6: 'N', // Team Communication
+    7: 'P', 8: 'P', 9: 'N', 10: 'P', 11: 'N', 12: 'N', // Shared Goals and Vision
+    13: 'P', 14: 'N', 15: 'P', 16: 'P', 17: 'N', 18: 'N', // Support and Collaboration
+    19: 'P', 20: 'P', 21: 'N', 22: 'N', 23: 'P', 24: 'N', // Trust and Transparency
+    25: 'P', 26: 'N', 27: 'N', 28: 'P', 29: 'N', 30: 'P'  // Team Motivation
+  };
   
   dimensions.forEach(dim => {
     scores[dim] = { total: 0, count: 0 };
@@ -197,18 +522,28 @@ function calculateManagerScores(results) {
   let totalScore = 0;
   let totalQuestions = 0;
 
-  // Process answers
+  // Process answers with P/N scoring
   const answersData = results.answers || results;
   Object.entries(answersData).forEach(([questionId, answerId]) => {
     const qId = parseInt(questionId);
-    const score = parseInt(answerId);
+    const answerValue = parseInt(answerId); // 1-5 scale
     
-    if (score >= 1 && score <= 5) {
+    if (answerValue >= 1 && answerValue <= 5 && questionScoring[qId]) {
+      let score;
+      
+      if (questionScoring[qId] === 'P') {
+        // Positive question: 1=1, 2=2, 3=3, 4=4, 5=5
+        score = answerValue;
+      } else {
+        // Negative question: 1=5, 2=4, 3=3, 4=2, 5=1 (reverse)
+        score = 6 - answerValue;
+      }
+      
       totalScore += score;
       totalQuestions++;
       
-      // Map questions to dimensions (5 questions per dimension)
-      const dimIndex = Math.floor((qId - 1) / 5);
+      // Map questions to dimensions (6 questions per dimension)
+      const dimIndex = Math.floor((qId - 1) / 6);
       if (dimIndex >= 0 && dimIndex < dimensions.length) {
         const dimension = dimensions[dimIndex];
         scores[dimension].total += score;
@@ -325,6 +660,202 @@ function calculateCompetencyScores(results) {
     overallScore,
     totalQuestions,
     scorePercentage: Math.min(scorePercentage, 100) // Cap at 100%
+  };
+}
+
+// Calculate manager assessment scores with new P/N logic
+function calculateManagerScores(results) {
+  console.log('🧮 [Submit Results API] Calculating manager scores with new P/N logic');
+  
+  if (!managerQuestionsData) {
+    console.warn('⚠️ [Submit Results API] No manager questions data, using fallback scoring');
+    return calculateManagerScoresFallback(results);
+  }
+
+  const scores = {};
+  const dimensionMap = new Map();
+  
+  // Initialize dimensions and subdimensions from questions data
+  managerQuestionsData.forEach(question => {
+    const dimension = question.dimension;
+    const subDimension = question.sub_dimension;
+    const dimId = dimension.toLowerCase().replace(/\s+/g, '_');
+    const subId = subDimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+    
+    if (!dimensionMap.has(dimId)) {
+      dimensionMap.set(dimId, {
+        name: dimension,
+        total: 0,
+        count: 0,
+        subdimensions: new Map()
+      });
+    }
+    
+    if (!dimensionMap.get(dimId).subdimensions.has(subId)) {
+      dimensionMap.get(dimId).subdimensions.set(subId, {
+        name: subDimension,
+        total: 0,
+        count: 0
+      });
+    }
+  });
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers with P/N logic
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const question = managerQuestionsData.find(q => q.id === questionId);
+    if (question) {
+      const rawValue = parseInt(answerId); // 1-10 scale
+      
+      if (rawValue >= 1 && rawValue <= 10) {
+        let normalizedScore;
+        if (question.orientation === 'P') {
+          // Positive question: raw score stays the same
+          normalizedScore = rawValue;
+        } else {
+          // Negative question: reverse score (11 - raw)
+          normalizedScore = 11 - rawValue;
+        }
+        
+        totalScore += normalizedScore;
+        totalQuestions++;
+        
+        // Add to dimension and subdimension totals
+        const dimId = question.dimension.toLowerCase().replace(/\s+/g, '_');
+        const subId = question.sub_dimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+        
+        if (dimensionMap.has(dimId)) {
+          const dim = dimensionMap.get(dimId);
+          dim.total += normalizedScore;
+          dim.count += 1;
+          
+          if (dim.subdimensions.has(subId)) {
+            const sub = dim.subdimensions.get(subId);
+            sub.total += normalizedScore;
+            sub.count += 1;
+          }
+        }
+      }
+    }
+  });
+
+  // Calculate final scores
+  const finalScores = {};
+  
+  dimensionMap.forEach((dimData, dimId) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 10) * 100), // Scale to 10-point system
+      total: dimData.total,
+      count: dimData.count,
+      subdimensions: {}
+    };
+    
+    // Calculate subdimension averages
+    dimData.subdimensions.forEach((subData, subId) => {
+      const subAverage = subData.count > 0 ? (subData.total / subData.count) : 0;
+      finalScores[dimId].subdimensions[subId] = {
+        score: Math.round(subAverage * 100) / 100,
+        percentage: Math.round((subAverage / 10) * 100),
+        total: subData.total,
+        count: subData.count
+      };
+    });
+  });
+
+  // Calculate overall manager effectiveness score
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
+  
+  finalScores.overall = {
+    score: Math.round(overallAverage * 100) / 100,
+    percentage: Math.min(scorePercentage, 100)
+  };
+
+  console.log('✅ [Submit Results API] Manager scores calculated:', {
+    totalQuestions,
+    overallScore: finalScores.overall.score,
+    dimensions: Object.keys(finalScores).filter(k => k !== 'overall')
+  });
+
+  return {
+    competencyScores: finalScores,
+    overallScore: Math.round(totalScore),
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
+  };
+}
+
+// Fallback scoring for when questions data is not available
+function calculateManagerScoresFallback(results) {
+  console.log('🧮 [Submit Results API] Using fallback manager scoring');
+  
+  const scores = {
+    iletişim_ve_erişilebilirlik: { total: 0, count: 0 },
+    geri_bildirim_kültürü: { total: 0, count: 0 },
+    takım_gelişimi: { total: 0, count: 0 },
+    karar_alma_ve_adalet: { total: 0, count: 0 },
+    motivasyon_ve_ilham_verme: { total: 0, count: 0 }
+  };
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers assuming 1-10 scale and simple dimension mapping
+  const answersData = results.answers || results;
+  Object.entries(answersData).forEach(([questionId, answerId]) => {
+    const rawValue = parseInt(answerId);
+    
+    if (rawValue >= 1 && rawValue <= 10) {
+      // Assume positive orientation for fallback
+      const normalizedScore = rawValue;
+      
+      totalScore += normalizedScore;
+      totalQuestions++;
+      
+      // Simple dimension mapping based on question ID patterns
+      if (questionId.startsWith('01-')) {
+        scores.iletişim_ve_erişilebilirlik.total += normalizedScore;
+        scores.iletişim_ve_erişilebilirlik.count++;
+      } else if (questionId.startsWith('04-')) {
+        scores.geri_bildirim_kültürü.total += normalizedScore;
+        scores.geri_bildirim_kültürü.count++;
+      } else if (questionId.startsWith('07-')) {
+        scores.takım_gelişimi.total += normalizedScore;
+        scores.takım_gelişimi.count++;
+      } else if (questionId.startsWith('10-')) {
+        scores.karar_alma_ve_adalet.total += normalizedScore;
+        scores.karar_alma_ve_adalet.count++;
+      } else if (questionId.startsWith('13-')) {
+        scores.motivasyon_ve_ilham_verme.total += normalizedScore;
+        scores.motivasyon_ve_ilham_verme.count++;
+      }
+    }
+  });
+
+  // Calculate averages
+  const finalScores = {};
+  Object.entries(scores).forEach(([dimId, dimData]) => {
+    const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
+    finalScores[dimId] = {
+      score: Math.round(average * 100) / 100,
+      percentage: Math.round((average / 10) * 100)
+    };
+  });
+
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
+
+  return {
+    competencyScores: finalScores,
+    overallScore: Math.round(totalScore),
+    totalQuestions,
+    scorePercentage: Math.min(scorePercentage, 100)
   };
 }
 

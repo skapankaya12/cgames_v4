@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
-import { managerQuestions, managerDimensions, calculateManagerScores } from '../../../data/manager';
+import { managerQuestions, calculateManagerScores, likertOptions } from '../../../data/manager';
 import './ManagerTestScreen.css';
 
 const ManagerTestScreen = () => {
@@ -159,7 +159,7 @@ const ManagerTestScreen = () => {
     );
   }
 
-  const currentDimension = managerDimensions.find(d => d.id === currentQuestion.dimension);
+  // Removed currentDimension logic as we now display dimension directly from question
 
   return (
     <div className="manager-test-screen">
@@ -172,16 +172,19 @@ const ManagerTestScreen = () => {
           <div className="question-counter">
             {currentQuestionIndex + 1} / {managerQuestions.length}
           </div>
-          <div className="dimension-badge" style={{ background: currentDimension?.color + '20', color: currentDimension?.color }}>
-            {currentDimension?.icon} {currentDimension?.name}
+          <div className="dimension-badge">
+            {currentQuestion.dimension}
+          </div>
+          <div className="sub-dimension-badge">
+            {currentQuestion.sub_dimension}
           </div>
         </div>
         
         <div className="question-content">
-          <h2 className="question-text">{currentQuestion.text}</h2>
+          <h2 className="question-text">{currentQuestion.question_text}</h2>
           
           <div className="options-container">
-            {currentQuestion.options.map((option) => (
+            {likertOptions.map((option) => (
               <button
                 key={option.id}
                 className={`option-button ${answers[currentQuestion.id] === option.id ? 'selected' : ''}`}
@@ -189,6 +192,7 @@ const ManagerTestScreen = () => {
                 disabled={isSubmitting}
               >
                 <span className="option-text">{option.text}</span>
+                <span className="option-value">({option.value})</span>
                 <span className="option-indicator"></span>
               </button>
             ))}

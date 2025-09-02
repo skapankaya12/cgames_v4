@@ -16,6 +16,7 @@ import { MultiEmailInvite } from '../../components/project/MultiEmailInvite';
 import { NotesPanel } from '../../components/project/NotesPanel';
 import { ActivityTimeline } from '../../components/project/ActivityTimeline';
 import { CandidateResultsViewer } from './components/CandidateResultsViewer';
+import { AssessmentTypeIndicator } from '../../components/AssessmentTypeIndicator';
 
 // Simple overlay styles for the full-screen results viewer
 const resultsOverlayStyles = `
@@ -668,6 +669,7 @@ export default function ProjectDashboard() {
                         <thead>
                           <tr>
                             <th>Candidate</th>
+                            <th>Assessment Type</th>
                             <th>Status</th>
                             <th>Invited</th>
                             <th>Completed</th>
@@ -687,6 +689,13 @@ export default function ProjectDashboard() {
                                     <div className="candidate-id">ID: {candidate.id ? candidate.id.slice(0, 8) : 'Unknown'}</div>
                                   </div>
                                 </div>
+                              </td>
+                              <td>
+                                <AssessmentTypeIndicator 
+                                  assessmentType={project?.assessmentType || 'space-mission'}
+                                  size="small"
+                                  showLabel={true}
+                                />
                               </td>
                               <td>
                                 <span className={`status-badge-modern ${getStatusColor(candidate.status)}`}>

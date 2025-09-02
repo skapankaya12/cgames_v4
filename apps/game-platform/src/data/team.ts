@@ -1,323 +1,247 @@
 // Team Evaluation Survey Questions
-// Based on team effectiveness dimensions and collaboration factors
+// Based on new comprehensive team assessment dataset
+// Uses 1-10 Likert scale with P/N orientation logic
 
-interface TeamOption {
+export interface TeamQuestion {
+  id: string;                // e.g. "01-1"
+  dimension: string;         // "Takım İletişimi" | "Ortak Hedefler ve Vizyon" | etc.
+  sub_dimension: string;     // Same as dimension for team assessment
+  question_text: string;     
+  orientation: "P" | "N";    // P = positive, N = negative
+}
+
+export interface TeamOption {
   id: string;
   text: string;
-  score: number; // 1-5 Likert scale
+  value: number; // 1-10 scale
 }
 
-interface TeamQuestion {
-  id: number;
-  text: string;
-  dimension: string;
-  options: TeamOption[];
-  isReversed?: boolean;
-}
-
-// Standard 5-point Likert scale options
-const likertOptions: TeamOption[] = [
-  { id: "1", text: "Kesinlikle Katılmıyorum", score: 1 },
-  { id: "2", text: "Katılmıyorum", score: 2 },
-  { id: "3", text: "Kararsızım", score: 3 },
-  { id: "4", text: "Katılıyorum", score: 4 },
-  { id: "5", text: "Kesinlikle Katılıyorum", score: 5 }
+// Standard 10-point Likert scale options
+export const likertOptions: TeamOption[] = [
+  { id: "1", text: "Kesinlikle Katılmıyorum", value: 1 },
+  { id: "2", text: "Katılmıyorum", value: 2 },
+  { id: "3", text: "Çoğunlukla Katılmıyorum", value: 3 },
+  { id: "4", text: "Kısmen Katılmıyorum", value: 4 },
+  { id: "5", text: "Kararsızım", value: 5 },
+  { id: "6", text: "Kısmen Katılıyorum", value: 6 },
+  { id: "7", text: "Çoğunlukla Katılıyorum", value: 7 },
+  { id: "8", text: "Katılıyorum", value: 8 },
+  { id: "9", text: "Büyük Ölçüde Katılıyorum", value: 9 },
+  { id: "10", text: "Kesinlikle Katılıyorum", value: 10 }
 ];
 
-const reversedLikertOptions: TeamOption[] = [
-  { id: "1", text: "Kesinlikle Katılmıyorum", score: 5 },
-  { id: "2", text: "Katılmıyorum", score: 4 },
-  { id: "3", text: "Kararsızım", score: 3 },
-  { id: "4", text: "Katılıyorum", score: 2 },
-  { id: "5", text: "Kesinlikle Katılıyorum", score: 1 }
-];
+// Import questions from JSON file
+import teamQuestionsData from './team_assessment_questions.json';
 
-export const teamQuestions: TeamQuestion[] = [
-  // COMMUNICATION
-  {
-    id: 1,
-    text: "Ekip üyeleri birbirleriyle açık ve dürüst iletişim kurar.",
-    dimension: "communication",
-    options: likertOptions
-  },
-  {
-    id: 2,
-    text: "Ekip toplantılarında herkes fikrini rahatça paylaşabilir.",
-    dimension: "communication",
-    options: likertOptions
-  },
-  {
-    id: 3,
-    text: "Ekip üyeleri birbirlerini aktif olarak dinler.",
-    dimension: "communication",
-    options: likertOptions
-  },
-  {
-    id: 4,
-    text: "Önemli bilgiler ekip içinde zamanında paylaşılır.",
-    dimension: "communication",
-    options: likertOptions
-  },
-  {
-    id: 5,
-    text: "Ekip üyeleri arasında iletişim sorunları yaşanır.",
-    dimension: "communication",
-    options: reversedLikertOptions,
-    isReversed: true
-  },
+// Load and transform questions from JSON
+export const teamQuestions: TeamQuestion[] = teamQuestionsData as TeamQuestion[];
 
-  // SHARED GOALS
-  {
-    id: 6,
-    text: "Ekip hedefleri net bir şekilde tanımlanmıştır.",
-    dimension: "shared_goals",
-    options: likertOptions
-  },
-  {
-    id: 7,
-    text: "Tüm ekip üyeleri ortak hedefleri anlar ve benimser.",
-    dimension: "shared_goals",
-    options: likertOptions
-  },
-  {
-    id: 8,
-    text: "Ekip üyeleri bireysel çıkarlardan çok ekip başarısını öncelendirir.",
-    dimension: "shared_goals",
-    options: likertOptions
-  },
-  {
-    id: 9,
-    text: "Ekip hedefleri düzenli olarak gözden geçirilir ve güncellenir.",
-    dimension: "shared_goals",
-    options: likertOptions
-  },
-  {
-    id: 10,
-    text: "Ekip üyeleri farklı önceliklere sahiptir ve bu çatışmalara yol açar.",
-    dimension: "shared_goals",
-    options: reversedLikertOptions,
-    isReversed: true
-  },
+// Generate dimensions and subdimensions from the questions data
+export const teamDimensions = generateDimensionsFromQuestions();
 
-  // SUPPORT & COLLABORATION
-  {
-    id: 11,
-    text: "Ekip üyeleri birbirlerine yardım etmeye isteklidir.",
-    dimension: "support_collaboration",
-    options: likertOptions
-  },
-  {
-    id: 12,
-    text: "Zorluk yaşayan ekip üyelerine destek sağlanır.",
-    dimension: "support_collaboration",
-    options: likertOptions
-  },
-  {
-    id: 13,
-    text: "Ekip üyeleri bilgi ve kaynaklarını paylaşır.",
-    dimension: "support_collaboration",
-    options: likertOptions
-  },
-  {
-    id: 14,
-    text: "Ekip projelerde etkili bir şekilde birlikte çalışır.",
-    dimension: "support_collaboration",
-    options: likertOptions
-  },
-  {
-    id: 15,
-    text: "Ekip üyeleri genellikle kendi işlerine odaklanır ve başkalarına yardım etmez.",
-    dimension: "support_collaboration",
-    options: reversedLikertOptions,
-    isReversed: true
-  },
-
-  // TRUST & TRANSPARENCY
-  {
-    id: 16,
-    text: "Ekip üyeleri birbirlerine güvenir.",
-    dimension: "trust_transparency",
-    options: likertOptions
-  },
-  {
-    id: 17,
-    text: "Ekip içinde açıklık ve şeffaflık hakimdir.",
-    dimension: "trust_transparency",
-    options: likertOptions
-  },
-  {
-    id: 18,
-    text: "Ekip üyeleri hatalarını kabul etmekten çekinmez.",
-    dimension: "trust_transparency",
-    options: likertOptions
-  },
-  {
-    id: 19,
-    text: "Ekip üyeleri birbirlerinin yetkinliklerine güvenir.",
-    dimension: "trust_transparency",
-    options: likertOptions
-  },
-  {
-    id: 20,
-    text: "Ekip üyeleri arasında güvensizlik ve şüphe vardır.",
-    dimension: "trust_transparency",
-    options: reversedLikertOptions,
-    isReversed: true
-  },
-
-  // MOTIVATION
-  {
-    id: 21,
-    text: "Ekip üyeleri işlerinden motive olmuş durumdadır.",
-    dimension: "motivation",
-    options: likertOptions
-  },
-  {
-    id: 22,
-    text: "Ekip başarıları uygun şekilde kutlanır ve takdir edilir.",
-    dimension: "motivation",
-    options: likertOptions
-  },
-  {
-    id: 23,
-    text: "Ekip üyeleri yeni projelere heyecanla yaklaşır.",
-    dimension: "motivation",
-    options: likertOptions
-  },
-  {
-    id: 24,
-    text: "Ekip içinde pozitif bir enerji ve atmosfer vardır.",
-    dimension: "motivation",
-    options: likertOptions
-  },
-  {
-    id: 25,
-    text: "Ekip üyeleri işlerini sadece mecburiyet olarak görür.",
-    dimension: "motivation",
-    options: reversedLikertOptions,
-    isReversed: true
-  }
-];
-
-// Dimension definitions for scoring and visualization
-export const teamDimensions = [
-  {
-    id: "communication",
-    name: "İletişim",
-    description: "Ekip içi iletişimin etkinliği ve kalitesi",
-    color: "#3498DB",
-    icon: "💬"
-  },
-  {
-    id: "shared_goals",
-    name: "Ortak Hedefler",
-    description: "Hedef birliği ve ortak vizyon",
-    color: "#E74C3C",
-    icon: "🎯"
-  },
-  {
-    id: "support_collaboration",
-    name: "Destek ve İşbirliği",
-    description: "Karşılıklı destek ve işbirliği düzeyi",
-    color: "#2ECC71",
-    icon: "🤝"
-  },
-  {
-    id: "trust_transparency",
-    name: "Güven ve Şeffaflık",
-    description: "Güven düzeyi ve açıklık kültürü",
-    color: "#9B59B6",
-    icon: "🛡️"
-  },
-  {
-    id: "motivation",
-    name: "Motivasyon",
-    description: "Ekip motivasyonu ve pozitif atmosfer",
-    color: "#F39C12",
-    icon: "⚡"
-  }
-];
-
-// Scoring function for team assessment
-export function calculateTeamScores(answers: Record<string, string>) {
-  const scores: Record<string, any> = {};
+function generateDimensionsFromQuestions() {
+  const dimensionsMap = new Map();
   
-  // Initialize dimension scores
-  teamDimensions.forEach(dim => {
-    scores[dim.id] = { total: 0, count: 0 };
+  teamQuestionsData.forEach(question => {
+    const dimension = question.dimension;
+    const subDimension = question.sub_dimension;
+    
+    if (!dimensionsMap.has(dimension)) {
+      dimensionsMap.set(dimension, {
+        id: dimension.toLowerCase().replace(/\s+/g, '_'),
+        name: dimension,
+        description: getDimensionDescription(dimension),
+        color: getDimensionColor(dimension),
+        subdimensions: new Map()
+      });
+    }
+    
+    const dim = dimensionsMap.get(dimension);
+    if (!dim.subdimensions.has(subDimension)) {
+      dim.subdimensions.set(subDimension, {
+        id: subDimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, ''),
+        name: subDimension,
+        description: subDimension
+      });
+    }
+  });
+  
+  // Convert Maps to Arrays
+  return Array.from(dimensionsMap.values()).map(dim => ({
+    ...dim,
+    subdimensions: Array.from(dim.subdimensions.values())
+  }));
+}
+
+function getDimensionDescription(dimension: string): string {
+  const descriptions: Record<string, string> = {
+    "Takım İletişimi": "Takım içindeki iletişim etkinliği ve kalitesi",
+    "Ortak Hedefler ve Vizyon": "Ortak amaçlar ve vizyon paylaşımı",
+    "Destek ve İş Birliği": "Takım üyeleri arasındaki destek ve işbirliği",
+    "Güven ve Şeffaflık": "Takım içindeki güven düzeyi ve şeffaflık",
+    "Takım Motivasyonu": "Takım motivasyonu ve moral düzeyi"
+  };
+  return descriptions[dimension] || dimension;
+}
+
+function getDimensionColor(dimension: string): string {
+  const colors: Record<string, string> = {
+    "Takım İletişimi": "#3498DB",
+    "Ortak Hedefler ve Vizyon": "#E74C3C",
+    "Destek ve İş Birliği": "#2ECC71",
+    "Güven ve Şeffaflık": "#F39C12",
+    "Takım Motivasyonu": "#9B59B6"
+  };
+  return colors[dimension] || "#6C757D";
+}
+
+// Scoring function for team assessment with P/N orientation logic
+export function calculateTeamScores(answers: Record<string, string>) {
+  console.log('🧮 [Team Assessment] Calculating team scores with P/N logic');
+  
+  const dimensionMap = new Map();
+  
+  // Initialize dimensions and subdimensions from questions data
+  teamQuestionsData.forEach(question => {
+    const dimension = question.dimension;
+    const subDimension = question.sub_dimension;
+    const dimId = dimension.toLowerCase().replace(/\s+/g, '_');
+    const subId = subDimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+    
+    if (!dimensionMap.has(dimId)) {
+      dimensionMap.set(dimId, {
+        name: dimension,
+        total: 0,
+        count: 0,
+        subdimensions: new Map()
+      });
+    }
+    
+    if (!dimensionMap.get(dimId).subdimensions.has(subId)) {
+      dimensionMap.get(dimId).subdimensions.set(subId, {
+        name: subDimension,
+        total: 0,
+        count: 0
+      });
+    }
   });
 
-  // Calculate scores for each answer
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  // Process answers with P/N logic
   Object.entries(answers).forEach(([questionId, answerId]) => {
-    const question = teamQuestions.find(q => q.id === parseInt(questionId));
+    const question = teamQuestionsData.find(q => q.id === questionId);
     if (question) {
-      const option = question.options.find(opt => opt.id === answerId);
-      if (option) {
-        const score = option.score;
+      const rawValue = parseInt(answerId); // 1-10 scale
+      
+      if (rawValue >= 1 && rawValue <= 10) {
+        let normalizedScore;
+        if (question.orientation === 'P') {
+          // Positive question: raw score stays the same
+          normalizedScore = rawValue;
+        } else {
+          // Negative question: reverse score (11 - raw)
+          normalizedScore = 11 - rawValue;
+        }
         
-        // Add to dimension total
-        scores[question.dimension].total += score;
-        scores[question.dimension].count += 1;
+        totalScore += normalizedScore;
+        totalQuestions++;
+        
+        // Add to dimension and subdimension totals
+        const dimId = question.dimension.toLowerCase().replace(/\s+/g, '_');
+        const subId = question.sub_dimension.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+        
+        if (dimensionMap.has(dimId)) {
+          const dim = dimensionMap.get(dimId);
+          dim.total += normalizedScore;
+          dim.count += 1;
+          
+          if (dim.subdimensions.has(subId)) {
+            const sub = dim.subdimensions.get(subId);
+            sub.total += normalizedScore;
+            sub.count += 1;
+          }
+        }
       }
     }
   });
 
-  // Calculate averages and percentages
+  // Calculate final scores
   const finalScores: Record<string, any> = {};
   
-  Object.entries(scores).forEach(([dimId, dimData]: [string, any]) => {
+  dimensionMap.forEach((dimData, dimId) => {
     const average = dimData.count > 0 ? (dimData.total / dimData.count) : 0;
     
     finalScores[dimId] = {
       score: Math.round(average * 100) / 100,
-      percentage: Math.round((average / 5) * 100),
+      percentage: Math.round((average / 10) * 100), // Scale to 10-point system
       total: dimData.total,
-      count: dimData.count
+      count: dimData.count,
+      subdimensions: {}
     };
+    
+    // Calculate subdimension averages
+    dimData.subdimensions.forEach((subData: any, subId: string) => {
+      const subAverage = subData.count > 0 ? (subData.total / subData.count) : 0;
+      finalScores[dimId].subdimensions[subId] = {
+        score: Math.round(subAverage * 100) / 100,
+        percentage: Math.round((subAverage / 10) * 100),
+        total: subData.total,
+        count: subData.count
+      };
+    });
   });
 
   // Calculate overall team effectiveness score
-  const overallAverage = Object.values(finalScores).reduce((sum: number, dim: any) => sum + dim.score, 0) / Object.keys(finalScores).length;
+  const overallAverage = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+  const scorePercentage = Math.round((overallAverage / 10) * 100);
   
   finalScores.overall = {
     score: Math.round(overallAverage * 100) / 100,
-    percentage: Math.round((overallAverage / 5) * 100)
+    percentage: Math.min(scorePercentage, 100)
   };
+
+  console.log('✅ [Team Assessment] Team scores calculated:', {
+    totalQuestions,
+    overallScore: finalScores.overall.score,
+    dimensions: Object.keys(finalScores).filter(k => k !== 'overall')
+  });
 
   return finalScores;
 }
 
 // Team effectiveness interpretation
 export function getTeamEffectivenessLevel(percentage: number): { level: string; description: string; color: string } {
-  if (percentage >= 80) {
+  if (percentage >= 90) {
     return {
-      level: "Çok Yüksek",
-      description: "Ekip son derece etkili çalışıyor ve mükemmel performans sergiliyor.",
-      color: "#2ECC71"
+      level: 'Mükemmel Takım',
+      description: 'Takım etkinliğinde olağanüstü performans',
+      color: '#2ECC71'
     };
-  } else if (percentage >= 65) {
+  } else if (percentage >= 80) {
     return {
-      level: "Yüksek",
-      description: "Ekip etkili çalışıyor, bazı küçük iyileştirmeler yapılabilir.",
-      color: "#27AE60"
+      level: 'Güçlü Takım',
+      description: 'Takım etkinliğinde çok iyi performans',
+      color: '#3498DB'
     };
-  } else if (percentage >= 50) {
+  } else if (percentage >= 70) {
     return {
-      level: "Orta",
-      description: "Ekip orta düzeyde etkili, önemli gelişim alanları mevcut.",
-      color: "#F39C12"
+      level: 'Etkili Takım',
+      description: 'Takım etkinliğinde iyi performans',
+      color: '#F39C12'
     };
-  } else if (percentage >= 35) {
+  } else if (percentage >= 60) {
     return {
-      level: "Düşük",
-      description: "Ekip etkinliği düşük, ciddi iyileştirmeler gerekli.",
-      color: "#E67E22"
+      level: 'Gelişen Takım',
+      description: 'Takım etkinliğinde orta düzey performans',
+      color: '#E67E22'
     };
   } else {
     return {
-      level: "Çok Düşük",
-      description: "Ekip etkinliği kritik seviyede, acil müdahale gerekli.",
-      color: "#E74C3C"
+      level: 'Gelişim Gerekli',
+      description: 'Takım etkinliğinde iyileştirme alanları mevcut',
+      color: '#E74C3C'
     };
   }
 }

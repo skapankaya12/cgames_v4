@@ -21,6 +21,39 @@ export const CandidateResultsViewer: React.FC<CandidateResultsViewerProps> = ({
 }) => {
   const { t } = useTranslation('common');
   
+  // Helper function to get assessment display name
+  const getAssessmentDisplayName = (assessmentType: string): string => {
+    const displayNames: Record<string, string> = {
+      'space-mission': 'Space Mission Assessment',
+      'calisan-bagliligi': 'Çalışan Bağlılığı Değerlendirmesi',
+      'takim-degerlendirme': 'Takım Değerlendirme Anketi',
+      'yonetici-degerlendirme': 'Yönetici Değerlendirme Anketi'
+    };
+    return displayNames[assessmentType] || assessmentType;
+  };
+  
+  // Get assessment-specific summary title
+  const getAssessmentSummaryTitle = (assessmentType: string): string => {
+    const titles: Record<string, string> = {
+      'space-mission': 'Competency Analysis',
+      'calisan-bagliligi': 'Bağlılık Boyutları Analizi',
+      'takim-degerlendirme': 'Takım Etkinliği Analizi',
+      'yonetici-degerlendirme': 'Liderlik Boyutları Analizi'
+    };
+    return titles[assessmentType] || 'Scores Summary';
+  };
+  
+  // Get assessment-specific context description
+  const getAssessmentContextDescription = (assessmentType: string): string => {
+    const descriptions: Record<string, string> = {
+      'space-mission': 'Decision-making and leadership competencies under pressure scenarios',
+      'calisan-bagliligi': 'Organizasyonel bağlılık düzeyinin duygusal, devam ve normatif boyutlarda analizi',
+      'takim-degerlendirme': 'Takım içi iletişim, işbirliği ve etkinlik düzeylerinin değerlendirilmesi',
+      'yonetici-degerlendirme': 'Liderlik etkinliği ve takım yönetimi becerilerinin analizi'
+    };
+    return descriptions[assessmentType] || 'Assessment results analysis';
+  };
+  
   // State for tab management
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -71,29 +104,64 @@ export const CandidateResultsViewer: React.FC<CandidateResultsViewerProps> = ({
     }
   }, [scores.length, storedRecommendations, isLoadingRecommendations, generatePersonalizedRecommendations]);
 
-  // Tab configuration
-  const tabs = [
-    {
+  // Assessment-specific tab configuration
+  const getAssessmentSpecificTabs = () => {
+    const assessmentType = candidateResults.assessmentType || 'space-mission';
+    
+    const baseTab = {
       id: 'overview',
       label: t('results.tabs.overview', 'Overview'),
       icon: <Icons.User size={20} />
-    },
-    {
-      id: 'competencies',
-      label: t('results.tabs.competencies', 'Competencies'),
-      icon: <Icons.BarChart3 size={20} />
-    },
-    {
-      id: 'analytics',
-      label: t('results.tabs.analytics', 'Analytics'),
-      icon: <Icons.TrendingUp size={20} />
-    },
-    {
-      id: 'recommendations',
-      label: t('results.tabs.recommendations', 'AI Recommendations'),
-      icon: <Icons.Lightbulb size={20} />
+    };
+    
+    let competenciesTab;
+    switch (assessmentType) {
+      case 'calisan-bagliligi':
+        competenciesTab = {
+          id: 'competencies',
+          label: 'Bağlılık Boyutları',
+          icon: <Icons.CheckCircle size={20} />
+        };
+        break;
+      case 'takim-degerlendirme':
+        competenciesTab = {
+          id: 'competencies', 
+          label: 'Takım Etkinliği',
+          icon: <Icons.Users size={20} />
+        };
+        break;
+      case 'yonetici-degerlendirme':
+        competenciesTab = {
+          id: 'competencies',
+          label: 'Liderlik Boyutları', 
+          icon: <Icons.Award size={20} />
+        };
+        break;
+      default:
+        competenciesTab = {
+          id: 'competencies',
+          label: t('results.tabs.competencies', 'Competencies'),
+          icon: <Icons.BarChart3 size={20} />
+        };
     }
-  ];
+    
+    return [
+      baseTab,
+      competenciesTab,
+      {
+        id: 'analytics',
+        label: t('results.tabs.analytics', 'Analytics'),
+        icon: <Icons.TrendingUp size={20} />
+      },
+      {
+        id: 'recommendations',
+        label: t('results.tabs.recommendations', 'AI Recommendations'),
+        icon: <Icons.Lightbulb size={20} />
+      }
+    ];
+  };
+  
+  const tabs = getAssessmentSpecificTabs();
 
   // Render tab content
   const renderTabContent = () => {
@@ -116,6 +184,12 @@ export const CandidateResultsViewer: React.FC<CandidateResultsViewerProps> = ({
                     <span className="info-value">{candidateResults.candidateEmail || 'N/A'}</span>
                   </div>
                   <div className="info-item">
+                    <span className="info-label">Assessment Type:</span>
+                    <span className="info-value assessment-type">
+                      {getAssessmentDisplayName(candidateResults.assessmentType)}
+                    </span>
+                  </div>
+                  <div className="info-item">
                     <span className="info-label">{t('results.completedAt', 'Completed')}:</span>
                     <span className="info-value">
                       {candidateResults.completedAt 
@@ -133,15 +207,23 @@ export const CandidateResultsViewer: React.FC<CandidateResultsViewerProps> = ({
 
               {scores.length > 0 && (
                 <div className="scores-summary-card">
-                  <h3>{t('results.scoresSummary', 'Scores Summary')}</h3>
+                  <h3>{getAssessmentSummaryTitle(candidateResults.assessmentType)}</h3>
+                  <div className="assessment-context">
+                    <p>{getAssessmentContextDescription(candidateResults.assessmentType)}</p>
+                  </div>
                   <div className="scores-overview">
                     {scores.slice(0, 6).map((score, index) => (
                       <div key={index} className="score-summary-item">
-                        <div className="score-summary-label">{score.fullName}</div>
+                        <div className="score-summary-label" style={{ color: score.color }}>
+                          {score.fullName}
+                        </div>
                         <div className="score-summary-bar">
                           <div 
                             className="score-summary-fill"
-                            style={{ width: `${(score.score / score.maxScore) * 100}%` }}
+                            style={{ 
+                              width: `${(score.score / score.maxScore) * 100}%`,
+                              backgroundColor: score.color
+                            }}
                           />
                         </div>
                         <div className="score-summary-value">
@@ -256,7 +338,7 @@ export const CandidateResultsViewer: React.FC<CandidateResultsViewerProps> = ({
               <div className="title-section">
                 <h1>
                   <Icons.Target size={24} className="title-icon" />
-                  {t('results.candidateAnalysis', 'Candidate Results Analysis')}
+                  {getAssessmentDisplayName(candidateResults.assessmentType)} - Results Analysis
                 </h1>
                 {user && (
                   <div className="candidate-info">

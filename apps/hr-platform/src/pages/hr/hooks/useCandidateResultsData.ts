@@ -77,7 +77,6 @@ export const useCandidateResultsData = ({ candidateResults }: UseCandidateResult
       const userData: ResultsScreenUser = {
         firstName: candidateResults.candidateEmail?.split('@')[0] || 'Candidate',
         lastName: '',
-        email: candidateResults.candidateEmail,
         company: 'Assessment Results'
       };
       setUser(userData);
@@ -115,18 +114,47 @@ export const useCandidateResultsData = ({ candidateResults }: UseCandidateResult
         const cvData: CVData = {
           fileName: 'candidate_info.txt',
           extractedText: JSON.stringify(candidateResults.results.candidateInfo),
-          personalInfo: candidateResults.results.candidateInfo,
-          workExperience: [],
-          education: [],
-          skills: [],
-          certifications: []
+          analysis: {
+            personalInfo: { location: '', email: '', phone: '' },
+            experience: { years: 0, companies: [], positions: [], industries: [] },
+            skills: { technical: [], soft: [], leadership: [], languages: [] },
+            education: { degrees: [], institutions: [], certifications: [] },
+            achievements: [],
+            keywordsFound: [],
+            competencyAlignment: {}
+          },
+          hrInsights: {
+            overallAssessment: '',
+            strengths: [],
+            concerns: [],
+            recommendations: [],
+            fitAnalysis: ''
+          },
+          extractedAt: new Date().toISOString()
         };
         setCvData(cvData);
         console.log('✅ [CandidateResultsData] CV data loaded');
       }
 
-      // Calculate competency scores using the EXACT same system
-      const competencyScores = calculateCompetencyScores(answersData);
+      // Calculate competency scores based on assessment type
+      let competencyScores: CompetencyScore[] = [];
+      
+      // Check assessment type from candidateResults
+      const assessmentType = candidateResults.assessmentType || candidateResults.results?.assessmentType || 'space-mission';
+      
+      console.log('🔍 [CandidateResultsData] Assessment type detected:', assessmentType);
+      
+      if (assessmentType === 'calisan-bagliligi') {
+        competencyScores = calculateEngagementScores(candidateResults.results?.scores || {});
+      } else if (assessmentType === 'takim-degerlendirme') {
+        competencyScores = calculateTeamScores(candidateResults.results?.scores || {});
+      } else if (assessmentType === 'yonetici-degerlendirme') {
+        competencyScores = calculateManagerScores(candidateResults.results?.scores || {});
+      } else {
+        // Use original competency scoring for space mission and other assessments
+        competencyScores = calculateCompetencyScores(answersData);
+      }
+      
       setScores(competencyScores);
       
       setIsDataLoaded(true);
@@ -211,6 +239,245 @@ export const useCandidateResultsData = ({ candidateResults }: UseCandidateResult
     })).sort((a, b) => b.score - a.score);
 
     return finalScores;
+  };
+
+  // Calculate engagement assessment scores for HR display
+  const calculateEngagementScores = (scoresData: any): CompetencyScore[] => {
+    console.log('🧮 [CandidateResultsData] Processing engagement scores:', scoresData);
+    
+    const engagementScores: CompetencyScore[] = [];
+    
+    // Process each dimension from the engagement scores
+    Object.entries(scoresData).forEach(([dimensionId, dimensionData]: [string, any]) => {
+      if (dimensionId === 'overall') return; // Skip overall score for now
+      
+      // Main dimension score
+      engagementScores.push({
+        name: dimensionId,
+        score: dimensionData.score || 0,
+        maxScore: 10, // 10-point scale
+        color: getDimensionColor(dimensionId),
+        fullName: getDimensionDisplayName(dimensionId),
+        abbreviation: dimensionId.substring(0, 3).toUpperCase(),
+        category: "engagement",
+        description: getDimensionDescription(dimensionId)
+      });
+      
+      // Add subdimension scores if available
+      if (dimensionData.subdimensions) {
+        Object.entries(dimensionData.subdimensions).forEach(([subId, subData]: [string, any]) => {
+          engagementScores.push({
+            name: `${dimensionId}_${subId}`,
+            score: subData.score || 0,
+            maxScore: 10,
+            color: getDimensionColor(dimensionId, 0.7), // Lighter shade for subdimensions
+            fullName: getSubDimensionDisplayName(subId),
+            abbreviation: subId.substring(0, 3).toUpperCase(),
+            category: "engagement_sub",
+            description: `${getDimensionDisplayName(dimensionId)} - ${getSubDimensionDisplayName(subId)}`
+          });
+        });
+      }
+    });
+    
+    // Sort by score descending
+    return engagementScores.sort((a, b) => b.score - a.score);
+  };
+  
+  // Helper functions for engagement display
+  const getDimensionDisplayName = (dimensionId: string): string => {
+    const displayNames: Record<string, string> = {
+      'duygusal_bağlılık': 'Duygusal Bağlılık',
+      'devam_bağlılığı': 'Devam Bağlılığı', 
+      'normatif_bağlılık': 'Normatif Bağlılık'
+    };
+    return displayNames[dimensionId] || dimensionId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  const getSubDimensionDisplayName = (subId: string): string => {
+    // Convert snake_case to readable format
+    return subId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  const getDimensionColor = (dimensionId: string, opacity: number = 1): string => {
+    const colors: Record<string, string> = {
+      'duygusal_bağlılık': '#2ECC71',
+      'devam_bağlılığı': '#F39C12',
+      'normatif_bağlılık': '#9B59B6'
+    };
+    const baseColor = colors[dimensionId] || '#6C757D';
+    
+    if (opacity < 1) {
+      // Convert hex to rgba for opacity
+      const r = parseInt(baseColor.slice(1, 3), 16);
+      const g = parseInt(baseColor.slice(3, 5), 16);
+      const b = parseInt(baseColor.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    
+    return baseColor;
+  };
+  
+  const getDimensionDescription = (dimensionId: string): string => {
+    const descriptions: Record<string, string> = {
+      'duygusal_bağlılık': 'Organizasyona karşı duygusal bağ ve özdeşleşme düzeyi',
+      'devam_bağlılığı': 'Maliyetler ve alternatif eksikliği nedeniyle organizasyonda kalma eğilimi',
+      'normatif_bağlılık': 'Ahlaki yükümlülük ve sadakat hissi ile organizasyonda kalma düşüncesi'
+    };
+    return descriptions[dimensionId] || 'Çalışan bağlılığı boyutu';
+  };
+
+  // Calculate team assessment scores for HR display
+  const calculateTeamScores = (scoresData: any): CompetencyScore[] => {
+    console.log('🧮 [CandidateResultsData] Processing team scores:', scoresData);
+    
+    const teamScores: CompetencyScore[] = [];
+    
+    // Process each dimension from the team scores
+    Object.entries(scoresData).forEach(([dimensionId, dimensionData]: [string, any]) => {
+      if (dimensionId === 'overall') return; // Skip overall score for now
+      
+      // Main dimension score
+      teamScores.push({
+        name: dimensionId,
+        score: dimensionData.score || 0,
+        maxScore: 10, // 10-point scale
+        color: getTeamDimensionColor(dimensionId),
+        fullName: getTeamDimensionDisplayName(dimensionId),
+        abbreviation: dimensionId.substring(0, 3).toUpperCase(),
+        category: "team",
+        description: getTeamDimensionDescription(dimensionId)
+      });
+      
+      // Add subdimension scores if available
+      if (dimensionData.subdimensions) {
+        Object.entries(dimensionData.subdimensions).forEach(([subId, subData]: [string, any]) => {
+          teamScores.push({
+            name: `${dimensionId}_${subId}`,
+            score: subData.score || 0,
+            maxScore: 10,
+            color: getTeamDimensionColor(dimensionId, 0.7), // Lighter shade for subdimensions
+            fullName: getTeamSubDimensionDisplayName(subId),
+            abbreviation: subId.substring(0, 3).toUpperCase(),
+            category: "team_sub",
+            description: `${getTeamDimensionDisplayName(dimensionId)} - ${getTeamSubDimensionDisplayName(subId)}`
+          });
+        });
+      }
+    });
+    
+    // Sort by score descending
+    return teamScores.sort((a, b) => b.score - a.score);
+  };
+  
+  // Helper functions for team display
+  const getTeamDimensionDisplayName = (dimensionId: string): string => {
+    const displayNames: Record<string, string> = {
+      'takım_iletişimi': 'Takım İletişimi',
+      'ortak_hedefler_ve_vizyon': 'Ortak Hedefler ve Vizyon',
+      'destek_ve_iş_birliği': 'Destek ve İş Birliği',
+      'güven_ve_şeffaflık': 'Güven ve Şeffaflık',
+      'takım_motivasyonu': 'Takım Motivasyonu'
+    };
+    return displayNames[dimensionId] || dimensionId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  const getTeamSubDimensionDisplayName = (subId: string): string => {
+    // Convert snake_case to readable format
+    return subId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  const getTeamDimensionColor = (dimensionId: string, opacity: number = 1): string => {
+    const colors: Record<string, string> = {
+      'takım_iletişimi': '#3498DB',
+      'ortak_hedefler_ve_vizyon': '#E74C3C',
+      'destek_ve_iş_birliği': '#2ECC71',
+      'güven_ve_şeffaflık': '#F39C12',
+      'takım_motivasyonu': '#9B59B6'
+    };
+    const baseColor = colors[dimensionId] || '#6C757D';
+    
+    if (opacity < 1) {
+      // Convert hex to rgba for opacity
+      const r = parseInt(baseColor.slice(1, 3), 16);
+      const g = parseInt(baseColor.slice(3, 5), 16);
+      const b = parseInt(baseColor.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    
+    return baseColor;
+  };
+  
+  const getTeamDimensionDescription = (dimensionId: string): string => {
+    const descriptions: Record<string, string> = {
+      'takım_iletişimi': 'Takım içindeki iletişim etkinliği ve kalitesi',
+      'ortak_hedefler_ve_vizyon': 'Ortak amaçlar ve vizyon paylaşımı',
+      'destek_ve_iş_birliği': 'Takım üyeleri arasındaki destek ve işbirliği',
+      'güven_ve_şeffaflık': 'Takım içindeki güven düzeyi ve şeffaflık',
+      'takım_motivasyonu': 'Takım motivasyonu ve moral düzeyi'
+    };
+    return descriptions[dimensionId] || 'Takım etkinliği boyutu';
+  };
+
+  // Calculate manager assessment scores for HR display
+  const calculateManagerScores = (scoresData: any): CompetencyScore[] => {
+    console.log('🧮 [CandidateResultsData] Processing manager scores:', scoresData);
+    
+    const managerScores: CompetencyScore[] = [];
+    
+    // Process each dimension from the manager scores
+    Object.entries(scoresData).forEach(([dimensionId, dimensionData]: [string, any]) => {
+      if (dimensionId === 'overall') return; // Skip overall score for now
+      
+      // Main dimension score
+      managerScores.push({
+        name: dimensionId,
+        score: dimensionData.score || 0,
+        maxScore: 5, // 5-point scale for manager assessment
+        color: getManagerDimensionColor(dimensionId),
+        fullName: getManagerDimensionDisplayName(dimensionId),
+        abbreviation: dimensionId.substring(0, 3).toUpperCase(),
+        category: "manager",
+        description: getManagerDimensionDescription(dimensionId)
+      });
+    });
+    
+    // Sort by score descending
+    return managerScores.sort((a, b) => b.score - a.score);
+  };
+  
+  // Helper functions for manager display
+  const getManagerDimensionDisplayName = (dimensionId: string): string => {
+    const displayNames: Record<string, string> = {
+      'team_communication': 'Takım İletişimi',
+      'shared_goals_vision': 'Ortak Hedefler ve Vizyon',
+      'support_collaboration': 'Destek ve İş Birliği',
+      'trust_transparency': 'Güven ve Şeffaflık',
+      'team_motivation': 'Takım Motivasyonu'
+    };
+    return displayNames[dimensionId] || dimensionId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  const getManagerDimensionColor = (dimensionId: string): string => {
+    const colors: Record<string, string> = {
+      'team_communication': '#3498DB',
+      'shared_goals_vision': '#E74C3C',
+      'support_collaboration': '#2ECC71',
+      'trust_transparency': '#F39C12',
+      'team_motivation': '#9B59B6'
+    };
+    return colors[dimensionId] || '#6C757D';
+  };
+  
+  const getManagerDimensionDescription = (dimensionId: string): string => {
+    const descriptions: Record<string, string> = {
+      'team_communication': 'Takım iletişimi ve liderlik etkinliği',
+      'shared_goals_vision': 'Vizyon paylaşımı ve hedef belirleme',
+      'support_collaboration': 'Takım desteği ve işbirliği teşviki',
+      'trust_transparency': 'Güven inşası ve şeffaf yönetim',
+      'team_motivation': 'Takım motivasyonu ve performans yönetimi'
+    };
+    return descriptions[dimensionId] || 'Yönetici etkinliği boyutu';
   };
 
   return {
