@@ -16,8 +16,6 @@ import { MultiEmailInvite } from '../../components/project/MultiEmailInvite';
 import { NotesPanel } from '../../components/project/NotesPanel';
 import { ActivityTimeline } from '../../components/project/ActivityTimeline';
 import { CandidateResultsViewer } from './components/CandidateResultsViewer';
-import { AssessmentTypeIndicator } from '../../components/AssessmentTypeIndicator';
-import { SlidingPanel } from '../../components/SlidingPanel';
 
 // Simple overlay styles for the full-screen results viewer
 const resultsOverlayStyles = `
@@ -670,7 +668,6 @@ export default function ProjectDashboard() {
                         <thead>
                           <tr>
                             <th>Candidate</th>
-                            <th>Assessment Type</th>
                             <th>Status</th>
                             <th>Invited</th>
                             <th>Completed</th>
@@ -691,13 +688,7 @@ export default function ProjectDashboard() {
                                   </div>
                                 </div>
                               </td>
-                              <td>
-                                <AssessmentTypeIndicator 
-                                  assessmentType={project?.assessmentType || 'space-mission'}
-                                  size="small"
-                                  showLabel={true}
-                                />
-                              </td>
+
                               <td>
                                 <span className={`status-badge-modern ${getStatusColor(candidate.status)}`}>
                                   <span className="status-dot"></span>
@@ -824,20 +815,17 @@ export default function ProjectDashboard() {
         </div>
       </main>
 
-      {/* Sliding Panel Results Viewer */}
-      <SlidingPanel
-        isOpen={isResultsPanelOpen}
-        onClose={() => setIsResultsPanelOpen(false)}
-        title="Candidate Results Analysis"
-        width="900px"
-      >
-        {selectedCandidateResults && (
-          <CandidateResultsViewer
-            candidateResults={selectedCandidateResults}
-            onClose={() => setIsResultsPanelOpen(false)}
-          />
-        )}
-      </SlidingPanel>
+      {/* Full ResultsScreen Viewer */}
+      {isResultsPanelOpen && selectedCandidateResults && (
+        <div className="results-overlay" onClick={() => setIsResultsPanelOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <CandidateResultsViewer
+              candidateResults={selectedCandidateResults}
+              onClose={() => setIsResultsPanelOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
