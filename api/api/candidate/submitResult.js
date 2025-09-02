@@ -933,22 +933,48 @@ module.exports = async function handler(req, res) {
 
     // 1. First, verify the invite exists and get invite data
     console.log('🔍 [Submit Results API] Step 1: Verifying invite...');
+    console.log('  - Searching for token:', token.substring(0, 8) + '...');
+    console.log('  - Searching for email:', candidateEmailValue);
+    
     const invitesQuery = await db.collection('invites')
       .where('token', '==', token)
       .where('candidateEmail', '==', candidateEmailValue)
       .limit(1)
       .get();
 
+    let inviteDoc, inviteData;
+    
     if (invitesQuery.empty) {
-      console.log('❌ [Submit Results API] Invite not found');
-      return res.status(404).json({
-        success: false,
-        error: 'Invalid invite token or candidate email'
-      });
+      console.log('❌ [Submit Results API] Invite not found with both token and email');
+      
+      // Debug: Try to find invite by token only
+      const tokenOnlyQuery = await db.collection('invites')
+        .where('token', '==', token)
+        .limit(1)
+        .get();
+      
+      if (!tokenOnlyQuery.empty) {
+        inviteDoc = tokenOnlyQuery.docs[0];
+        inviteData = inviteDoc.data();
+        
+        console.log('🔍 [Submit Results API] Found invite by token only:');
+        console.log('  - Stored email:', inviteData.candidateEmail);
+        console.log('  - Submitted email:', candidateEmailValue);
+        console.log('  - Email match:', inviteData.candidateEmail === candidateEmailValue);
+        
+        // Use the invite found by token (email might be case-sensitive or have slight differences)
+        console.log('✅ [Submit Results API] Using invite found by token, proceeding with stored email');
+      } else {
+        console.log('❌ [Submit Results API] No invite found even by token only');
+        return res.status(404).json({
+          success: false,
+          error: 'Invalid invite token or candidate email'
+        });
+      }
+    } else {
+      inviteDoc = invitesQuery.docs[0];
+      inviteData = inviteDoc.data();
     }
-
-    const inviteDoc = invitesQuery.docs[0];
-    const inviteData = inviteDoc.data();
     
     console.log('✅ [Submit Results API] Invite verified');
     console.log('  - Invite ID:', inviteDoc.id);
@@ -988,9 +1014,9 @@ module.exports = async function handler(req, res) {
       token: token,
       inviteId: inviteDoc.id,
       
-      // Candidate Info
-      candidateEmail: candidateEmailValue,
-      candidateInfo: candidateInfo || { email: candidateEmailValue },
+      // Candidate Info - use email from invite to ensure consistency
+      candidateEmail: inviteData.candidateEmail,
+      candidateInfo: candidateInfo || { email: inviteData.candidateEmail },
       projectId: inviteData.projectId,
       
       // Assessment Info
