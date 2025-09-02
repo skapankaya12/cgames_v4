@@ -143,16 +143,25 @@ export const useCandidateResultsData = ({ candidateResults }: UseCandidateResult
       const assessmentType = candidateResults.assessmentType || candidateResults.results?.assessmentType || 'space-mission';
       
       console.log('🔍 [CandidateResultsData] Assessment type detected:', assessmentType);
+      console.log('🔍 [CandidateResultsData] Full candidateResults object:', candidateResults);
+      console.log('🔍 [CandidateResultsData] Available scores data:', candidateResults.results?.scores || candidateResults.competencyScores);
       
       if (assessmentType === 'calisan-bagliligi') {
-        competencyScores = calculateEngagementScores(candidateResults.results?.scores || {});
+        const scoresData = candidateResults.results?.scores || candidateResults.competencyScores || {};
+        competencyScores = calculateEngagementScores(scoresData);
+        console.log('✅ [CandidateResultsData] Using engagement scoring, scores:', competencyScores);
       } else if (assessmentType === 'takim-degerlendirme') {
-        competencyScores = calculateTeamScores(candidateResults.results?.scores || {});
+        const scoresData = candidateResults.results?.scores || candidateResults.competencyScores || {};
+        competencyScores = calculateTeamScores(scoresData);
+        console.log('✅ [CandidateResultsData] Using team scoring, scores:', competencyScores);
       } else if (assessmentType === 'yonetici-degerlendirme') {
-        competencyScores = calculateManagerScores(candidateResults.results?.scores || {});
+        const scoresData = candidateResults.results?.scores || candidateResults.competencyScores || {};
+        competencyScores = calculateManagerScores(scoresData);
+        console.log('✅ [CandidateResultsData] Using manager scoring, scores:', competencyScores);
       } else {
         // Use original competency scoring for space mission and other assessments
         competencyScores = calculateCompetencyScores(answersData);
+        console.log('✅ [CandidateResultsData] Using space mission scoring, scores:', competencyScores);
       }
       
       setScores(competencyScores);

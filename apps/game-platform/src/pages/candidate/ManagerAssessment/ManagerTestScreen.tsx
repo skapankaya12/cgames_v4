@@ -127,13 +127,8 @@ const ManagerTestScreen = () => {
       sessionStorage.removeItem('manager-candidate-data');
       sessionStorage.removeItem('manager-answers');
       
-      // Navigate to results or thank you page
-      navigate('/candidate/manager/results', { 
-        state: { 
-          scores,
-          submissionData 
-        }
-      });
+      // Navigate to thank you page (not results - results go to HR dashboard)
+      navigate('/thank-you');
       
     } catch (error) {
       console.error('Error submitting assessment:', error);
