@@ -17,6 +17,7 @@ import { NotesPanel } from '../../components/project/NotesPanel';
 import { ActivityTimeline } from '../../components/project/ActivityTimeline';
 import { CandidateResultsViewer } from './components/CandidateResultsViewer';
 import { AssessmentTypeIndicator } from '../../components/AssessmentTypeIndicator';
+import { SlidingPanel } from '../../components/SlidingPanel';
 
 // Simple overlay styles for the full-screen results viewer
 const resultsOverlayStyles = `
@@ -823,17 +824,20 @@ export default function ProjectDashboard() {
         </div>
       </main>
 
-      {/* Full ResultsScreen Viewer */}
-      {isResultsPanelOpen && selectedCandidateResults && (
-        <div className="results-overlay" onClick={() => setIsResultsPanelOpen(false)}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <CandidateResultsViewer
-              candidateResults={selectedCandidateResults}
-              onClose={() => setIsResultsPanelOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      {/* Sliding Panel Results Viewer */}
+      <SlidingPanel
+        isOpen={isResultsPanelOpen}
+        onClose={() => setIsResultsPanelOpen(false)}
+        title="Candidate Results Analysis"
+        width="900px"
+      >
+        {selectedCandidateResults && (
+          <CandidateResultsViewer
+            candidateResults={selectedCandidateResults}
+            onClose={() => setIsResultsPanelOpen(false)}
+          />
+        )}
+      </SlidingPanel>
     </div>
   );
 } 

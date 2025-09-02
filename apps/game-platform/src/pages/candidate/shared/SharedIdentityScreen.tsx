@@ -14,9 +14,6 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
   // const { t } = useTranslation('common');
   
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
     department: '',
     position: '',
     experience: '',
@@ -73,20 +70,6 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Ad alanı zorunludur';
-    }
-    
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Soyad alanı zorunludur';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'E-posta alanı zorunludur';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Geçerli bir e-posta adresi giriniz';
-    }
-    
     if (!formData.department.trim()) {
       newErrors.department = 'Departman alanı zorunludur';
     }
@@ -113,9 +96,6 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
     console.log('💾 [SharedIdentityScreen] Saving identity data:');
     console.log('  - Assessment Type:', assessmentType);
     console.log('  - Form Data:', {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
       department: formData.department,
       position: formData.position,
       experience: formData.experience,
@@ -153,45 +133,8 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
         </div>
 
         <form className="identity-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="firstName">Ad *</label>
-              <input
-                type="text"
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
-                className={errors.firstName ? 'error' : ''}
-                placeholder="Adınızı giriniz"
-              />
-              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="lastName">Soyad *</label>
-              <input
-                type="text"
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
-                className={errors.lastName ? 'error' : ''}
-                placeholder="Soyadınızı giriniz"
-              />
-              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">E-posta *</label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              className={errors.email ? 'error' : ''}
-              placeholder="E-posta adresinizi giriniz"
-            />
-            {errors.email && <span className="error-message">{errors.email}</span>}
+          <div className="form-intro">
+            <p>Değerlendirmeye başlamadan önce lütfen aşağıdaki bilgileri doldurunuz:</p>
           </div>
 
           <div className="form-row">

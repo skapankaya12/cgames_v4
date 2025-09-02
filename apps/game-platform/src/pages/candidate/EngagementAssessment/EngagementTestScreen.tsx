@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
-import { engagementQuestions, calculateEngagementScores, likertOptions } from '../../../data/engagement';
+import { engagementQuestions, calculateEngagementScores } from '../../../data/engagement';
+import { LikertSlider } from '../../../components/LikertSlider';
 import './EngagementTestScreen.css';
 
 const EngagementTestScreen = () => {
@@ -45,10 +46,10 @@ const EngagementTestScreen = () => {
     }
   }, [navigate]);
 
-  const handleAnswer = (optionId: string) => {
+  const handleAnswer = (value: number) => {
     const newAnswers = {
       ...answers,
-      [currentQuestion.id]: optionId
+      [currentQuestion.id]: value.toString()
     };
     
     setAnswers(newAnswers);
@@ -63,7 +64,7 @@ const EngagementTestScreen = () => {
       } else {
         handleSubmitAssessment(newAnswers);
       }
-    }, 500);
+    }, 1000); // Slightly longer delay for slider
   };
 
   const handlePrevious = () => {
@@ -237,19 +238,15 @@ const EngagementTestScreen = () => {
         <div className="question-content">
           <h2 className="question-text">{currentQuestion.question_text}</h2>
           
-          <div className="options-container">
-            {likertOptions.map((option) => (
-              <button
-                key={option.id}
-                className={`option-button ${answers[currentQuestion.id] === option.id ? 'selected' : ''}`}
-                onClick={() => handleAnswer(option.id)}
-                disabled={isSubmitting}
-              >
-                <span className="option-text">{option.text}</span>
-                <span className="option-value">({option.value})</span>
-                <span className="option-indicator"></span>
-              </button>
-            ))}
+          <div className="slider-container">
+            <LikertSlider
+              value={answers[currentQuestion.id] ? parseInt(answers[currentQuestion.id]) : undefined}
+              onChange={handleAnswer}
+              disabled={isSubmitting}
+              leftLabel="Kesinlikle Katılmıyorum (1)"
+              rightLabel="Kesinlikle Katılıyorum (10)"
+              showValue={true}
+            />
           </div>
         </div>
         
