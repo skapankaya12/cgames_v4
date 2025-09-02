@@ -20,7 +20,7 @@
     "@cgames/services": "file:../../packages/services",
     "@cgames/types": "file:../../packages/types",
     "@cgames/ui-kit": "file:../../packages/ui-kit",
-    "@types/node": "^18.0.0",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vercel/node": "^3.2.17",
