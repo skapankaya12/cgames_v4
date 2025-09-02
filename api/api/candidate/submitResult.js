@@ -1061,11 +1061,16 @@ module.exports = async function handler(req, res) {
     };
 
     console.log('💾 [Submit Results API] Step 3: Saving result document...');
+    console.log('  - Saving with projectId:', resultDocument.projectId);
+    console.log('  - Saving with candidateEmail:', resultDocument.candidateEmail);
+    console.log('  - Saving with assessmentType:', resultDocument.assessmentType);
     
     // Save to candidateResults collection (not testResults)
     await db.collection('candidateResults').doc(resultId).set(resultDocument);
     
     console.log('✅ [Submit Results API] Result saved successfully to candidateResults collection');
+    console.log('  - Document ID:', resultId);
+    console.log('  - Searchable by projectId:', resultDocument.projectId);
 
     // 4. Update invite status to 'completed'
     console.log('🔄 [Submit Results API] Step 4: Updating invite status...');

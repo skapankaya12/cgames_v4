@@ -174,12 +174,28 @@ module.exports = async function handler(req, res) {
     }
 
     // Step 3: Get all candidate results for the project from candidateResults collection
-    console.log('🔍 [Get Candidate Results API] Step 2: Fetching candidate results...');
+    console.log('🔍 [Get Candidate Results API] Step 3: Fetching candidate results...');
+    console.log('  - Searching for projectId:', projectId);
     
     // Use simple query to avoid composite index requirement
     const resultsQuery = await db.collection('candidateResults')
       .where('projectId', '==', projectId)
       .get();
+      
+    console.log('📊 [Get Candidate Results API] Query results:');
+    console.log('  - Found', resultsQuery.docs.length, 'results for project');
+    
+    if (resultsQuery.docs.length === 0) {
+      console.log('⚠️ [Get Candidate Results API] No results found, trying alternative search...');
+      
+      // Try to find any results for debugging
+      const allResultsQuery = await db.collection('candidateResults').limit(5).get();
+      console.log('🔍 [Get Candidate Results API] Sample results in database:');
+      allResultsQuery.docs.forEach((doc, index) => {
+        const data = doc.data();
+        console.log(`  ${index + 1}. ProjectId: ${data.projectId}, Email: ${data.candidateEmail}, AssessmentType: ${data.assessmentType}`);
+      });
+    }
 
     const results = [];
     

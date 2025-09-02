@@ -10,7 +10,7 @@ import ResultsScreen from './pages/candidate/ResultsScreen';
 import IdentityScreen2 from './pages/candidate/Game2/IdentityScreen2';
 import TestScreen2 from './pages/candidate/Game2/TestScreen2';
 import ResultsScreen2 from './pages/candidate/Game2/ResultsScreen2';
-import ThankYouScreen from './pages/candidate/ThankYouScreen';
+import SimpleThankYouScreen from './pages/candidate/SimpleThankYouScreen';
 import LanguageSelector from './components/LanguageSelector';
 import { getGameById } from './config/games';
 import { SafeGameFlowProvider } from './contexts/GameFlowContext';
@@ -245,7 +245,7 @@ function AppContent() {
         <Route path="/candidate/manager/results" element={<ProtectedRoute><ManagerResultsScreen /></ProtectedRoute>} />
         
         {/* Thank you screen */}
-        <Route path="/thank-you" element={<ThankYouScreen />} />
+        <Route path="/thank-you" element={<SimpleThankYouScreen />} />
       </Routes>
     </div>
   );
