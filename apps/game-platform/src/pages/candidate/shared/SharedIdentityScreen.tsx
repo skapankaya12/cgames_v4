@@ -140,7 +140,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="department" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Departman *</label>
+                  <label htmlFor="department" className="form-label">Departman *</label>
                   <input
                     type="text"
                     id="department"
@@ -157,7 +157,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="position" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Pozisyon *</label>
+                  <label htmlFor="position" className="form-label">Pozisyon *</label>
                   <input
                     type="text"
                     id="position"
@@ -176,7 +176,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="experience" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Deneyim Süresi *</label>
+                  <label htmlFor="experience" className="form-label">Deneyim Süresi *</label>
                   <select
                     id="experience"
                     value={formData.experience}
@@ -195,7 +195,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="workMode" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Çalışma Şekli</label>
+                  <label htmlFor="workMode" className="form-label">Çalışma Şekli</label>
                   <select
                     id="workMode"
                     value={formData.workMode}
@@ -217,10 +217,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                   disabled={isLoading}
                   style={{ 
                     width: '100%', 
-                    maxWidth: '300px',
-                    background: '#708238',
-                    backgroundColor: '#708238',
-                    border: 'none'
+                    maxWidth: '300px'
                   }}
                 >
                   {isLoading ? 'Yükleniyor...' : 'Devam Et'}
@@ -242,29 +239,48 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
               All rights reserved. OlivinHR 2025.
             </p>
             <p style={{ margin: '0' }}>
-              Help? Contact <strong>info@olivinhr.com</strong>
+              Need Help? Contact our support team at <strong>info@olivinhr.com</strong>
             </p>
           </div>
         </div>
       </div>
       
-      {/* Custom styles for placeholder text alignment */}
+      {/* Custom styles for form styling overrides */}
       <style>{`
         .form-input::placeholder {
           font-size: 0.85rem !important;
-          text-align: right !important;
+          text-align: left !important;
         }
         .form-input::-webkit-input-placeholder {
           font-size: 0.85rem !important;
-          text-align: right !important;
+          text-align: left !important;
         }
         .form-input::-moz-placeholder {
           font-size: 0.85rem !important;
-          text-align: right !important;
+          text-align: left !important;
         }
         .form-input:-ms-input-placeholder {
           font-size: 0.85rem !important;
-          text-align: right !important;
+          text-align: left !important;
+        }
+        
+        /* Remove blue background from labels */
+        .form-label {
+          background: none !important;
+          backgroundColor: transparent !important;
+          background-color: transparent !important;
+        }
+        
+        /* Remove gray background from button */
+        .login-button {
+          background: #708238 !important;
+          background-color: #708238 !important;
+          border: none !important;
+        }
+        
+        .login-button:hover {
+          background: #5a6b2d !important;
+          background-color: #5a6b2d !important;
         }
       `}</style>
     </div>
