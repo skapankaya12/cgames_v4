@@ -116,10 +116,7 @@ const AdminLogin: React.FC = () => {
               className={`login-button ${(isLoading || loading) ? 'loading' : ''}`}
             >
               {(isLoading || loading) ? (
-                <>
-                  <div className="loading-spinner"></div>
-                  Signing In...
-                </>
+                <div className="loading-spinner"></div>
               ) : (
                 'Sign In as Admin'
               )}

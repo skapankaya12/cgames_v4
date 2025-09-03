@@ -163,7 +163,12 @@ const CreateCompany: React.FC = () => {
       try {
         result = text ? JSON.parse(text) : ({ success: response.ok } as CreateCompanyResponse);
       } catch {
-        result = { success: false, error: `Unexpected response: ${text?.slice(0, 200)}` };
+        result = { 
+          success: false, 
+          error: `Unexpected response: ${text?.slice(0, 200)}`,
+          company: { id: '', name: '', licenseCount: 0, maxUsers: 0, usedLicensesCount: 0 },
+          hrUser: { id: '', email: '', name: '', role: 'admin', companyId: '' }
+        };
       }
 
       if (!response.ok) {
@@ -202,59 +207,65 @@ const CreateCompany: React.FC = () => {
 
   if (success) {
     return (
-      <div className="admin-dashboard">
-        <div className="admin-content">
-          <div className="success-container">
-            <div className="success-card">
-              <div className="success-header">
-                <div className="success-icon">✅</div>
-                <h2>Company Created Successfully!</h2>
+      <div className="hr-login-page create-company-page-wrapper">
+        <div className="create-company-page">
+          <div className="create-company-container">
+            <div className="create-company-card">
+              <div className="login-logo">
+                <img src="/HR.png" alt="OlivinHR" className="logo-image" />
               </div>
               
-              <div className="success-content">
-                <div className="company-details">
-                  <h3>Company Details</h3>
-                  <div className="details-grid">
+              <div className="success-message">
+                <svg className="success-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <h2 className="success-title">Company Created Successfully!</h2>
+              </div>
+              
+              <div className="success-details">
+                <div className="detail-section">
+                  <h3 className="detail-section-title">Company Details</h3>
+                  <div className="detail-grid">
                     <div className="detail-item">
-                      <span className="label">Company Name:</span>
-                      <span className="value">{success.company.name}</span>
+                      <span className="detail-label">Company Name:</span>
+                      <span className="detail-value">{success.company.name}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="label">Company ID:</span>
-                      <span className="value">{success.company.id}</span>
+                      <span className="detail-label">Company ID:</span>
+                      <span className="detail-value">{success.company.id}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="label">License Count:</span>
-                      <span className="value">{success.company.licenseCount}</span>
+                      <span className="detail-label">License Count:</span>
+                      <span className="detail-value">{success.company.licenseCount}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="label">Max Users:</span>
-                      <span className="value">{success.company.maxUsers}</span>
+                      <span className="detail-label">Max Users:</span>
+                      <span className="detail-value">{success.company.maxUsers}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="hr-admin-details">
-                  <h3>HR Admin Created</h3>
-                  <div className="details-grid">
+                <div className="detail-section">
+                  <h3 className="detail-section-title">HR Admin Created</h3>
+                  <div className="detail-grid">
                     <div className="detail-item">
-                      <span className="label">Name:</span>
-                      <span className="value">{success.hrUser.name}</span>
+                      <span className="detail-label">Name:</span>
+                      <span className="detail-value">{success.hrUser.name}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="label">Email:</span>
-                      <span className="value">{success.hrUser.email}</span>
+                      <span className="detail-label">Email:</span>
+                      <span className="detail-value">{success.hrUser.email}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="label">Role:</span>
-                      <span className="value">Admin</span>
+                      <span className="detail-label">Role:</span>
+                      <span className="detail-value">Admin</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="next-steps">
-                  <h3>Next Steps</h3>
-                  <ul>
+                  <h3 className="detail-section-title">Next Steps</h3>
+                  <ul className="steps-list">
                     <li>✅ Company created successfully in the database</li>
                     <li>✅ HR admin account has been set up</li>
                     <li>📧 Welcome email sent with login credentials</li>
@@ -266,13 +277,15 @@ const CreateCompany: React.FC = () => {
               <div className="success-actions">
                 <button 
                   onClick={handleCreateAnother}
-                  className="button primary"
+                  className="login-button"
+                  style={{ marginBottom: '1rem' }}
                 >
                   Create Another Company
                 </button>
                 <button 
                   onClick={() => window.location.href = '/admin/dashboard'}
-                  className="button secondary"
+                  className="forgot-password"
+                  style={{ textDecoration: 'underline', background: 'none', border: 'none', color: '#708238' }}
                 >
                   Back to Dashboard
                 </button>
@@ -285,18 +298,22 @@ const CreateCompany: React.FC = () => {
   }
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-content">
+    <div className="hr-login-page create-company-page-wrapper">
+      <div className="create-company-page">
         <div className="create-company-container">
-          <div className="page-header">
-            <h1>Create New Company</h1>
-            <p>Set up a new company with an initial HR administrator</p>
-          </div>
+          <div className="create-company-card">
+            <div className="login-logo">
+              <img src="/HR.png" alt="OlivinHR" className="logo-image" />
+            </div>
+            
+            <div className="page-header">
+              <h1 className="page-title">Create New Company</h1>
+              <p className="page-subtitle">Set up a new company with an initial HR administrator</p>
+            </div>
 
-          <div className="form-card">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="create-company-form">
               {errors.general && (
-                <div className="error-message global-error">
+                <div className="error-message">
                   <svg className="error-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                   </svg>
@@ -305,19 +322,24 @@ const CreateCompany: React.FC = () => {
               )}
 
               <div className="form-section">
-                <h3>Company Information</h3>
+                <h2 className="section-title">Company Information</h2>
                 
                 <div className="form-group">
-                  <label htmlFor="companyName">Company Name *</label>
-                  <input
-                    id="companyName"
-                    type="text"
-                    value={formData.companyName}
-                    onChange={(e) => handleInputChange('companyName', e.target.value)}
-                    placeholder="e.g., Acme Corporation"
-                    className={errors.companyName ? 'error' : ''}
-                    disabled={loading}
-                  />
+                  <label htmlFor="companyName" className="form-label">Company Name *</label>
+                  <div className="input-wrapper">
+                    <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 8a1 1 0 011-1h4a1 1 0 011 1v4H7v-4z" clipRule="evenodd" />
+                    </svg>
+                    <input
+                      id="companyName"
+                      type="text"
+                      value={formData.companyName}
+                      onChange={(e) => handleInputChange('companyName', e.target.value)}
+                      placeholder="e.g., Acme Corporation"
+                      className={`form-input ${errors.companyName ? 'error' : ''}`}
+                      disabled={loading}
+                    />
+                  </div>
                   {errors.companyName && (
                     <span className="field-error">{errors.companyName}</span>
                   )}
@@ -325,17 +347,22 @@ const CreateCompany: React.FC = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="licenseCount">License Count *</label>
-                    <input
-                      id="licenseCount"
-                      type="number"
-                      min="1"
-                      max="10000"
-                      value={formData.licenseCount}
-                      onChange={(e) => handleInputChange('licenseCount', parseInt(e.target.value) || 0)}
-                      className={errors.licenseCount ? 'error' : ''}
-                      disabled={loading}
-                    />
+                    <label htmlFor="licenseCount" className="form-label">License Count *</label>
+                    <div className="input-wrapper">
+                      <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <input
+                        id="licenseCount"
+                        type="number"
+                        min="1"
+                        max="10000"
+                        value={formData.licenseCount}
+                        onChange={(e) => handleInputChange('licenseCount', parseInt(e.target.value) || 0)}
+                        className={`form-input ${errors.licenseCount ? 'error' : ''}`}
+                        disabled={loading}
+                      />
+                    </div>
                     {errors.licenseCount && (
                       <span className="field-error">{errors.licenseCount}</span>
                     )}
@@ -343,17 +370,22 @@ const CreateCompany: React.FC = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="maxUsers">Max HR Users *</label>
-                    <input
-                      id="maxUsers"
-                      type="number"
-                      min="1"
-                      max="1000"
-                      value={formData.maxUsers}
-                      onChange={(e) => handleInputChange('maxUsers', parseInt(e.target.value) || 0)}
-                      className={errors.maxUsers ? 'error' : ''}
-                      disabled={loading}
-                    />
+                    <label htmlFor="maxUsers" className="form-label">Max HR Users *</label>
+                    <div className="input-wrapper">
+                      <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                      </svg>
+                      <input
+                        id="maxUsers"
+                        type="number"
+                        min="1"
+                        max="1000"
+                        value={formData.maxUsers}
+                        onChange={(e) => handleInputChange('maxUsers', parseInt(e.target.value) || 0)}
+                        className={`form-input ${errors.maxUsers ? 'error' : ''}`}
+                        disabled={loading}
+                      />
+                    </div>
                     {errors.maxUsers && (
                       <span className="field-error">{errors.maxUsers}</span>
                     )}
@@ -362,17 +394,22 @@ const CreateCompany: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="maxProjects">Max Projects *</label>
-                  <input
-                    id="maxProjects"
-                    type="number"
-                    min="1"
-                    max="500"
-                    value={formData.maxProjects}
-                    onChange={(e) => handleInputChange('maxProjects', parseInt(e.target.value) || 0)}
-                    className={errors.maxProjects ? 'error' : ''}
-                    disabled={loading}
-                  />
+                  <label htmlFor="maxProjects" className="form-label">Max Projects *</label>
+                  <div className="input-wrapper">
+                    <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+                    </svg>
+                    <input
+                      id="maxProjects"
+                      type="number"
+                      min="1"
+                      max="500"
+                      value={formData.maxProjects}
+                      onChange={(e) => handleInputChange('maxProjects', parseInt(e.target.value) || 0)}
+                      className={`form-input ${errors.maxProjects ? 'error' : ''}`}
+                      disabled={loading}
+                    />
+                  </div>
                   {errors.maxProjects && (
                     <span className="field-error">{errors.maxProjects}</span>
                   )}
@@ -381,38 +418,49 @@ const CreateCompany: React.FC = () => {
               </div>
 
               <div className="form-section">
-                <h3>HR Administrator</h3>
+                <h2 className="section-title">HR Administrator</h2>
                 <p className="section-description">
                   This person will become the initial admin for the company
                 </p>
                 
                 <div className="form-group">
-                  <label htmlFor="hrName">Full Name *</label>
-                  <input
-                    id="hrName"
-                    type="text"
-                    value={formData.hrName}
-                    onChange={(e) => handleInputChange('hrName', e.target.value)}
-                    placeholder="e.g., John Smith"
-                    className={errors.hrName ? 'error' : ''}
-                    disabled={loading}
-                  />
+                  <label htmlFor="hrName" className="form-label">Full Name *</label>
+                  <div className="input-wrapper">
+                    <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                    <input
+                      id="hrName"
+                      type="text"
+                      value={formData.hrName}
+                      onChange={(e) => handleInputChange('hrName', e.target.value)}
+                      placeholder="e.g., John Smith"
+                      className={`form-input ${errors.hrName ? 'error' : ''}`}
+                      disabled={loading}
+                    />
+                  </div>
                   {errors.hrName && (
                     <span className="field-error">{errors.hrName}</span>
                   )}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="hrEmail">Email Address *</label>
-                  <input
-                    id="hrEmail"
-                    type="email"
-                    value={formData.hrEmail}
-                    onChange={(e) => handleInputChange('hrEmail', e.target.value)}
-                    placeholder="e.g., john.smith@company.com"
-                    className={errors.hrEmail ? 'error' : ''}
-                    disabled={loading}
-                  />
+                  <label htmlFor="hrEmail" className="form-label">Email Address *</label>
+                  <div className="input-wrapper">
+                    <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                    </svg>
+                    <input
+                      id="hrEmail"
+                      type="email"
+                      value={formData.hrEmail}
+                      onChange={(e) => handleInputChange('hrEmail', e.target.value)}
+                      placeholder="e.g., john.smith@company.com"
+                      className={`form-input ${errors.hrEmail ? 'error' : ''}`}
+                      disabled={loading}
+                    />
+                  </div>
                   {errors.hrEmail && (
                     <span className="field-error">{errors.hrEmail}</span>
                   )}
@@ -422,28 +470,26 @@ const CreateCompany: React.FC = () => {
                 </div>
               </div>
 
-              <div className="form-actions">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`button primary ${loading ? 'loading' : ''}`}
-                >
-                  {loading ? (
-                    <>
-                      <div className="loading-spinner-small"></div>
-                      Creating Company...
-                    </>
-                  ) : (
-                    <>
-                      <svg viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                      </svg>
-                      Create Company
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className={`login-button ${loading ? 'loading' : ''}`}
+              >
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : (
+                  'Create Company'
+                )}
+              </button>
             </form>
+
+
+
+            <div className="support-info">
+              <p className="support-contact">
+                Need help? Contact our support team at <a href="mailto:info@olivinhr.com">info@olivinhr.com</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -184,10 +184,7 @@ export default function HrLogin() {
               disabled={loading}
             >
               {loading ? (
-                <>
-                  <div className="loading-spinner"></div>
-                  Signing in...
-                </>
+                <div className="loading-spinner"></div>
               ) : (
                 'Log in'
               )}

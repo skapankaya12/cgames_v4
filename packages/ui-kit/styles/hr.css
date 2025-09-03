@@ -17,11 +17,19 @@
   justify-content: center;
   background: #edeaea;
   padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+/* Ensure scrolling works properly for create company page */
+.hr-login-page.create-company-page-wrapper {
+  align-items: flex-start;
+  padding: 1rem;
 }
 
 .hr-login-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 450px;
+  min-width: 320px;
   margin: 0 auto;
 }
 
@@ -143,22 +151,352 @@
 }
 
 .login-button {
-  width: 100%;
-  padding: 1rem 1.5rem;
+  width: 100% !important;
+  min-width: 220px !important;
+  padding: 1rem 2rem !important;
   background: #708238;
   color: white;
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 1rem !important;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 48px;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  min-height: 48px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  word-break: keep-all !important;
+  line-height: 1.2 !important;
 }
+
+.login-button .loading-spinner {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0 auto;
+}
+
+.login-button span,
+.login-button > * {
+  white-space: nowrap;
+}
+
+.login-button.loading {
+  min-width: 200px !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Extra specific selector to override any conflicting styles */
+button.login-button,
+.login-form button.login-button,
+.hr-login-card button.login-button {
+  white-space: nowrap !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  min-width: 220px !important;
+}
+
+/* Ensure the loading text doesn't wrap */
+.login-button.loading,
+button.login-button.loading {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  text-wrap: nowrap !important;
+}
+
+/* Create Company Page Styles */
+.create-company-page {
+  min-height: 100vh;
+  background: #edeaea;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.create-company-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.create-company-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.create-company-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.section-description {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.field-help {
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Create Company Form specific input styling */
+.create-company-form .input-wrapper {
+  position: relative;
+}
+
+.create-company-form .input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.create-company-form .form-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+  color: #374151 !important;
+}
+
+.create-company-form .form-input:focus {
+  outline: none;
+  border-color: #708238;
+  box-shadow: 0 0 0 3px rgba(112, 130, 56, 0.1);
+  color: #374151 !important;
+}
+
+.create-company-form .form-input.error {
+  border-color: #dc2626;
+}
+
+.create-company-form .form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Responsive design for create company */
+@media (max-width: 768px) {
+  .create-company-container {
+    max-width: 480px;
+  }
+  
+  .create-company-card {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-company-page {
+    padding: 1rem;
+  }
+  
+  .create-company-card {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/* Success Page Styles */
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #047857;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.success-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.detail-section {
+  background: #f9fafb;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.detail-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.detail-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+  text-align: right;
+  word-break: break-all;
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.steps-list li {
+  padding: 0.5rem 0;
+  color: #374151;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .success-details {
+    gap: 1rem;
+  }
+  
+  .detail-section {
+    padding: 1rem;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .detail-value {
+    text-align: left;
+  }
+}
+
+
 
 .login-button:hover:not(:disabled) {
   background: #5d6b2f;
