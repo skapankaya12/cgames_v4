@@ -5784,8 +5784,6 @@
 
 .project-content-redesigned {
   padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .tab-content {
@@ -5802,9 +5800,10 @@
 
 .invite-panel {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 3fr;
   gap: 2rem;
   align-items: start;
+  max-width: none;
 }
 
 .invite-section {
@@ -5825,6 +5824,7 @@
 .project-panel {
   max-height: 80vh;
   overflow-y: auto;
+  width: 100%;
 }
 
 .project-details-content {
@@ -5836,6 +5836,7 @@
 .notes-panel, .history-panel {
   max-height: 80vh;
   overflow-y: auto;
+  width: 100%;
 }
 
 /* Update button styles to match HR platform */

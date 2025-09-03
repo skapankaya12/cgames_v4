@@ -400,25 +400,7 @@ export default function ProjectDashboard() {
             </button>
           </nav>
           
-          {/* Quick Stats */}
-          <div className="quick-stats-header">
-            <div className="stat-item">
-              <span className="stat-number">{statusCounts.total}</span>
-              <span className="stat-label">Total</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{statusCounts.invited}</span>
-              <span className="stat-label">Invited</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{statusCounts.inProgress}</span>
-              <span className="stat-label">Active</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{statusCounts.completed}</span>
-              <span className="stat-label">Complete</span>
-            </div>
-          </div>
+
         </div>
         
         {/* Tab Navigation */}
