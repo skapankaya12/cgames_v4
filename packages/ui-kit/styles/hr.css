@@ -5662,3 +5662,307 @@
   flex-shrink: 0;
   color: #F87171;
 }
+
+/* Redesigned Project Dashboard Styles */
+.project-dashboard {
+  background: #edeaea;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.project-header-redesigned {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-top {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #708238;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  background: #5d6b2e;
+}
+
+.breadcrumb-link svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.quick-stats-header {
+  display: flex;
+  gap: 2rem;
+}
+
+.quick-stats-header .stat-item {
+  text-align: center;
+}
+
+.quick-stats-header .stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #708238;
+  line-height: 1.2;
+}
+
+.quick-stats-header .stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.25rem;
+}
+
+.tab-navigation {
+  padding: 0 2rem;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-navigation .tab-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tab-navigation .tab-button:hover {
+  color: #708238;
+  background: rgba(112, 130, 56, 0.05);
+}
+
+.tab-navigation .tab-button.active {
+  color: #708238;
+  border-bottom-color: #708238;
+  background: rgba(112, 130, 56, 0.05);
+}
+
+.tab-navigation .tab-button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.project-content-redesigned {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tab-content {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tab-panel {
+  padding: 2rem;
+  min-height: 600px;
+}
+
+.invite-panel {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.invite-section {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.candidates-section {
+  background: white;
+}
+
+.section-header-minimal {
+  margin-bottom: 1.5rem;
+}
+
+.project-panel {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.project-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.notes-panel, .history-panel {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Update button styles to match HR platform */
+.send-invitations-button {
+  background: #708238 !important;
+  color: white !important;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.send-invitations-button:hover:not(:disabled) {
+  background: #5d6b2e !important;
+}
+
+.send-invitations-button:disabled {
+  background: #9ca3af !important;
+  cursor: not-allowed;
+}
+
+.filter-tabs-modern .tab-button.active {
+  background: #708238;
+  color: white;
+}
+
+.filter-tabs-modern .tab-button:hover:not(.active) {
+  background: rgba(112, 130, 56, 0.1);
+  color: #708238;
+}
+
+.action-button.primary {
+  background: #708238;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-button.primary:hover {
+  background: #5d6b2e;
+}
+
+.action-button.primary svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.empty-cta-button {
+  background: #708238;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+}
+
+.empty-cta-button:hover {
+  background: #5d6b2e;
+}
+
+.empty-cta-button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .invite-panel {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .project-content-redesigned {
+    padding: 1rem;
+  }
+  
+  .header-top {
+    padding: 1rem;
+  }
+  
+  .tab-navigation {
+    padding: 0 1rem;
+    overflow-x: auto;
+  }
+  
+  .quick-stats-header {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tab-navigation .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  .quick-stats-header .stat-number {
+    font-size: 1.25rem;
+  }
+  
+  .quick-stats-header .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .tab-panel {
+    padding: 1rem;
+  }
+}

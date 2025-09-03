@@ -323,7 +323,7 @@ export const MultiEmailInvite: React.FC<MultiEmailInviteProps> = ({
             </svg>
             <span>
               {validEmailCount === 0
-                ? 'Send Your First Invitation'
+                ? 'Send Invitation'
                 : `Send ${validEmailCount} Invitation${validEmailCount !== 1 ? 's' : ''}`
               }
             </span>
@@ -331,12 +331,7 @@ export const MultiEmailInvite: React.FC<MultiEmailInviteProps> = ({
         )}
       </button>
 
-      {/* Help Text */}
-      <div className="invite-help">
-        <p>
-          <strong>Pro tip:</strong> Paste multiple emails separated by commas, or drag & drop a CSV file.
-        </p>
-      </div>
+
     </div>
   );
 }; 

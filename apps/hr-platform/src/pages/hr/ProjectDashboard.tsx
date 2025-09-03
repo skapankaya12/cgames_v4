@@ -81,6 +81,9 @@ export default function ProjectDashboard() {
     const saved = localStorage.getItem(`project-details-${projectId}`);
     return saved ? JSON.parse(saved) : false;
   });
+  
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'invite' | 'project' | 'notes' | 'history'>('invite');
 
   // Results panel state
   const [isResultsPanelOpen, setIsResultsPanelOpen] = useState(false);
@@ -382,214 +385,99 @@ export default function ProjectDashboard() {
         </div>
       )}
 
-      {/* Sticky Header */}
-      <header className="project-header sticky">
-        <div className="container">
-          <div className="header-content">
-            {/* Breadcrumb Navigation */}
-            <nav className="breadcrumb">
-              <button 
-                onClick={() => navigate('/hr/projects')}
-                className="breadcrumb-link"
-              >
-                <svg viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                Projects
-              </button>
-              <span className="breadcrumb-separator">/</span>
-              <span className="breadcrumb-current">{project.name}</span>
-            </nav>
-
-            {/* Project Info */}
-            <div className="project-info">
-              <div className="project-title-section">
-                <h1 className="project-title">{project.name}</h1>
-                <div className="project-meta">
-                  <span className="position-tag">{project.roleInfo?.position || 'Assessment'}</span>
-                  <span className="department-tag">{project.roleInfo?.department || 'General'}</span>
-                  <span className={`status-badge ${project.status === 'active' ? 'status-active' : 'status-inactive'}`}>
-                    {project.status}
-                  </span>
-                </div>
-              </div>
-              
-              {/* Quick Stats */}
-              <div className="quick-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{statusCounts.total}</span>
-                  <span className="stat-label">Total</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{statusCounts.invited}</span>
-                  <span className="stat-label">Invited</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{statusCounts.inProgress}</span>
-                  <span className="stat-label">Active</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{statusCounts.completed}</span>
-                  <span className="stat-label">Complete</span>
-                </div>
-              </div>
+      {/* Simplified Header with Tabs */}
+      <header className="project-header-redesigned">
+        <div className="header-top">
+          <nav className="breadcrumb">
+            <button 
+              onClick={() => navigate('/hr/projects')}
+              className="breadcrumb-link"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+              Projects
+            </button>
+          </nav>
+          
+          {/* Quick Stats */}
+          <div className="quick-stats-header">
+            <div className="stat-item">
+              <span className="stat-number">{statusCounts.total}</span>
+              <span className="stat-label">Total</span>
             </div>
-
-            {/* Header Actions */}
-            <div className="header-actions">
-              <button 
-                onClick={async () => {
-                  await signOut(auth);
-                  navigate('/hr/login');
-                }}
-                className="header-action-btn"
-              >
-                <svg viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                </svg>
-                Sign Out
-              </button>
+            <div className="stat-item">
+              <span className="stat-number">{statusCounts.invited}</span>
+              <span className="stat-label">Invited</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{statusCounts.inProgress}</span>
+              <span className="stat-label">Active</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{statusCounts.completed}</span>
+              <span className="stat-label">Complete</span>
             </div>
           </div>
         </div>
+        
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
+          <button 
+            className={`tab-button ${activeTab === 'invite' ? 'active' : ''}`}
+            onClick={() => setActiveTab('invite')}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+            </svg>
+            Invite Candidates
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'project' ? 'active' : ''}`}
+            onClick={() => setActiveTab('project')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+            </svg>
+            Project Details
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'notes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notes')}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+            Notes
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'history' ? 'active' : ''}`}
+            onClick={() => setActiveTab('history')}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+            </svg>
+            History
+          </button>
+        </div>
       </header>
 
-      {/* Main Content */}
-      <main className="project-content">
-        <div className="container">
-          <div className="content-grid">
-            {/* Left Column: Invite & Overview */}
-            <aside className="left-column">
-              {/* Multi-Email Invite Component */}
-              <MultiEmailInvite
-                onInvite={handleMultiInvite}
-                isLoading={inviteLoading}
-                rolePosition={project.roleInfo?.position || 'Assessment'}
-              />
-
-              {/* Collapsible Project Details */}
-              <div className="project-details-card">
-                <div className="collapsible-header" onClick={toggleProjectDetails}>
-                  <div className="header-left">
-                    <div className="header-icon">
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-                      </svg>
-                    </div>
-                    <div className="header-text">
-                      <h3>Project Details</h3>
-                      <p>Assessment configuration and requirements</p>
-                    </div>
-                  </div>
-                  <button className="toggle-button">
-                    <svg
-                      className={`chevron ${isProjectDetailsOpen ? 'open' : ''}`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div className={`collapsible-content ${isProjectDetailsOpen ? 'open' : ''}`}>
-                  <div className="overview-content">
-                    <div className="info-section">
-                      <h4>Role Information</h4>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="label">Position</span>
-                          <span className="value">{project.roleInfo?.position || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Department</span>
-                          <span className="value">{project.roleInfo?.department || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Experience Level</span>
-                          <span className="value">{project.roleInfo?.yearsExperience || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Work Mode</span>
-                          <span className="value">{project.roleInfo?.workMode || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Location</span>
-                          <span className="value">{project.roleInfo?.location || 'Not specified'}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="info-section">
-                      <h4>Team & Culture</h4>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="label">Team Size</span>
-                          <span className="value">{project.customization?.teamSize || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Management Style</span>
-                          <span className="value">{project.customization?.managementStyle || 'Not specified'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Industry</span>
-                          <span className="value">{project.customization?.industryFocus || 'Not specified'}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="info-section">
-                      <h4>Assessment Configuration</h4>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="label">Duration</span>
-                          <span className="value">{project.recommendations?.assessmentDuration || '30'} minutes</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Focus Areas</span>
-                          <div className="tag-list">
-                            {(project.recommendations?.focusAreas || ['Leadership', 'Communication']).map((area: string, index: number) => (
-                              <span key={index} className="focus-tag">{area}</span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Key Skills</span>
-                          <div className="tag-list">
-                            {(project.customization?.keySkills || ['Communication', 'Leadership']).map((skill: string, index: number) => (
-                              <span key={index} className="skill-tag">{skill}</span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">Suggested Games</span>
-                          <div className="tag-list">
-                            {(project.recommendations?.suggestedGames || ['Leadership Scenario Game']).map((game: string, index: number) => (
-                              <span key={index} className="game-tag">{game}</span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      {/* Main Content with Tabs */}
+      <main className="project-content-redesigned">
+        <div className="tab-content">
+          {/* Invite Candidates Tab */}
+          {activeTab === 'invite' && (
+            <div className="tab-panel invite-panel">
+              <div className="invite-section">
+                <MultiEmailInvite
+                  onInvite={handleMultiInvite}
+                  isLoading={inviteLoading}
+                  rolePosition={project.roleInfo?.position || 'Assessment'}
+                />
               </div>
-
-              {/* Notes Panel */}
-              <NotesPanel projectId={projectId} />
-
-              {/* Activity Timeline */}
-              <ActivityTimeline projectId={projectId} maxItems={5} />
-            </aside>
-
-            {/* Right Column: Candidates Management */}
-            <main className="right-column">
+              
               <div className="candidates-section">
-                <div className="section-header">
-                  <div className="section-title">
-                    <h2>Candidate Management</h2>
-                    <p>Track and manage assessment progress</p>
-                  </div>
+                <div className="section-header-minimal">
 
                   {/* Modern Filter Tabs */}
                   <div className="filter-tabs-modern">
@@ -810,8 +698,107 @@ export default function ProjectDashboard() {
                   </div>
                 )}
               </div>
-            </main>
-          </div>
+            </div>
+          )}
+          
+          {/* Project Details Tab */}
+          {activeTab === 'project' && (
+            <div className="tab-panel project-panel">
+              <div className="project-details-content">
+                <div className="info-section">
+                  <h4>Role Information</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Position</span>
+                      <span className="value">{project.roleInfo?.position || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Department</span>
+                      <span className="value">{project.roleInfo?.department || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Experience Level</span>
+                      <span className="value">{project.roleInfo?.yearsExperience || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Work Mode</span>
+                      <span className="value">{project.roleInfo?.workMode || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Location</span>
+                      <span className="value">{project.roleInfo?.location || 'Not specified'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="info-section">
+                  <h4>Team & Culture</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Team Size</span>
+                      <span className="value">{project.customization?.teamSize || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Management Style</span>
+                      <span className="value">{project.customization?.managementStyle || 'Not specified'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Industry</span>
+                      <span className="value">{project.customization?.industryFocus || 'Not specified'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="info-section">
+                  <h4>Assessment Configuration</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Duration</span>
+                      <span className="value">{project.recommendations?.assessmentDuration || '30'} minutes</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Focus Areas</span>
+                      <div className="tag-list">
+                        {(project.recommendations?.focusAreas || ['Leadership', 'Communication']).map((area: string, index: number) => (
+                          <span key={index} className="focus-tag">{area}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Key Skills</span>
+                      <div className="tag-list">
+                        {(project.customization?.keySkills || ['Communication', 'Leadership']).map((skill: string, index: number) => (
+                          <span key={index} className="skill-tag">{skill}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Suggested Games</span>
+                      <div className="tag-list">
+                        {(project.recommendations?.suggestedGames || ['Leadership Scenario Game']).map((game: string, index: number) => (
+                          <span key={index} className="game-tag">{game}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Notes Tab */}
+          {activeTab === 'notes' && (
+            <div className="tab-panel notes-panel">
+              <NotesPanel projectId={projectId} />
+            </div>
+          )}
+          
+          {/* History Tab */}
+          {activeTab === 'history' && (
+            <div className="tab-panel history-panel">
+              <ActivityTimeline projectId={projectId} maxItems={20} />
+            </div>
+          )}
         </div>
       </main>
 
