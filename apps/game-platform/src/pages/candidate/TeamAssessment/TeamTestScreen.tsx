@@ -16,6 +16,7 @@ const TeamTestScreen = () => {
   const [startTime] = useState(Date.now());
 
   const currentQuestion = teamQuestions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / teamQuestions.length) * 100;
 
   useEffect(() => {
     // Check if user has completed identity screen
@@ -185,6 +186,30 @@ const TeamTestScreen = () => {
     <div className="team-test-screen">
       
       <div className="question-container">
+        {/* Progress Bar - 3cm above questions */}
+        <div style={{ 
+          marginBottom: '3cm',
+          width: '100%',
+          maxWidth: '600px',
+          margin: '0 auto 3cm auto'
+        }}>
+          <div style={{
+            width: '100%',
+            height: '6px',
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            borderRadius: '3px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: `${progress}%`,
+              height: '100%',
+              backgroundColor: '#6B8E23',
+              borderRadius: '3px',
+              transition: 'width 0.3s ease'
+            }} />
+          </div>
+        </div>
+
         <div className="question-header" style={{ justifyContent: 'center' }}>
           {/* Removed question counter and dimension badges */}
         </div>

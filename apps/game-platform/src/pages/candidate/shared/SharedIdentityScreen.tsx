@@ -140,7 +140,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="department" className="form-label">Departman *</label>
+                  <label htmlFor="department" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Departman *</label>
                   <input
                     type="text"
                     id="department"
@@ -148,12 +148,16 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     onChange={(e) => handleInputChange('department', e.target.value)}
                     className={`form-input ${errors.department ? 'error' : ''}`}
                     placeholder="Departmanınızı giriniz"
+                    style={{ 
+                      fontSize: '0.9rem',
+                      textAlign: 'right'
+                    }}
                   />
                   {errors.department && <span className="field-error">{errors.department}</span>}
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="position" className="form-label">Pozisyon *</label>
+                  <label htmlFor="position" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Pozisyon *</label>
                   <input
                     type="text"
                     id="position"
@@ -161,6 +165,10 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     onChange={(e) => handleInputChange('position', e.target.value)}
                     className={`form-input ${errors.position ? 'error' : ''}`}
                     placeholder="Pozisyonunuzu giriniz"
+                    style={{ 
+                      fontSize: '0.9rem',
+                      textAlign: 'right'
+                    }}
                   />
                   {errors.position && <span className="field-error">{errors.position}</span>}
                 </div>
@@ -168,12 +176,13 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="experience" className="form-label">Deneyim Süresi *</label>
+                  <label htmlFor="experience" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Deneyim Süresi *</label>
                   <select
                     id="experience"
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value)}
                     className={`form-input ${errors.experience ? 'error' : ''}`}
+                    style={{ fontSize: '0.9rem', textAlign: 'right' }}
                   >
                     <option value="">Seçiniz</option>
                     <option value="0-1">0-1 yıl</option>
@@ -186,12 +195,13 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="workMode" className="form-label">Çalışma Şekli</label>
+                  <label htmlFor="workMode" className="form-label" style={{ background: 'none', backgroundColor: 'transparent' }}>Çalışma Şekli</label>
                   <select
                     id="workMode"
                     value={formData.workMode}
                     onChange={(e) => handleInputChange('workMode', e.target.value)}
                     className="form-input"
+                    style={{ fontSize: '0.9rem', textAlign: 'right' }}
                   >
                     <option value="office">Ofis</option>
                     <option value="remote">Uzaktan</option>
@@ -205,7 +215,13 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                   type="submit" 
                   className="login-button"
                   disabled={isLoading}
-                  style={{ width: '100%', maxWidth: '300px' }}
+                  style={{ 
+                    width: '100%', 
+                    maxWidth: '300px',
+                    background: '#708238',
+                    backgroundColor: '#708238',
+                    border: 'none'
+                  }}
                 >
                   {isLoading ? 'Yükleniyor...' : 'Devam Et'}
                 </button>
@@ -231,6 +247,26 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
           </div>
         </div>
       </div>
+      
+      {/* Custom styles for placeholder text alignment */}
+      <style>{`
+        .form-input::placeholder {
+          font-size: 0.85rem !important;
+          text-align: right !important;
+        }
+        .form-input::-webkit-input-placeholder {
+          font-size: 0.85rem !important;
+          text-align: right !important;
+        }
+        .form-input::-moz-placeholder {
+          font-size: 0.85rem !important;
+          text-align: right !important;
+        }
+        .form-input:-ms-input-placeholder {
+          font-size: 0.85rem !important;
+          text-align: right !important;
+        }
+      `}</style>
     </div>
   );
 };
