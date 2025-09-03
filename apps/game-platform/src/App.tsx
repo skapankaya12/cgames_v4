@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { Header } from '@cgames/ui-kit';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -213,15 +213,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   
-  // Show header only on candidate identity screens
-  const showHeader = location.pathname === '/candidate' || 
-                    location.pathname === '/candidate/game2' ||
-                    location.pathname === '/candidate/engagement' ||
-                    location.pathname === '/candidate/team' ||
-                    location.pathname === '/candidate/manager';
+  // Header removed from all assessment pages
+  const showHeader = false;
   
   // Check if this is a token-based access (for root route only)
   const hasToken = searchParams.get('token');

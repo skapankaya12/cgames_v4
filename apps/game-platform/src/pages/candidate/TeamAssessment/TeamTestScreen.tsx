@@ -189,16 +189,8 @@ const TeamTestScreen = () => {
       </div>
       
       <div className="question-container">
-        <div className="question-header">
-          <div className="question-counter">
-            {currentQuestionIndex + 1} / {teamQuestions.length}
-          </div>
-          <div className="dimension-badge">
-            {currentQuestion.dimension}
-          </div>
-          <div className="sub-dimension-badge">
-            {currentQuestion.sub_dimension}
-          </div>
+        <div className="question-header" style={{ justifyContent: 'center' }}>
+          {/* Removed question counter and dimension badges */}
         </div>
         
         <div className="question-content">
@@ -242,6 +234,28 @@ const TeamTestScreen = () => {
             </button>
           )}
         </div>
+      </div>
+      
+      {/* Footer */}
+      <div style={{ 
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: 'rgba(255, 255, 255, 0.95)',
+        borderTop: '1px solid #e5e7eb',
+        padding: '1rem',
+        textAlign: 'center',
+        fontSize: '0.875rem',
+        color: '#6b7280',
+        zIndex: 999
+      }}>
+        <p style={{ margin: '0 0 0.5rem 0' }}>
+          All rights reserved. OlivinHR 2025.
+        </p>
+        <p style={{ margin: '0' }}>
+          Help? Contact <strong>info@olivinhr.com</strong>
+        </p>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
-import './SharedIdentityScreen.css';
+import '@cgames/ui-kit/styles/hr.css';
 
 interface SharedIdentityScreenProps {
   assessmentType: 'calisan-bagliligi' | 'takim-degerlendirme' | 'yonetici-degerlendirme';
@@ -116,98 +116,120 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
   };
 
   return (
-    <div className="shared-identity-screen">
-      <div className="identity-container">
-        <div className="identity-header">
-          <div className="assessment-badge">
-            {assessmentType === 'calisan-bagliligi' && '💼'}
-            {assessmentType === 'takim-degerlendirme' && '👥'}
-            {assessmentType === 'yonetici-degerlendirme' && '👔'}
+    <div className="hr-login-page">
+      <div className="hr-login-container">
+        <div className="hr-login-card">
+          <div className="login-logo">
+            <img src="/HR.png" alt="OlivinHR" className="logo-image" />
           </div>
-          <h1 className="assessment-title">
-            {assessmentTitles[assessmentType]}
-          </h1>
-          <p className="assessment-description">
-            {assessmentDescriptions[assessmentType]}
-          </p>
+
+          <div className="page-header">
+            <h1 className="page-title">
+              {assessmentTitles[assessmentType]}
+            </h1>
+            <p className="page-subtitle">
+              {assessmentDescriptions[assessmentType]}
+            </p>
+          </div>
+
+          <form className="create-company-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+            <div className="form-section">
+              <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#6b7280' }}>
+                Değerlendirmeye başlamadan önce lütfen aşağıdaki bilgileri doldurunuz:
+              </p>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="department" className="form-label">Departman *</label>
+                  <input
+                    type="text"
+                    id="department"
+                    value={formData.department}
+                    onChange={(e) => handleInputChange('department', e.target.value)}
+                    className={`form-input ${errors.department ? 'error' : ''}`}
+                    placeholder="Departmanınızı giriniz"
+                  />
+                  {errors.department && <span className="field-error">{errors.department}</span>}
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="position" className="form-label">Pozisyon *</label>
+                  <input
+                    type="text"
+                    id="position"
+                    value={formData.position}
+                    onChange={(e) => handleInputChange('position', e.target.value)}
+                    className={`form-input ${errors.position ? 'error' : ''}`}
+                    placeholder="Pozisyonunuzu giriniz"
+                  />
+                  {errors.position && <span className="field-error">{errors.position}</span>}
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="experience" className="form-label">Deneyim Süresi *</label>
+                  <select
+                    id="experience"
+                    value={formData.experience}
+                    onChange={(e) => handleInputChange('experience', e.target.value)}
+                    className={`form-input ${errors.experience ? 'error' : ''}`}
+                  >
+                    <option value="">Seçiniz</option>
+                    <option value="0-1">0-1 yıl</option>
+                    <option value="1-3">1-3 yıl</option>
+                    <option value="3-5">3-5 yıl</option>
+                    <option value="5-10">5-10 yıl</option>
+                    <option value="10+">10+ yıl</option>
+                  </select>
+                  {errors.experience && <span className="field-error">{errors.experience}</span>}
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="workMode" className="form-label">Çalışma Şekli</label>
+                  <select
+                    id="workMode"
+                    value={formData.workMode}
+                    onChange={(e) => handleInputChange('workMode', e.target.value)}
+                    className="form-input"
+                  >
+                    <option value="office">Ofis</option>
+                    <option value="remote">Uzaktan</option>
+                    <option value="hybrid">Hibrit</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-actions" style={{ textAlign: 'center', marginTop: '2rem' }}>
+                <button 
+                  type="submit" 
+                  className="login-button"
+                  disabled={isLoading}
+                  style={{ width: '100%', maxWidth: '300px' }}
+                >
+                  {isLoading ? 'Yükleniyor...' : 'Devam Et'}
+                </button>
+              </div>
+            </div>
+          </form>
+
+          {/* Footer */}
+          <div style={{ 
+            marginTop: '2rem', 
+            paddingTop: '1rem', 
+            borderTop: '1px solid #e5e7eb', 
+            textAlign: 'center',
+            fontSize: '0.875rem',
+            color: '#6b7280'
+          }}>
+            <p style={{ margin: '0 0 0.5rem 0' }}>
+              All rights reserved. OlivinHR 2025.
+            </p>
+            <p style={{ margin: '0' }}>
+              Help? Contact <strong>info@olivinhr.com</strong>
+            </p>
+          </div>
         </div>
-
-        <form className="identity-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
-          <div className="form-intro">
-            <p>Değerlendirmeye başlamadan önce lütfen aşağıdaki bilgileri doldurunuz:</p>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="department">Departman *</label>
-              <input
-                type="text"
-                id="department"
-                value={formData.department}
-                onChange={(e) => handleInputChange('department', e.target.value)}
-                className={errors.department ? 'error' : ''}
-                placeholder="Departmanınızı giriniz"
-              />
-              {errors.department && <span className="error-message">{errors.department}</span>}
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="position">Pozisyon *</label>
-              <input
-                type="text"
-                id="position"
-                value={formData.position}
-                onChange={(e) => handleInputChange('position', e.target.value)}
-                className={errors.position ? 'error' : ''}
-                placeholder="Pozisyonunuzu giriniz"
-              />
-              {errors.position && <span className="error-message">{errors.position}</span>}
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="experience">Deneyim Süresi *</label>
-              <select
-                id="experience"
-                value={formData.experience}
-                onChange={(e) => handleInputChange('experience', e.target.value)}
-                className={errors.experience ? 'error' : ''}
-              >
-                <option value="">Seçiniz</option>
-                <option value="0-1">0-1 yıl</option>
-                <option value="1-3">1-3 yıl</option>
-                <option value="3-5">3-5 yıl</option>
-                <option value="5-10">5-10 yıl</option>
-                <option value="10+">10+ yıl</option>
-              </select>
-              {errors.experience && <span className="error-message">{errors.experience}</span>}
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="workMode">Çalışma Şekli</label>
-              <select
-                id="workMode"
-                value={formData.workMode}
-                onChange={(e) => handleInputChange('workMode', e.target.value)}
-              >
-                <option value="office">Ofis</option>
-                <option value="remote">Uzaktan</option>
-                <option value="hybrid">Hibrit</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="form-actions">
-            <button 
-              type="submit" 
-              className="continue-button"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Yükleniyor...' : 'Devam Et'}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );
