@@ -16,7 +16,6 @@ const EngagementTestScreen = () => {
   const [startTime] = useState(Date.now());
 
   const currentQuestion = engagementQuestions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / engagementQuestions.length) * 100;
 
   useEffect(() => {
     // Check if user has completed identity screen (try both keys)
@@ -235,9 +234,6 @@ const EngagementTestScreen = () => {
 
   return (
     <div className="engagement-test-screen">
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-      </div>
       
       <div className="question-container">
         <div className="question-header" style={{ justifyContent: 'center' }}>
@@ -305,7 +301,7 @@ const EngagementTestScreen = () => {
           All rights reserved. OlivinHR 2025.
         </p>
         <p style={{ margin: '0' }}>
-          Help? Contact <strong>info@olivinhr.com</strong>
+          Need help? Contact our support team at <strong>info@olivinhr.com</strong>
         </p>
       </div>
     </div>

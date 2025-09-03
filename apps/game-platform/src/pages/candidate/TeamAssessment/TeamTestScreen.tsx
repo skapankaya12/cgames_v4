@@ -16,7 +16,6 @@ const TeamTestScreen = () => {
   const [startTime] = useState(Date.now());
 
   const currentQuestion = teamQuestions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / teamQuestions.length) * 100;
 
   useEffect(() => {
     // Check if user has completed identity screen
@@ -184,9 +183,6 @@ const TeamTestScreen = () => {
 
   return (
     <div className="team-test-screen">
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-      </div>
       
       <div className="question-container">
         <div className="question-header" style={{ justifyContent: 'center' }}>
@@ -253,9 +249,9 @@ const TeamTestScreen = () => {
         <p style={{ margin: '0 0 0.5rem 0' }}>
           All rights reserved. OlivinHR 2025.
         </p>
-        <p style={{ margin: '0' }}>
-          Help? Contact <strong>info@olivinhr.com</strong>
-        </p>
+                  <p style={{ margin: '0' }}>
+            Need help? Contact our support team at <strong>info@olivinhr.com</strong>
+          </p>
       </div>
     </div>
   );
