@@ -35,6 +35,14 @@
   line-height: 32px;
 }
 
+.header-logo {
+  height: 32px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+}
+
 .game-navigation {
   display: flex;
   gap: 0.5rem;

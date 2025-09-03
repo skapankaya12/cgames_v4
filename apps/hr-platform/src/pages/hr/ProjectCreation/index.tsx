@@ -11,6 +11,7 @@ import { ProjectCreationStep3 } from './components/ProjectCreationStep3';
 import { ProjectCreationStep4 } from './components/ProjectCreationStep4';
 import { ProjectCreationNavigation } from './components/ProjectCreationNavigation';
 import { StepIndicator } from './components/StepIndicator';
+import { Navigation } from '@cgames/ui-kit';
 
 
 export default function ProjectCreation() {
@@ -18,6 +19,7 @@ export default function ProjectCreation() {
   const auth = getAuth();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [hrUser, setHrUser] = useState<any>(null);
+  const [companyData, setCompanyData] = useState<any>(null);
 
   const {
     formData,
@@ -48,6 +50,17 @@ export default function ProjectCreation() {
             const userData = hrUserDoc.data();
             setHrUser(userData);
             setCompanyId(userData.companyId);
+            
+            // Fetch company data
+            try {
+              const companyDocRef = doc(db, 'companies', userData.companyId);
+              const companyDocSnap = await getDoc(companyDocRef);
+              if (companyDocSnap.exists()) {
+                setCompanyData(companyDocSnap.data());
+              }
+            } catch (companyError) {
+              console.warn('Could not fetch company data:', companyError);
+            }
           } else {
             console.error('HR user document not found');
             navigate('/hr/login');
@@ -108,24 +121,20 @@ export default function ProjectCreation() {
   };
 
   return (
-    <div className="hr-dashboard">
-      <div className="hr-content">
+    <>
+      <Navigation 
+        hrUser={hrUser} 
+        companyData={companyData}
+      />
+      <div className="hr-dashboard nav-expanded">
+        <div className="project-creation-wrapper">
         <div className="creation-container">
           <div className="creation-header">
-            <h2>Create New Project</h2>
+            <h1>Create New Project</h1>
             <p>Set up a recruitment assessment project for your organization</p>
             
             {/* NEW: Project limits display */}
-            <div className="project-limits-info" style={{ 
-              marginTop: '1rem', 
-              padding: '0.75rem 1rem', 
-              borderRadius: '8px',
-              backgroundColor: projectLimits.canCreateProject ? '#f0f9ff' : '#fef2f2',
-              border: projectLimits.canCreateProject ? '1px solid #0ea5e9' : '1px solid #ef4444',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}>
+            <div className="project-limits-info">
               {projectLimits.loading ? (
                 <>
                   <div className="loading-spinner-small"></div>
@@ -185,24 +194,58 @@ export default function ProjectCreation() {
             </div>
           )}
 
+          {/* Sidebar with step info */}
+          <div className="creation-sidebar">
+            <div className="sidebar-section">
+              <h3>Project Creation Steps</h3>
+              <ul className="step-list">
+                <li className={currentStep === 1 ? 'current' : ''}>1. Basic Information</li>
+                <li className={currentStep === 2 ? 'current' : ''}>2. Role Details</li>
+                <li className={currentStep === 3 ? 'current' : ''}>3. Team & Culture</li>
+                <li className={currentStep === 4 ? 'current' : ''}>4. Assessment Setup</li>
+              </ul>
+            </div>
+            <div className="sidebar-section">
+              <h3>Current Step</h3>
+              <p>
+                {currentStep === 1 && "Enter basic project information including name, description, and deadline."}
+                {currentStep === 2 && "Define the role requirements, responsibilities, and department details."}
+                {currentStep === 3 && "Set team culture preferences and working environment details."}
+                {currentStep === 4 && "Configure assessment criteria and evaluation parameters."}
+              </p>
+            </div>
+            <div className="sidebar-section">
+              <h3>Tips</h3>
+              <p>
+                {currentStep === 1 && "Use a clear, descriptive project name that helps identify the recruitment goal."}
+                {currentStep === 2 && "Be specific about required skills and experience levels for better candidate matching."}
+                {currentStep === 3 && "Cultural fit is crucial - describe your team's working style and values."}
+                {currentStep === 4 && "Choose assessment criteria that align with the role's key requirements."}
+              </p>
+            </div>
+          </div>
+
           <div className="creation-content">
             <div className="form-container">
               {renderCurrentStep()}
             </div>
           </div>
 
-          <ProjectCreationNavigation
-            currentStep={currentStep}
-            isLastStep={currentStep === 4}
-            loading={loading}
-            isStepValid={isStepValid()}
-            onPrevious={prevStep}
-            onNext={nextStep}
-            onSubmit={handleSubmit}
-            disabled={!projectLimits.canCreateProject} // NEW: Disable if project limit reached
-          />
+          <div className="creation-navigation-wrapper">
+            <ProjectCreationNavigation
+              currentStep={currentStep}
+              isLastStep={currentStep === 4}
+              loading={loading}
+              isStepValid={isStepValid()}
+              onPrevious={prevStep}
+              onNext={nextStep}
+              onSubmit={handleSubmit}
+              disabled={!projectLimits.canCreateProject} // NEW: Disable if project limit reached
+            />
+          </div>
         </div>
       </div>
     </div>
+    </>
   );
 } 

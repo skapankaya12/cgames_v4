@@ -14,7 +14,7 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hrUser, setHrUser] = useState<any>(null);
-  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -48,11 +48,10 @@ export default function Settings() {
     return (
       <>
         <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
+          companyData={null}
         />
-        <div className={`hr-dashboard-loading ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+        <div className="hr-dashboard-loading nav-expanded">
           <div className="loading-spinner-large"></div>
           <p>Loading settings...</p>
         </div>
@@ -64,11 +63,10 @@ export default function Settings() {
     return (
       <>
         <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
+          companyData={null}
         />
-        <div className={`hr-dashboard-error ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+        <div className="hr-dashboard-error nav-expanded">
           <div className="error-icon">
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -84,12 +82,11 @@ export default function Settings() {
   return (
     <>
       <Navigation 
-        isCollapsed={isNavCollapsed} 
-        setIsCollapsed={setIsNavCollapsed} 
         hrUser={hrUser} 
+        companyData={null}
       />
       
-      <div className={`hr-dashboard ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+      <div className="hr-dashboard nav-expanded">
         {/* Header */}
         <header className="dashboard-header">
           <div className="header-content">

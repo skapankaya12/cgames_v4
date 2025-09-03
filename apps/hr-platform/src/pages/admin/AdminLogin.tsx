@@ -51,98 +51,106 @@ const AdminLogin: React.FC = () => {
   const isFormValid = formData.email.trim() && formData.password.trim();
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <div className="auth-logo">
-            <div className="logo-icon">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-              </svg>
-            </div>
-            <span className="logo-text">Admin Portal</span>
+    <div className="hr-login-page">
+      <div className="hr-login-container">
+        <div className="hr-login-card">
+          <div className="login-logo">
+            <img src="/teklogo.png" alt="Tek Logo" className="logo-image" />
           </div>
-          <h1>Super Admin Login</h1>
-          <p>Access the company management system</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          {(error || authError) && (
-            <div className="error-message">
-              <svg className="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              {error || authError}
-            </div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="admin@company.com"
-              required
-              disabled={isLoading || loading}
-              className="auth-input"
-            />
+          
+          <div className="admin-header">
+            <h1 className="admin-title">Admin Portal</h1>
+            <p className="admin-description">Only for OlivinHR team</p>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              placeholder="Enter your password"
-              required
-              disabled={isLoading || loading}
-              className="auth-input"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!isFormValid || isLoading || loading}
-            className={`auth-button ${(isLoading || loading) ? 'loading' : ''}`}
-          >
-            {(isLoading || loading) ? (
-              <>
-                <div className="loading-spinner-small"></div>
-                Signing In...
-              </>
-            ) : (
-              <>
-                <svg viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L12.586 9H5a1 1 0 100 2h7.586l-2.293 2.293z" clipRule="evenodd" />
+          <form onSubmit={handleSubmit} className="login-form">
+            {(error || authError) && (
+              <div className="error-message">
+                <svg className="error-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                Sign In as Admin
-              </>
+                {error || authError}
+              </div>
             )}
-          </button>
-        </form>
 
-        <div className="auth-footer">
-          <div className="auth-links">
-            <button 
-              onClick={() => navigate('/hr/login')}
-              className="link-button"
-              disabled={isLoading || loading}
+            <div className="form-group">
+              <div className="input-wrapper">
+                <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="Email Address"
+                  required
+                  disabled={isLoading || loading}
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <div className="input-wrapper">
+                <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Password"
+                  required
+                  disabled={isLoading || loading}
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={!isFormValid || isLoading || loading}
+              className={`login-button ${(isLoading || loading) ? 'loading' : ''}`}
             >
-              HR User Login
+              {(isLoading || loading) ? (
+                <>
+                  <div className="loading-spinner"></div>
+                  Signing In...
+                </>
+              ) : (
+                'Sign In as Admin'
+              )}
             </button>
-            <span className="separator">•</span>
-            <button 
-              onClick={() => navigate('/')}
-              className="link-button"
-              disabled={isLoading || loading}
-            >
-              Back to Home
-            </button>
-          </div>
+
+            <div className="admin-links">
+              <button 
+                type="button"
+                onClick={() => navigate('/hr/login')}
+                className="admin-link-button"
+                disabled={isLoading || loading}
+              >
+                HR User Login
+              </button>
+              <span className="link-separator">•</span>
+              <button 
+                type="button"
+                onClick={() => navigate('/')}
+                className="admin-link-button"
+                disabled={isLoading || loading}
+              >
+                Back to Home
+              </button>
+            </div>
+
+            <div className="support-info">
+              <p className="support-contact">
+                Need help? Contact our support team at <a href="mailto:info@olivinhr.com">info@olivinhr.com</a>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
     </div>

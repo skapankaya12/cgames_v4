@@ -93,56 +93,147 @@ body {
   }
 }
 
-/* Landing page styles */
-.landing-page {
+/* Token Access Landing Page Styles */
+.token-access-landing {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #edeaea;
+  color: #333;
   text-align: center;
-  padding: 20px;
+  padding: 2rem 1rem;
+  position: relative;
 }
 
-.landing-content h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.landing-content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-}
-
-.landing-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.landing-button {
-  padding: 12px 24px;
-  background: rgba(255,255,255,0.2);
-  border: 2px solid rgba(255,255,255,0.3);
+.token-access-landing .language-selector-container {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.token-access-landing .language-selector-container * {
+  color: #708238 !important;
+  font-weight: 600;
+}
+
+.token-access-landing .landing-content {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.token-access-landing .landing-logo {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.token-access-landing .olivinhr-logo {
+  width: 250px;
+  height: auto;
+  object-fit: contain;
+}
+
+.token-access-landing .landing-info {
+  margin-bottom: 2rem;
+}
+
+.token-access-landing .access-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.token-access-landing .access-description {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.token-access-landing .landing-actions {
+  margin-bottom: 2rem;
+}
+
+.token-access-landing .website-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: #708238;
   color: white;
   text-decoration: none;
+  border-radius: 12px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  min-height: 48px;
 }
 
-.landing-button:hover {
-  background: rgba(255,255,255,0.3);
-  transform: translateY(-2px);
+.token-access-landing .website-button:hover {
+  background: #5d6b2f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(112, 130, 56, 0.3);
+  color: white;
+  text-decoration: none;
 }
 
-.landing-button.secondary {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.2);
+.token-access-landing .support-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.token-access-landing .support-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.token-access-landing .support-email {
+  color: #708238;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.token-access-landing .support-email:hover {
+  color: #5d6b2f;
+  text-decoration: underline;
+}
+
+/* Responsive Design for Token Access Landing */
+@media (max-width: 768px) {
+  .token-access-landing {
+    padding: 1rem;
+  }
+  
+  .token-access-landing .language-selector-container {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem;
+  }
+  
+  .token-access-landing .landing-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .token-access-landing .olivinhr-logo {
+    width: 200px;
+  }
+  
+  .token-access-landing .access-title {
+    font-size: 1.5rem;
+  }
 }
 
 /* Card styles */

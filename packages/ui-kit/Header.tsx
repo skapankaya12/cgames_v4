@@ -20,7 +20,7 @@ const Header = () => {
     <header className="game-header">
       <div className="header-content">
         <div className="logo">
-          <h1>Yeni ismimiz ve logomuz buraya gelcek. </h1>
+          <img src="/teklogo.png" alt="Tek Logo" className="header-logo" />
         </div>
         <nav className="game-navigation">
           <button 

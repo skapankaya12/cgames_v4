@@ -32,7 +32,7 @@ export default function Candidates() {
   const [error, setError] = useState<string | null>(null);
   const [hrUser, setHrUser] = useState<any>(null);
   const [companyId, setCompanyId] = useState<string | null>(null);
-  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [companyData, setCompanyData] = useState<any>(null);
   
   // Filter states
   const [selectedProject, setSelectedProject] = useState<string>('all');
@@ -55,6 +55,17 @@ export default function Candidates() {
           const userData = hrUserDoc.data();
           setHrUser(userData);
           setCompanyId(userData.companyId);
+          
+          // Fetch company data
+          try {
+            const companyDocRef = doc(db, 'companies', userData.companyId);
+            const companyDocSnap = await getDoc(companyDocRef);
+            if (companyDocSnap.exists()) {
+              setCompanyData(companyDocSnap.data());
+            }
+          } catch (companyError) {
+            console.warn('Could not fetch company data:', companyError);
+          }
         } else {
           console.error('HR user document not found');
           navigate('/hr/login');
@@ -240,9 +251,8 @@ export default function Candidates() {
     return (
       <div className="hr-dashboard">
         <Navigation 
-          collapsed={isNavCollapsed} 
-          onToggle={setIsNavCollapsed}
-          userRole={hrUser?.role || 'employee'}
+          hrUser={hrUser}
+          companyData={companyData}
         />
         <div className="hr-content">
           <div className="loading-state">
@@ -257,9 +267,8 @@ export default function Candidates() {
   return (
     <div className="hr-dashboard">
       <Navigation 
-        collapsed={isNavCollapsed} 
-        onToggle={setIsNavCollapsed}
-        userRole={hrUser?.role || 'employee'}
+        hrUser={hrUser}
+        companyData={companyData}
       />
       <div className="hr-content">
         <div className="candidates-page">

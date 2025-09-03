@@ -20,7 +20,11 @@
     "game2Assessment": "Game 2 Assessment | Coming Soon",
     "welcome": "Welcome to OlivinHR",
     "description": "Professional gamified assessment platform",
-    "needInvitation": "You need a valid invitation to access assessments."
+    "needInvitation": "You need a valid invitation to access assessments.",
+    "tokenAccessOnly": "Assessment Platform",
+    "tokenAccessDescription": "This platform is accessible only through invitation links sent by HR teams. If you have received an assessment invitation, please use the link provided in your email.",
+    "visitWebsite": "Visit OlivinHR.com",
+    "supportText": "For support with token access issues, please contact:"
   },
   "buttons": {
     "continue": "Continue",

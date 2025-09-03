@@ -20,7 +20,11 @@
     "game2Assessment": "Game 2 Assessment | Yakında",
     "welcome": "OlivinHR'ye Hoş Geldiniz",
     "description": "Profesyonel oyunlaştırılmış değerlendirme platformu",
-    "needInvitation": "Değerlendirmelere erişmek için geçerli bir davetiyeye ihtiyacınız var."
+    "needInvitation": "Değerlendirmelere erişmek için geçerli bir davetiyeye ihtiyacınız var.",
+    "tokenAccessOnly": "Değerlendirme Platformu",
+    "tokenAccessDescription": "Bu platforma sadece İK ekipleri tarafından gönderilen davet bağlantıları ile erişim sağlanabilir. Eğer bir değerlendirme davetiyesi aldıysanız, lütfen e-postanızda verilen bağlantıyı kullanın.",
+    "visitWebsite": "OlivinHR.com'u Ziyaret Et",
+    "supportText": "Token erişim sorunları için destek:"
   },
   "buttons": {
     "continue": "Devam Et",

@@ -16,7 +16,8 @@ export default function ProjectsOverview() {
   const [error, setError] = useState<string | null>(null);
   const [hrUser, setHrUser] = useState<any>(null);
   const [companyId, setCompanyId] = useState<string | null>(null);
-  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [companyData, setCompanyData] = useState<any>(null);
+
   const [draggedProject, setDraggedProject] = useState<Project | null>(null);
 
   // Helper function to determine project status based on deadline
@@ -148,6 +149,17 @@ export default function ProjectsOverview() {
         const userCompanyId = hrData.companyId as string;
         setCompanyId(userCompanyId);
 
+        // Fetch company data
+        try {
+          const companyDocRef = doc(db, 'companies', userCompanyId);
+          const companyDocSnap = await getDoc(companyDocRef);
+          if (companyDocSnap.exists()) {
+            setCompanyData(companyDocSnap.data());
+          }
+        } catch (companyError) {
+          console.warn('Could not fetch company data:', companyError);
+        }
+
         // Load projects using API endpoint
         try {
           const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
@@ -205,11 +217,10 @@ export default function ProjectsOverview() {
     return (
       <>
         <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
+          companyData={companyData}
         />
-        <div className={`hr-dashboard-loading ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+        <div className="hr-dashboard-loading nav-expanded">
           <div className="loading-spinner-large"></div>
           <p>Loading your projects...</p>
         </div>
@@ -221,11 +232,10 @@ export default function ProjectsOverview() {
     return (
       <>
         <Navigation 
-          isCollapsed={isNavCollapsed} 
-          setIsCollapsed={setIsNavCollapsed} 
           hrUser={hrUser} 
+          companyData={companyData}
         />
-        <div className={`hr-dashboard-error ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+        <div className="hr-dashboard-error nav-expanded">
           <div className="error-icon">
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -247,19 +257,16 @@ export default function ProjectsOverview() {
   return (
     <>
       <Navigation 
-        isCollapsed={isNavCollapsed} 
-        setIsCollapsed={setIsNavCollapsed} 
         hrUser={hrUser} 
+        companyData={companyData}
       />
       
-      <div className={`hr-dashboard ${isNavCollapsed ? 'nav-collapsed' : 'nav-expanded'}`}>
+      <div className="hr-dashboard nav-expanded">
         {/* Header */}
         <header className="dashboard-header">
           <div className="header-content">
             <div className="header-left">
               <div className="header-info">
-                <h1>Project Management</h1>
-                <p>Manage your recruitment projects and hiring pipeline</p>
               </div>
             </div>
             <div className="header-actions">
@@ -333,8 +340,7 @@ export default function ProjectsOverview() {
             <div className="section-card">
               <div className="card-header">
                 <div className="header-left">
-                  <h2>Recruitment Pipeline</h2>
-                  <p>Kanban view of your recruitment projects - drag cards to update status</p>
+                  <h2>Your Projects</h2>
                 </div>
               </div>
 

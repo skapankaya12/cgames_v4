@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,6 +10,8 @@ export default function HrLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -67,34 +69,48 @@ export default function HrLogin() {
     }
   };
 
-  return (
-    <div className="hr-auth-page">
-      <div className="hr-auth-background">
-        <div className="hr-auth-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
-      </div>
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      setError('Please enter your email address first');
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      setError(null);
       
-      <div className="hr-auth-container">
-        <div className="hr-auth-card">
-          <div className="hr-auth-header">
-            <div className="hr-auth-logo">
-              <div className="logo-icon">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-                </svg>
-              </div>
-              <span className="logo-text">OlivinHR</span>
-            </div>
-            <h1 className="hr-auth-title">Welcome Back</h1>
-            <p className="hr-auth-subtitle">Sign in to your HR dashboard</p>
+      console.log('🔄 [HrLogin] Sending password reset email to:', email);
+      
+      await sendPasswordResetEmail(auth, email);
+      
+      setResetEmailSent(true);
+      console.log('✅ [HrLogin] Password reset email sent successfully');
+      
+    } catch (err: any) {
+      console.error('❌ [HrLogin] Password reset error:', err);
+      
+      if (err.code === 'auth/user-not-found') {
+        setError('No account found with this email address');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Please enter a valid email address');
+      } else {
+        setError('Failed to send reset email. Please try again.');
+      }
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  return (
+    <div className="hr-login-page">
+      <div className="hr-login-container">
+        <div className="hr-login-card">
+          <div className="login-logo">
+            <img src="/HR.png" alt="OlivinHR" className="logo-image" />
           </div>
 
-          <form onSubmit={handleSubmit} className="hr-auth-form">
+          <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Work Email</label>
               <div className="input-wrapper">
                 <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
@@ -105,7 +121,7 @@ export default function HrLogin() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your work email"
+                  placeholder="Username"
                   className="form-input"
                   required
                 />
@@ -113,7 +129,6 @@ export default function HrLogin() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-wrapper">
                 <svg className="input-icon" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -123,11 +138,26 @@ export default function HrLogin() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="Password"
                   className="form-input"
                   required
                 />
               </div>
+            </div>
+
+            <div className="form-options">
+              <label className="remember-me">
+                <input type="checkbox" />
+                <span>Remember Me</span>
+              </label>
+              <button 
+                type="button" 
+                className="forgot-password"
+                onClick={handleForgotPassword}
+                disabled={resetLoading}
+              >
+                {resetLoading ? 'Sending...' : 'Forgot Password?'}
+              </button>
             </div>
 
             {error && (
@@ -139,9 +169,18 @@ export default function HrLogin() {
               </div>
             )}
 
+            {resetEmailSent && (
+              <div className="success-message">
+                <svg className="success-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Password reset email sent! Check your email for instructions.
+              </div>
+            )}
+
             <button 
               type="submit" 
-              className={`submit-button ${loading ? 'loading' : ''}`}
+              className={`login-button ${loading ? 'loading' : ''}`}
               disabled={loading}
             >
               {loading ? (
@@ -150,17 +189,16 @@ export default function HrLogin() {
                   Signing in...
                 </>
               ) : (
-                'Sign In'
+                'Log in'
               )}
             </button>
-          </form>
 
-          <div className="hr-auth-footer">
-            <p className="auth-link-text">
-              Need access? 
-              <a href="/hr/register" className="auth-link">Contact your admin</a>
-            </p>
-          </div>
+            <div className="support-info">
+              <p className="support-contact">
+                Need help? Contact our support team at <a href="mailto:info@olivinhr.com">info@olivinhr.com</a>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
     </div>

@@ -29,10 +29,9 @@ function LandingPage() {
       </div>
       
       <div className="landing-content">
-        <h1 className="landing-title">Welcome to OlivinHR</h1>
-        <p className="landing-subtitle">
-          Advanced Leadership Assessment Platform
-        </p>
+        <div className="landing-logo">
+          <img src="/HR.png" alt="OlivinHR" className="olivinhr-logo" />
+        </div>
         <div className="landing-actions">
           <a 
             href="/hr" 

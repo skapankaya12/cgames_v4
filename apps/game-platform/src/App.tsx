@@ -28,25 +28,40 @@ import ManagerIdentityScreen from './pages/candidate/ManagerAssessment/ManagerId
 import ManagerTestScreen from './pages/candidate/ManagerAssessment/ManagerTestScreen';
 import ManagerResultsScreen from './pages/candidate/ManagerAssessment/ManagerResultsScreen';
 
-// Placeholder Landing Page Component
+// Token Access Only Landing Page
 function LandingPage() {
   const { t } = useTranslation('common');
   
   return (
-    <div className="landing-page">
+    <div className="token-access-landing">
       <div className="language-selector-container">
         <LanguageSelector />
       </div>
       <div className="landing-content">
-        <h1>{t('app.title')}</h1>
-        <p>{t('app.subtitle')}</p>
-        <div className="landing-buttons">
-          <a href="/candidate" className="landing-button">
-            {t('landing.startAssessment')}
+        <div className="landing-logo">
+          <img src="/HR.png" alt="OlivinHR" className="olivinhr-logo" />
+        </div>
+        <div className="landing-info">
+          <h2 className="access-title">{t('landing.tokenAccessOnly')}</h2>
+          <p className="access-description">{t('landing.tokenAccessDescription')}</p>
+        </div>
+        <div className="landing-actions">
+          <a 
+            href="https://olivinhr.com" 
+            className="website-button"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('landing.visitWebsite')}
           </a>
-          <a href="/candidate/game2" className="landing-button secondary">
-            {t('landing.game2Assessment')}
-          </a>
+        </div>
+        <div className="support-section">
+          <p className="support-text">
+            {t('landing.supportText')}{' '}
+            <a href="mailto:info@olivinhr.com" className="support-email">
+              info@olivinhr.com
+            </a>
+          </p>
         </div>
       </div>
     </div>
