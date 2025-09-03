@@ -31,7 +31,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
   const assessmentDescriptions = {
     'calisan-bagliligi': 'Bu değerlendirme, organizasyona olan bağlılığınızı ve çalışma motivasyonunuzu anlamak için tasarlanmıştır.',
-    'takim-degerlendirme': 'Bu anket, ekibinizin etkinliğini ve işbirliği düzeyini değerlendirmek için hazırlanmıştır.',
+    'takim-degerlendirme': 'Bu anket, ekibinizin etkinliğini ve iş birliği düzeyini değerlendirmek için hazırlanmıştır.',
     'yonetici-degerlendirme': 'Bu değerlendirme, yöneticinizin liderlik etkinliğini ve yönetim becerilerini anlamak için tasarlanmıştır.'
   };
 
@@ -150,7 +150,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Departmanınızı giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'left'
+                      textAlign: 'start'
                     }}
                   />
                   {errors.department && <span className="field-error">{errors.department}</span>}
@@ -167,7 +167,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Pozisyonunuzu giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'left'
+                      textAlign: 'start'
                     }}
                   />
                   {errors.position && <span className="field-error">{errors.position}</span>}
@@ -182,7 +182,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value)}
                     className={`form-input ${errors.experience ? 'error' : ''}`}
-                    style={{ fontSize: '0.9rem', textAlign: 'left' }}
+                    style={{ fontSize: '0.9rem', textAlign: 'start' }}
                   >
                     <option value="">Seçiniz</option>
                     <option value="0-1">0-1 yıl</option>
@@ -201,7 +201,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.workMode}
                     onChange={(e) => handleInputChange('workMode', e.target.value)}
                     className="form-input"
-                    style={{ fontSize: '0.9rem', textAlign: 'left' }}
+                    style={{ fontSize: '0.9rem', textAlign: 'start' }}
                   >
                     <option value="office">Ofis</option>
                     <option value="remote">Uzaktan</option>
@@ -249,22 +249,22 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
       <style>{`
         .form-input::placeholder {
           font-size: 0.85rem !important;
-          text-align: left !important;
+          text-align: start !important;
         }
         .form-input::-webkit-input-placeholder {
           font-size: 0.85rem !important;
-          text-align: left !important;
+          text-align: start !important;
         }
         .form-input::-moz-placeholder {
           font-size: 0.85rem !important;
-          text-align: left !important;
+          text-align: start !important;
         }
         .form-input:-ms-input-placeholder {
           font-size: 0.85rem !important;
-          text-align: left !important;
+          text-align: start !important;
         }
         
-        /* More specific selectors to override HR styles */
+        /* Fix blueish background on form labels */
         .hr-login-card .form-label,
         .hr-login-card label.form-label,
         .create-company-form .form-label,
@@ -274,6 +274,17 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
           background-image: none !important;
           box-shadow: none !important;
           border: none !important;
+          color: #374151 !important;
+        }
+        
+        /* Remove gray background from form-actions area */
+        .hr-login-card .form-actions,
+        .create-company-form .form-actions {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-top: none !important;
+          padding: 0 !important;
         }
         
         /* More specific button override */
