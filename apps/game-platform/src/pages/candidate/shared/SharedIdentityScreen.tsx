@@ -140,7 +140,16 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="department" className="form-label">Departman *</label>
+                  <div style={{ 
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    color: '#374151',
+                    marginBottom: '0.5rem',
+                    background: 'transparent',
+                    border: 'none'
+                  }}>
+                    Departman *
+                  </div>
                   <input
                     type="text"
                     id="department"
@@ -150,14 +159,27 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Departmanınızı giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'start'
+                      textAlign: 'start',
+                      background: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      padding: '0.75rem'
                     }}
                   />
                   {errors.department && <span className="field-error">{errors.department}</span>}
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="position" className="form-label">Pozisyon *</label>
+                  <div style={{ 
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    color: '#374151',
+                    marginBottom: '0.5rem',
+                    background: 'transparent',
+                    border: 'none'
+                  }}>
+                    Pozisyon *
+                  </div>
                   <input
                     type="text"
                     id="position"
@@ -167,7 +189,11 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Pozisyonunuzu giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'start'
+                      textAlign: 'start',
+                      background: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      padding: '0.75rem'
                     }}
                   />
                   {errors.position && <span className="field-error">{errors.position}</span>}
@@ -176,13 +202,29 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="experience" className="form-label">Deneyim Süresi *</label>
+                  <div style={{ 
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    color: '#374151',
+                    marginBottom: '0.5rem',
+                    background: 'transparent',
+                    border: 'none'
+                  }}>
+                    Deneyim Süresi *
+                  </div>
                   <select
                     id="experience"
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value)}
                     className={`form-input ${errors.experience ? 'error' : ''}`}
-                    style={{ fontSize: '0.9rem', textAlign: 'start' }}
+                    style={{ 
+                      fontSize: '0.9rem', 
+                      textAlign: 'start',
+                      background: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      padding: '0.75rem'
+                    }}
                   >
                     <option value="">Seçiniz</option>
                     <option value="0-1">0-1 yıl</option>
@@ -195,13 +237,29 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="workMode" className="form-label">Çalışma Şekli</label>
+                  <div style={{ 
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    color: '#374151',
+                    marginBottom: '0.5rem',
+                    background: 'transparent',
+                    border: 'none'
+                  }}>
+                    Çalışma Şekli
+                  </div>
                   <select
                     id="workMode"
                     value={formData.workMode}
                     onChange={(e) => handleInputChange('workMode', e.target.value)}
                     className="form-input"
-                    style={{ fontSize: '0.9rem', textAlign: 'start' }}
+                    style={{ 
+                      fontSize: '0.9rem', 
+                      textAlign: 'start',
+                      background: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      padding: '0.75rem'
+                    }}
                   >
                     <option value="office">Ofis</option>
                     <option value="remote">Uzaktan</option>
@@ -210,14 +268,42 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                 </div>
               </div>
 
-              <div className="form-actions" style={{ textAlign: 'center', marginTop: '2rem' }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center',
+                marginTop: '2rem',
+                background: 'transparent',
+                border: 'none',
+                padding: '0'
+              }}>
                 <button 
                   type="submit" 
-                  className="login-button"
                   disabled={isLoading}
                   style={{ 
                     width: '100%', 
-                    maxWidth: '300px'
+                    maxWidth: '300px',
+                    padding: '0.875rem 1.5rem',
+                    background: '#708238',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.7 : 1,
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isLoading) {
+                      (e.target as HTMLButtonElement).style.background = '#5a6b2d';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isLoading) {
+                      (e.target as HTMLButtonElement).style.background = '#708238';
+                    }
                   }}
                 >
                   {isLoading ? 'Yükleniyor...' : 'Devam Et'}
@@ -245,76 +331,34 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
         </div>
       </div>
       
-      {/* Custom styles for form styling overrides */}
+      {/* Custom styles for placeholder styling */}
       <style>{`
         .form-input::placeholder {
           font-size: 0.85rem !important;
           text-align: start !important;
+          color: #9ca3af !important;
         }
         .form-input::-webkit-input-placeholder {
           font-size: 0.85rem !important;
           text-align: start !important;
+          color: #9ca3af !important;
         }
         .form-input::-moz-placeholder {
           font-size: 0.85rem !important;
           text-align: start !important;
+          color: #9ca3af !important;
         }
         .form-input:-ms-input-placeholder {
           font-size: 0.85rem !important;
           text-align: start !important;
+          color: #9ca3af !important;
         }
         
-        /* Fix blueish background on form labels */
-        .hr-login-card .form-label,
-        .hr-login-card label.form-label,
-        .create-company-form .form-label,
-        .create-company-form label.form-label {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          box-shadow: none !important;
-          border: none !important;
-          color: #374151 !important;
-        }
-        
-        /* Remove gray background from form-actions area */
-        .hr-login-card .form-actions,
-        .create-company-form .form-actions {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border-top: none !important;
-          padding: 0 !important;
-        }
-        
-        /* More specific button override */
-        .hr-login-card .login-button,
-        .hr-login-card button.login-button,
-        .create-company-form .login-button,
-        .create-company-form button.login-button {
-          background: #708238 !important;
-          background-color: #708238 !important;
-          background-image: none !important;
-          border: none !important;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-        }
-        
-        .hr-login-card .login-button:hover,
-        .hr-login-card button.login-button:hover,
-        .create-company-form .login-button:hover,
-        .create-company-form button.login-button:hover {
-          background: #5a6b2d !important;
-          background-color: #5a6b2d !important;
-          background-image: none !important;
-        }
-        
-        .hr-login-card .login-button:disabled,
-        .hr-login-card button.login-button:disabled,
-        .create-company-form .login-button:disabled,
-        .create-company-form button.login-button:disabled {
-          background: #9caa6b !important;
-          background-color: #9caa6b !important;
-          background-image: none !important;
+        /* Focus states for inputs */
+        .form-input:focus {
+          outline: none !important;
+          border-color: #708238 !important;
+          box-shadow: 0 0 0 3px rgba(112, 130, 56, 0.1) !important;
         }
       `}</style>
     </div>
