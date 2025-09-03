@@ -150,7 +150,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Departmanınızı giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'right'
+                      textAlign: 'left'
                     }}
                   />
                   {errors.department && <span className="field-error">{errors.department}</span>}
@@ -167,7 +167,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     placeholder="Pozisyonunuzu giriniz"
                     style={{ 
                       fontSize: '0.9rem',
-                      textAlign: 'right'
+                      textAlign: 'left'
                     }}
                   />
                   {errors.position && <span className="field-error">{errors.position}</span>}
@@ -182,7 +182,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value)}
                     className={`form-input ${errors.experience ? 'error' : ''}`}
-                    style={{ fontSize: '0.9rem', textAlign: 'right' }}
+                    style={{ fontSize: '0.9rem', textAlign: 'left' }}
                   >
                     <option value="">Seçiniz</option>
                     <option value="0-1">0-1 yıl</option>
@@ -201,7 +201,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.workMode}
                     onChange={(e) => handleInputChange('workMode', e.target.value)}
                     className="form-input"
-                    style={{ fontSize: '0.9rem', textAlign: 'right' }}
+                    style={{ fontSize: '0.9rem', textAlign: 'left' }}
                   >
                     <option value="office">Ofis</option>
                     <option value="remote">Uzaktan</option>
@@ -264,23 +264,46 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
           text-align: left !important;
         }
         
-        /* Remove blue background from labels */
-        .form-label {
-          background: none !important;
-          backgroundColor: transparent !important;
+        /* More specific selectors to override HR styles */
+        .hr-login-card .form-label,
+        .hr-login-card label.form-label,
+        .create-company-form .form-label,
+        .create-company-form label.form-label {
+          background: transparent !important;
           background-color: transparent !important;
-        }
-        
-        /* Remove gray background from button */
-        .login-button {
-          background: #708238 !important;
-          background-color: #708238 !important;
+          background-image: none !important;
+          box-shadow: none !important;
           border: none !important;
         }
         
-        .login-button:hover {
+        /* More specific button override */
+        .hr-login-card .login-button,
+        .hr-login-card button.login-button,
+        .create-company-form .login-button,
+        .create-company-form button.login-button {
+          background: #708238 !important;
+          background-color: #708238 !important;
+          background-image: none !important;
+          border: none !important;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .hr-login-card .login-button:hover,
+        .hr-login-card button.login-button:hover,
+        .create-company-form .login-button:hover,
+        .create-company-form button.login-button:hover {
           background: #5a6b2d !important;
           background-color: #5a6b2d !important;
+          background-image: none !important;
+        }
+        
+        .hr-login-card .login-button:disabled,
+        .hr-login-card button.login-button:disabled,
+        .create-company-form .login-button:disabled,
+        .create-company-form button.login-button:disabled {
+          background: #9caa6b !important;
+          background-color: #9caa6b !important;
+          background-image: none !important;
         }
       `}</style>
     </div>
