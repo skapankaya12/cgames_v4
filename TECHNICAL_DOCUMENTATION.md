@@ -3,7 +3,7 @@
 ## 🎯 System Overview
 
 CGames V4 is a comprehensive HR assessment platform consisting of three main applications:
-- **Game Platform** (`game.olivinhr.com`) - Interactive assessments for candidates
+- **Game Platform** (`hub.olivinhr.com`) - Interactive assessments for candidates
 - **HR Platform** (`app.olivinhr.com`) - Management interface for HR professionals  
 - **API Services** (`api.olivinhr.com`) - Backend services and data processing
 
@@ -52,7 +52,7 @@ cgames_v4/
 3. **Email** contains unique assessment link with token
 
 ### 3. Assessment Execution
-1. **Candidate** clicks email link → redirected to `game.olivinhr.com?token=xyz`
+1. **Candidate** clicks email link → redirected to `hub.olivinhr.com?token=xyz`
 2. **Token Validation** via `/api/invite/open`
 3. **Identity Collection** - candidate enters personal information
 4. **Assessment Execution** - interactive game scenarios
@@ -121,7 +121,7 @@ function initializeFirebaseAdmin() {
 ```javascript
 const allowedOrigins = [
   'https://app.olivinhr.com',
-  'https://game.olivinhr.com',
+  'https://hub.olivinhr.com',
   'https://cgames-v4-hr-platform.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
@@ -325,7 +325,7 @@ FIREBASE_PROJECT_ID=your_project_id
 FIREBASE_CLIENT_EMAIL=your_service_account_email  
 FIREBASE_PRIVATE_KEY_B64=base64_encoded_private_key
 SENDGRID_API_KEY=your_sendgrid_api_key
-VITE_GAME_PLATFORM_URL=https://game.olivinhr.com
+VITE_GAME_PLATFORM_URL=https://hub.olivinhr.com
 ```
 
 **HR Platform (`app.olivinhr.com`):**
@@ -339,7 +339,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-**Game Platform (`game.olivinhr.com`):**
+**Game Platform (`hub.olivinhr.com`):**
 ```bash
 VITE_API_BASE_URL=https://api.olivinhr.com
 VITE_FIREBASE_API_KEY=your_firebase_web_api_key
@@ -360,7 +360,7 @@ git push origin main
 # Vercel will automatically deploy:
 # - api.olivinhr.com (from /api directory)
 # - app.olivinhr.com (from /apps/hr-platform)  
-# - game.olivinhr.com (from /apps/game-platform)
+# - hub.olivinhr.com (from /apps/game-platform)
 ```
 
 ## 🧪 Testing Workflow

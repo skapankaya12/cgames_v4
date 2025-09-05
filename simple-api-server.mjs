@@ -21,7 +21,7 @@ app.use(cors({
     'http://localhost:5173', 
     'http://localhost:5174', // Local development
     'https://app.olivinhr.com', // HR Platform production
-    'https://game.olivinhr.com' // Game Platform production
+    'https://hub.olivinhr.com' // Game Platform production
   ],
   credentials: true
 }));

@@ -25,7 +25,7 @@ packages/
 - AI-powered conversational interface for HR professionals
 - **NEW**: Smart invite system with game selection per project
 - **NEW**: Real-time status tracking and results flow
-- **NEW**: Custom domain support (game.olivinhr.com)
+- **NEW**: Custom domain support (hub.olivinhr.com)
 - **NEW**: Thank you screens and completion tracking
 
 ## Getting Started
@@ -78,7 +78,7 @@ SENDGRID_API_KEY=your_sendgrid_api_key
 
 #### **Platform URLs**
 ```bash
-VITE_GAME_PLATFORM_URL=https://game.olivinhr.com
+VITE_GAME_PLATFORM_URL=https://hub.olivinhr.com
 NODE_ENV=production
 ```
 
@@ -96,7 +96,7 @@ This system requires two separate Vercel deployments:
 vercel --prod
 ```
 
-#### **2. Game Platform (game.olivinhr.com)**
+#### **2. Game Platform (hub.olivinhr.com)**
 ```bash
 # Deploy with game-specific config
 vercel --prod --config vercel-game.json
@@ -105,7 +105,7 @@ vercel --prod --config vercel-game.json
 ### Domain Configuration
 
 1. **HR Platform**: Configure `app.olivinhr.com` to point to the main Vercel deployment
-2. **Game Platform**: Configure `game.olivinhr.com` to point to the game deployment
+2. **Game Platform**: Configure `hub.olivinhr.com` to point to the game deployment
 
 ### Environment Variables Setup
 
@@ -115,7 +115,7 @@ In your Vercel dashboard, add all the environment variables listed above to **bo
 
 ### Complete Assessment Flow
 
-1. **HR sends invite** → Email with game.olivinhr.com link + token
+1. **HR sends invite** → Email with hub.olivinhr.com link + token
 2. **Candidate clicks link** → Game platform validates token & routes to correct game
 3. **Candidate completes assessment** → Results submitted to Firebase
 4. **Status updates automatically** → HR sees "Completed" status

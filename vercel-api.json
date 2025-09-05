@@ -10,7 +10,7 @@
     "FIREBASE_CLIENT_EMAIL": "@firebase_client_email", 
     "FIREBASE_PRIVATE_KEY": "@firebase_private_key",
     "SENDGRID_API_KEY": "@sendgrid_api_key",
-    "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+    "VITE_GAME_PLATFORM_URL": "https://hub.olivinhr.com",
     "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
   },
   "build": {
@@ -20,7 +20,7 @@
       "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
       "FIREBASE_PRIVATE_KEY": "@firebase_private_key", 
       "SENDGRID_API_KEY": "@sendgrid_api_key",
-      "VITE_GAME_PLATFORM_URL": "https://game.olivinhr.com",
+      "VITE_GAME_PLATFORM_URL": "https://hub.olivinhr.com",
       "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
     }
   },
@@ -52,7 +52,7 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://game.olivinhr.com" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://hub.olivinhr.com" },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" },
         { "key": "Access-Control-Allow-Credentials", "value": "true" },

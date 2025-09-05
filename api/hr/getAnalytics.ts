@@ -109,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers for cross-origin requests from app.olivinhr.com
   const allowedOrigins = new Set([
     'https://app.olivinhr.com',
-    'https://game.olivinhr.com',
+    'https://hub.olivinhr.com',
     'https://cgames-v4-hr-platform.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'

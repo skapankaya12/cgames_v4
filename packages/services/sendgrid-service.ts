@@ -27,7 +27,7 @@ export class SendGridService {
       sgMail.setApiKey(apiKey);
       
       const gameBaseUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.VITE_GAME_PLATFORM_URL || 'https://game.olivinhr.com'
+        ? process.env.VITE_GAME_PLATFORM_URL || 'https://hub.olivinhr.com'
         : 'http://localhost:5174';
       
       const inviteUrl = `${gameBaseUrl}?token=${data.token}&game=${encodeURIComponent(data.selectedGame || 'Leadership Scenario Game')}`;

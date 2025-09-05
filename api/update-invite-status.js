@@ -44,7 +44,7 @@ module.exports = async function handler(req, res) {
   // Set CORS headers early so all responses (including errors) match the caller's origin
   const allowedOrigins = [
     'https://app.olivinhr.com',
-    'https://game.olivinhr.com',
+    'https://hub.olivinhr.com',
     'https://cgames-v4-hr-platform.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'
