@@ -198,7 +198,7 @@ function initializeSheetHeaders(sheet, assessmentType) {
       headers.push(`Q${i}_Answer`);
     }
     // Add dimension scores
-    const dimensions = ['team_communication', 'shared_goals_vision', 'support_collaboration', 'trust_transparency', 'team_motivation'];
+    const dimensions = ['takım_iletişimi', 'ortak_hedefler_ve_vizyon', 'destek_ve_iş_birliği', 'güven_ve_şeffaflık', 'takım_motivasyonu'];
     dimensions.forEach(dim => {
       headers.push(`${dim}_Score`);
     });
@@ -243,34 +243,93 @@ function prepareRowData(data) {
     data.completedQuestions || 0
   ];
   
+  console.log('Preparing row data for assessment:', data.assessmentType);
+  console.log('Available answers:', Object.keys(data.answers || {}));
+  
+  // Helper function to extract numeric answers from various question ID formats
+  function getAnswerByIndex(answers, index, assessmentType) {
+    // Try different formats based on assessment type
+    const formats = [
+      index.toString(), // "1", "2", "3"
+      `0${index}-1`, // "01-1", "02-1", "03-1" (team/manager format)
+      `${String(index).padStart(2, '0')}-1` // "01-1", "02-1" format
+    ];
+    
+    for (const format of formats) {
+      if (answers[format] !== undefined) {
+        console.log(`Found answer for index ${index} with format "${format}": ${answers[format]}`);
+        return answers[format];
+      }
+    }
+    
+    // For team/manager assessments, try to find by sequential order
+    if (['takim-degerlendirme', 'yonetici-degerlendirme'].includes(assessmentType)) {
+      const answerKeys = Object.keys(answers).sort();
+      if (answerKeys[index - 1]) {
+        const value = answers[answerKeys[index - 1]];
+        console.log(`Found answer for index ${index} by position: ${value}`);
+        return value;
+      }
+    }
+    
+    console.log(`No answer found for index ${index}`);
+    return '';
+  }
+  
   // Add answers based on assessment type
   if (data.assessmentType === 'space-mission') {
     // Add 16 question answers
     for (let i = 1; i <= 16; i++) {
-      rowData.push(data.answers[i.toString()] || '');
+      rowData.push(getAnswerByIndex(data.answers, i, data.assessmentType));
     }
     // Add competency scores
     const competencies = ['DM', 'IN', 'AD', 'CM', 'ST', 'TO', 'RL', 'RI'];
     competencies.forEach(comp => {
-      rowData.push(data.scores && data.scores[comp] ? data.scores[comp] : '');
+      const score = data.scores && data.scores[comp] ? data.scores[comp] : '';
+      rowData.push(score);
     });
   } else if (['takim-degerlendirme', 'yonetici-degerlendirme'].includes(data.assessmentType)) {
-    // Add 30 question answers
+    // Add 30 question answers - handle both numeric and "XX-X" format
     for (let i = 1; i <= 30; i++) {
-      rowData.push(data.answers[i.toString()] || '');
+      rowData.push(getAnswerByIndex(data.answers, i, data.assessmentType));
     }
-    // Add dimension scores
-    const dimensions = ['team_communication', 'shared_goals_vision', 'support_collaboration', 'trust_transparency', 'team_motivation'];
+    // Add dimension scores - handle nested score objects
+    // Use the actual dimension keys returned by calculateTeamScores/calculateManagerScores
+    const dimensions = ['takım_iletişimi', 'ortak_hedefler_ve_vizyon', 'destek_ve_iş_birliği', 'güven_ve_şeffaflık', 'takım_motivasyonu'];
     dimensions.forEach(dim => {
-      rowData.push(data.scores && data.scores[dim] ? data.scores[dim] : '');
+      let score = '';
+      if (data.scores && data.scores[dim]) {
+        // Handle nested score objects
+        if (typeof data.scores[dim] === 'object' && data.scores[dim].score !== undefined) {
+          score = data.scores[dim].score;
+        } else if (typeof data.scores[dim] === 'object' && data.scores[dim].percentage !== undefined) {
+          score = data.scores[dim].percentage;
+        } else {
+          score = data.scores[dim];
+        }
+      }
+      console.log(`Score for dimension ${dim}:`, score);
+      rowData.push(score);
     });
   } else if (data.assessmentType === 'calisan-bagliligi') {
     // Add engagement question answers (up to 50)
     for (let i = 1; i <= 50; i++) {
-      rowData.push(data.answers[i.toString()] || '');
+      rowData.push(getAnswerByIndex(data.answers, i, data.assessmentType));
     }
     // Add overall engagement score
-    rowData.push(data.scores && data.scores.overall ? data.scores.overall : '');
+    let engagementScore = '';
+    if (data.scores) {
+      if (data.scores.overall) {
+        engagementScore = typeof data.scores.overall === 'object' ? data.scores.overall.score : data.scores.overall;
+      } else {
+        // Try to find any score value
+        const scoreValues = Object.values(data.scores);
+        if (scoreValues.length > 0) {
+          engagementScore = typeof scoreValues[0] === 'object' ? scoreValues[0].score : scoreValues[0];
+        }
+      }
+    }
+    rowData.push(engagementScore);
   }
   
   // Add metadata
@@ -281,10 +340,12 @@ function prepareRowData(data) {
     JSON.stringify({
       answers: data.answers,
       scores: data.scores,
-      metadata: data.metadata || {}
+      metadata: data.metadata || {},
+      originalKeys: Object.keys(data.answers || {})
     })
   );
   
+  console.log('Final row data length:', rowData.length);
   return rowData;
 }
 
