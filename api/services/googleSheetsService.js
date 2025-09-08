@@ -26,13 +26,7 @@ class GoogleSheetsService {
       console.log('  - Candidate:', assessmentData.candidateEmail);
       console.log('  - Answers Count:', Object.keys(assessmentData.answers || {}).length);
 
-      // Prepare data for Google Apps Script
-      const payload = {
-        action: 'submitAssessment',
-        data: JSON.stringify(assessmentData)
-      };
-
-      // Send to Google Apps Script
+      // Send to Google Apps Script - send data directly as JSON body
       const response = await fetch(this.scriptUrl, {
         method: 'POST',
         headers: {
