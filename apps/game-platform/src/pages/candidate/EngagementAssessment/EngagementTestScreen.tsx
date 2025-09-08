@@ -177,8 +177,8 @@ const EngagementTestScreen = () => {
       console.log('  - Answers count:', Object.keys(submissionData.answers).length);
       console.log('  - Scores count:', Object.keys(submissionData.scores).length);
 
-      // Submit to API
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+      // Submit to API (default to production API domain if env not provided)
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://api.olivinhr.com';
       const response = await fetch(`${apiBaseUrl}/api/candidate/submitResult`, {
         method: 'POST',
         headers: {

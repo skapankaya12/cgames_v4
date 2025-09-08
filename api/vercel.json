@@ -1,5 +1,15 @@
 {
   "version": 2,
+  "env": {
+    "NODE_ENV": "production",
+    "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production",
+      "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url"
+    }
+  },
   "functions": {
     "**/*.ts": { "runtime": "@vercel/node@4.0.0" },
     "**/*.js": { "runtime": "@vercel/node@4.0.0" }
