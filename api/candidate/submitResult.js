@@ -1,5 +1,6 @@
 const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
+const GoogleSheetsService = require('../services/googleSheetsService');
 
 // CORS headers for cross-origin requests from app.olivinhr.com
 const allowedOrigins = [
@@ -288,6 +289,32 @@ module.exports = async function handler(req, res) {
     await db.collection('candidateResults').doc(resultId).set(resultDocument);
     
     console.log('✅ [Submit Results API] Result saved successfully to candidateResults collection');
+
+    // Step 5: Send data to Google Sheets
+    console.log('📊 [Submit Results API] Step 5: Sending data to Google Sheets...');
+    
+    try {
+      const googleSheetsService = new GoogleSheetsService();
+      
+      const sheetsData = {
+        assessmentType: assessmentType,
+        candidateEmail: candidateEmail,
+        projectId: projectId,
+        token: token,
+        answers: answers,
+        scores: scores || {},
+        completionTime: completionTime,
+        totalQuestions: totalQuestions,
+        completedQuestions: completedQuestions,
+        timestamp: new Date().toISOString()
+      };
+      
+      await googleSheetsService.submitAssessmentData(sheetsData);
+      console.log('✅ [Submit Results API] Assessment data sent to Google Sheets successfully');
+    } catch (error) {
+      console.error('❌ [Submit Results API] Error sending data to Google Sheets:', error);
+      // Don't fail the entire request if Google Sheets fails
+    }
 
     // 4. Update invite status to 'completed'
     console.log('🔄 [Submit Results API] Step 4: Updating invite status...');
