@@ -2,12 +2,12 @@
   "version": 2,
   "env": {
     "NODE_ENV": "production",
-    "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url"
+    "GOOGLE_APPS_SCRIPT_URL": "https://script.google.com/macros/s/AKfycbwAfA_93RdadyK-HbBlCdWpIf_2Basao5h06X22R086lhi-OKXIv22aMprdRPLpsVfRlA/exec"
   },
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url"
+      "GOOGLE_APPS_SCRIPT_URL": "https://script.google.com/macros/s/AKfycbwAfA_93RdadyK-HbBlCdWpIf_2Basao5h06X22R086lhi-OKXIv22aMprdRPLpsVfRlA/exec"
     }
   },
   "functions": {

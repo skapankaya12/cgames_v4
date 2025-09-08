@@ -10,7 +10,7 @@
     "FIREBASE_CLIENT_EMAIL": "@firebase_client_email", 
     "FIREBASE_PRIVATE_KEY": "@firebase_private_key",
     "SENDGRID_API_KEY": "@sendgrid_api_key",
-    "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url",
+    "GOOGLE_APPS_SCRIPT_URL": "https://script.google.com/macros/s/AKfycbwAfA_93RdadyK-HbBlCdWpIf_2Basao5h06X22R086lhi-OKXIv22aMprdRPLpsVfRlA/exec",
     "VITE_GAME_PLATFORM_URL": "https://hub.olivinhr.com",
     "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
   },
@@ -21,7 +21,7 @@
       "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
       "FIREBASE_PRIVATE_KEY": "@firebase_private_key", 
       "SENDGRID_API_KEY": "@sendgrid_api_key",
-      "GOOGLE_APPS_SCRIPT_URL": "@google_apps_script_url",
+      "GOOGLE_APPS_SCRIPT_URL": "https://script.google.com/macros/s/AKfycbwAfA_93RdadyK-HbBlCdWpIf_2Basao5h06X22R086lhi-OKXIv22aMprdRPLpsVfRlA/exec",
       "VITE_GAME_PLATFORM_URL": "https://hub.olivinhr.com",
       "VITE_HR_PLATFORM_URL": "https://app.olivinhr.com"
     }
