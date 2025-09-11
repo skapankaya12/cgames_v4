@@ -95,14 +95,14 @@ async function sendInvitationEmail(data: {
                 </div>
               </div>
               
-              <div style="margin: 2rem 0;">
+              <div style="margin: 2rem 0; text-align: left;">
                 <a href="${inviteUrl}" 
                    style="width: 100%; min-width: 220px; padding: 1rem 2rem; background: #708238; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(112, 130, 56, 0.2);">
                   Start Your Assessment Here
                 </a>
               </div>
               
-              <div style="background: #f0f9ff; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; border-left: 4px solid #708238;">
+              <div style="background: #edeaea; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; border-left: 4px solid #708238;">
                 <p style="color: #374151; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 0.95rem;">Assessment Details:</p>
                 <ul style="color: #6b7280; margin: 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
                   <li>Estimated Duration: 20-35 minutes</li>
