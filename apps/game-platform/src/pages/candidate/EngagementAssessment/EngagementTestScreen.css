@@ -208,10 +208,10 @@
 }
 
 .next-button {
-  background: #6B8E23;
-  color: white;
-  border: 1px solid #6B8E23;
-  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.3);
+  background: #6B8E23 !important;
+  color: white !important;
+  border: 1px solid #6B8E23 !important;
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.3) !important;
 }
 
 .next-button:hover:not(:disabled) {
