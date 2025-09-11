@@ -144,29 +144,37 @@ async function sendInvitationEmail(data) {
       subject: `${data.companyName} Assessment Invitation - ${data.selectedGameName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #4F46E5;">You're Invited to Complete an Assessment</h2>
+          <h2 style="color: #6B8E23;">You're Invited to Complete an Assessment</h2>
           <p>Hello,</p>
-                      <p><strong>${data.companyName}</strong> has invited you to complete a <strong>${data.selectedGameName}</strong> assessment.</p>
-          ${data.roleTag && data.roleTag !== 'candidate' ? `<p><strong>Company:</strong> ${data.companyName}<br><strong>Role:</strong> ${data.roleTag}</p>` : `<p><strong>Company:</strong> ${data.companyName}</p>`}
-          <div style="margin: 30px 0; text-align: center;">
+          <p><strong>${data.companyName}</strong> has invited you to complete a <strong>${data.selectedGameName === 'takim-degerlendirme' ? 'takim-degerlendirme' : data.selectedGameName}</strong> assessment.</p>
+          
+          <p><strong>Company:</strong> ${data.companyName}</p>
+          ${data.roleTag && data.roleTag !== 'candidate' && !['space-mission', 'uzay-gorevi'].includes(data.selectedGame?.toLowerCase()) ? `<p><strong>Role:</strong> ${data.roleTag}</p>` : ''}
+          
+          <div style="margin: 30px 0; text-align: left;">
             <a href="${inviteUrl}" 
-               style="background-color: #4F46E5; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
-              Start ${data.selectedGame} Assessment
+               style="background-color: #6B8E23; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
+              ${data.selectedGame === 'takim-degerlendirme' ? 'Start Your Assessment Here' : `Start ${data.selectedGame} Assessment`}
             </a>
           </div>
+          
           <p style="font-size: 14px; color: #666;">
             <strong>Assessment Details:</strong><br>
-            • Game: ${data.selectedGame}<br>
-            • Estimated Duration: 30-45 minutes<br>
+            • Estimated Duration: 20-35 minutes<br>
             • This link expires in 7 days<br>
             • You can access the assessment multiple times, but can only submit once
           </p>
+          
           <p>If you have any questions, please don't hesitate to reach out.</p>
           <p>Best regards,<br>The ${data.companyName} Team</p>
+          
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
           <p style="font-size: 12px; color: #999;">
             This assessment is powered by OlivinHR. 
-            <a href="${inviteUrl}" style="color: #4F46E5;">Click here to start your assessment</a>
+            <a href="https://olivinhr.com" style="color: #6B8E23;" target="_blank" rel="noopener noreferrer">Click here to learn more about OlivinHR</a>
+          </p>
+          <p style="font-size: 12px; color: #999;">
+            If you face any issues please contact <a href="mailto:info@olivinhr.com" style="color: #6B8E23;">info@olivinhr.com</a>
           </p>
         </div>
       `,

@@ -37,19 +37,39 @@ export class SendGridService {
         from: 'noreply@olivinhr.com', // Replace with your verified sender
         subject: `${data.companyName} Assessment Invitation`,
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>You're Invited to Complete an Assessment</h2>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #6B8E23;">You're Invited to Complete an Assessment</h2>
             <p>Hello,</p>
-            <p>${data.companyName} has invited you to complete a leadership assessment.</p>
-            <p><strong>Role:</strong> ${data.roleTag}</p>
-            <div style="margin: 30px 0;">
+            <p><strong>${data.companyName}</strong> has invited you to complete a leadership assessment.</p>
+            
+            <p><strong>Company:</strong> ${data.companyName}</p>
+            ${data.roleTag ? `<p><strong>Role:</strong> ${data.roleTag}</p>` : ''}
+            
+            <div style="margin: 30px 0; text-align: left;">
               <a href="${inviteUrl}" 
-                 style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-                Start Assessment
+                 style="background-color: #6B8E23; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
+                Start Your Assessment Here
               </a>
             </div>
-            <p>This link is unique to you and can only be used once.</p>
+            
+            <p style="font-size: 14px; color: #666;">
+              <strong>Assessment Details:</strong><br>
+              • Estimated Duration: 20-35 minutes<br>
+              • This link expires in 7 days<br>
+              • You can access the assessment multiple times, but can only submit once
+            </p>
+            
+            <p>If you have any questions, please don't hesitate to reach out.</p>
             <p>Best regards,<br>The ${data.companyName} Team</p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+            <p style="font-size: 12px; color: #999;">
+              This assessment is powered by OlivinHR. 
+              <a href="https://olivinhr.com" style="color: #6B8E23;" target="_blank" rel="noopener noreferrer">Click here to learn more about OlivinHR</a>
+            </p>
+            <p style="font-size: 12px; color: #999;">
+              If you face any issues please contact <a href="mailto:info@olivinhr.com" style="color: #6B8E23;">info@olivinhr.com</a>
+            </p>
           </div>
         `,
       };
