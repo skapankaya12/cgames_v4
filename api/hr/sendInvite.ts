@@ -71,41 +71,64 @@ async function sendInvitationEmail(data: {
     const msg = {
       to: data.candidateEmail,
       from: 'noreply@olivinhr.com',
-      subject: `You received an assessment by "${data.companyName}"`,
+      subject: `You have received an assessment from ${data.companyName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #6B8E23;">You received an assessment by "${data.companyName}"</h2>
-          <p>Hello,</p>
-          <p><strong>${data.companyName}</strong> has invited you to complete an assessment.</p>
-          
-          <p><strong>Company:</strong> ${data.companyName}</p>
-          ${data.roleTag ? `<p><strong>Role:</strong> ${data.roleTag}</p>` : ''}
-          
-          <div style="margin: 30px 0; text-align: left;">
-            <a href="${inviteUrl}" 
-               style="background-color: #6B8E23; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
-              Start Your Assessment Here
-            </a>
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #edeaea; padding: 2rem 1rem; font-family: Arial, sans-serif;">
+          <div style="width: 100%; max-width: 450px; margin: 0 auto;">
+            <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center;">
+              
+              <div style="margin-bottom: 2rem;">
+                <h2 style="color: #374151; font-size: 1.5rem; font-weight: 600; margin: 0 0 1rem 0; line-height: 1.4;">You have received an assessment from</h2>
+                <h1 style="color: #708238; font-size: 1.75rem; font-weight: 700; margin: 0; line-height: 1.2;">${data.companyName}</h1>
+              </div>
+              
+              <div style="text-align: left; margin-bottom: 2rem;">
+                <p style="color: #374151; margin: 0 0 1rem 0; font-size: 1rem; line-height: 1.5;">Hello,</p>
+                <p style="color: #374151; margin: 0 0 1.5rem 0; font-size: 1rem; line-height: 1.5;"><strong>${data.companyName}</strong> has invited you to complete an assessment.</p>
+                
+                <div style="background: #f9fafb; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid #e5e7eb;">
+                  <p style="color: #374151; margin: 0 0 0.5rem 0; font-weight: 600;">Company:</p>
+                  <p style="color: #6b7280; margin: 0; font-size: 0.95rem;">${data.companyName}</p>
+                  ${data.roleTag ? `
+                    <p style="color: #374151; margin: 1rem 0 0.5rem 0; font-weight: 600;">Role:</p>
+                    <p style="color: #6b7280; margin: 0; font-size: 0.95rem;">${data.roleTag}</p>
+                  ` : ''}
+                </div>
+              </div>
+              
+              <div style="margin: 2rem 0;">
+                <a href="${inviteUrl}" 
+                   style="width: 100%; min-width: 220px; padding: 1rem 2rem; background: #708238; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(112, 130, 56, 0.2);">
+                  Start Your Assessment Here
+                </a>
+              </div>
+              
+              <div style="background: #f0f9ff; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; border-left: 4px solid #708238;">
+                <p style="color: #374151; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 0.95rem;">Assessment Details:</p>
+                <ul style="color: #6b7280; margin: 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+                  <li>Estimated Duration: 20-35 minutes</li>
+                  <li>This link expires in 7 days</li>
+                  <li>You can access the assessment multiple times, but can only submit once</li>
+                </ul>
+              </div>
+              
+              <div style="text-align: left; margin-bottom: 2rem;">
+                <p style="color: #374151; margin: 0 0 1rem 0; font-size: 0.95rem; line-height: 1.5;">If you have any questions, please don't hesitate to reach out.</p>
+                <p style="color: #374151; margin: 0; font-size: 0.95rem; line-height: 1.5;">Best regards,<br>The ${data.companyName} Team</p>
+              </div>
+              
+              <div style="border-top: 2px solid #e5e7eb; padding-top: 1.5rem; text-align: center;">
+                <p style="color: #9ca3af; margin: 0 0 0.5rem 0; font-size: 0.8rem;">
+                  This assessment is powered by OlivinHR. 
+                  <a href="https://olivinhr.com" style="color: #708238; text-decoration: none;" target="_blank" rel="noopener noreferrer">Click here to learn more about OlivinHR</a>
+                </p>
+                <p style="color: #9ca3af; margin: 0; font-size: 0.8rem;">
+                  If you face any issues please contact <a href="mailto:info@olivinhr.com" style="color: #708238; text-decoration: none;">info@olivinhr.com</a>
+                </p>
+              </div>
+              
+            </div>
           </div>
-          
-          <p style="font-size: 14px; color: #666;">
-            <strong>Assessment Details:</strong><br>
-            • Estimated Duration: 20-35 minutes<br>
-            • This link expires in 7 days<br>
-            • You can access the assessment multiple times, but can only submit once
-          </p>
-          
-          <p>If you have any questions, please don't hesitate to reach out.</p>
-          <p>Best regards,<br>The ${data.companyName} Team</p>
-          
-          <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-          <p style="font-size: 12px; color: #999;">
-            This assessment is powered by OlivinHR. 
-            <a href="https://olivinhr.com" style="color: #6B8E23;" target="_blank" rel="noopener noreferrer">Click here to learn more about OlivinHR</a>
-          </p>
-          <p style="font-size: 12px; color: #999;">
-            If you face any issues please contact <a href="mailto:info@olivinhr.com" style="color: #6B8E23;">info@olivinhr.com</a>
-          </p>
         </div>
       `,
     };
