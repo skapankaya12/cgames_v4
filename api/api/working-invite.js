@@ -150,38 +150,35 @@ async function sendInvitationEmail(data) {
       subject: `You have received an assessment from ${data.companyName}`,
       html: `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #edeaea; padding: 2rem 1rem; font-family: Arial, sans-serif;">
-          <div style="width: 100%; max-width: 450px; margin: 0 auto;">
-            <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center;">
+          <div style="width: 100%; max-width: 900px; margin: 0 auto;">
+            <div style="background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center;">
               
               <div style="margin-bottom: 2rem;">
-                <h2 style="color: #374151; font-size: 1.5rem; font-weight: 600; margin: 0 0 1rem 0; line-height: 1.4;">You have received an assessment from</h2>
-                <h1 style="color: #708238; font-size: 1.75rem; font-weight: 700; margin: 0; line-height: 1.2;">${data.companyName}</h1>
+                <h1 style="color: #374151; font-size: 1.25rem; font-weight: 600; margin: 0; line-height: 1.4;">You have received an assessment from <span style="color: #708238;">${data.companyName}</span></h1>
               </div>
               
               <div style="text-align: left; margin-bottom: 2rem;">
                 <p style="color: #374151; margin: 0 0 1rem 0; font-size: 1rem; line-height: 1.5;">Hello,</p>
                 <p style="color: #374151; margin: 0 0 1.5rem 0; font-size: 1rem; line-height: 1.5;"><strong>${data.companyName}</strong> has invited you to complete an assessment.</p>
                 
-                <div style="background: #f9fafb; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid #e5e7eb;">
-                  <p style="color: #374151; margin: 0 0 0.5rem 0; font-weight: 600;">Company:</p>
-                  <p style="color: #6b7280; margin: 0; font-size: 0.95rem;">${data.companyName}</p>
-                  ${data.roleTag && data.roleTag !== 'candidate' && !['space-mission', 'uzay-gorevi'].includes(data.selectedGame?.toLowerCase()) ? `
-                    <p style="color: #374151; margin: 1rem 0 0.5rem 0; font-weight: 600;">Role:</p>
-                    <p style="color: #6b7280; margin: 0; font-size: 0.95rem;">${data.roleTag}</p>
-                  ` : ''}
-                </div>
+                <p style="color: #374151; margin: 0 0 0.5rem 0; font-weight: 600;">Company:</p>
+                <p style="color: #6b7280; margin: 0 0 1rem 0; font-size: 0.95rem;">${data.companyName}</p>
+                ${data.roleTag && data.roleTag !== 'candidate' && !['space-mission', 'uzay-gorevi'].includes(data.selectedGame?.toLowerCase()) ? `
+                  <p style="color: #374151; margin: 0 0 0.5rem 0; font-weight: 600;">Role:</p>
+                  <p style="color: #6b7280; margin: 0 0 1.5rem 0; font-size: 0.95rem;">${data.roleTag}</p>
+                ` : '<div style="margin-bottom: 0.5rem;"></div>'}
               </div>
               
-              <div style="margin: 2rem 0;">
+              <div style="margin: 2rem 0; text-align: center;">
                 <a href="${inviteUrl}" 
-                   style="width: 100%; min-width: 220px; padding: 1rem 2rem; background: #708238; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(112, 130, 56, 0.2);">
+                   style="display: inline-block; max-width: 100%; padding: 1rem 2rem; background: #708238; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(112, 130, 56, 0.2);">
                   ${data.selectedGame === 'takim-degerlendirme' ? 'Start Your Assessment Here' : `Start ${data.selectedGame} Assessment`}
                 </a>
               </div>
               
-              <div style="background: #f0f9ff; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; border-left: 4px solid #708238;">
+              <div style="text-align: left; background: #f0f9ff; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; border-left: 4px solid #708238;">
                 <p style="color: #374151; margin: 0 0 0.75rem 0; font-weight: 600; font-size: 0.95rem;">Assessment Details:</p>
-                <ul style="color: #6b7280; margin: 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+                <ul style="color: #6b7280; margin: 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; text-align: left;">
                   <li>Estimated Duration: 20-35 minutes</li>
                   <li>This link expires in 7 days</li>
                   <li>You can access the assessment multiple times, but can only submit once</li>

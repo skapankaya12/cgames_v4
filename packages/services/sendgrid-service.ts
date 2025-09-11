@@ -38,12 +38,11 @@ export class SendGridService {
         subject: `You have received an assessment from ${data.companyName}`,
         html: `
           <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #edeaea; padding: 2rem 1rem; font-family: Arial, sans-serif;">
-            <div style="width: 100%; max-width: 450px; margin: 0 auto;">
-              <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center;">
+            <div style="width: 100%; max-width: 900px; margin: 0 auto;">
+              <div style="background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center;">
                 
                 <div style="margin-bottom: 2rem;">
-                  <h2 style="color: #374151; font-size: 1.5rem; font-weight: 600; margin: 0 0 1rem 0; line-height: 1.4;">You have received an assessment from</h2>
-                  <h1 style="color: #708238; font-size: 1.75rem; font-weight: 700; margin: 0; line-height: 1.2;">${data.companyName}</h1>
+                  <h1 style="color: #374151; font-size: 1.25rem; font-weight: 600; margin: 0; line-height: 1.4;">You have received an assessment from <span style="color: #708238;">${data.companyName}</span></h1>
                 </div>
                 
                 <div style="text-align: left; margin-bottom: 2rem;">
