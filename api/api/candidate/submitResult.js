@@ -1,5 +1,6 @@
 const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
+const { GoogleSheetsService } = require('../../services/googleSheetsService');
 const fs = require('fs');
 const path = require('path');
 
@@ -1072,8 +1073,48 @@ module.exports = async function handler(req, res) {
     console.log('  - Document ID:', resultId);
     console.log('  - Searchable by projectId:', resultDocument.projectId);
 
-    // 4. Update invite status to 'completed'
-    console.log('🔄 [Submit Results API] Step 4: Updating invite status...');
+    // 4. Send data to Google Sheets
+    console.log('📊 [Submit Results API] Step 4: Sending data to Google Sheets...');
+    
+    try {
+      const googleSheetsService = new GoogleSheetsService();
+      
+      // Format data for Google Sheets
+      const sheetsData = googleSheetsService.formatAssessmentData(
+        {
+          candidateEmail: inviteData.candidateEmail,
+          assessmentType: finalAssessmentType,
+          assessmentName: assessmentName || getAssessmentDisplayName(finalAssessmentType),
+          answers: answers || results?.answers || {},
+          scores: calculatedScores.competencyScores,
+          completionTime: completionTime,
+          completedQuestions: completedQuestions || calculatedScores.totalQuestions,
+          token: token
+        },
+        inviteData,
+        calculatedScores
+      );
+      
+      console.log('📊 [Submit Results API] Formatted data for Google Sheets:', {
+        assessmentType: sheetsData.assessmentType,
+        candidateEmail: sheetsData.candidateEmail,
+        answersCount: Object.keys(sheetsData.answers).length,
+        hasScores: Object.keys(sheetsData.scores).length > 0
+      });
+      
+      const success = await googleSheetsService.sendAssessmentData(sheetsData);
+      if (success) {
+        console.log('✅ [Submit Results API] Assessment data sent to Google Sheets successfully');
+      } else {
+        console.log('⚠️ [Submit Results API] Google Sheets submission failed but continuing...');
+      }
+    } catch (error) {
+      console.error('❌ [Submit Results API] Error sending data to Google Sheets:', error);
+      // Don't fail the entire request if Google Sheets fails
+    }
+
+    // 5. Update invite status to 'completed'
+    console.log('🔄 [Submit Results API] Step 5: Updating invite status...');
     
     await inviteDoc.ref.update({
       status: 'completed',
@@ -1085,7 +1126,7 @@ module.exports = async function handler(req, res) {
     
     console.log('✅ [Submit Results API] Invite status updated to completed');
 
-    // 5. Return success response
+    // 6. Return success response
     const response = {
       success: true,
       message: 'Results submitted successfully',

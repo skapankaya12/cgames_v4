@@ -1,6 +1,6 @@
 const { initializeApp, getApps, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
-const GoogleSheetsService = require('../services/googleSheetsService');
+const { GoogleSheetsService } = require('../services/googleSheetsService');
 
 // CORS headers for cross-origin requests from app.olivinhr.com
 const allowedOrigins = [
@@ -296,20 +296,23 @@ module.exports = async function handler(req, res) {
     try {
       const googleSheetsService = new GoogleSheetsService();
       
-      const sheetsData = {
-        assessmentType: assessmentType,
-        candidateEmail: candidateEmail,
-        projectId: projectId,
-        token: token,
-        answers: answers,
-        scores: scores || {},
-        completionTime: completionTime,
-        totalQuestions: totalQuestions,
-        completedQuestions: completedQuestions,
-        timestamp: new Date().toISOString()
-      };
+      // Format data for Google Sheets
+      const sheetsData = googleSheetsService.formatAssessmentData(
+        {
+          candidateEmail: candidateEmail,
+          assessmentType: 'space-mission',
+          assessmentName: 'Space Mission Leadership Assessment',
+          answers: results.answers || results,
+          scores: competencyScores,
+          completionTime: results.completionTime,
+          completedQuestions: totalQuestions,
+          token: token
+        },
+        inviteData,
+        { competencyScores, overallScore, totalQuestions, scorePercentage }
+      );
       
-      await googleSheetsService.submitAssessmentData(sheetsData);
+      await googleSheetsService.sendAssessmentData(sheetsData);
       console.log('✅ [Submit Results API] Assessment data sent to Google Sheets successfully');
     } catch (error) {
       console.error('❌ [Submit Results API] Error sending data to Google Sheets:', error);
