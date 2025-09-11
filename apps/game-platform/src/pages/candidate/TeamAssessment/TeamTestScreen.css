@@ -200,6 +200,13 @@
   cursor: not-allowed;
 }
 
+.prev-button {
+  background: white !important;
+  border: 1px solid #6B8E23 !important;
+  color: #6B8E23 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
 .next-button {
   background: #6B8E23;
   color: white;
