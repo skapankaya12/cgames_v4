@@ -152,7 +152,7 @@ async function sendInvitationEmail(data) {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #6B8E23;">You received an assessment by "${data.companyName}"</h2>
           <p>Hello,</p>
-          <p><strong>${data.companyName}</strong> has invited you to complete a <strong>${data.selectedGameName === 'takim-degerlendirme' ? 'takim-degerlendirme' : data.selectedGameName}</strong> assessment.</p>
+          <p><strong>${data.companyName}</strong> has invited you to complete an assessment.</p>
           
           <p><strong>Company:</strong> ${data.companyName}</p>
           ${data.roleTag && data.roleTag !== 'candidate' && !['space-mission', 'uzay-gorevi'].includes(data.selectedGame?.toLowerCase()) ? `<p><strong>Role:</strong> ${data.roleTag}</p>` : ''}
