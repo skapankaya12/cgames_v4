@@ -50,7 +50,7 @@ const SimpleThankYouScreen = () => {
               margin: '0'
             }}>
               <p style={{ margin: '0 0 0.5rem 0' }}>
-                You will be notified about the results.
+                You will be notified about the results. You can close this window.
               </p>
               <p style={{ margin: '0' }}>
                 Please contact <strong>info@olivinhr.com</strong> for any questions.
