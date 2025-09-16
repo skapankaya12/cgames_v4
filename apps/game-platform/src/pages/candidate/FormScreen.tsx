@@ -11,7 +11,7 @@ interface User {
   company: string;
 }
 
-type FormStep = 'welcome' | 'rules' | 'form';
+type FormStep = 'welcome' | 'testDetails' | 'rules' | 'form';
 
 const FormScreen = () => {
   const navigate = useNavigate();
@@ -155,8 +155,10 @@ const FormScreen = () => {
   const handleBack = () => {
     if (currentStep === 'welcome') {
       navigate('/candidate');
-    } else if (currentStep === 'rules') {
+    } else if (currentStep === 'testDetails') {
       setCurrentStep('welcome');
+    } else if (currentStep === 'rules') {
+      setCurrentStep('testDetails');
     } else if (currentStep === 'form') {
       setCurrentStep('rules');
     }
@@ -165,6 +167,8 @@ const FormScreen = () => {
   const handleNext = () => {
     setError(null);
     if (currentStep === 'welcome') {
+      setCurrentStep('testDetails');
+    } else if (currentStep === 'testDetails') {
       setCurrentStep('rules');
     } else if (currentStep === 'rules') {
       setCurrentStep('form');
@@ -177,7 +181,7 @@ const FormScreen = () => {
         <h2 className="step-title">{t('form.welcomeStep.title')}</h2>
         <div className="step-indicator">
           <span className="step-number">1</span>
-          <span className="step-total">/ 3</span>
+          <span className="step-total">/ 4</span>
         </div>
       </div>
       
@@ -193,40 +197,27 @@ const FormScreen = () => {
         </div>
       </div>
 
-      {/* Detailed Test Information */}
+      <button onClick={handleNext} className="next-button">
+        {t('buttons.continue', 'Devam Et')}
+        <span className="button-arrow">→</span>
+      </button>
+    </div>
+  );
+
+  const renderTestDetailsStep = () => (
+    <div className="step-content test-details-step">
+      <div className="step-header">
+        <h2 className="step-title">{t('form.welcomeStep.testDetails.title')}</h2>
+        <div className="step-indicator">
+          <span className="step-number">2</span>
+          <span className="step-total">/ 4</span>
+        </div>
+      </div>
+      
       <div className="test-details-section">
-        <h3 className="test-details-title">{t('form.welcomeStep.testDetails.title')}</h3>
-        
         <div className="test-description">
           <p>{t('form.welcomeStep.testDetails.description')}</p>
           <p>{t('form.welcomeStep.testDetails.choiceInfo')}</p>
-        </div>
-
-        <div className="competencies-grid">
-          <div className="competency-item">
-            <strong>DM:</strong> {t('form.welcomeStep.testDetails.competencies.DM')}
-          </div>
-          <div className="competency-item">
-            <strong>IN:</strong> {t('form.welcomeStep.testDetails.competencies.IN')}
-          </div>
-          <div className="competency-item">
-            <strong>AD:</strong> {t('form.welcomeStep.testDetails.competencies.AD')}
-          </div>
-          <div className="competency-item">
-            <strong>CM:</strong> {t('form.welcomeStep.testDetails.competencies.CM')}
-          </div>
-          <div className="competency-item">
-            <strong>ST:</strong> {t('form.welcomeStep.testDetails.competencies.ST')}
-          </div>
-          <div className="competency-item">
-            <strong>TO:</strong> {t('form.welcomeStep.testDetails.competencies.TO')}
-          </div>
-          <div className="competency-item">
-            <strong>RL:</strong> {t('form.welcomeStep.testDetails.competencies.RL')}
-          </div>
-          <div className="competency-item">
-            <strong>RI:</strong> {t('form.welcomeStep.testDetails.competencies.RI')}
-          </div>
         </div>
 
         <div className="important-note">
@@ -234,17 +225,18 @@ const FormScreen = () => {
         </div>
 
         <div className="key-question-section">
-          <p className="key-question">{t('form.welcomeStep.testDetails.keyQuestion')}</p>
+          <h3 className="priorities-title">{t('form.welcomeStep.testPriorities.title')}</h3>
+          <p className="key-question">{t('form.welcomeStep.testPriorities.keyQuestion')}</p>
           <ul className="priorities-list">
-            <li>{t('form.welcomeStep.testDetails.priorities.0')}</li>
-            <li>{t('form.welcomeStep.testDetails.priorities.1')}</li>
-            <li>{t('form.welcomeStep.testDetails.priorities.2')}</li>
-            <li>{t('form.welcomeStep.testDetails.priorities.3')}</li>
+            <li>{t('form.welcomeStep.testPriorities.priorities.0')}</li>
+            <li>{t('form.welcomeStep.testPriorities.priorities.1')}</li>
+            <li>{t('form.welcomeStep.testPriorities.priorities.2')}</li>
+            <li>{t('form.welcomeStep.testPriorities.priorities.3')}</li>
           </ul>
         </div>
 
         <div className="test-purpose">
-          <p>{t('form.welcomeStep.testDetails.purpose')}</p>
+          <p>{t('form.welcomeStep.testPriorities.purpose')}</p>
         </div>
       </div>
 
@@ -260,8 +252,8 @@ const FormScreen = () => {
       <div className="step-header">
         <h2 className="step-title">{t('form.rulesStep.title')}</h2>
         <div className="step-indicator">
-          <span className="step-number">2</span>
-          <span className="step-total">/ 3</span>
+          <span className="step-number">3</span>
+          <span className="step-total">/ 4</span>
         </div>
       </div>
       
@@ -314,8 +306,8 @@ const FormScreen = () => {
       <div className="step-header">
         <h2 className="step-title">{t('form.formStep.title')}</h2>
         <div className="step-indicator">
-          <span className="step-number">3</span>
-          <span className="step-total">/ 3</span>
+          <span className="step-number">4</span>
+          <span className="step-total">/ 4</span>
         </div>
       </div>
       
@@ -461,9 +453,10 @@ const FormScreen = () => {
                 ← {t('buttons.back', 'Geri')}
               </button>
               
-              {currentStep === 'welcome' && renderWelcomeStep()}
-              {currentStep === 'rules' && renderRulesStep()}
-              {currentStep === 'form' && renderFormStep()}
+        {currentStep === 'welcome' && renderWelcomeStep()}
+        {currentStep === 'testDetails' && renderTestDetailsStep()}
+        {currentStep === 'rules' && renderRulesStep()}
+        {currentStep === 'form' && renderFormStep()}
             </div>
           </div>
         </div>
