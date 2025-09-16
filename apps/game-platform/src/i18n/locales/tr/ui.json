@@ -6,7 +6,31 @@
       "missionTitle": "Göreve Atandın: Galaksiler Arası Teslimat Kaptanısın",
       "missionDescription": "Bu kritik enerji çekirdeği, galaksi ittifakının enerji dengesini koruyacak ve evrenin geleceğini belirleyecek. Görevin: çekirdeği Nova Terminali'ne tam zamanında, eksiksiz ve doğru alıcıya ulaştırmak.",
       "journeyDuration": "Yolculuk yaklaşık 8-10 dakika sürecek. Verdiğin her karar; liderlik tarzını, karakterini ve reflekslerini test edecek ve seni yeni bir senaryoya yönlendirecek.",
-      "missionHighlight": "Bu bir test değil! Her tercih kaptanlık tarzının yansımasıdır. Hazırsan, kaptan koltuğuna geç ve maceranı başlat."
+      "missionHighlight": "Bu bir test değil! Her tercih kaptanlık tarzının yansımasıdır. Hazırsan, kaptan koltuğuna geç ve maceranı başlat.",
+      "testDetails": {
+        "title": "Test Girişi — Detaylı Açıklama",
+        "description": "Bu test, tek bir teslimat görevi hikâyesi üzerinden senin kararlarını ölçer. Toplam 16 sahne vardır ve test 4 bölüme ayrılır.",
+        "choiceInfo": "Her sahnede tek bir seçim yapacaksın. Burada \"doğru\" ya da \"yanlış\" cevap yoktur. Her seçenek, 8 farklı yetkinlik alanında puan yazdırır:",
+        "competencies": {
+          "DM": "Karar Verme",
+          "IN": "İnisiyatif", 
+          "AD": "Uyum Sağlama",
+          "CM": "İletişim",
+          "ST": "Stratejik Düşünme",
+          "TO": "Zaman Yönetimi",
+          "RL": "Risk Liderliği",
+          "RI": "Risk Zekâsı"
+        },
+        "importantNote": "⚠️ Önemli: Bu test senin tüm özelliklerini aynı anda ölçmez; önceliklendirmelerini ortaya çıkarır. Yani bir sahnede hızlı karar vermeyi seçersen \"Karar Verme\" yüksek puan alırken \"Stratejik Düşünme\" veya \"Zaman Yönetimi\" daha düşük kalabilir. Her seçim, başka bir özelliğin önüne geçtiğini gösterir.",
+        "keyQuestion": "Sorularda dikkat etmen gereken asıl şey: Senin için ne daha öncelikli?",
+        "priorities": [
+          "Teslimatı en hızlı şekilde bitirmek mi?",
+          "En güvenli yolu seçmek mi?",
+          "Ekibi ve sistemi korumak mı?",
+          "Yoksa en stratejik, uzun vadeli faydayı düşünmek mi?"
+        ],
+        "purpose": "Testin amacı: \"Hangisi daha iyi?\"yi göstermek değil; senin tercih sıralamanı ortaya çıkarmaktır. Yani aynı anda hem en hızlı hem en güvenli olamazsın. Seçtiğin her yol, başka bir yolu geride bırakır."
+      }
     },
     "rulesStep": {
       "title": "Kurallar & Talimatlar",

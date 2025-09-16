@@ -182,7 +182,6 @@ const FormScreen = () => {
       </div>
       
       <div className="mission-content">
-        
         <h3 className="mission-title">{t('form.welcomeStep.missionTitle')}</h3>
         <div className="mission-description">
           <p>{t('form.welcomeStep.missionDescription')}</p>
@@ -191,6 +190,61 @@ const FormScreen = () => {
         
         <div className="mission-highlight">
           {t('form.welcomeStep.missionHighlight')}
+        </div>
+      </div>
+
+      {/* Detailed Test Information */}
+      <div className="test-details-section">
+        <h3 className="test-details-title">{t('form.welcomeStep.testDetails.title')}</h3>
+        
+        <div className="test-description">
+          <p>{t('form.welcomeStep.testDetails.description')}</p>
+          <p>{t('form.welcomeStep.testDetails.choiceInfo')}</p>
+        </div>
+
+        <div className="competencies-grid">
+          <div className="competency-item">
+            <strong>DM:</strong> {t('form.welcomeStep.testDetails.competencies.DM')}
+          </div>
+          <div className="competency-item">
+            <strong>IN:</strong> {t('form.welcomeStep.testDetails.competencies.IN')}
+          </div>
+          <div className="competency-item">
+            <strong>AD:</strong> {t('form.welcomeStep.testDetails.competencies.AD')}
+          </div>
+          <div className="competency-item">
+            <strong>CM:</strong> {t('form.welcomeStep.testDetails.competencies.CM')}
+          </div>
+          <div className="competency-item">
+            <strong>ST:</strong> {t('form.welcomeStep.testDetails.competencies.ST')}
+          </div>
+          <div className="competency-item">
+            <strong>TO:</strong> {t('form.welcomeStep.testDetails.competencies.TO')}
+          </div>
+          <div className="competency-item">
+            <strong>RL:</strong> {t('form.welcomeStep.testDetails.competencies.RL')}
+          </div>
+          <div className="competency-item">
+            <strong>RI:</strong> {t('form.welcomeStep.testDetails.competencies.RI')}
+          </div>
+        </div>
+
+        <div className="important-note">
+          <p>{t('form.welcomeStep.testDetails.importantNote')}</p>
+        </div>
+
+        <div className="key-question-section">
+          <p className="key-question">{t('form.welcomeStep.testDetails.keyQuestion')}</p>
+          <ul className="priorities-list">
+            <li>{t('form.welcomeStep.testDetails.priorities.0')}</li>
+            <li>{t('form.welcomeStep.testDetails.priorities.1')}</li>
+            <li>{t('form.welcomeStep.testDetails.priorities.2')}</li>
+            <li>{t('form.welcomeStep.testDetails.priorities.3')}</li>
+          </ul>
+        </div>
+
+        <div className="test-purpose">
+          <p>{t('form.welcomeStep.testDetails.purpose')}</p>
         </div>
       </div>
 
