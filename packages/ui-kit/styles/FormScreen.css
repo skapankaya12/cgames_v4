@@ -18,19 +18,20 @@
 /* Additional styles specific to FormScreen */
 .back-button {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  background: rgba(0, 0, 0, 0.7);
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.8);
   border: 2px solid rgba(0, 191, 255, 0.6);
   border-radius: 8px;
   color: #00bfff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   text-shadow: 0 0 8px rgba(0, 191, 255, 0.3);
+  z-index: 10;
 }
 
 .back-button:hover {
@@ -44,6 +45,8 @@
 .hero-section {
   justify-content: center !important;
   background: linear-gradient(to right, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.4) 100%) !important;
+  align-items: flex-start !important;
+  padding-top: 3rem !important;
 }
 
 .hero-content {
@@ -51,6 +54,7 @@
   max-width: 90vw !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
+  margin-top: -2rem !important;
 }
 
 /* Wizard Container Styles */
@@ -456,9 +460,14 @@
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
+  .hero-section {
+    padding-top: 2rem !important;
+  }
+  
   .hero-content {
     width: 100% !important;
     max-width: 95vw !important;
+    margin-top: -1rem !important;
   }
   
   .wizard-box {
