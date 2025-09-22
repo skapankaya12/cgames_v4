@@ -102,19 +102,9 @@ const TestScreen = () => {
     const currentSectionKey = `section_${section.id}_onboarding`;
     const hasSeenOnboarding = completedSections.includes(currentSectionKey);
 
-    // Check if we're coming from a direct navigation (skip onboarding in this case)
-    const skipOnboarding = sessionStorage.getItem('skipNextOnboarding') === 'true';
-    if (skipOnboarding) {
-      sessionStorage.removeItem('skipNextOnboarding');
-      setShowSectionOnboarding(false);
-      setShowSectionEnd(false);
-      setCurrentSection(null);
-      return;
-    }
 
-    // Show section onboarding for first question if not seen before and only for section 1
-    // For other sections, only show if we naturally progressed there (not from direct navigation)
-    if (isFirstQuestionOfSection && !hasSeenOnboarding && section.id === 1) {
+    // Show section onboarding for first question if not seen before
+    if (isFirstQuestionOfSection && !hasSeenOnboarding) {
       setCurrentSection(section);
       setShowSectionOnboarding(true);
       setShowSectionEnd(false);
@@ -167,11 +157,12 @@ const TestScreen = () => {
         sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
       }
 
-      // If this was the last section, go to completion
+      // If this was the last section, navigate to simple thank you page
       if (currentSection.id === 4) {
-        // The test should be complete, let the normal flow handle it
         setShowSectionEnd(false);
         setCurrentSection(null);
+        // Navigate directly to simple thank you page
+        navigate('/candidate/simple-thank-you');
         return;
       }
     }
@@ -179,14 +170,10 @@ const TestScreen = () => {
     setShowSectionEnd(false);
     setCurrentSection(null);
 
-    // For sections 1-3, navigate to the next question after a short delay
+    // For sections 1-3, navigate to the next question immediately
     if (currentSection && currentSection.id < 4) {
       const nextQuestionId = currentSection.questionRange.end + 1;
-      // Set flag to skip onboarding for the next section
-      sessionStorage.setItem('skipNextOnboarding', 'true');
-      setTimeout(() => {
-        navigate(`/candidate/test/${nextQuestionId}`);
-      }, 100);
+      navigate(`/candidate/test/${nextQuestionId}`);
     }
   };
 

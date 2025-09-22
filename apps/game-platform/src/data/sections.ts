@@ -42,8 +42,8 @@ export const sections: SectionData[] = [
   {
     id: 1,
     title: {
-      en: "Section 1 — Beginning & First Contact (Questions 1–4)",
-      tr: "Bölüm 1 — Başlangıç & İlk Temas (Sorular 1–4)"
+      en: "Section 1",
+      tr: "Bölüm 1"
     },
     onboarding: {
       title: {
@@ -94,8 +94,8 @@ export const sections: SectionData[] = [
   {
     id: 2,
     title: {
-      en: "Section 2 — Route & Threat Management (Questions 5–8)",
-      tr: "Bölüm 2 — Rota & Tehdit Yönetimi (Sorular 5–8)"
+      en: "Section 2",
+      tr: "Bölüm 2"
     },
     onboarding: {
       title: {
@@ -148,8 +148,8 @@ export const sections: SectionData[] = [
   {
     id: 3,
     title: {
-      en: "Section 3 — Pre-Terminal Decisions (Questions 9–12)",
-      tr: "Bölüm 3 — Terminal Öncesi Kararlar (Sorular 9–12)"
+      en: "Section 3",
+      tr: "Bölüm 3"
     },
     onboarding: {
       title: {
@@ -200,8 +200,8 @@ export const sections: SectionData[] = [
   {
     id: 4,
     title: {
-      en: "Section 4 — Landing, Control & Delivery (Questions 13–16)",
-      tr: "Bölüm 4 — İniş, Kontrol & Teslim (Sorular 13–16)"
+      en: "Section 4",
+      tr: "Bölüm 4"
     },
     onboarding: {
       title: {

@@ -53,7 +53,7 @@ export const SectionEndText: React.FC<SectionEndTextProps> = ({
               {/* Continue Button */}
               <button onClick={onContinue} className="section-simple-button">
                 {isLastSection 
-                  ? (currentLang === 'en' ? 'View Results' : 'Sonuçları Görüntüle')
+                  ? (currentLang === 'en' ? 'Submit Results' : 'Sonuçları Gönder')
                   : (currentLang === 'en' ? 'Continue Mission' : 'Devam et')
                 }
               </button>
