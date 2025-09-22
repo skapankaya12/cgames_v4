@@ -163,14 +163,18 @@ const TestScreen = () => {
         setCurrentSection(null);
         return;
       }
-
-      // Otherwise, navigate to the next question
-      const nextQuestionId = currentSection.questionRange.end + 1;
-      navigate(`/candidate/test/${nextQuestionId}`);
     }
     
     setShowSectionEnd(false);
     setCurrentSection(null);
+
+    // For sections 1-3, navigate to the next question after a short delay
+    if (currentSection && currentSection.id < 4) {
+      const nextQuestionId = currentSection.questionRange.end + 1;
+      setTimeout(() => {
+        navigate(`/candidate/test/${nextQuestionId}`);
+      }, 100);
+    }
   };
 
   // Show section onboarding if needed
