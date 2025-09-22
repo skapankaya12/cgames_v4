@@ -170,7 +170,8 @@ const TestScreen = () => {
     setShowSectionEnd(false);
     setCurrentSection(null);
 
-    // For sections 1-3, navigate to the next question immediately
+    // For sections 1-3, navigate to the first question of the next section
+    // This will trigger the onboarding for the next section automatically
     if (currentSection && currentSection.id < 4) {
       const nextQuestionId = currentSection.questionRange.end + 1;
       navigate(`/candidate/test/${nextQuestionId}`);

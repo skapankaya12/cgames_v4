@@ -33,7 +33,7 @@ export const TestProgress: React.FC<TestProgressProps> = ({
           {t('buttons.back')}
         </button>
         <div className="question-counter">
-          Question {currentQuestion + 1} / {totalQuestions} - {questionTitles[currentQuestion]}
+          {currentQuestion + 1} / {totalQuestions} - {questionTitles[currentQuestion]}
         </div>
       </div>
     </div>
