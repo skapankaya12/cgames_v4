@@ -449,7 +449,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: 14px;
   line-height: 1.5; /* Increased from 1.4 for better readability */
   cursor: pointer;
@@ -470,6 +470,7 @@
   flex: 1;
   font-weight: 700;
   line-height: 1.4; /* Better line height for option text */
+  color: #ffffff !important; /* Ensure option text is white */
 }
 
 
@@ -844,6 +845,7 @@
   
   .option-text {
     line-height: 1.4; /* Better line height for mobile option text */
+    color: #ffffff !important; /* Ensure option text is white on mobile */
   }
   
   .dialog-completion {
