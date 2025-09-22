@@ -1,7 +1,7 @@
 /* Import FormScreen base styles */
 @import './FormScreen.css';
 
-/* Section-specific overrides for full-page layout */
+/* Section-specific overrides for simple layout matching screenshot */
 .section-hero {
   justify-content: center !important;
   background: linear-gradient(to right, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.4) 100%) !important;
@@ -12,7 +12,7 @@
 
 .section-hero-content {
   width: 90% !important;
-  max-width: 1200px !important;
+  max-width: 800px !important;
   margin: 0 auto !important;
 }
 
@@ -22,219 +22,80 @@
   backdrop-filter: blur(15px);
   border: 2px solid rgba(0, 191, 255, 0.6);
   border-radius: 12px;
-  padding: 3rem 4rem;
+  padding: 3rem;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
     0 0 20px rgba(0, 191, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  min-height: 70vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  gap: 2rem;
 }
 
-/* Section Header */
-.section-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 3rem;
-}
-
-.section-icon {
-  margin-bottom: 1.5rem;
-  animation: pulseGlow 2s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.6));
-  }
-  50% {
-    filter: drop-shadow(0 0 25px rgba(0, 191, 255, 0.9));
-  }
-}
-
-.section-main-title {
-  font-size: 3rem;
+/* Simple Title - matches screenshot */
+.section-simple-title {
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #00bfff;
-  text-shadow: 0 0 30px rgba(0, 191, 255, 0.8);
-  background: linear-gradient(135deg, #00bfff, #4e5eff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 1.5rem 0;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  margin: 0;
   line-height: 1.2;
 }
 
-.section-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(78, 94, 255, 0.15));
-  border: 2px solid rgba(0, 191, 255, 0.4);
-  border-radius: 30px;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 6px 20px rgba(0, 191, 255, 0.25);
-}
-
-.section-number {
-  background: linear-gradient(135deg, #00bfff, #4e5eff);
-  color: white;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.4rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
-}
-
-.section-total {
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.2rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.progress-text {
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-/* Section Content */
-.section-content {
-  flex: 1;
-  max-width: 800px;
+/* Simple Description - matches screenshot */
+.section-simple-description {
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.section-subtitle {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, #ffffff, #e0e7ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 2rem;
-}
-
-.section-description {
-  margin-bottom: 3rem;
-}
-
-.section-description p {
+.section-simple-description p {
   color: #e2e8f0;
-  font-size: 1.2rem;
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* Next Step Box */
-.next-step-box {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 2.5rem;
-  background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(78, 94, 255, 0.1));
-  border: 2px solid rgba(0, 191, 255, 0.3);
-  border-radius: 16px;
-  border-left: 6px solid #00bfff;
-  margin-bottom: 3rem;
-  width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-}
-
-.next-step-icon {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #00bfff, #4e5eff);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
-}
-
-.next-step-icon span {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.next-step-content {
-  flex: 1;
-}
-
-.next-step-content h3 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #00bfff;
-  text-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
-  margin: 0 0 1rem 0;
-}
-
-.next-step-content p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.6;
   margin: 0;
 }
 
-/* Main Action Button */
-.section-main-button {
-  width: 70%;
-  max-width: 500px;
-  padding: 1.5rem 3rem;
-  background: linear-gradient(135deg, #00bfff, #4e5eff);
-  color: white;
-  border: none;
+/* Sırada Box - matches screenshot design */
+.sirada-box {
+  background: rgba(0, 191, 255, 0.1);
+  border: 2px solid rgba(0, 191, 255, 0.3);
   border-radius: 12px;
-  font-size: 1.3rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+  padding: 1.5rem 2rem;
+  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
 }
 
-.section-main-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0, 191, 255, 0.5);
-  background: linear-gradient(135deg, #0099cc, #3d4ecc);
+.sirada-box p {
+  color: #00bfff;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 500;
 }
 
-.section-main-button .button-text {
-  font-size: 1.3rem;
+/* Simple Button - matches screenshot */
+.section-simple-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1a1a2e;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
 }
 
-.section-main-button .button-arrow {
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.section-main-button:hover .button-arrow {
-  transform: translateX(5px);
+.section-simple-button:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
 }
 
 /* Responsive Design */
@@ -244,21 +105,12 @@
   }
   
   .section-wizard-box {
-    padding: 2.5rem 3rem;
-    min-height: 65vh;
+    padding: 2.5rem;
+    min-height: 55vh;
   }
   
-  .section-main-title {
-    font-size: 2.5rem;
-  }
-  
-  .next-step-box {
-    width: 80%;
-    padding: 2rem;
-  }
-  
-  .section-main-button {
-    width: 80%;
+  .section-simple-title {
+    font-size: 2.2rem;
   }
 }
 
@@ -269,34 +121,26 @@
   
   .section-wizard-box {
     padding: 2rem;
-    min-height: 60vh;
-  }
-  
-  .section-main-title {
-    font-size: 2rem;
-  }
-  
-  .section-description p {
-    font-size: 1.1rem;
-  }
-  
-  .next-step-box {
-    flex-direction: column;
-    text-align: center;
-    width: 90%;
+    min-height: 50vh;
     gap: 1.5rem;
   }
   
-  .section-main-button {
-    width: 90%;
-    padding: 1.25rem 2rem;
-    font-size: 1.1rem;
+  .section-simple-title {
+    font-size: 2rem;
   }
   
-  .section-number {
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.2rem;
+  .section-simple-description p {
+    font-size: 1rem;
+  }
+  
+  .sirada-box {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .section-simple-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    min-width: 180px;
   }
 }
 
@@ -308,28 +152,28 @@
   
   .section-wizard-box {
     padding: 1.5rem;
-    min-height: 55vh;
+    min-height: 45vh;
   }
   
-  .section-main-title {
+  .section-simple-title {
     font-size: 1.8rem;
   }
   
-  .section-header {
-    margin-bottom: 2rem;
+  .section-simple-description p {
+    font-size: 0.95rem;
   }
   
-  .section-icon {
-    margin-bottom: 1rem;
+  .sirada-box {
+    padding: 1rem;
   }
   
-  .next-step-box {
-    width: 100%;
-    padding: 1.5rem;
+  .sirada-box p {
+    font-size: 0.95rem;
   }
   
-  .section-main-button {
-    width: 100%;
-    padding: 1rem 1.5rem;
+  .section-simple-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    min-width: 160px;
   }
 }
