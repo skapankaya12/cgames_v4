@@ -21,30 +21,24 @@ export const SectionEndText: React.FC<SectionEndTextProps> = ({
     <div className="dialog-game-container">
       <div className="background-image"></div>
       
-      <div className="hero-section">
-        <div className="hero-content">
-          <div className="section-end-container">
-            <div className="section-end-box">
+      <div className="hero-section section-hero">
+        <div className="hero-content section-hero-content">
+          <div className="wizard-container">
+            <div className="wizard-box section-wizard-box">
               {/* Section Complete Header */}
-              <div className="section-complete-header">
-                <div className="complete-icon">
+              <div className="section-header">
+                <div className="section-icon">
                   {isLastSection ? (
                     <Icons.Trophy size={64} color="#ffc107" />
                   ) : (
                     <Icons.Check size={64} color="#00bfff" />
                   )}
                 </div>
-                <h1 className="section-complete-title">
+                <h1 className="section-main-title">
                   {section.endText.title[currentLang]}
                 </h1>
                 {!isLastSection && (
-                  <div className="section-progress-indicator">
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill" 
-                        style={{ width: `${(section.id / 4) * 100}%` }}
-                      ></div>
-                    </div>
+                  <div className="section-indicator">
                     <span className="progress-text">
                       {currentLang === 'en' 
                         ? `Section ${section.id} of 4 Complete`
@@ -55,70 +49,37 @@ export const SectionEndText: React.FC<SectionEndTextProps> = ({
                 )}
               </div>
 
-              {/* Section Summary */}
-              <div className="section-summary">
-                <div className="summary-content">
-                  <p className="summary-text">
-                    {section.endText.content[currentLang]}
-                  </p>
+              {/* Section Content */}
+              <div className="section-content">
+                <div className="section-description">
+                  <p>{section.endText.content[currentLang]}</p>
                 </div>
 
-                {!isLastSection && (
-                  <div className="next-section-preview">
-                    <div className="preview-icon">
-                      <Icons.ChevronRight size={32} color="#00bfff" />
-                    </div>
-                    <div className="preview-content">
-                      <h3 className="preview-title">
-                        {currentLang === 'en' ? 'Coming Next:' : 'Sırada:'}
-                      </h3>
-                      <p className="preview-description">
-                        {currentLang === 'en' 
-                          ? 'The challenges ahead will test different aspects of your decision-making under increasing pressure.'
-                          : 'Önündeki zorluklar, artan baskı altında karar vermenin farklı yönlerini test edecek.'
-                        }
-                      </p>
-                    </div>
+                {/* Next Step Preview Box */}
+                <div className="next-step-box">
+                  <div className="next-step-icon">
+                    <span>&gt;</span>
                   </div>
-                )}
-
-                {isLastSection && (
-                  <div className="final-mission-summary">
-                    <div className="mission-stats">
-                      <div className="stat-item">
-                        <Icons.Target size={32} color="#00bfff" />
-                        <div className="stat-content">
-                          <span className="stat-label">
-                            {currentLang === 'en' ? 'Decisions Made' : 'Verilen Kararlar'}
-                          </span>
-                          <span className="stat-value">16</span>
-                        </div>
-                      </div>
-                      <div className="stat-item">
-                        <Icons.CheckCircle size={32} color="#10b981" />
-                        <div className="stat-content">
-                          <span className="stat-label">
-                            {currentLang === 'en' ? 'Sections Completed' : 'Tamamlanan Bölümler'}
-                          </span>
-                          <span className="stat-value">4/4</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="final-message">
-                      <p className="final-text">
-                        {currentLang === 'en' 
+                  <div className="next-step-content">
+                    <h3>{currentLang === 'en' ? 'Coming Up:' : 'Sırada:'}</h3>
+                    <p>
+                      {isLastSection 
+                        ? (currentLang === 'en' 
                           ? 'Your decision-making profile is now being analyzed. The results will reveal your unique leadership style and decision priorities.'
                           : 'Karar verme profilin şimdi analiz ediliyor. Sonuçlar senin eşsiz liderlik tarzını ve karar önceliklerini ortaya çıkaracak.'
-                        }
-                      </p>
-                    </div>
+                        )
+                        : (currentLang === 'en' 
+                          ? 'The challenges ahead will test different aspects of your decision-making under increasing pressure.'
+                          : 'Önündeki zorluklar, artan baskı altında karar vermenin farklı yönlerini test edecek.'
+                        )
+                      }
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Continue Button */}
-              <button onClick={onContinue} className="section-continue-button">
+              <button onClick={onContinue} className="section-main-button">
                 <span className="button-text">
                   {isLastSection 
                     ? (currentLang === 'en' ? 'View Results' : 'Sonuçları Görüntüle')
