@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getTranslatedQuestions } from '../../../utils/questionsUtils';
+import { getSectionByQuestionId } from '../../../data/sections';
 import InteractionTracker from '@cgames/services/InteractionTracker';
 import { useTestState } from './hooks/useTestState';
 import { useVideoManager } from './hooks/useVideoManager';
@@ -11,12 +12,20 @@ import { TestNarration } from './components/TestNarration';
 import { TestOptions } from './components/TestOptions';
 import { ForwardingMessage } from './components/ForwardingMessage';
 import { CompletionScreen } from './components/CompletionScreen';
+import { SectionOnboarding } from './components/SectionOnboarding';
+import { SectionEndText } from './components/SectionEndText';
 import '@cgames/ui-kit/styles/TestScreen.css';
+import '@cgames/ui-kit/styles/SectionScreens.css';
 
 const TestScreen = () => {
   const navigate = useNavigate();
   const { questionNumber } = useParams<{ questionNumber: string }>();
   const { t, i18n } = useTranslation('common');
+  
+  // Section flow states
+  const [showSectionOnboarding, setShowSectionOnboarding] = useState(false);
+  const [showSectionEnd, setShowSectionEnd] = useState(false);
+  const [currentSection, setCurrentSection] = useState<any>(null);
   
   // Get translated questions - this will update when language changes
   const questions = getTranslatedQuestions();
@@ -74,6 +83,116 @@ const TestScreen = () => {
     console.log('Questions after language change:', questions.length, 'questions loaded');
     console.log('Current question:', currentQuestion?.id, currentQuestion?.text?.substring(0, 50) + '...');
   }, [i18n.language, questions, currentQuestion]);
+
+  // Section management logic
+  useEffect(() => {
+    if (!currentQuestion) return;
+
+    const questionId = currentQuestion.id;
+    const section = getSectionByQuestionId(questionId);
+    
+    if (!section) return;
+
+    // Check if we're starting a new section
+    const isFirstQuestionOfSection = questionId === section.questionRange.start;
+    const isLastQuestionOfSection = questionId === section.questionRange.end;
+    
+    // Get stored section progress from sessionStorage
+    const completedSections = JSON.parse(sessionStorage.getItem('completedSections') || '[]');
+    const currentSectionKey = `section_${section.id}_onboarding`;
+    const hasSeenOnboarding = completedSections.includes(currentSectionKey);
+
+    // Show section onboarding for first question if not seen before
+    if (isFirstQuestionOfSection && !hasSeenOnboarding) {
+      setCurrentSection(section);
+      setShowSectionOnboarding(true);
+      setShowSectionEnd(false);
+      return;
+    }
+
+    // Check if we just completed a section (after answering the last question)
+    if (isLastQuestionOfSection && testState.answers[questionId]) {
+      const sectionEndKey = `section_${section.id}_end`;
+      const hasSeenSectionEnd = completedSections.includes(sectionEndKey);
+      
+      if (!hasSeenSectionEnd) {
+        setCurrentSection(section);
+        setShowSectionEnd(true);
+        setShowSectionOnboarding(false);
+        return;
+      }
+    }
+
+    // Normal test flow
+    setShowSectionOnboarding(false);
+    setShowSectionEnd(false);
+    setCurrentSection(null);
+  }, [currentQuestion, testState.answers]);
+
+  // Handle section onboarding continue
+  const handleSectionOnboardingContinue = () => {
+    if (currentSection) {
+      const completedSections = JSON.parse(sessionStorage.getItem('completedSections') || '[]');
+      const currentSectionKey = `section_${currentSection.id}_onboarding`;
+      
+      if (!completedSections.includes(currentSectionKey)) {
+        completedSections.push(currentSectionKey);
+        sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
+      }
+    }
+    
+    setShowSectionOnboarding(false);
+    setCurrentSection(null);
+  };
+
+  // Handle section end continue
+  const handleSectionEndContinue = () => {
+    if (currentSection) {
+      const completedSections = JSON.parse(sessionStorage.getItem('completedSections') || '[]');
+      const sectionEndKey = `section_${currentSection.id}_end`;
+      
+      if (!completedSections.includes(sectionEndKey)) {
+        completedSections.push(sectionEndKey);
+        sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
+      }
+
+      // If this was the last section, go to completion
+      if (currentSection.id === 4) {
+        // The test should be complete, let the normal flow handle it
+        setShowSectionEnd(false);
+        setCurrentSection(null);
+        return;
+      }
+
+      // Otherwise, navigate to the next question
+      const nextQuestionId = currentSection.questionRange.end + 1;
+      navigate(`/candidate/test/${nextQuestionId}`);
+    }
+    
+    setShowSectionEnd(false);
+    setCurrentSection(null);
+  };
+
+  // Show section onboarding if needed
+  if (showSectionOnboarding && currentSection) {
+    return (
+      <SectionOnboarding
+        section={currentSection}
+        onContinue={handleSectionOnboardingContinue}
+      />
+    );
+  }
+
+  // Show section end text if needed
+  if (showSectionEnd && currentSection) {
+    return (
+      <SectionEndText
+        section={currentSection}
+        onContinue={handleSectionEndContinue}
+        isLastSection={currentSection.id === 4}
+      />
+    );
+  }
 
   // If test is complete, show completion screen
   if (testState.isComplete) {
