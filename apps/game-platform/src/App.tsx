@@ -256,6 +256,7 @@ function AppContent() {
         
         {/* Thank you screen */}
         <Route path="/thank-you" element={<SimpleThankYouScreen />} />
+        <Route path="/candidate/simple-thank-you" element={<SimpleThankYouScreen />} />
       </Routes>
     </div>
   );

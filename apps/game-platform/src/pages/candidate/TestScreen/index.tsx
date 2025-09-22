@@ -91,7 +91,10 @@ const TestScreen = () => {
     const questionId = currentQuestion.id;
     const section = getSectionByQuestionId(questionId);
     
-    if (!section) return;
+    if (!section) {
+      console.log(`[TestScreen] No section found for question ${questionId}`);
+      return;
+    }
 
     // Check if we're starting a new section
     const isFirstQuestionOfSection = questionId === section.questionRange.start;
@@ -102,9 +105,11 @@ const TestScreen = () => {
     const currentSectionKey = `section_${section.id}_onboarding`;
     const hasSeenOnboarding = completedSections.includes(currentSectionKey);
 
+    console.log(`[TestScreen] Question ${questionId}, Section ${section.id}, First: ${isFirstQuestionOfSection}, Last: ${isLastQuestionOfSection}, HasOnboarding: ${hasSeenOnboarding}, HasAnswer: ${!!testState.answers[questionId]}`);
 
     // Show section onboarding for first question if not seen before
     if (isFirstQuestionOfSection && !hasSeenOnboarding) {
+      console.log(`[TestScreen] Showing onboarding for section ${section.id}`);
       setCurrentSection(section);
       setShowSectionOnboarding(true);
       setShowSectionEnd(false);
@@ -117,6 +122,7 @@ const TestScreen = () => {
       const hasSeenSectionEnd = completedSections.includes(sectionEndKey);
       
       if (!hasSeenSectionEnd) {
+        console.log(`[TestScreen] Showing end screen for section ${section.id}`);
         setCurrentSection(section);
         setShowSectionEnd(true);
         setShowSectionOnboarding(false);
@@ -140,6 +146,8 @@ const TestScreen = () => {
         completedSections.push(currentSectionKey);
         sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
       }
+
+      console.log(`[TestScreen] Completed onboarding for section ${currentSection.id}, navigating to question ${currentSection.questionRange.start}`);
     }
     
     setShowSectionOnboarding(false);
@@ -157,8 +165,11 @@ const TestScreen = () => {
         sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
       }
 
+      console.log(`[TestScreen] Completed section ${currentSection.id} end screen`);
+
       // If this was the last section, navigate to simple thank you page
       if (currentSection.id === 4) {
+        console.log(`[TestScreen] Last section completed, navigating to thank you page`);
         setShowSectionEnd(false);
         setCurrentSection(null);
         // Navigate directly to simple thank you page
@@ -174,7 +185,16 @@ const TestScreen = () => {
     // This will trigger the onboarding for the next section automatically
     if (currentSection && currentSection.id < 4) {
       const nextQuestionId = currentSection.questionRange.end + 1;
-      navigate(`/candidate/test/${nextQuestionId}`);
+      console.log(`[TestScreen] Navigating from section ${currentSection.id} to next question ${nextQuestionId}`);
+      
+      // Ensure the next question ID is valid
+      if (nextQuestionId <= questions.length) {
+        navigate(`/candidate/test/${nextQuestionId}`);
+      } else {
+        // If we've exceeded the questions, navigate to ending
+        console.log(`[TestScreen] Next question ${nextQuestionId} exceeds total questions ${questions.length}, navigating to ending`);
+        navigate('/candidate/ending');
+      }
     }
   };
 
