@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import IdentityScreen from './pages/candidate/IdentityScreen';
 import FormScreen from './pages/candidate/FormScreen';
 import TestScreen from './pages/candidate/TestScreen';
+import SectionOnboardingScreen from './pages/candidate/TestScreen/SectionOnboardingScreen';
+import SectionEndingScreen from './pages/candidate/TestScreen/SectionEndingScreen';
 import EndingScreen from './pages/candidate/EndingScreen';
 import ResultsScreen from './pages/candidate/ResultsScreen';
 import IdentityScreen2 from './pages/candidate/Game2/IdentityScreen2';
@@ -233,6 +235,8 @@ function AppContent() {
         <Route path="/candidate/form" element={<ProtectedRoute><FormScreen /></ProtectedRoute>} />
         <Route path="/candidate/test" element={<ProtectedRoute><TestScreen /></ProtectedRoute>} />
         <Route path="/candidate/test/:questionNumber" element={<ProtectedRoute><TestScreen /></ProtectedRoute>} />
+        <Route path="/candidate/test/section/:sectionId/onboarding" element={<ProtectedRoute><SectionOnboardingScreen /></ProtectedRoute>} />
+        <Route path="/candidate/test/section/:sectionId/ending" element={<ProtectedRoute><SectionEndingScreen /></ProtectedRoute>} />
         <Route path="/candidate/ending" element={<ProtectedRoute><EndingScreen /></ProtectedRoute>} />
         <Route path="/candidate/results" element={<ProtectedRoute><ResultsScreen /></ProtectedRoute>} />
         <Route path="/candidate/game2" element={<ProtectedRoute><IdentityScreen2 /></ProtectedRoute>} />

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getTranslatedQuestions } from '../../../utils/questionsUtils';
@@ -12,8 +12,6 @@ import { TestNarration } from './components/TestNarration';
 import { TestOptions } from './components/TestOptions';
 import { ForwardingMessage } from './components/ForwardingMessage';
 import { CompletionScreen } from './components/CompletionScreen';
-import { SectionOnboarding } from './components/SectionOnboarding';
-import { SectionEndText } from './components/SectionEndText';
 import '@cgames/ui-kit/styles/TestScreen.css';
 import '@cgames/ui-kit/styles/SectionScreens.css';
 
@@ -22,10 +20,6 @@ const TestScreen = () => {
   const { questionNumber } = useParams<{ questionNumber: string }>();
   const { t, i18n } = useTranslation('common');
   
-  // Section flow states
-  const [showSectionOnboarding, setShowSectionOnboarding] = useState(false);
-  const [showSectionEnd, setShowSectionEnd] = useState(false);
-  const [currentSection, setCurrentSection] = useState<any>(null);
   
   // Get translated questions - this will update when language changes
   const questions = getTranslatedQuestions();
@@ -84,7 +78,7 @@ const TestScreen = () => {
     console.log('Current question:', currentQuestion?.id, currentQuestion?.text?.substring(0, 50) + '...');
   }, [i18n.language, questions, currentQuestion]);
 
-  // Section management logic
+  // Section management logic - redirect to proper section screens
   useEffect(() => {
     if (!currentQuestion) return;
 
@@ -107,12 +101,10 @@ const TestScreen = () => {
 
     console.log(`[TestScreen] Question ${questionId}, Section ${section.id}, First: ${isFirstQuestionOfSection}, Last: ${isLastQuestionOfSection}, HasOnboarding: ${hasSeenOnboarding}, HasAnswer: ${!!testState.answers[questionId]}`);
 
-    // Show section onboarding for first question if not seen before
+    // Redirect to section onboarding for first question if not seen before
     if (isFirstQuestionOfSection && !hasSeenOnboarding) {
-      console.log(`[TestScreen] Showing onboarding for section ${section.id}`);
-      setCurrentSection(section);
-      setShowSectionOnboarding(true);
-      setShowSectionEnd(false);
+      console.log(`[TestScreen] Redirecting to onboarding for section ${section.id}`);
+      navigate(`/candidate/test/section/${section.id}/onboarding`);
       return;
     }
 
@@ -122,175 +114,16 @@ const TestScreen = () => {
       const hasSeenSectionEnd = completedSections.includes(sectionEndKey);
       
       if (!hasSeenSectionEnd) {
-        console.log(`[TestScreen] Showing end screen for section ${section.id}`);
-        setCurrentSection(section);
-        setShowSectionEnd(true);
-        setShowSectionOnboarding(false);
+        console.log(`[TestScreen] Redirecting to end screen for section ${section.id}`);
+        // Store test answers in session storage for the section ending screen
+        sessionStorage.setItem('testAnswers', JSON.stringify(testState.answers));
+        navigate(`/candidate/test/section/${section.id}/ending`);
         return;
       }
     }
+  }, [currentQuestion, testState.answers, navigate]);
 
-    // Normal test flow
-    setShowSectionOnboarding(false);
-    setShowSectionEnd(false);
-    setCurrentSection(null);
-  }, [currentQuestion, testState.answers]);
 
-  // Handle section onboarding continue
-  const handleSectionOnboardingContinue = () => {
-    if (currentSection) {
-      const completedSections = JSON.parse(sessionStorage.getItem('completedSections') || '[]');
-      const currentSectionKey = `section_${currentSection.id}_onboarding`;
-      
-      if (!completedSections.includes(currentSectionKey)) {
-        completedSections.push(currentSectionKey);
-        sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
-      }
-
-      console.log(`[TestScreen] Completed onboarding for section ${currentSection.id}, navigating to question ${currentSection.questionRange.start}`);
-    }
-    
-    setShowSectionOnboarding(false);
-    setCurrentSection(null);
-  };
-
-  // Handle section end continue
-  const handleSectionEndContinue = async () => {
-    if (currentSection) {
-      const completedSections = JSON.parse(sessionStorage.getItem('completedSections') || '[]');
-      const sectionEndKey = `section_${currentSection.id}_end`;
-      
-      if (!completedSections.includes(sectionEndKey)) {
-        completedSections.push(sectionEndKey);
-        sessionStorage.setItem('completedSections', JSON.stringify(completedSections));
-      }
-
-      console.log(`[TestScreen] Completed section ${currentSection.id} end screen`);
-
-      // If this was the last section, submit results and navigate to simple thank you page
-      if (currentSection.id === 4) {
-        console.log(`[TestScreen] Last section completed, submitting results...`);
-        
-        try {
-          // Get invite data from session storage (same as GameFlowContext)
-          const inviteDataStr = sessionStorage.getItem('currentInvite');
-          if (!inviteDataStr) {
-            console.error('❌ [TestScreen] No invite data found in session storage with key "currentInvite"');
-            throw new Error('Missing invite data');
-          }
-          
-          const inviteData = JSON.parse(inviteDataStr);
-          const candidateEmail = inviteData.candidateEmail;
-          
-          if (!candidateEmail) {
-            console.error('❌ [TestScreen] No candidate email found in invite data');
-            throw new Error('Missing candidate email');
-          }
-          
-          // Prepare submission data in same format as working assessments
-          const submissionData = {
-            token: inviteData.token,
-            candidateEmail: candidateEmail,
-            candidateInfo: {
-              email: candidateEmail,
-              // Add other candidate info if available
-            },
-            assessmentType: 'space-mission',
-            assessmentName: 'Space Mission Leadership Assessment',
-            answers: testState.answers,
-            completionTime: testState.timeSpent || null,
-            completedAt: new Date().toISOString(),
-            totalQuestions: questions.length,
-            completedQuestions: Object.keys(testState.answers).length,
-            gameMetadata: {
-              questionIds: questions.map(q => q.id),
-              language: i18n.language,
-              startTime: testState.startTime,
-              endTime: new Date().toISOString()
-            }
-          };
-
-          console.log('📊 [TestScreen] Submitting space mission results...');
-          console.log('  - Token:', submissionData.token ? 'VALID' : 'INVALID');
-          console.log('  - CandidateEmail:', submissionData.candidateEmail || 'MISSING');
-          console.log('  - Assessment Type:', submissionData.assessmentType);
-          console.log('  - Answers count:', Object.keys(submissionData.answers).length);
-          
-          // Submit directly to API (same as working assessments)
-          const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://api.olivinhr.com';
-          const response = await fetch(`${apiBaseUrl}/api/candidate/submitResult`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(submissionData),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            throw new Error(errorData.error || `HTTP ${response.status}`);
-          }
-
-          const responseData = await response.json();
-          console.log('✅ [TestScreen] Space mission results submitted successfully!', responseData);
-          
-        } catch (error) {
-          console.error('❌ [TestScreen] Failed to submit space mission results:', error);
-          // Continue to thank you page even if submission fails
-        }
-        
-        setShowSectionEnd(false);
-        setCurrentSection(null);
-        // Navigate to simple thank you page
-        navigate('/candidate/simple-thank-you');
-        return;
-      }
-
-      // For sections 1-3, navigate to the first question of the next section
-      // This will trigger the onboarding for the next section automatically
-      if (currentSection.id < 4) {
-        const nextQuestionId = currentSection.questionRange.end + 1;
-        console.log(`[TestScreen] Navigating from section ${currentSection.id} to next question ${nextQuestionId}`);
-        
-        setShowSectionEnd(false);
-        setCurrentSection(null);
-        
-        // Ensure the next question ID is valid
-        if (nextQuestionId <= questions.length) {
-          navigate(`/candidate/test/${nextQuestionId}`);
-        } else {
-          // If we've exceeded the questions, navigate to ending
-          console.log(`[TestScreen] Next question ${nextQuestionId} exceeds total questions ${questions.length}, navigating to ending`);
-          navigate('/candidate/ending');
-        }
-        return;
-      }
-    }
-    
-    setShowSectionEnd(false);
-    setCurrentSection(null);
-  };
-
-  // Show section onboarding if needed
-  if (showSectionOnboarding && currentSection) {
-    return (
-      <SectionOnboarding
-        section={currentSection}
-        onContinue={handleSectionOnboardingContinue}
-      />
-    );
-  }
-
-  // Show section end text if needed
-  if (showSectionEnd && currentSection) {
-    return (
-      <SectionEndText
-        section={currentSection}
-        onContinue={handleSectionEndContinue}
-        isLastSection={currentSection.id === 4}
-      />
-    );
-  }
 
   // If test is complete, show completion screen
   if (testState.isComplete) {
