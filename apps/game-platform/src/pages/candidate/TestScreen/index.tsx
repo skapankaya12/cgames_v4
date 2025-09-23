@@ -172,10 +172,10 @@ const TestScreen = () => {
         console.log(`[TestScreen] Last section completed, submitting results...`);
         
         try {
-          // Get invite data from session storage (same as working assessments)
-          const inviteDataStr = sessionStorage.getItem('inviteData');
+          // Get invite data from session storage (same as GameFlowContext)
+          const inviteDataStr = sessionStorage.getItem('currentInvite');
           if (!inviteDataStr) {
-            console.error('❌ [TestScreen] No invite data found in session storage');
+            console.error('❌ [TestScreen] No invite data found in session storage with key "currentInvite"');
             throw new Error('Missing invite data');
           }
           
