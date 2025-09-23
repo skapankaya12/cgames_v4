@@ -176,26 +176,30 @@ const TestScreen = () => {
         navigate('/candidate/simple-thank-you');
         return;
       }
+
+      // For sections 1-3, navigate to the first question of the next section
+      // This will trigger the onboarding for the next section automatically
+      if (currentSection.id < 4) {
+        const nextQuestionId = currentSection.questionRange.end + 1;
+        console.log(`[TestScreen] Navigating from section ${currentSection.id} to next question ${nextQuestionId}`);
+        
+        setShowSectionEnd(false);
+        setCurrentSection(null);
+        
+        // Ensure the next question ID is valid
+        if (nextQuestionId <= questions.length) {
+          navigate(`/candidate/test/${nextQuestionId}`);
+        } else {
+          // If we've exceeded the questions, navigate to ending
+          console.log(`[TestScreen] Next question ${nextQuestionId} exceeds total questions ${questions.length}, navigating to ending`);
+          navigate('/candidate/ending');
+        }
+        return;
+      }
     }
     
     setShowSectionEnd(false);
     setCurrentSection(null);
-
-    // For sections 1-3, navigate to the first question of the next section
-    // This will trigger the onboarding for the next section automatically
-    if (currentSection && currentSection.id < 4) {
-      const nextQuestionId = currentSection.questionRange.end + 1;
-      console.log(`[TestScreen] Navigating from section ${currentSection.id} to next question ${nextQuestionId}`);
-      
-      // Ensure the next question ID is valid
-      if (nextQuestionId <= questions.length) {
-        navigate(`/candidate/test/${nextQuestionId}`);
-      } else {
-        // If we've exceeded the questions, navigate to ending
-        console.log(`[TestScreen] Next question ${nextQuestionId} exceeds total questions ${questions.length}, navigating to ending`);
-        navigate('/candidate/ending');
-      }
-    }
   };
 
   // Show section onboarding if needed
