@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface LikertSliderProps {
   value?: number;
@@ -13,13 +14,18 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
   value,
   onChange,
   disabled = false,
-  leftLabel = "Kesinlikle Katılmıyorum",
-  rightLabel = "Kesinlikle Katılıyorum",
+  leftLabel,
+  rightLabel,
   showValue = true
 }) => {
+  const { t } = useTranslation('common');
   const [currentValue, setCurrentValue] = useState(value || 0); // Start at 0 (no selection)
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Use translation keys with fallbacks
+  const finalLeftLabel = leftLabel || t('assessments.test.likertScale.leftLabel');
+  const finalRightLabel = rightLabel || t('assessments.test.likertScale.rightLabel');
 
   useEffect(() => {
     if (value !== undefined) {
@@ -75,20 +81,8 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
   }, [isDragging]);
 
   const getValueLabel = (val: number) => {
-    const labels = [
-      '', // 0 - not used
-      'Kesinlikle Katılmıyorum',
-      'Katılmıyorum', 
-      'Çoğunlukla Katılmıyorum',
-      'Kısmen Katılmıyorum',
-      'Kararsızım',
-      'Kısmen Katılıyorum',
-      'Çoğunlukla Katılıyorum',
-      'Katılıyorum',
-      'Büyük Ölçüde Katılıyorum',
-      'Kesinlikle Katılıyorum'
-    ];
-    return labels[val] || '';
+    if (val < 1 || val > 10) return '';
+    return t(`assessments.test.likertScale.values.${val}`);
   };
 
   const percentage = currentValue > 0 ? ((currentValue - 1) / 9) * 100 : 0;
@@ -96,8 +90,8 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
   return (
     <div className="likert-slider-container">
       <div className="slider-labels">
-        <span className="label-left">{leftLabel}</span>
-        <span className="label-right">{rightLabel}</span>
+        <span className="label-left">{finalLeftLabel}</span>
+        <span className="label-right">{finalRightLabel}</span>
       </div>
       
       <div 
@@ -137,7 +131,7 @@ export const LikertSlider: React.FC<LikertSliderProps> = ({
             </div>
           ) : (
             <div className="no-selection">
-              <span className="no-selection-text">Lütfen bir değer seçiniz</span>
+              <span className="no-selection-text">{t('assessments.test.likertScale.noSelection')}</span>
             </div>
           )}
         </div>

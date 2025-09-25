@@ -131,5 +131,84 @@
     "resultsLoading": "Sonuçlar Yükleniyor...",
     "dataProcessing": "Verileriniz işleniyor, lütfen bekleyin.",
     "savingResults": "Sonuçlar kaydediliyor..."
+  },
+  "footer": {
+    "copyright": "Tüm hakları saklıdır. OlivinHR 2025.",
+    "support": "Yardıma mı ihtiyacınız var? Destek ekibimizle iletişime geçin:",
+    "email": "info@olivinhr.com"
+  },
+  "assessments": {
+    "titles": {
+      "calisan-bagliligi": "Çalışan Bağlılığı Değerlendirmesi",
+      "takim-degerlendirme": "Takım Değerlendirme Anketi",
+      "yonetici-degerlendirme": "Yönetici Değerlendirme Anketi"
+    },
+    "descriptions": {
+      "calisan-bagliligi": "Bu değerlendirme, organizasyona olan bağlılığınızı ve çalışma motivasyonunuzu anlamak için tasarlanmıştır.",
+      "takim-degerlendirme": "Bu anket, ekibinizin etkinliğini ve iş birliği düzeyini değerlendirmek için hazırlanmıştır.",
+      "yonetici-degerlendirme": "Bu değerlendirme, yöneticinizin liderlik etkinliğini ve yönetim becerilerini anlamak için tasarlanmıştır."
+    },
+    "form": {
+      "instructions": "Değerlendirmeye başlamadan önce lütfen aşağıdaki bilgileri doldurunuz:",
+      "department": "Departman",
+      "departmentPlaceholder": "Departmanınızı giriniz",
+      "position": "Pozisyon",
+      "positionPlaceholder": "Pozisyonunuzu giriniz",
+      "experience": "Deneyim Süresi",
+      "experienceSelect": "Seçiniz",
+      "workMode": "Çalışma Şekli",
+      "workModes": {
+        "office": "Ofis",
+        "remote": "Uzaktan",
+        "hybrid": "Hibrit"
+      },
+      "experienceOptions": {
+        "0-1": "0-1 yıl",
+        "1-3": "1-3 yıl",
+        "3-5": "3-5 yıl",
+        "5-10": "5-10 yıl",
+        "10+": "10+ yıl"
+      },
+      "errors": {
+        "departmentRequired": "Departman alanı zorunludur",
+        "positionRequired": "Pozisyon alanı zorunludur",
+        "experienceRequired": "Deneyim alanı zorunludur"
+      }
+    },
+    "test": {
+      "loading": "Yükleniyor...",
+      "submitting": "Değerlendirmeniz Gönderiliyor...",
+      "submittingDescription": "Lütfen bekleyin, sonuçlarınız hazırlanıyor.",
+      "submitError": "Değerlendirme gönderilirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "navigation": {
+        "back": "← Geri",
+        "next": "İleri →",
+        "complete": "Tamamla ✓"
+      },
+      "likertScale": {
+        "leftLabel": "Kesinlikle Katılmıyorum (1)",
+        "rightLabel": "Kesinlikle Katılıyorum (10)",
+        "noSelection": "Lütfen bir değer seçiniz",
+        "values": {
+          "1": "Kesinlikle Katılmıyorum",
+          "2": "Katılmıyorum",
+          "3": "Çoğunlukla Katılmıyorum",
+          "4": "Kısmen Katılmıyorum",
+          "5": "Kararsızım",
+          "6": "Kısmen Katılıyorum",
+          "7": "Çoğunlukla Katılıyorum",
+          "8": "Katılıyorum",
+          "9": "Büyük Ölçüde Katılıyorum",
+          "10": "Kesinlikle Katılıyorum"
+        }
+      }
+    },
+    "results": {
+      "aiAssistant": "🤖 AI İK Asistan",
+      "aiDescription": "Yönetici etkinliği sonuçlarınız hakkında detaylı analiz ve liderlik geliştirme önerileri için AI asistanımızla konuşabilirsiniz.",
+      "strengths": "💪 Güçlü Yönler",
+      "development": "📈 Gelişim Alanları",
+      "allExcellent": "Tüm alanlar mükemmel seviyede!"
+    }
   }
 } 

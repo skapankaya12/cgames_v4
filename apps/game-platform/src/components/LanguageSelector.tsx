@@ -9,8 +9,8 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' }
+  { code: 'en', name: 'EN', flag: '🇺🇸' },
+  { code: 'tr', name: 'TR', flag: '🇹🇷' }
 ];
 
 export const LanguageSelector: React.FC = () => {
@@ -36,7 +36,6 @@ export const LanguageSelector: React.FC = () => {
         aria-label="Select language"
         aria-expanded={isOpen}
       >
-        <span className="language-flag">{currentLanguage.flag}</span>
         <span className="language-name">{currentLanguage.name}</span>
         <svg 
           className={`language-arrow ${isOpen ? 'open' : ''}`}
@@ -70,7 +69,6 @@ export const LanguageSelector: React.FC = () => {
                 }`}
                 onClick={() => handleLanguageChange(language.code)}
               >
-                <span className="language-flag">{language.flag}</span>
                 <span className="language-name">{language.name}</span>
                 {language.code === currentLanguage.code && (
                   <svg 

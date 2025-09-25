@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '@cgames/ui-kit/styles/hr.css';
 
 interface SharedIdentityScreenProps {
@@ -11,7 +11,7 @@ interface SharedIdentityScreenProps {
 const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentType, onContinue }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const { t } = useTranslation('common');
+  const { t } = useTranslation('common');
   
   const [formData, setFormData] = useState({
     department: '',
@@ -23,17 +23,6 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const assessmentTitles = {
-    'calisan-bagliligi': 'Çalışan Bağlılığı Değerlendirmesi',
-    'takim-degerlendirme': 'Takım Değerlendirme Anketi',
-    'yonetici-degerlendirme': 'Yönetici Değerlendirme Anketi'
-  };
-
-  const assessmentDescriptions = {
-    'calisan-bagliligi': 'Bu değerlendirme, organizasyona olan bağlılığınızı ve çalışma motivasyonunuzu anlamak için tasarlanmıştır.',
-    'takim-degerlendirme': 'Bu anket, ekibinizin etkinliğini ve iş birliği düzeyini değerlendirmek için hazırlanmıştır.',
-    'yonetici-degerlendirme': 'Bu değerlendirme, yöneticinizin liderlik etkinliğini ve yönetim becerilerini anlamak için tasarlanmıştır.'
-  };
 
   useEffect(() => {
     // Check if we have a valid token
@@ -71,15 +60,15 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
     const newErrors: Record<string, string> = {};
     
     if (!formData.department.trim()) {
-      newErrors.department = 'Departman alanı zorunludur';
+      newErrors.department = t('assessments.form.errors.departmentRequired');
     }
     
     if (!formData.position.trim()) {
-      newErrors.position = 'Pozisyon alanı zorunludur';
+      newErrors.position = t('assessments.form.errors.positionRequired');
     }
     
     if (!formData.experience.trim()) {
-      newErrors.experience = 'Deneyim alanı zorunludur';
+      newErrors.experience = t('assessments.form.errors.experienceRequired');
     }
 
     setErrors(newErrors);
@@ -125,17 +114,17 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
 
           <div className="page-header">
             <h1 className="page-title">
-              {assessmentTitles[assessmentType]}
+              {t(`assessments.titles.${assessmentType}`)}
             </h1>
             <p className="page-subtitle">
-              {assessmentDescriptions[assessmentType]}
+              {t(`assessments.descriptions.${assessmentType}`)}
             </p>
           </div>
 
           <form className="create-company-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
             <div className="form-section">
               <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#6b7280' }}>
-                Değerlendirmeye başlamadan önce lütfen aşağıdaki bilgileri doldurunuz:
+                {t('assessments.form.instructions')}
               </p>
 
               <div className="form-row">
@@ -148,7 +137,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     background: 'transparent',
                     border: 'none'
                   }}>
-                    Departman *
+                    {t('assessments.form.department')} *
                   </div>
                   <input
                     type="text"
@@ -156,7 +145,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.department}
                     onChange={(e) => handleInputChange('department', e.target.value)}
                     className={`form-input ${errors.department ? 'error' : ''}`}
-                    placeholder="Departmanınızı giriniz"
+                    placeholder={t('assessments.form.departmentPlaceholder')}
                     style={{ 
                       fontSize: '0.9rem',
                       textAlign: 'start',
@@ -178,7 +167,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     background: 'transparent',
                     border: 'none'
                   }}>
-                    Pozisyon *
+                    {t('assessments.form.position')} *
                   </div>
                   <input
                     type="text"
@@ -186,7 +175,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     value={formData.position}
                     onChange={(e) => handleInputChange('position', e.target.value)}
                     className={`form-input ${errors.position ? 'error' : ''}`}
-                    placeholder="Pozisyonunuzu giriniz"
+                    placeholder={t('assessments.form.positionPlaceholder')}
                     style={{ 
                       fontSize: '0.9rem',
                       textAlign: 'start',
@@ -210,7 +199,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     background: 'transparent',
                     border: 'none'
                   }}>
-                    Deneyim Süresi *
+                    {t('assessments.form.experience')} *
                   </div>
                   <select
                     id="experience"
@@ -226,12 +215,12 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                       padding: '0.75rem'
                     }}
                   >
-                    <option value="">Seçiniz</option>
-                    <option value="0-1">0-1 yıl</option>
-                    <option value="1-3">1-3 yıl</option>
-                    <option value="3-5">3-5 yıl</option>
-                    <option value="5-10">5-10 yıl</option>
-                    <option value="10+">10+ yıl</option>
+                    <option value="">{t('assessments.form.experienceSelect')}</option>
+                    <option value="0-1">{t('assessments.form.experienceOptions.0-1')}</option>
+                    <option value="1-3">{t('assessments.form.experienceOptions.1-3')}</option>
+                    <option value="3-5">{t('assessments.form.experienceOptions.3-5')}</option>
+                    <option value="5-10">{t('assessments.form.experienceOptions.5-10')}</option>
+                    <option value="10+">{t('assessments.form.experienceOptions.10+')}</option>
                   </select>
                   {errors.experience && <span className="field-error">{errors.experience}</span>}
                 </div>
@@ -245,7 +234,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     background: 'transparent',
                     border: 'none'
                   }}>
-                    Çalışma Şekli
+                    {t('assessments.form.workMode')}
                   </div>
                   <select
                     id="workMode"
@@ -261,9 +250,9 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                       padding: '0.75rem'
                     }}
                   >
-                    <option value="office">Ofis</option>
-                    <option value="remote">Uzaktan</option>
-                    <option value="hybrid">Hibrit</option>
+                    <option value="office">{t('assessments.form.workModes.office')}</option>
+                    <option value="remote">{t('assessments.form.workModes.remote')}</option>
+                    <option value="hybrid">{t('assessments.form.workModes.hybrid')}</option>
                   </select>
                 </div>
               </div>
@@ -306,7 +295,7 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
                     }
                   }}
                 >
-                  {isLoading ? 'Yükleniyor...' : 'Devam Et'}
+                  {isLoading ? t('status.loading') : t('buttons.continue')}
                 </button>
               </div>
             </div>
@@ -322,10 +311,10 @@ const SharedIdentityScreen: React.FC<SharedIdentityScreenProps> = ({ assessmentT
             color: '#6b7280'
           }}>
             <p style={{ margin: '0 0 0.5rem 0' }}>
-              All rights reserved. OlivinHR 2025.
+              {t('footer.copyright')}
             </p>
             <p style={{ margin: '0' }}>
-              Need Help? Contact our support team at <strong>info@olivinhr.com</strong>
+              {t('footer.support')} <strong>{t('footer.email')}</strong>
             </p>
           </div>
         </div>

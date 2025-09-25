@@ -131,5 +131,84 @@
     "resultsLoading": "Results Loading...",
     "dataProcessing": "Your data is being processed, please wait.",
     "savingResults": "Saving results..."
+  },
+  "footer": {
+    "copyright": "All rights reserved. OlivinHR 2025.",
+    "support": "Need help? Contact our support team at",
+    "email": "info@olivinhr.com"
+  },
+  "assessments": {
+    "titles": {
+      "calisan-bagliligi": "Employee Engagement Assessment",
+      "takim-degerlendirme": "Team Assessment Survey",
+      "yonetici-degerlendirme": "Manager Assessment Survey"
+    },
+    "descriptions": {
+      "calisan-bagliligi": "This assessment is designed to understand your commitment to the organization and work motivation.",
+      "takim-degerlendirme": "This survey is prepared to evaluate your team's effectiveness and collaboration level.",
+      "yonetici-degerlendirme": "This assessment is designed to understand your manager's leadership effectiveness and management skills."
+    },
+    "form": {
+      "instructions": "Please fill out the following information before starting the assessment:",
+      "department": "Department",
+      "departmentPlaceholder": "Enter your department",
+      "position": "Position",
+      "positionPlaceholder": "Enter your position",
+      "experience": "Experience Duration",
+      "experienceSelect": "Select",
+      "workMode": "Work Mode",
+      "workModes": {
+        "office": "Office",
+        "remote": "Remote",
+        "hybrid": "Hybrid"
+      },
+      "experienceOptions": {
+        "0-1": "0-1 years",
+        "1-3": "1-3 years",
+        "3-5": "3-5 years",
+        "5-10": "5-10 years",
+        "10+": "10+ years"
+      },
+      "errors": {
+        "departmentRequired": "Department field is required",
+        "positionRequired": "Position field is required",
+        "experienceRequired": "Experience field is required"
+      }
+    },
+    "test": {
+      "loading": "Loading...",
+      "submitting": "Submitting Your Assessment...",
+      "submittingDescription": "Please wait, your results are being prepared.",
+      "submitError": "An error occurred while submitting the assessment. Please try again.",
+      "navigation": {
+        "back": "← Back",
+        "next": "Next →",
+        "complete": "Complete ✓"
+      },
+      "likertScale": {
+        "leftLabel": "Strongly Disagree (1)",
+        "rightLabel": "Strongly Agree (10)",
+        "noSelection": "Please select a value",
+        "values": {
+          "1": "Strongly Disagree",
+          "2": "Disagree",
+          "3": "Mostly Disagree",
+          "4": "Somewhat Disagree",
+          "5": "Neutral",
+          "6": "Somewhat Agree",
+          "7": "Mostly Agree",
+          "8": "Agree",
+          "9": "Largely Agree",
+          "10": "Strongly Agree"
+        }
+      }
+    },
+    "results": {
+      "aiAssistant": "🤖 AI HR Assistant",
+      "aiDescription": "You can chat with our AI assistant for detailed analysis and leadership development recommendations regarding your manager effectiveness results.",
+      "strengths": "💪 Strengths",
+      "development": "📈 Development Areas",
+      "allExcellent": "All areas are at excellent level!"
+    }
   }
 } 

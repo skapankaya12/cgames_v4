@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { managerQuestions, calculateManagerScores } from '../../../data/manager';
 import { LikertSlider } from '../../../components/LikertSlider';
+import { getTranslatedQuestionText } from '../../../utils/assessmentTranslations';
 import './ManagerTestScreen.css';
 
 const ManagerTestScreen = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const { t } = useTranslation('common');
+  const { t } = useTranslation('common');
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -151,7 +152,7 @@ const ManagerTestScreen = () => {
       
     } catch (error) {
       console.error('Error submitting assessment:', error);
-      alert('Değerlendirme gönderilirken bir hata oluştu. Lütfen tekrar deneyin.');
+      alert(t('assessments.test.submitError'));
       setIsSubmitting(false);
     }
   };
@@ -161,7 +162,7 @@ const ManagerTestScreen = () => {
       <div className="manager-test-screen">
         <div className="loading-screen">
           <div className="loading-spinner"></div>
-          <p>Yükleniyor...</p>
+          <p>{t('assessments.test.loading')}</p>
         </div>
       </div>
     );
@@ -172,8 +173,8 @@ const ManagerTestScreen = () => {
       <div className="manager-test-screen">
         <div className="submitting-screen">
           <div className="loading-spinner"></div>
-          <h2>Değerlendirmeniz Gönderiliyor...</h2>
-          <p>Lütfen bekleyin, sonuçlarınız hazırlanıyor.</p>
+          <h2>{t('assessments.test.submitting')}</h2>
+          <p>{t('assessments.test.submittingDescription')}</p>
         </div>
       </div>
     );
@@ -214,15 +215,15 @@ const ManagerTestScreen = () => {
         </div>
         
         <div className="question-content">
-          <h2 className="question-text">{currentQuestion.question_text}</h2>
+          <h2 className="question-text">
+            {getTranslatedQuestionText('manager', currentQuestion.id, currentQuestion.question_text)}
+          </h2>
           
           <div className="slider-container">
             <LikertSlider
               value={answers[currentQuestion.id] ? parseInt(answers[currentQuestion.id]) : undefined}
               onChange={handleAnswer}
               disabled={isSubmitting}
-              leftLabel="Kesinlikle Katılmıyorum (1)"
-              rightLabel="Kesinlikle Katılıyorum (10)"
               showValue={true}
             />
           </div>
@@ -235,7 +236,7 @@ const ManagerTestScreen = () => {
               onClick={handlePrevious}
               disabled={isSubmitting}
             >
-              ← Geri
+{t('assessments.test.navigation.back')}
             </button>
           )}
           
@@ -247,9 +248,9 @@ const ManagerTestScreen = () => {
               onClick={handleNext}
               disabled={isSubmitting}
             >
-              {currentQuestionIndex < managerQuestions.length - 1 
-                ? 'İleri →' 
-                : 'Tamamla ✓'
+{currentQuestionIndex < managerQuestions.length - 1 
+                ? t('assessments.test.navigation.next')
+                : t('assessments.test.navigation.complete')
               }
             </button>
           )}
@@ -271,11 +272,11 @@ const ManagerTestScreen = () => {
         zIndex: 999
       }}>
         <p style={{ margin: '0 0 0.5rem 0' }}>
-          All rights reserved. OlivinHR 2025.
+          {t('footer.copyright')}
         </p>
-                  <p style={{ margin: '0' }}>
-            Need help? Contact our support team at <strong>info@olivinhr.com</strong>
-          </p>
+        <p style={{ margin: '0' }}>
+          {t('footer.support')} <strong>{t('footer.email')}</strong>
+        </p>
       </div>
     </div>
   );

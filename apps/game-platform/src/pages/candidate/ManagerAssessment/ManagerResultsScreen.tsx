@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { managerDimensions, getManagerEffectivenessLevel } from '../../../data/manager';
 import { AIAssistantChat } from '@cgames/ui-kit';
 import './ManagerResultsScreen.css';
@@ -16,6 +17,7 @@ interface ManagerScores {
 const ManagerResultsScreen = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const [scores, setScores] = useState<ManagerScores | null>(null);
   const [candidateInfo, setCandidateInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -218,7 +220,7 @@ const ManagerResultsScreen = () => {
         <div className="insights-section">
           <div className="insights-grid">
             <div className="insights-card strengths">
-              <h3>🌟 Güçlü Yönler</h3>
+              <h3>{t('assessments.results.strengths')}</h3>
               <ul>
                 {scores ? managerDimensions
                   .filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) >= 70)
@@ -235,7 +237,7 @@ const ManagerResultsScreen = () => {
             </div>
             
             <div className="insights-card development">
-              <h3>📈 Gelişim Alanları</h3>
+              <h3>{t('assessments.results.development')}</h3>
               <ul>
                 {scores ? managerDimensions
                   .filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) < 70)
@@ -251,7 +253,7 @@ const ManagerResultsScreen = () => {
                   )) : null
                 }
                 {(!scores || managerDimensions.filter(dim => (scores[dim.id as keyof ManagerScores]?.percentage ?? 0) < 70).length === 0) && (
-                  <li>Tüm alanlar mükemmel seviyede!</li>
+                  <li>{t('assessments.results.allExcellent')}</li>
                 )}
               </ul>
             </div>
@@ -260,8 +262,8 @@ const ManagerResultsScreen = () => {
 
         {/* AI Assistant */}
         <div className="ai-assistant-section">
-          <h2>🤖 AI İK Asistan</h2>
-          <p>Yönetici etkinliği sonuçlarınız hakkında detaylı analiz ve liderlik geliştirme önerileri için AI asistanımızla konuşabilirsiniz.</p>
+          <h2>{t('assessments.results.aiAssistant')}</h2>
+          <p>{t('assessments.results.aiDescription')}</p>
           
           <AIAssistantChat
             scores={scores ? Object.entries(scores).filter(([key]) => key !== 'overall').map(([key, value]) => ({
