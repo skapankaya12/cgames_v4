@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { managerQuestions, calculateManagerScores } from '../../../data/manager';
 import { LikertSlider } from '../../../components/LikertSlider';
 import { getTranslatedQuestionText } from '../../../utils/assessmentTranslations';
+import LanguageSelector from '../../../components/LanguageSelector';
 import './ManagerTestScreen.css';
 
 const ManagerTestScreen = () => {
@@ -184,6 +185,15 @@ const ManagerTestScreen = () => {
 
   return (
     <div className="manager-test-screen">
+      {/* Language Selector */}
+      <div style={{ 
+        position: 'fixed',
+        top: '1rem',
+        right: '1rem',
+        zIndex: 1001
+      }}>
+        <LanguageSelector />
+      </div>
       
       <div className="question-container">
         {/* Progress Bar - 3cm above questions */}

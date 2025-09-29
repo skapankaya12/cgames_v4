@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { teamQuestions, calculateTeamScores } from '../../../data/team';
 import { LikertSlider } from '../../../components/LikertSlider';
 import { getTranslatedQuestionText } from '../../../utils/assessmentTranslations';
+import LanguageSelector from '../../../components/LanguageSelector';
 import './TeamTestScreen.css';
 
 const TeamTestScreen = () => {
@@ -185,6 +186,15 @@ const TeamTestScreen = () => {
 
   return (
     <div className="team-test-screen">
+      {/* Language Selector */}
+      <div style={{ 
+        position: 'fixed',
+        top: '1rem',
+        right: '1rem',
+        zIndex: 1001
+      }}>
+        <LanguageSelector />
+      </div>
       
       <div className="question-container">
         {/* Progress Bar - 3cm above questions */}

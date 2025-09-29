@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { engagementQuestions, calculateEngagementScores } from '../../../data/engagement';
 import { LikertSlider } from '../../../components/LikertSlider';
 import { getTranslatedQuestionText } from '../../../utils/assessmentTranslations';
+import LanguageSelector from '../../../components/LanguageSelector';
 import './EngagementTestScreen.css';
 
 const EngagementTestScreen = () => {
@@ -236,6 +237,15 @@ const EngagementTestScreen = () => {
 
   return (
     <div className="engagement-test-screen">
+      {/* Language Selector */}
+      <div style={{ 
+        position: 'fixed',
+        top: '1rem',
+        right: '1rem',
+        zIndex: 1001
+      }}>
+        <LanguageSelector />
+      </div>
       
       <div className="question-container">
         {/* Progress Bar - 3cm above questions */}
