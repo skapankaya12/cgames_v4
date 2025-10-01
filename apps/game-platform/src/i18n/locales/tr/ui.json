@@ -64,6 +64,18 @@
       "pdfUploadFailed": "PDF yükleme başarısız oldu. Devam etmek istiyor musunuz?"
     }
   },
+  "buttons": {
+    "continue": "Devam Et",
+    "back": "Geri",
+    "next": "İleri",
+    "start": "Başla",
+    "submit": "Gönder",
+    "restart": "Yeniden Başla",
+    "startJourney": "Yolculuğa Başla",
+    "startGame": "Oyuna Başla",
+    "understood": "Anladım, Devam Et",
+    "retry": "Yeniden Dene"
+  },
   "test": {
     "progressTitles": [
       "Yük Sorumlusu ile İlk Karşılaşma",

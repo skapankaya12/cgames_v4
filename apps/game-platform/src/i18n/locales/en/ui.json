@@ -64,6 +64,18 @@
       "pdfUploadFailed": "PDF upload failed. Do you want to continue?"
     }
   },
+  "buttons": {
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "start": "Start",
+    "submit": "Submit",
+    "restart": "Restart",
+    "startJourney": "Start Journey",
+    "startGame": "Start Game",
+    "understood": "Understood, Continue",
+    "retry": "Retry"
+  },
   "test": {
     "progressTitles": [
       "First Encounter with Cargo Officer",
