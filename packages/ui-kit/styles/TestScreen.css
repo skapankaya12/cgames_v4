@@ -332,7 +332,7 @@
 /* Narration Dialog - Bottom positioned above options */
 .dialog-narration {
   position: fixed;
-  bottom: 260px; /* Increased from 180px for better spacing */
+  bottom: 336px; /* Increased by 76px (2cm) for better spacing between question and options */
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
@@ -383,7 +383,7 @@
 .dialog-narration[data-question-id="13"],
 .dialog-narration[data-question-id="14"],
 .dialog-narration[data-question-id="16"] {
-  bottom: 290px; /* Increased from 220px for questions with more text */
+  bottom: 366px; /* Increased by 76px (2cm) for questions with more text */
 }
 
 /* Options Dialog - Bottom positioned with proper spacing from narration */
@@ -672,7 +672,7 @@
   }
   
   .dialog-narration {
-    bottom: 320px; /* Increased from 280px for better tablet spacing */
+    bottom: 396px; /* Increased by 76px (2cm) for better tablet spacing */
     width: 98%;
     max-width: 800px;
   }
@@ -685,7 +685,7 @@
   .dialog-narration[data-question-id="13"],
   .dialog-narration[data-question-id="14"],
   .dialog-narration[data-question-id="16"] {
-    bottom: 370px; /* Increased from 320px for extra spacing on tablet */
+    bottom: 446px; /* Increased by 76px (2cm) for extra spacing on tablet */
   }
   
   .narration-box {
@@ -792,7 +792,7 @@
   }
   
   .dialog-narration {
-    bottom: 280px; /* Increased from 240px for better mobile spacing */
+    bottom: 356px; /* Increased by 76px (2cm) for better mobile spacing */
     width: 99%;
     max-width: 700px;
   }
@@ -805,7 +805,7 @@
   .dialog-narration[data-question-id="13"],
   .dialog-narration[data-question-id="14"],
   .dialog-narration[data-question-id="16"] {
-    bottom: 330px; /* Increased from 280px for extra spacing on mobile */
+    bottom: 406px; /* Increased by 76px (2cm) for extra spacing on mobile */
   }
   
   .narration-box {

@@ -97,15 +97,7 @@ export const getQuestionTitles = (): string[] => {
     ];
   }
 
-  // Return English titles - try to get from translations first, fallback to hardcoded
-  const uiBundle = i18n.getResourceBundle('en', 'ui');
-  const progressTitles = uiBundle?.test?.progressTitles;
-  
-  if (progressTitles && Array.isArray(progressTitles) && progressTitles.length === 16) {
-    return progressTitles;
-  }
-  
-  // Fallback to hardcoded English titles
+  // Always return hardcoded English titles to avoid translation key issues
   return [
     "First Encounter with Cargo Officer",
     "Exit Corridor", 
