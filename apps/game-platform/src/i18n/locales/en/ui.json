@@ -6,7 +6,24 @@
       "missionTitle": "Mission Assignment: You Are an Intergalactic Delivery Captain",
       "missionDescription": "This critical energy core will maintain the energy balance of the galactic alliance and determine the future of the universe. Your mission: deliver the core to Nova Terminal on time, complete and to the correct recipient.",
       "journeyDuration": "The journey will take approximately 8-10 minutes. Every decision you make will test your leadership style, character, and reflexes, leading you to new scenarios.",
-      "missionHighlight": "This is not a test! Every choice reflects your captaincy style. If you're ready, take the captain's seat and start your adventure."
+      "missionHighlight": "This is not a test! Every choice reflects your captaincy style. If you're ready, take the captain's seat and start your adventure.",
+      "testDetails": {
+        "title": "Test Entry — Details",
+        "description": "This test measures your decisions through a single delivery mission story. There are 16 scenes in total and the test is divided into 4 sections.",
+        "choiceInfo": "You will make a single choice in each scene. There are no \"right\" or \"wrong\" answers here.",
+        "importantNote": "⚠️ Important: This test does not measure all your traits at once; it reveals your prioritizations. So if you choose to make quick decisions in a scene, \"Decision Making\" gets a high score while \"Strategic Thinking\" or \"Time Management\" may remain lower. Each choice shows that you prioritize one trait over another."
+      },
+      "testPriorities": {
+        "title": "Priorities",
+        "keyQuestion": "The key thing to pay attention to in the questions: What is more priority for you?",
+        "priorities": [
+          "Completing the delivery as quickly as possible?",
+          "Choosing the safest route?",
+          "Protecting the team and system?",
+          "Or thinking about the most strategic, long-term benefit?"
+        ],
+        "purpose": "The purpose of the test: Not to show \"which is better\"; but to reveal your preference ranking. So you cannot be both the fastest and the safest at the same time. Each path you choose leaves another path behind."
+      }
     },
     "rulesStep": {
       "title": "Rules & Instructions",

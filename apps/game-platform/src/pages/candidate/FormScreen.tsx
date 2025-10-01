@@ -179,10 +179,6 @@ const FormScreen = () => {
     <div className="step-content welcome-step">
       <div className="step-header">
         <h2 className="step-title">{t('form.welcomeStep.title')}</h2>
-        <div className="step-indicator">
-          <span className="step-number">1</span>
-          <span className="step-total">/ 4</span>
-        </div>
       </div>
       
       <div className="mission-content">
@@ -208,10 +204,6 @@ const FormScreen = () => {
     <div className="step-content test-details-step">
       <div className="step-header">
         <h2 className="step-title">{t('form.welcomeStep.testDetails.title')}</h2>
-        <div className="step-indicator">
-          <span className="step-number">2</span>
-          <span className="step-total">/ 4</span>
-        </div>
       </div>
       
       <div className="test-details-section">
@@ -251,10 +243,6 @@ const FormScreen = () => {
     <div className="step-content rules-step">
       <div className="step-header">
         <h2 className="step-title">{t('form.rulesStep.title')}</h2>
-        <div className="step-indicator">
-          <span className="step-number">3</span>
-          <span className="step-total">/ 4</span>
-        </div>
       </div>
       
       <div className="rules-content">
@@ -305,10 +293,6 @@ const FormScreen = () => {
     <div className="step-content form-step">
       <div className="step-header">
         <h2 className="step-title">{t('form.formStep.title')}</h2>
-        <div className="step-indicator">
-          <span className="step-number">4</span>
-          <span className="step-total">/ 4</span>
-        </div>
       </div>
       
       <form onSubmit={handleSubmit} className="user-form">
