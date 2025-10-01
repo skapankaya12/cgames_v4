@@ -5,7 +5,6 @@ import { getQuestionTitles } from '../../../../utils/questionsUtils';
 interface TestProgressProps {
   progress: number;
   currentQuestion: number;
-  totalQuestions: number;
   isTransitioning: boolean;
   onPrevious: () => void;
 }
@@ -13,7 +12,6 @@ interface TestProgressProps {
 export const TestProgress: React.FC<TestProgressProps> = ({
   progress,
   currentQuestion,
-  totalQuestions,
   isTransitioning,
   onPrevious
 }) => {

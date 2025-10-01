@@ -170,7 +170,6 @@ const TestScreen = () => {
         <TestProgress
           progress={progress}
           currentQuestion={testState.currentQuestion}
-          totalQuestions={questions.length}
           isTransitioning={isTransitioning}
           onPrevious={handlePrevious}
         />
