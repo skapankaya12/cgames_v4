@@ -106,7 +106,7 @@ async function sendInvitationEmail(data: {
               <div style="margin: 2rem 0; text-align: left;">
                 <a href="${inviteUrl}" 
                    style="display: inline-block; max-width: 100%; padding: 1rem 2rem; background: #708238; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(112, 130, 56, 0.2);">
-                  ${assessmentName === 'takim-degerlendirme' ? 'Start Your Assessment Here' : `Start ${assessmentName} Assessment`}
+                  Start Your Assessment Here
                 </a>
               </div>
               
